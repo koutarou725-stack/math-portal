@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中学数学科 教員ポータル & 授業工房</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- KaTeX for beautiful math equations -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- トップヘッダーナビゲーション -->
+  <header class="app-header no-print">
+    <div class="header-left">
+      <div class="logo" onclick="switchTab('home')" style="cursor: pointer;">
+        <i class="fa-solid fa-compass-drafting logo-icon"></i>
+        <div>
+          <h1>中学数学科ポータル</h1>
+          <span class="subtitle">Math Teacher's Portal & Hub</span>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="home">
+          <i class="fa-solid fa-house"></i> ホーム
+        </button>
+        <button class="nav-tab" data-tab="timetable">
+          <i class="fa-solid fa-calendar-days"></i> 時間割
+        </button>
+        <button class="nav-tab" data-tab="worksheet">
+          <i class="fa-solid fa-file-pen"></i> 授業プリント
+        </button>
+        <button class="nav-tab" data-tab="practice-test">
+          <i class="fa-solid fa-calculator"></i> 練習プリント・小テスト
+        </button>
+        <button class="nav-tab" data-tab="math-tools">
+          <i class="fa-solid fa-shapes"></i> 作図・グラフ
+        </button>
+        <button class="nav-tab" data-tab="progress-log">
+          <i class="fa-solid fa-book-bookmark"></i> 授業改善メモ
+        </button>
+      </nav>
+    </div>
+    
+    <div class="header-right">
+      <!-- 授業タイマートリガー -->
+      <button id="openTimerBtn" class="btn btn-secondary btn-sm" title="授業タイマーを開く">
+        <i class="fa-solid fa-stopwatch"></i> <span id="timerDisplayShort">10:00</span>
+      </button>
+      
+      <!-- データ保存 & スプレッドシート同期ボタン -->
+      <div class="backup-actions">
+        <button class="btn btn-sm btn-cloud-sync" id="cloudSyncHeaderBtn" onclick="openCloudSyncModal()" title="Googleスプレッドシートと自動同期・スマホやタブレットで活用">
+          <i class="fa-solid fa-cloud"></i> <span id="cloudSyncStatusText">スプレッドシート同期</span>
+        </button>
+        <button class="btn btn-sm btn-outline" onclick="exportAllDataBackup()" title="時間割・設定データをファイルとしてダウンロード保存">
+          <i class="fa-solid fa-download"></i> 保存
+        </button>
+        <button class="btn btn-sm btn-ghost" onclick="document.getElementById('backupFileInput').click()" title="保存したファイルからデータを復元">
+          <i class="fa-solid fa-upload"></i> 復元
+        </button>
+        <input type="file" id="backupFileInput" accept=".json" style="display:none;" onchange="importBackupFile(event)">
+      </div>
+
+      <!-- 今日の日付情報 -->
+      <div class="date-badge">
+        <i class="fa-regular fa-calendar"></i>
+        <span id="currentDateStr">2026年9月30日 (水)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ領域 -->
+  <main class="main-content">
+
+    <!-- ============================================== -->
+    <!-- TAB 0: ホーム画面（トップ画 ＋ メインポータル） -->
+    <!-- ============================================== -->
+    <section id="tab-home" class="tab-pane active">
+      <div class="home-container">
+        
+        <!-- ヒーローセクション（トップ画） -->
+        <div class="hero-banner">
+          <img src="assets/hero.jpg" alt="Junior High Math Dashboard" class="hero-image">
+          <div class="hero-overlay">
+            <div class="hero-content">
+              <span class="hero-tag"><i class="fa-solid fa-graduation-cap"></i> 中学校 数学科 教員ポータル</span>
+              <h2 class="hero-title">数学科 授業ハブ & ワークスペース</h2>
+              <p class="hero-sub">時間割の確認、授業プリントの即時作成・改善、小テストの印刷まで。毎日の授業づくりをこの場所から始めましょう。</p>
+              
+              <div class="hero-quick-status">
+                <div class="quick-status-item">
+                  <i class="fa-solid fa-bell text-warning"></i>
+                  <span>本日の授業: <strong>3コマ</strong> (2年1組 / 2年3組 / 3年2組)</span>
+                </div>
+                <div class="quick-status-item">
+                  <i class="fa-solid fa-clock-rotate-left text-success"></i>
+                  <span>次回定期テストまで: <strong>残り 18 コマ</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 本日の時間割ミニバー -->
+        <div class="today-schedule-bar">
+          <div class="today-label">
+            <i class="fa-solid fa-calendar-day"></i> 本日の予定
+          </div>
+          <div class="today-slots-list" id="todayMiniSlots">
+            <!-- JSで動的に表示 -->
+          </div>
+          <button class="btn btn-sm btn-outline" onclick="switchTab('timetable')">
+            時間割全体を見る <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- メインポータル ナビゲーションカード群 -->
+        <div class="portal-cards-grid">
+          
+          <!-- カード1: 時間割 -->
+          <div class="portal-card" onclick="switchTab('timetable')">
+            <div class="card-icon-wrap bg-indigo">
+              <i class="fa-solid fa-calendar-days"></i>
+            </div>
+            <div class="card-info">
+              <div class="card-title-row">
+                <h3>時間割</h3>
+                <span class="card-badge">週間予定</span>
+              </div>
+              <p>月〜金の時間割と担当クラスの確認。コマをクリックしてその日のプリント準備へ直結。</p>
+              <div class="card-footer-action">
+                <span>時間割を開く</span> <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- カード2: 授業プリント -->
+          <div class="portal-card featured" onclick="switchTab('worksheet')">
+            <div class="card-icon-wrap bg-blue">
+              <i class="fa-solid fa-file-pen"></i>
+            </div>
+            <div class="card-info">
+              <div class="card-title-row">
+                <h3>授業プリント工房</h3>
+                <span class="card-badge badge-primary">PDCAエディタ</span>
+              </div>
+              <p>めあて・復習・問い・グラフ・まとめをブロックで自在に組み立て。授業後の改善メモも一緒に保存。</p>
+              <div class="card-footer-action">
+                <span>ワークシートを作る</span> <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- カード3: 練習プリント・小テスト -->
+          <div class="portal-card" onclick="switchTab('practice-test')">
+            <div class="card-icon-wrap bg-emerald">
+              <i class="fa-solid fa-calculator"></i>
+            </div>
+            <div class="card-info">
+              <div class="card-title-row">
+                <h3>練習プリント・小テスト</h3>
+                <span class="card-badge">ワンクリック生成</span>
+              </div>
+              <p>計算・方程式・因数分解などの5分間テストを数値ランダムで自動作成。先生用模範解答も同時出力。</p>
+              <div class="card-footer-action">
+                <span>テストを作成する</span> <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- カード4: 作図・グラフジェネレーター -->
+          <div class="portal-card" onclick="switchTab('math-tools')">
+            <div class="card-icon-wrap bg-purple">
+              <i class="fa-solid fa-shapes"></i>
+            </div>
+            <div class="card-info">
+              <div class="card-title-row">
+                <h3>作図・グラフジェネレーター</h3>
+                <span class="card-badge">SVG動的作図</span>
+              </div>
+              <p>一次関数のきれいな方眼紙グラフや、平行線・円周角などの角度問題をパラメータ指定で即作図・挿入。</p>
+              <div class="card-footer-action">
+                <span>図形・グラフを作る</span> <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- カード5: 授業改善メモ & 進度 -->
+          <div class="portal-card" onclick="switchTab('progress-log')">
+            <div class="card-icon-wrap bg-amber">
+              <i class="fa-solid fa-book-bookmark"></i>
+            </div>
+            <div class="card-info">
+              <div class="card-title-row">
+                <h3>授業改善メモ & 進度</h3>
+                <span class="card-badge">ナレッジ蓄積</span>
+              </div>
+              <p>「この問題でつまずいた」「ここを工夫した」という日々の指導の気づきを蓄積し、来年の指導案に活用。</p>
+              <div class="card-footer-action">
+                <span>メモ一覧を見る</span> <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- カード6: 外部リンク・便利ツール -->
+          <div class="portal-card" onclick="scrollToLauncher()">
+            <div class="card-icon-wrap bg-cyan">
+              <i class="fa-solid fa-up-right-from-square"></i>
+            </div>
+            <div class="card-info">
+              <div class="card-title-row">
+                <h3>クイックランチャー</h3>
+                <span class="card-badge">外部ツール</span>
+              </div>
+              <p>GeoGebra、NHK for School、Google Classroom、Desmosなど、授業準備や授業中に使う外部サービスへ直結。</p>
+              <div class="card-footer-action">
+                <span>ツール一覧へ</span> <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 外部教育サービス・便利ランチャー（トップ下部） -->
+        <div class="launcher-section" id="homeLauncherSection">
+          <div class="section-header">
+            <h3><i class="fa-solid fa-toolbox"></i> よく使う数学科ツール & 外部サービス</h3>
+            <span class="badge">ワンクリック起動</span>
+          </div>
+          <div class="launcher-grid">
+            <a href="https://www.geogebra.org/calculator" target="_blank" class="launcher-card">
+              <i class="fa-solid fa-calculator launcher-icon" style="color: #6366f1;"></i>
+              <div>
+                <strong>GeoGebra</strong>
+                <span>動的作図・幾何・グラフ確認</span>
+              </div>
+            </a>
+            <a href="https://www.nhk.or.jp/school/math/" target="_blank" class="launcher-card">
+              <i class="fa-solid fa-tv launcher-icon" style="color: #ec4899;"></i>
+              <div>
+                <strong>NHK for School (数学)</strong>
+                <span>身近な導入動画・アクティブラーニング</span>
+              </div>
+            </a>
+            <a href="https://classroom.google.com" target="_blank" class="launcher-card">
+              <i class="fa-solid fa-graduation-cap launcher-icon" style="color: #10b981;"></i>
+              <div>
+                <strong>Google Classroom</strong>
+                <span>課題配信・生徒への連絡</span>
+              </div>
+            </a>
+            <a href="https://desmos.com/calculator" target="_blank" class="launcher-card">
+              <i class="fa-solid fa-wave-square launcher-icon" style="color: #06b6d4;"></i>
+              <div>
+                <strong>Desmos グラフ計算機</strong>
+                <span>見やすい直感的な関数シミュレーター</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 1: 時間割 (3層構造システム) -->
+    <!-- ============================================== -->
+    <section id="tab-timetable" class="tab-pane">
+      <div class="timetable-container">
+        
+        <div class="page-top-nav no-print">
+          <button class="back-home-btn" onclick="switchTab('home')">
+            <i class="fa-solid fa-arrow-left"></i> ホームに戻る
+          </button>
+          <h2><i class="fa-solid fa-calendar-days text-primary"></i> 時間割マネージャー</h2>
+          
+          <div class="timetable-mode-tabs">
+            <button class="tt-mode-btn active" id="ttModeSchedule" onclick="switchTimetableMode('schedule')">
+              <i class="fa-solid fa-calendar-week"></i> 実時間割 (振替反映)
+            </button>
+            <button class="tt-mode-btn" id="ttModeBase" onclick="switchTimetableMode('base')">
+              <i class="fa-solid fa-table-cells"></i> ベース時間割 (マスター)
+            </button>
+            <button class="tt-mode-btn" id="ttModeBell" onclick="switchTimetableMode('bell')">
+              <i class="fa-solid fa-clock"></i> 学校の時程設定
+            </button>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- サブビュー 1: 実時間割 (月間カレンダー振替反映ビュー) -->
+        <!-- ======================================================== -->
+        <div id="ttSubViewSchedule" class="tt-sub-view active">
+          <div class="tt-control-bar">
+            <div class="week-selector">
+              <button class="btn btn-sm btn-outline" onclick="changeWeekOffset(-1)"><i class="fa-solid fa-chevron-left"></i> 前週</button>
+              <span class="current-week-label" id="currentWeekRangeLabel">2026年9月28日(月) 〜 10月2日(金)</span>
+              <button class="btn btn-sm btn-outline" onclick="changeWeekOffset(1)">次週 <i class="fa-solid fa-chevron-right"></i></button>
+              <button class="btn btn-sm btn-ghost" onclick="changeWeekOffset(0)">今週に戻る</button>
+            </div>
+            <div class="tt-actions">
+              <button class="btn btn-sm btn-primary" onclick="openDayOverrideModal()">
+                <i class="fa-solid fa-shuffle"></i> 特時・校時振替を設定
+              </button>
+              <button class="btn btn-sm btn-outline" onclick="resetAllOverrides()">
+                <i class="fa-solid fa-rotate-left"></i> 振替をクリア
+              </button>
+            </div>
+          </div>
+
+          <div class="info-banner-tip">
+            <i class="fa-solid fa-lightbulb text-warning"></i>
+            <span>職員会議で決まった<strong>「月曜だけど金2が入る」「木曜校時で実施」</strong>などの日課変更は、上の<strong>「特時・校時振替を設定」</strong>からワンタッチで反映できます。また、各マスをクリックして<strong>今週の学習内容・授業メモ</strong>を登録できます。</span>
+          </div>
+
+          <!-- 今週のクラス別授業回数・進度サマリーバー -->
+          <div class="week-lesson-summary-card mt-3" id="weekLessonSummaryCard">
+            <!-- JSで各クラスの今週コマ数・偏りを自動計算して表示 -->
+          </div>
+
+          <!-- 実際の振替反映グリッド表 -->
+          <div class="timetable-wrapper mt-3">
+            <table class="timetable-table" id="timetableRealGrid">
+              <thead id="timetableRealHeader">
+                <!-- JSで動的に日付入りヘッダーを生成 -->
+              </thead>
+              <tbody id="timetableRealBody">
+                <!-- JSで動的に振替適用後の時間割を生成 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- サブビュー 2: ベース時間割 (期別マスター管理) -->
+        <!-- ======================================================== -->
+        <div id="ttSubViewBase" class="tt-sub-view">
+          <div class="tt-control-bar">
+            <div class="form-inline-group">
+              <label><strong>対象の期:</strong></label>
+              <select id="termSelector" class="form-control form-control-sm" onchange="onTermChange()">
+                <option value="first_term">2026年度 前期基本時間割</option>
+                <option value="second_term">2026年度 後期基本時間割</option>
+              </select>
+            </div>
+            <div class="tt-actions">
+              <button class="btn btn-sm btn-primary" onclick="openTimetableBatchModal()">
+                <i class="fa-solid fa-pen-to-square"></i> ベースを一括編集
+              </button>
+              <button class="btn btn-sm btn-outline text-danger" onclick="resetTimetableDefault()" title="現在の期の全コマを空欄にします">
+                <i class="fa-solid fa-trash-can"></i> 全コマをクリア (白紙)
+              </button>
+            </div>
+          </div>
+
+          <p class="page-subtitle no-print mt-2">
+            前期・後期の基本となる持ちコマ（月1〜金6）を登録します。各マスをクリックまたは鉛筆アイコンから編集できます。
+          </p>
+
+          <div class="timetable-wrapper mt-3">
+            <table class="timetable-table" id="timetableBaseGrid">
+              <thead>
+                <tr>
+                  <th class="time-col">校時</th>
+                  <th>月曜日 (月1〜6)</th>
+                  <th>火曜日 (火1〜6)</th>
+                  <th>水曜日 (水1〜6)</th>
+                  <th>木曜日 (木1〜6)</th>
+                  <th>金曜日 (金1〜6)</th>
+                </tr>
+              </thead>
+              <tbody id="timetableBaseBody">
+                <!-- JSでベース時間割を生成 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- サブビュー 3: 学校の時程設定 (ベル時刻) -->
+        <!-- ======================================================== -->
+        <div id="ttSubViewBell" class="tt-sub-view">
+          <div class="bell-settings-card">
+            <div class="card-title-row">
+              <h3><i class="fa-solid fa-clock text-primary"></i> 学校の時制・ベル時刻の設定</h3>
+              <button class="btn btn-sm btn-primary" onclick="saveBellSettings()">
+                <i class="fa-solid fa-floppy-disk"></i> 時程設定を保存
+              </button>
+            </div>
+            <p class="panel-desc">先生の学校のタイムスケジュールに合わせて調整できます。保存すると全ての時間割表示に反映されます。</p>
+
+            <div class="bell-config-grid">
+              <div class="form-group">
+                <label>1時間目の開始時刻</label>
+                <input type="time" id="bellStartTime" class="form-control" value="08:45" onchange="previewBellSchedule()">
+              </div>
+              <div class="form-group">
+                <label>1コマの授業時間</label>
+                <div class="input-with-unit">
+                  <input type="number" id="bellDuration" class="form-control" value="50" min="20" max="90" oninput="previewBellSchedule()">
+                  <span class="unit-text">分</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>授業間の休み時間</label>
+                <div class="input-with-unit">
+                  <input type="number" id="bellBreakDuration" class="form-control" value="10" min="0" max="60" oninput="previewBellSchedule()">
+                  <span class="unit-text">分</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>昼休みの長さ</label>
+                <div class="input-with-unit">
+                  <input type="number" id="bellLunchDuration" class="form-control" value="50" min="10" max="120" oninput="previewBellSchedule()">
+                  <span class="unit-text">分</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bell-schedule-preview mt-4">
+              <div class="preview-header-row">
+                <h4><i class="fa-solid fa-list-check"></i> 校時スケジュール (直接入力・微調整可能)</h4>
+                <button class="btn btn-sm btn-ghost" onclick="recalcBellTimesFromInputs()">
+                  <i class="fa-solid fa-calculator"></i> 基準値から再計算
+                </button>
+              </div>
+              <div class="bell-timeline" id="bellTimelinePreview">
+                <!-- JSで計算・手動編集可能な時程を表示 -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 特時・校時振替設定モーダル (1週間一括マネージャー) -->
+    <div id="dayOverrideModal" class="modal-overlay hidden">
+      <div class="override-modal-content wide-modal">
+        <div class="slot-modal-header">
+          <h3><i class="fa-solid fa-shuffle text-primary"></i> 1週間の特時・校時振替マネージャー</h3>
+          <button class="modal-close-btn" onclick="closeDayOverrideModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="slot-modal-body">
+          <div class="week-override-header-bar">
+            <div>
+              <strong id="overrideWeekRangeText" style="font-size: 1.05rem; color: var(--text-main);"></strong>
+              <div class="sub-tip mt-1">職員会議の週予定表に合わせて、曜日ごとの校時や入れ替えコマを1週間まとめて設定できます</div>
+            </div>
+            <div class="week-override-quick-actions">
+              <button class="btn btn-sm btn-outline text-danger" onclick="clearCurrentWeekOverrides()" title="今週の振替をすべて解除して通常に戻す">
+                <i class="fa-solid fa-rotate-left"></i> 今週をすべて通常校時に戻す
+              </button>
+            </div>
+          </div>
+
+          <!-- 月〜金の5列カードグリッド -->
+          <div class="week-override-columns" id="weekOverrideColumnsContainer">
+            <!-- JSで動的に月〜金の5列を生成 -->
+          </div>
+        </div>
+        <div class="slot-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeDayOverrideModal()">閉じる</button>
+          <button type="button" class="btn btn-primary" onclick="saveWeekOverrides()">
+            <i class="fa-solid fa-check"></i> 1週間の振替設定を保存
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- コマ単体編集モーダル (ベース時間割用: コマ区分を廃止してスッキリ) -->
+    <div id="slotEditModal" class="modal-overlay hidden">
+      <div class="slot-modal-content">
+        <div class="slot-modal-header">
+          <h3><i class="fa-solid fa-pen-to-square text-primary"></i> <span id="slotEditTitle">ベースコマの編集 (月曜 1限)</span></h3>
+          <button class="modal-close-btn" onclick="closeSlotEditModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="slot-modal-body">
+          <div class="form-group" id="classGroup">
+            <div class="label-with-action">
+              <label>学年・クラス</label>
+              <span class="sub-tip">※入力した項目は次回から下のボタンで選べます (クラス順に自動整列)</span>
+            </div>
+            <input type="text" id="slotClassInput" class="form-control" placeholder="例: 2-1, 2-2, 3-1, 職員室">
+            <div class="learned-chip-group mt-2" id="classChipsContainer">
+              <!-- クラス順にソートされたボタンがJSで並びます -->
+            </div>
+          </div>
+
+          <div class="form-group" id="subjectGroup">
+            <div class="label-with-action">
+              <label>教科</label>
+              <span class="sub-tip">※入力した教科・内容は次回から下のボタンで選べます</span>
+            </div>
+            <input type="text" id="slotSubjectInput" class="form-control" placeholder="例: 数学, 学活, 道徳, 総合, 会議">
+            <div class="learned-chip-group mt-2" id="subjectChipsContainer">
+              <!-- 教科・活動ボタンがJSで並びます -->
+            </div>
+          </div>
+        </div>
+        <div class="slot-modal-footer">
+          <button type="button" class="btn btn-outline text-danger" onclick="clearCurrentSlot()" title="このコマの登録内容を消去して空欄にします">
+            <i class="fa-solid fa-eraser"></i> このコマを空にする
+          </button>
+          <div style="flex: 1;"></div>
+          <button type="button" class="btn btn-outline" onclick="closeSlotEditModal()">キャンセル</button>
+          <button type="button" class="btn btn-primary" onclick="saveSlotEdit()">
+            <i class="fa-solid fa-check"></i> このコマを保存
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 週案・学習内容入力モーダル (実時間割用) -->
+    <div id="lessonPlanModal" class="modal-overlay hidden">
+      <div class="slot-modal-content">
+        <div class="slot-modal-header">
+          <h3><i class="fa-solid fa-book-open text-primary"></i> <span id="lessonPlanTitle">学習内容・授業予定の入力</span></h3>
+          <button class="modal-close-btn" onclick="closeLessonPlanModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="slot-modal-body">
+          <div class="lesson-plan-meta-banner" id="lessonPlanMetaBanner">
+            <!-- クラス、校時、教科名を表示 -->
+          </div>
+
+          <div class="form-group mt-3">
+            <label>今週の学習内容・単元予定・めあて</label>
+            <input type="text" id="lessonPlanInput" class="form-control" placeholder="例: 一次関数の利用① (動点と面積), 計算小テスト">
+            <div class="sub-tip mt-1">※この時間の学習予定を入力します。ここで入力した内容はプリント作成時にも引き継がれます。</div>
+          </div>
+
+          <div class="form-group mt-3">
+            <label>よく使う単元・進度キーワード (ワンタップ入力)</label>
+            <div class="learned-chip-group" id="lessonKeywordsContainer">
+              <span class="learned-chip" onclick="setLessonKeyword('単元導入・めあて確認')">単元導入</span>
+              <span class="learned-chip" onclick="setLessonKeyword('一次関数の式とグラフ')">一次関数グラフ</span>
+              <span class="learned-chip" onclick="setLessonKeyword('変化の割合・計算演習')">変化の割合</span>
+              <span class="learned-chip" onclick="setLessonKeyword('一次関数の利用 (文章題)')">一次関数利用</span>
+              <span class="learned-chip" onclick="setLessonKeyword('小テスト & 振り返り')">小テスト</span>
+              <span class="learned-chip" onclick="setLessonKeyword('章末問題・発展課題')">章末問題</span>
+            </div>
+          </div>
+        </div>
+        <div class="slot-modal-footer">
+          <button type="button" class="btn btn-outline text-danger" onclick="clearCurrentLessonPlan()">
+            <i class="fa-solid fa-eraser"></i> 予定をクリア
+          </button>
+          <div style="flex: 1;"></div>
+          <button type="button" class="btn btn-outline" onclick="closeLessonPlanModal()">キャンセル</button>
+          <button type="button" class="btn btn-primary" onclick="saveLessonPlan()">
+            <i class="fa-solid fa-check"></i> 学習内容を保存
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 時間割一括カスタマイズモーダル -->
+    <div id="timetableBatchModal" class="modal-overlay hidden">
+      <div class="batch-modal-content">
+        <div class="slot-modal-header">
+          <h3><i class="fa-solid fa-calendar-days text-primary"></i> 時間割の一括カスタマイズ</h3>
+          <button class="modal-close-btn" onclick="closeTimetableBatchModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <p class="panel-desc">先生の担当学年やクラスを反映してください。各セルを直接クリックして文字を編集できます。</p>
+        
+        <div class="batch-table-container">
+          <table class="batch-table" id="batchEditTable">
+            <!-- JSで編集可能なグリッドを生成 -->
+          </table>
+        </div>
+
+        <div class="slot-modal-footer mt-4">
+          <button class="btn btn-outline" onclick="closeTimetableBatchModal()">閉じる</button>
+          <button class="btn btn-primary" onclick="saveBatchTimetable()">
+            <i class="fa-solid fa-floppy-disk"></i> 全体を保存して反映
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Googleスプレッドシート連携 (クラウド自動同期) モーダル -->
+    <div id="cloudSyncModal" class="modal-overlay hidden">
+      <div class="slot-modal-content wide-modal">
+        <div class="slot-modal-header">
+          <h3><i class="fa-solid fa-cloud text-primary"></i> Googleスプレッドシート自動同期設定</h3>
+          <button class="modal-close-btn" onclick="closeCloudSyncModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="slot-modal-body">
+          <div class="cloud-status-banner mb-3" id="cloudStatusBanner">
+            <!-- 接続状況（未設定・接続中・同期済み）を表示 -->
+          </div>
+
+          <div class="form-group">
+            <label><strong>Google Apps Script (GAS) ウェブアプリURL</strong></label>
+            <div class="input-with-action">
+              <input type="url" id="gasUrlInput" class="form-control" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+            </div>
+            <span class="sub-tip">※スプレッドシートから発行したURLを貼り付けます。一度設定すれば次回から自動同期されます。</span>
+          </div>
+
+          <div class="cloud-sync-btn-row mt-3">
+            <button type="button" class="btn btn-primary" onclick="syncFromCloud(true)">
+              <i class="fa-solid fa-cloud-arrow-down"></i> スプレッドシートから読み込む
+            </button>
+            <button type="button" class="btn btn-outline" onclick="syncToCloud(true)">
+              <i class="fa-solid fa-cloud-arrow-up"></i> 現在のデータを書き出す
+            </button>
+            <button type="button" class="btn btn-ghost text-danger" onclick="disconnectCloudSync()">
+              <i class="fa-solid fa-link-slash"></i> 連携解除
+            </button>
+          </div>
+
+          <div class="auto-sync-toggle-row mt-3">
+            <label class="toggle-label">
+              <input type="checkbox" id="autoSyncCheckbox" onchange="onAutoSyncToggle()">
+              <span>時間割や予定を変更したとき、自動でスプレッドシートにバックグラウンド保存する</span>
+            </label>
+          </div>
+
+          <!-- セットアップ手順ガイド -->
+          <div class="setup-guide-card mt-4">
+            <div class="guide-header">
+              <h4><i class="fa-solid fa-book-open-reader text-warning"></i> 1分で完了する連携手順（Googleスプレッドシートの準備）</h4>
+            </div>
+            <ol class="guide-steps">
+              <li>Googleドライブで新しい <strong>Googleスプレッドシート</strong> を1枚作成します（名前は何でもOK）。</li>
+              <li>画面上部のメニュー <strong>「拡張機能」 ➔ 「Apps Script」</strong> を開きます。</li>
+              <li>表示されたエディタの内容を全消去し、フォルダ内の <code>gas/google_apps_script.js</code> のコードをまるごと貼り付けて保存（Ctrl+S）。</li>
+              <li>右上の <strong>「デプロイ」 ➔ 「新しいデプロイ」</strong> を押し、種類の歯車から <strong>「ウェブアプリ」</strong> を選択：
+                <ul class="sub-steps">
+                  <li>次のユーザーとして実行: <strong>自分</strong></li>
+                  <li>アクセスできるユーザー: <strong>全員</strong>（※URLを知っている本人のみ通信）</li>
+                </ul>
+              </li>
+              <li>発行された <strong>「ウェブアプリのURL」</strong> をコピーし、上の入力欄に貼り付けて「読み込む」または「書き出す」を押せば完了です！</li>
+            </ol>
+            <div class="guide-footer-tip">
+              <i class="fa-solid fa-circle-check text-emerald"></i> これにより、iPadやスマホ、別のPCからでもスプレッドシートを通じて同じ時間割・週案データが常時自動同期され、生涯の教育資産として蓄積されます！
+            </div>
+          </div>
+        </div>
+        <div class="slot-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeCloudSyncModal()">閉じる</button>
+          <button type="button" class="btn btn-primary" onclick="saveGasUrlSettings()">
+            <i class="fa-solid fa-check"></i> URL設定を保存
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- TAB 2: 授業プリント (ブロック型ワークシート工房) -->
+    <!-- ============================================== -->
+    <section id="tab-worksheet" class="tab-pane">
+      <div class="worksheet-workspace">
+        
+        <!-- 左サイドバー: 構成ブロック操作 & ツールパレット -->
+        <aside class="sidebar-panel no-print">
+          <div class="page-top-nav-compact mb-2">
+            <button class="back-home-btn-sm" onclick="switchTab('home')">
+              <i class="fa-solid fa-arrow-left"></i> ホーム
+            </button>
+          </div>
+
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-cubes"></i> ブロック追加</h3>
+            <span class="badge">レゴ方式</span>
+          </div>
+          <p class="panel-desc">授業の流れに合わせてパーツを追加・並び替えできます。</p>
+          
+          <div class="block-palette">
+            <button class="palette-item" onclick="addBlock('objective')">
+              <i class="fa-solid fa-bullseye"></i>
+              <div>
+                <strong>本時のめあて</strong>
+                <span>学習目標の囲み枠</span>
+              </div>
+            </button>
+            <button class="palette-item" onclick="addBlock('review')">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              <div>
+                <strong>導入・前時の復習</strong>
+                <span>つまずき確認・小問</span>
+              </div>
+            </button>
+            <button class="palette-item" onclick="addBlock('question')">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <div>
+                <strong>問い・課題</strong>
+                <span>計算・思考・解答スペース</span>
+              </div>
+            </button>
+            <button class="palette-item" onclick="addBlock('graph-block')">
+              <i class="fa-solid fa-chart-line"></i>
+              <div>
+                <strong>関数・グラフ枠</strong>
+                <span>方眼紙・座標平面付き</span>
+              </div>
+            </button>
+            <button class="palette-item" onclick="addBlock('geometry-block')">
+              <i class="fa-solid fa-draw-polygon"></i>
+              <div>
+                <strong>図形問題枠</strong>
+                <span>図形スペース・角度など</span>
+              </div>
+            </button>
+            <button class="palette-item" onclick="addBlock('summary')">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div>
+                <strong>まとめ</strong>
+                <span>本時の公式・重要ポイント</span>
+              </div>
+            </button>
+            <button class="palette-item" onclick="addBlock('reflection')">
+              <i class="fa-solid fa-star"></i>
+              <div>
+                <strong>振り返り・自己評価</strong>
+                <span>3段階評価と記述欄</span>
+              </div>
+            </button>
+          </div>
+
+          <div class="panel-section mt-4">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-sliders"></i> プリント設定</h3>
+            </div>
+            <div class="form-group">
+              <label>対象学年・単元</label>
+              <select id="sheetGradeUnit" class="form-control" onchange="onGradeUnitChange()">
+                <option value="中2: 一次関数 (変化の割合・グラフ)">中2: 一次関数 (変化の割合・グラフ)</option>
+                <option value="中2: 平行線と角 (錯角・同位角)">中2: 平行線と角 (錯角・同位角)</option>
+                <option value="中3: 平方根の計算">中3: 平方根の計算</option>
+                <option value="中3: 円周角の定理">中3: 円周角の定理</option>
+                <option value="中1: 一次方程式の解き方">中1: 一次方程式の解き方</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>プリント番号 / 通し番号</label>
+              <input type="text" id="sheetNumber" class="form-control" value="No. 14">
+            </div>
+          </div>
+
+          <div class="action-buttons-group mt-4">
+            <button class="btn btn-primary btn-block" onclick="window.print()">
+              <i class="fa-solid fa-print"></i> 印刷 / PDF保存 (A4)
+            </button>
+            <button class="btn btn-outline btn-block" onclick="loadSampleSheet()">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> 授業例テンプレート読込
+            </button>
+            <button class="btn btn-ghost btn-block text-danger" onclick="clearWorksheet()">
+              <i class="fa-solid fa-trash-can"></i> 全ブロック初期化
+            </button>
+          </div>
+        </aside>
+
+        <!-- 中央: A4用紙実物プレビュー領域 -->
+        <div class="paper-container">
+          <div class="paper-toolbar no-print">
+            <div class="paper-status">
+              <span class="status-indicator"></span>
+              <span>A4 縦レイアウト (自動レイアウト調整中)</span>
+            </div>
+            <div class="paper-actions">
+              <button class="btn btn-sm btn-ghost" onclick="toggleAnswerMode()" id="answerModeBtn">
+                <i class="fa-solid fa-eye"></i> 解答表示切替
+              </button>
+            </div>
+          </div>
+
+          <!-- 実際の印刷用紙 (A4サイズ) -->
+          <div class="sheet-paper" id="printableSheet">
+            
+            <!-- シートヘッダー -->
+            <div class="sheet-header">
+              <div class="sheet-title-area">
+                <span class="sheet-badge" id="paperGradeBadge">第2学年 数学科 授業プリント</span>
+                <h2 class="sheet-title" contenteditable="true" id="paperTitle">一次関数のグラフと傾き・切片</h2>
+              </div>
+              <div class="sheet-meta-area">
+                <div class="sheet-no" contenteditable="true" id="paperNoDisplay">No. 14</div>
+                <div class="sheet-student-info">
+                  <div class="info-cell class-cell">2年 <span class="blank-line" contenteditable="true">　</span>組</div>
+                  <div class="info-cell num-cell">番　氏名: <span class="blank-line-name" contenteditable="true">　　　　　　　　</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ブロックコンテナ (並び替え・編集可能) -->
+            <div class="blocks-container" id="blocksContainer">
+              <!-- JSで動的にブロックが配置されます -->
+            </div>
+
+            <!-- シートフッター -->
+            <div class="sheet-footer">
+              <span>中学校 数学科ワークシート</span>
+              <span id="footerLessonCode">M2-U3-L14</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右サイドバー: 「授業後メモ・PDCA改善ログ」 -->
+        <aside class="sidebar-panel pdca-panel no-print">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-pen-ruler"></i> 授業改善ログ (PDCA)</h3>
+            <span class="badge badge-success">先生専用メモ</span>
+          </div>
+          <p class="panel-desc">※印刷には含まれません。授業後の気づきや来年への反省をこのプリントに紐付けて記録できます。</p>
+
+          <div class="pdca-box">
+            <div class="pdca-item">
+              <label><i class="fa-solid fa-chalkboard-user"></i> 1組での生徒の反応・つまずき</label>
+              <textarea id="memoClass1" class="form-control memo-textarea" placeholder="例: 問2で切片が負の数になった時に符号ミスが多発。導入でマイナスの復習を一言挟むと良かった。"></textarea>
+            </div>
+            
+            <div class="pdca-item">
+              <label><i class="fa-solid fa-hourglass-half"></i> 時間配分のメモ</label>
+              <textarea id="memoTiming" class="form-control memo-textarea" placeholder="例: めあて+導入10分、問1〜2で20分、グループワーク10分、まとめ10分でちょうどだった。"></textarea>
+            </div>
+
+            <div class="pdca-item">
+              <label><i class="fa-solid fa-seedling"></i> 次の授業・来年への改善案</label>
+              <textarea id="memoNext" class="form-control memo-textarea" placeholder="例: 問3は発展なので時間がないクラスはスキップ可にする。"></textarea>
+            </div>
+
+            <button class="btn btn-secondary btn-block mt-3" onclick="savePdcaMemo()">
+              <i class="fa-solid fa-floppy-disk"></i> このプリントのメモを保存
+            </button>
+            <div id="saveNotification" class="save-status">自動保存されました</div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 3: 練習プリント・小テスト (5分テスト・問題集) -->
+    <!-- ============================================== -->
+    <section id="tab-practice-test" class="tab-pane">
+      <div class="test-gen-container">
+        
+        <div class="page-top-nav no-print">
+          <button class="back-home-btn" onclick="switchTab('home')">
+            <i class="fa-solid fa-arrow-left"></i> ホームに戻る
+          </button>
+          <h2><i class="fa-solid fa-calculator text-emerald"></i> 練習プリント & 5分間確認テスト自動生成</h2>
+        </div>
+
+        <div class="test-config-card">
+          <h3><i class="fa-solid fa-bolt text-warning"></i> 出題設定</h3>
+          <p class="subtitle">学年と単元を選択するだけで、問題用紙と解答がワンクリックでランダム生成されます。</p>
+          
+          <div class="test-config-grid">
+            <div class="form-group">
+              <label>対象学年</label>
+              <select id="testGrade" class="form-control" onchange="updateTestUnitOptions()">
+                <option value="1">中1</option>
+                <option value="2" selected>中2</option>
+                <option value="3">中3</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>出題単元</label>
+              <select id="testUnit" class="form-control" onchange="generateQuickTest()">
+                <!-- JSで動的更新 -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label>問題数</label>
+              <select id="testCount" class="form-control" onchange="generateQuickTest()">
+                <option value="4">4問 (じっくり型)</option>
+                <option value="6" selected>6問 (標準・5分テスト)</option>
+                <option value="8">8問 (計算スピード練習)</option>
+              </select>
+            </div>
+            <div class="form-group align-self-end">
+              <button class="btn btn-primary btn-block" onclick="generateQuickTest()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> 別の数値を再生成
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-preview-dual">
+          <div class="test-preview-box">
+            <div class="test-box-header">
+              <h4><i class="fa-solid fa-file-lines"></i> 生徒用 練習プリント (プレビュー)</h4>
+              <button class="btn btn-sm btn-outline" onclick="window.print()">
+                <i class="fa-solid fa-print"></i> 印刷
+              </button>
+            </div>
+            <div class="test-paper-mock" id="testStudentPaper">
+              <!-- 問題がここに表示 -->
+            </div>
+          </div>
+
+          <div class="test-preview-box">
+            <div class="test-box-header">
+              <h4><i class="fa-solid fa-square-check text-success"></i> 先生用 模範解答</h4>
+              <button class="btn btn-sm btn-outline" onclick="window.print()">
+                <i class="fa-solid fa-print"></i> 印刷
+              </button>
+            </div>
+            <div class="test-paper-mock" id="testAnswerPaper">
+              <!-- 解答がここに表示 -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 4: 作図・グラフジェネレーター (SVG動的作図) -->
+    <!-- ============================================== -->
+    <section id="tab-math-tools" class="tab-pane">
+      <div class="tools-container">
+        
+        <div class="page-top-nav no-print">
+          <button class="back-home-btn" onclick="switchTab('home')">
+            <i class="fa-solid fa-arrow-left"></i> ホームに戻る
+          </button>
+          <h2><i class="fa-solid fa-shapes text-purple"></i> 作図・グラフジェネレーター</h2>
+        </div>
+
+        <div class="tools-grid-container">
+          
+          <!-- ツール1: 一次関数グラフ作成 & 問題生成 -->
+          <div class="tool-card">
+            <div class="tool-card-header">
+              <div class="tool-title">
+                <i class="fa-solid fa-chart-line text-primary"></i>
+                <h3>一次関数グラフ・方眼紙ジェネレーター</h3>
+              </div>
+              <span class="badge">中2 関数</span>
+            </div>
+            <div class="tool-body">
+              <div class="control-row">
+                <div class="control-col">
+                  <label>直線の式: <span class="math-preview" id="linearEqPreview">y = 2x + 1</span></label>
+                  <div class="input-inline">
+                    <span>傾き a = </span>
+                    <input type="number" id="funcA" value="2" step="0.5" class="form-control form-control-sm" onchange="renderLinearGraph()">
+                    <span>切片 b = </span>
+                    <input type="number" id="funcB" value="1" step="1" class="form-control form-control-sm" onchange="renderLinearGraph()">
+                  </div>
+                </div>
+                <div class="control-col">
+                  <label>表示設定</label>
+                  <div class="checkbox-group">
+                    <label><input type="checkbox" id="showPointsCheck" checked onchange="renderLinearGraph()"> 切片・整数点を表示</label>
+                    <label><input type="checkbox" id="showLineCheck" checked onchange="renderLinearGraph()"> 直線を描画 (解答用)</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SVG 描画プレビュー -->
+              <div class="svg-canvas-wrapper" id="linearGraphContainer">
+                <!-- SVGがここに描画される -->
+              </div>
+
+              <div class="tool-actions">
+                <button class="btn btn-outline btn-sm" onclick="randomizeLinear()">
+                  <i class="fa-solid fa-shuffle"></i> 整数になる数値をランダム生成
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="insertGraphToWorksheet()">
+                  <i class="fa-solid fa-arrow-down-to-bracket"></i> 授業プリントに挿入
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ツール2: 平面図形（平行線と角・三角形・円周角） -->
+          <div class="tool-card">
+            <div class="tool-card-header">
+              <div class="tool-title">
+                <i class="fa-solid fa-shapes text-accent"></i>
+                <h3>図形・角度問題ジェネレーター</h3>
+              </div>
+              <span class="badge">中2・中3 図形</span>
+            </div>
+            <div class="tool-body">
+              <div class="control-row">
+                <div class="control-col">
+                  <label>問題パターン</label>
+                  <select id="geometryPattern" class="form-control form-control-sm" onchange="renderGeometryFig()">
+                    <option value="parallel_chevron">平行線と折れ線の角 (くの字型)</option>
+                    <option value="triangle_exterior">三角形の内角と外角 (スリッパの法則)</option>
+                    <option value="inscribed_angle">円周角と中心角の定理</option>
+                  </select>
+                </div>
+                <div class="control-col">
+                  <label id="geoParamLabel">角度パラメータ</label>
+                  <div class="input-inline">
+                    <span>角1 = </span>
+                    <input type="number" id="geoAngle1" value="45" min="20" max="80" step="5" class="form-control form-control-sm" onchange="renderGeometryFig()">
+                    <span>°　角2 = </span>
+                    <input type="number" id="geoAngle2" value="35" min="20" max="80" step="5" class="form-control form-control-sm" onchange="renderGeometryFig()">
+                    <span>°</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SVG 描画プレビュー -->
+              <div class="svg-canvas-wrapper" id="geometryContainer">
+                <!-- SVGがここに描画される -->
+              </div>
+
+              <div class="tool-actions">
+                <div class="calc-answer">
+                  求める角 <span class="math">x</span> = <strong id="geoAnswerDisplay">80°</strong>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="insertGeometryToWorksheet()">
+                  <i class="fa-solid fa-arrow-down-to-bracket"></i> 授業プリントに挿入
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 5: 指導進度 & 授業改善メモ (蓄積データベース) -->
+    <!-- ============================================== -->
+    <section id="tab-progress-log" class="tab-pane">
+      <div class="progress-dashboard">
+        
+        <div class="page-top-nav no-print">
+          <button class="back-home-btn" onclick="switchTab('home')">
+            <i class="fa-solid fa-arrow-left"></i> ホームに戻る
+          </button>
+          <h2><i class="fa-solid fa-book-bookmark text-amber"></i> 指導進度 & 授業改善メモ (ナレッジベース)</h2>
+        </div>
+
+        <div class="progress-summary-row">
+          <div class="stat-card">
+            <div class="stat-icon bg-blue"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">中2 数学 (全クラス平均進度)</span>
+              <strong class="stat-value">第 3 単元 (62%)</strong>
+              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 62%;"></div></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-emerald"><i class="fa-solid fa-stopwatch-20"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">次回 定期テストまで</span>
+              <strong class="stat-value">残り 18 授業コマ</strong>
+              <span class="stat-sub">目標範囲: 1次関数の利用まで</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon bg-purple"><i class="fa-solid fa-lightbulb"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">蓄積された授業改善メモ</span>
+              <strong class="stat-value" id="savedMemosCount">2 件</strong>
+              <span class="stat-sub">来年度の指導案に活用可能</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="memos-list-section">
+          <div class="section-header">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> 単元別 授業改善メモ一覧 (つまずき・実践知)</h3>
+            <span class="badge">実践ナレッジ</span>
+          </div>
+
+          <div class="memos-grid" id="memosHistoryGrid">
+            <!-- 保存されたメモがカード形式で表示されます -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 授業用ポップアップ・フルスクリーンタイマーモーダル -->
+  <div id="timerModal" class="modal-overlay hidden">
+    <div class="timer-modal-content">
+      <div class="timer-header">
+        <h3><i class="fa-solid fa-stopwatch"></i> 授業用タイマー</h3>
+        <button class="modal-close-btn" onclick="closeTimerModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="timer-display-huge" id="timerDisplayHuge">
+        10:00
+      </div>
+      <div class="timer-controls">
+        <button class="btn btn-outline" onclick="adjustTimer(-60)">-1分</button>
+        <button class="btn btn-outline" onclick="adjustTimer(60)">+1分</button>
+        <button class="btn btn-outline" onclick="adjustTimer(300)">+5分</button>
+        <button class="btn btn-secondary" onclick="resetTimer()">リセット</button>
+        <button class="btn btn-primary" id="timerStartBtn" onclick="toggleTimer()">スタート</button>
+      </div>
+      <div class="timer-presets">
+        <button class="preset-btn" onclick="setTimerSeconds(180)">3分 (小テスト)</button>
+        <button class="preset-btn" onclick="setTimerSeconds(300)">5分 (個人思考)</button>
+        <button class="preset-btn" onclick="setTimerSeconds(600)">10分 (ペア・グループ)</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
