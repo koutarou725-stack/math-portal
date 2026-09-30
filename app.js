@@ -31,10 +31,19 @@ function createEmptyBaseTimetable() {
   return tt;
 }
 
-// 2. 期別ベース時間割（マスター: 初期は完全な空っぽ白紙）
+// 2. 期別ベース時間割（マスター）
+const defaultTermsList = [
+  { id: '2027_second', label: '2027年度 後期基本時間割' },
+  { id: '2027_first', label: '2027年度 前期基本時間割' },
+  { id: '2026_second', label: '2026年度 後期基本時間割' },
+  { id: '2026_first', label: '2026年度 前期基本時間割' },
+  { id: '2025_second', label: '2025年度 後期基本時間割' },
+  { id: '2025_first', label: '2025年度 前期基本時間割' }
+];
+
 const defaultBaseTimetables = {
-  first_term: createEmptyBaseTimetable(),
-  second_term: createEmptyBaseTimetable()
+  '2026_first': createEmptyBaseTimetable(),
+  '2026_second': createEmptyBaseTimetable()
 };
 
 // 3. 特時・日課振替（初期は空っぽ）
@@ -65,8 +74,9 @@ const state = {
   
   // 3層時間割データ
   bellSettings: loadStorage('math_portal_bell_settings', defaultBellSettings),
+  termsList: loadStorage('math_portal_terms_list', defaultTermsList),
   baseTimetables: loadStorage('math_portal_base_timetables', defaultBaseTimetables),
-  currentTerm: localStorage.getItem('math_portal_current_term') || 'first_term',
+  currentTerm: localStorage.getItem('math_portal_current_term') || '2026_first',
   dateOverrides: loadStorage('math_portal_date_overrides', defaultOverrides),
   currentWeekOffset: 0,
   editingSlot: { period: 1, dayKey: 'mon' },
@@ -112,6 +122,16 @@ const state = {
   ]
 };
 
+// レガシーキー (first_term, second_term) からの互換マイグレーション
+if (state.currentTerm === 'first_term') state.currentTerm = '2026_first';
+if (state.currentTerm === 'second_term') state.currentTerm = '2026_second';
+if (state.baseTimetables && state.baseTimetables['first_term'] && !state.baseTimetables['2026_first']) {
+  state.baseTimetables['2026_first'] = state.baseTimetables['first_term'];
+}
+if (state.baseTimetables && state.baseTimetables['second_term'] && !state.baseTimetables['2026_second']) {
+  state.baseTimetables['2026_second'] = state.baseTimetables['second_term'];
+}
+
 // ==========================================
 // 初期化
 // ==========================================
@@ -123,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initBellSettingsUI();
   previewBellSchedule();
 
+  renderTermSelector();
   renderRealTimetableGrid();
   renderBaseTimetableGrid();
   renderTodayScheduleMini();
@@ -308,15 +329,180 @@ function saveBellSettings() {
 }
 
 // ==========================================
-// 2. ベース時間割 (マスター) ロジック
+// 2. ベース時間割 (マスター) & 期管理ロジック
 // ==========================================
+
+function renderTermSelector() {
+  const select = document.getElementById('termSelector');
+  if (!select) return;
+
+  // 選択肢の生成
+  select.innerHTML = state.termsList.map(t => `
+    <option value="${t.id}" ${state.currentTerm === t.id ? 'selected' : ''}>${escapeHtml(t.label)}</option>
+  `).join('');
+
+  // もし現在の期がリストに無ければ補正
+  if (!state.termsList.some(t => t.id === state.currentTerm)) {
+    if (state.termsList.length > 0) {
+      state.currentTerm = state.termsList[0].id;
+      select.value = state.currentTerm;
+      localStorage.setItem('math_portal_current_term', state.currentTerm);
+    }
+  }
+}
+
 function onTermChange() {
-  state.currentTerm = document.getElementById('termSelector').value;
+  const select = document.getElementById('termSelector');
+  if (select) state.currentTerm = select.value;
   localStorage.setItem('math_portal_current_term', state.currentTerm);
+
+  // 選択した期の時間割がまだ無ければ空白を生成
+  if (!state.baseTimetables[state.currentTerm]) {
+    state.baseTimetables[state.currentTerm] = createEmptyBaseTimetable();
+    localStorage.setItem('math_portal_base_timetables', JSON.stringify(state.baseTimetables));
+  }
+
   renderBaseTimetableGrid();
   renderRealTimetableGrid();
   renderTodayScheduleMini();
   triggerAutoCloudSync();
+}
+
+function openAddTermModal() {
+  const nowYear = new Date().getFullYear();
+  const yearInput = document.getElementById('newTermYear');
+  if (yearInput) yearInput.value = nowYear + 1; // 来年度をデフォルト推薦
+
+  // コピー元候補の生成
+  const sourceSelect = document.getElementById('newTermSource');
+  if (sourceSelect) {
+    let opts = `<option value="empty">白紙（完全な空っぽ）からスタート</option>`;
+    state.termsList.forEach(t => {
+      opts += `<option value="${t.id}">【${escapeHtml(t.label)}】の時間割をコピーして開始</option>`;
+    });
+    sourceSelect.innerHTML = opts;
+  }
+
+  document.getElementById('addTermModal').classList.remove('hidden');
+}
+
+function closeAddTermModal() {
+  document.getElementById('addTermModal').classList.add('hidden');
+}
+
+function onNewTermTypeChange() {
+  const type = document.getElementById('newTermType').value;
+  const customGroup = document.getElementById('customTermNameGroup');
+  if (customGroup) {
+    if (type === 'custom') customGroup.classList.remove('hidden');
+    else customGroup.classList.add('hidden');
+  }
+}
+
+function saveNewTerm() {
+  const year = document.getElementById('newTermYear').value.trim();
+  const type = document.getElementById('newTermType').value;
+  let termName = type;
+  if (type === 'custom') {
+    const custom = document.getElementById('newTermCustomName').value.trim();
+    termName = custom || '新学期';
+  } else {
+    termName = `${type}基本時間割`;
+  }
+
+  if (!year) {
+    alert('年度（西暦）を入力してください。');
+    return;
+  }
+
+  // ユニークIDとラベル生成
+  const termKey = type === '前期' ? 'first' : type === '後期' ? 'second' : type === '1学期' ? 'sem1' : type === '2学期' ? 'sem2' : type === '3学期' ? 'sem3' : Date.now().toString(36);
+  const newTermId = `${year}_${termKey}`;
+  const newTermLabel = `${year}年度 ${termName}`;
+
+  // 既に存在するかチェック
+  if (state.termsList.some(t => t.id === newTermId)) {
+    if (!confirm(`【${newTermLabel}】は既に存在します。この期に切り替えますか？`)) {
+      return;
+    }
+  } else {
+    state.termsList.unshift({ id: newTermId, label: newTermLabel });
+    localStorage.setItem('math_portal_terms_list', JSON.stringify(state.termsList));
+  }
+
+  // 初期データの準備（白紙 or コピー元）
+  const source = document.getElementById('newTermSource').value;
+  if (!state.baseTimetables[newTermId]) {
+    if (source !== 'empty' && state.baseTimetables[source]) {
+      state.baseTimetables[newTermId] = JSON.parse(JSON.stringify(state.baseTimetables[source]));
+    } else {
+      state.baseTimetables[newTermId] = createEmptyBaseTimetable();
+    }
+    localStorage.setItem('math_portal_base_timetables', JSON.stringify(state.baseTimetables));
+  }
+
+  state.currentTerm = newTermId;
+  localStorage.setItem('math_portal_current_term', state.currentTerm);
+
+  renderTermSelector();
+  renderBaseTimetableGrid();
+  renderRealTimetableGrid();
+  renderTodayScheduleMini();
+  closeAddTermModal();
+  triggerAutoCloudSync();
+
+  showToast(`🎉 【${newTermLabel}】を作成し、選択しました！`);
+}
+
+function openCopyTermModal() {
+  const currentObj = state.termsList.find(t => t.id === state.currentTerm);
+  const labelEl = document.getElementById('copyTargetTermLabel');
+  if (labelEl) labelEl.textContent = currentObj ? currentObj.label : state.currentTerm;
+
+  const select = document.getElementById('copySourceTermSelector');
+  if (select) {
+    const otherTerms = state.termsList.filter(t => t.id !== state.currentTerm);
+    if (otherTerms.length === 0) {
+      alert('コピー元となる他の期がまだ登録されていません。先に「新しい期を追加」してください。');
+      return;
+    }
+    select.innerHTML = otherTerms.map(t => `
+      <option value="${t.id}">${escapeHtml(t.label)}</option>
+    `).join('');
+  }
+
+  document.getElementById('copyTermModal').classList.remove('hidden');
+}
+
+function closeCopyTermModal() {
+  document.getElementById('copyTermModal').classList.add('hidden');
+}
+
+function executeCopyTerm() {
+  const sourceTermId = document.getElementById('copySourceTermSelector').value;
+  if (!sourceTermId || !state.baseTimetables[sourceTermId]) {
+    alert('コピー元の時間割データが見つかりませんでした。');
+    return;
+  }
+
+  const sourceObj = state.termsList.find(t => t.id === sourceTermId);
+  const targetObj = state.termsList.find(t => t.id === state.currentTerm);
+
+  const sourceName = sourceObj ? sourceObj.label : sourceTermId;
+  const targetName = targetObj ? targetObj.label : state.currentTerm;
+
+  if (confirm(`【${sourceName}】の時間割をコピーして、【${targetName}】に上書きしますか？`)) {
+    state.baseTimetables[state.currentTerm] = JSON.parse(JSON.stringify(state.baseTimetables[sourceTermId]));
+    localStorage.setItem('math_portal_base_timetables', JSON.stringify(state.baseTimetables));
+
+    renderBaseTimetableGrid();
+    renderRealTimetableGrid();
+    renderTodayScheduleMini();
+    closeCopyTermModal();
+    triggerAutoCloudSync();
+
+    showToast(`📋 【${sourceName}】から時間割をコピーしました！`);
+  }
 }
 
 function getBaseSlot(dayKey, period) {
@@ -2005,9 +2191,10 @@ function showToast(msg) {
 function exportAllDataBackup() {
   const backupData = {
     appName: '中学数学科ポータル',
-    version: '1.1',
+    version: '1.2',
     exportDate: new Date().toISOString(),
     bellSettings: state.bellSettings,
+    termsList: state.termsList,
     baseTimetables: state.baseTimetables,
     currentTerm: state.currentTerm,
     dateOverrides: state.dateOverrides,
@@ -2050,6 +2237,10 @@ function importBackupFile(event) {
         state.bellSettings = data.bellSettings;
         localStorage.setItem('math_portal_bell_settings', JSON.stringify(data.bellSettings));
       }
+      if (data.termsList && Array.isArray(data.termsList)) {
+        state.termsList = data.termsList;
+        localStorage.setItem('math_portal_terms_list', JSON.stringify(data.termsList));
+      }
       if (data.baseTimetables) {
         state.baseTimetables = data.baseTimetables;
         localStorage.setItem('math_portal_base_timetables', JSON.stringify(data.baseTimetables));
@@ -2081,6 +2272,7 @@ function importBackupFile(event) {
 
       initBellSettingsUI();
       previewBellSchedule();
+      renderTermSelector();
       renderBaseTimetableGrid();
       renderRealTimetableGrid();
       renderTodayScheduleMini();
@@ -2244,6 +2436,10 @@ async function syncFromCloud(isManual = false) {
         state.bellSettings = data.bellSettings;
         localStorage.setItem('math_portal_bell_settings', JSON.stringify(data.bellSettings));
       }
+      if (data.termsList && Array.isArray(data.termsList)) {
+        state.termsList = data.termsList;
+        localStorage.setItem('math_portal_terms_list', JSON.stringify(data.termsList));
+      }
       if (data.baseTimetables) {
         state.baseTimetables = data.baseTimetables;
         localStorage.setItem('math_portal_base_timetables', JSON.stringify(data.baseTimetables));
@@ -2275,6 +2471,7 @@ async function syncFromCloud(isManual = false) {
 
       initBellSettingsUI();
       previewBellSchedule();
+      renderTermSelector();
       renderBaseTimetableGrid();
       renderRealTimetableGrid();
       renderTodayScheduleMini();
@@ -2325,9 +2522,10 @@ async function syncToCloud(isManual = false) {
 
   const payload = {
     appName: '中学数学科ポータル',
-    version: '1.1',
+    version: '1.2',
     exportDate: new Date().toISOString(),
     bellSettings: state.bellSettings,
+    termsList: state.termsList,
     baseTimetables: state.baseTimetables,
     currentTerm: state.currentTerm,
     dateOverrides: state.dateOverrides,

@@ -1359,8 +1359,16 @@ body {
   border-radius: var(--radius-md);
   width: 520px;
   max-width: 92vw;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
   box-shadow: var(--shadow-lg);
   overflow: hidden;
+}
+
+.slot-modal-content.wide-modal {
+  width: 680px;
+  max-width: 94vw;
 }
 
 .batch-modal-content {
@@ -1395,6 +1403,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .slot-modal-footer {

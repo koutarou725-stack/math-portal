@@ -53,33 +53,35 @@ function saveAllData(ss, payload) {
   const metaSheet = getOrCreateSheet(ss, '_system_data');
   metaSheet.getRange('A1').setValue(JSON.stringify(payload));
 
-  // 2. 先生自身が見て確認できる「ベース時間割」シート更新
-  if (payload.baseTimetables) {
-    const ttSheet = getOrCreateSheet(ss, 'ベース時間割(マスター)');
-    ttSheet.clear();
-    ttSheet.getRange('A1:K1').setValues([['校時', '月(クラス)', '月(教科)', '火(クラス)', '火(教科)', '水(クラス)', '水(教科)', '木(クラス)', '木(教科)', '金(クラス)', '金(教科)']]);
-    
-    const rows = [];
-    const term = payload.currentTerm || 'first_term';
-    const tt = payload.baseTimetables[term] || {};
-    const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
-
-    for (let p = 1; p <= 6; p++) {
-      const row = [`${p}限`];
-      days.forEach(d => {
-        const slot = (tt[p] && tt[p][d]) ? tt[p][d] : { class: '', subject: '' };
-        row.push(slot.class || '');
-        row.push(slot.subject || '');
-      });
-      rows.push(row);
-    }
-    if (rows.length > 0) {
-      ttSheet.getRange(2, 1, rows.length, rows[0].length).setValues(rows);
-      ttSheet.getRange('A1:K1').setBackground('#1e40af').setFontColor('#ffffff').setFontWeight('bold');
-    }
+  // 2. 期の名称マッピング生成
+  const termMap = {};
+  if (payload.termsList && Array.isArray(payload.termsList)) {
+    payload.termsList.forEach(t => { termMap[t.id] = t.label; });
   }
 
-  // 3. 先生自身が見て確認できる「週案・学習予定」シート更新
+  const currentTermId = payload.currentTerm || '2026_first';
+  const currentTermLabel = termMap[currentTermId] || (currentTermId === 'first_term' ? '2026年度 前期' : currentTermId === 'second_term' ? '2026年度 後期' : currentTermId);
+
+  // 3. ベース時間割の蓄積保存
+  if (payload.baseTimetables) {
+    // 3-A. 現在（アクティブ）の時間割シート（一番左でいつでもパッと確認できる）
+    const activeTt = payload.baseTimetables[currentTermId] || payload.baseTimetables['first_term'] || {};
+    writeTimetableToSheet(ss, 'ベース時間割(現在)', currentTermLabel, activeTt, '#1e40af');
+
+    // 3-B. 年度・期ごとの個別アーカイブシート（全年度を生涯蓄積！）
+    Object.keys(payload.baseTimetables).forEach(termId => {
+      const tt = payload.baseTimetables[termId];
+      if (!tt) return;
+
+      const label = termMap[termId] || (termId === 'first_term' ? '2026年度 前期' : termId === 'second_term' ? '2026年度 後期' : termId);
+      // シート名に使えない記号をサニタイズ
+      const cleanLabel = label.replace(/[\\/*?:\[\]]/g, '').trim();
+      const tabName = `時間割_${cleanLabel}`;
+      writeTimetableToSheet(ss, tabName, label, tt, '#334155');
+    });
+  }
+
+  // 4. 先生自身が見て確認できる「週案・学習予定」シート更新（時系列で蓄積）
   if (payload.lessonPlans) {
     const planSheet = getOrCreateSheet(ss, '週案・授業進度一覧');
     planSheet.clear();
@@ -96,7 +98,7 @@ function saveAllData(ss, payload) {
     }
   }
 
-  // 4. 授業改善メモシート更新
+  // 5. 授業改善メモシート更新
   if (payload.memos && payload.memos.length > 0) {
     const memoSheet = getOrCreateSheet(ss, '授業改善ナレッジメモ');
     memoSheet.clear();
@@ -105,6 +107,35 @@ function saveAllData(ss, payload) {
     memoSheet.getRange(2, 1, memoRows.length, 5).setValues(memoRows);
     memoSheet.getRange('A1:E1').setBackground('#b45309').setFontColor('#ffffff').setFontWeight('bold');
   }
+}
+
+// 時間割を表形式でシートに書き出す共通ヘルパー関数
+function writeTimetableToSheet(ss, sheetName, termTitle, ttData, headerColor) {
+  const sheet = getOrCreateSheet(ss, sheetName);
+  sheet.clear();
+
+  // タイトル帯
+  sheet.getRange('A1:K1').merge().setValue(`【${termTitle}】 (最終同期: ${new Date().toLocaleString('ja-JP')})`)
+    .setFontWeight('bold').setBackground('#f8fafc').setFontColor('#0f172a');
+
+  // 列見出し
+  sheet.getRange('A2:K2').setValues([['校時', '月(クラス)', '月(教科)', '火(クラス)', '火(教科)', '水(クラス)', '水(教科)', '木(クラス)', '木(教科)', '金(クラス)', '金(教科)']]);
+  sheet.getRange('A2:K2').setBackground(headerColor || '#1e40af').setFontColor('#ffffff').setFontWeight('bold');
+
+  const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
+  const rows = [];
+  for (let p = 1; p <= 6; p++) {
+    const row = [`${p}限`];
+    days.forEach(d => {
+      const slot = (ttData && ttData[p] && ttData[p][d]) ? ttData[p][d] : { class: '', subject: '' };
+      row.push(slot.class || '');
+      row.push(slot.subject || '');
+    });
+    rows.push(row);
+  }
+
+  sheet.getRange(3, 1, rows.length, 11).setValues(rows);
+  sheet.getRange(2, 1, rows.length + 1, 11).setBorder(true, true, true, true, true, true, '#cbd5e1', SpreadsheetApp.BorderStyle.SOLID);
 }
 
 function getOrCreateSheet(ss, name) {

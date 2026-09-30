@@ -351,16 +351,21 @@
             <div class="form-inline-group">
               <label><strong>対象の期:</strong></label>
               <select id="termSelector" class="form-control form-control-sm" onchange="onTermChange()">
-                <option value="first_term">2026年度 前期基本時間割</option>
-                <option value="second_term">2026年度 後期基本時間割</option>
+                <!-- JSで動的に全年度・期を自動生成 -->
               </select>
+              <button class="btn btn-sm btn-outline" onclick="openAddTermModal()" title="新しい年度・学期を追加">
+                <i class="fa-solid fa-plus"></i> 新しい期を追加
+              </button>
             </div>
             <div class="tt-actions">
               <button class="btn btn-sm btn-primary" onclick="openTimetableBatchModal()">
                 <i class="fa-solid fa-pen-to-square"></i> ベースを一括編集
               </button>
+              <button class="btn btn-sm btn-outline" onclick="openCopyTermModal()" title="過去の学期から時間割をコピーして今期に適用">
+                <i class="fa-solid fa-copy"></i> 他の期から複製
+              </button>
               <button class="btn btn-sm btn-outline text-danger" onclick="resetTimetableDefault()" title="現在の期の全コマを空欄にします">
-                <i class="fa-solid fa-trash-can"></i> 全コマをクリア (白紙)
+                <i class="fa-solid fa-trash-can"></i> 白紙クリア
               </button>
             </div>
           </div>
@@ -604,8 +609,11 @@
 
           <div class="form-group">
             <label><strong>Google Apps Script (GAS) ウェブアプリURL</strong></label>
-            <div class="input-with-action">
+            <div class="input-with-action" style="display: flex; gap: 0.5rem;">
               <input type="url" id="gasUrlInput" class="form-control" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+              <button type="button" class="btn btn-primary" onclick="saveGasUrlSettings()" style="white-space: nowrap;">
+                <i class="fa-solid fa-floppy-disk"></i> 保存
+              </button>
             </div>
             <span class="sub-tip">※スプレッドシートから発行したURLを貼り付けます。一度設定すれば次回から自動同期されます。</span>
           </div>
@@ -655,6 +663,82 @@
           <button type="button" class="btn btn-outline" onclick="closeCloudSyncModal()">閉じる</button>
           <button type="button" class="btn btn-primary" onclick="saveGasUrlSettings()">
             <i class="fa-solid fa-check"></i> URL設定を保存
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 新しい年度・期追加モーダル -->
+    <div id="addTermModal" class="modal-overlay hidden">
+      <div class="slot-modal-content">
+        <div class="slot-modal-header">
+          <h3><i class="fa-solid fa-calendar-plus text-primary"></i> 新しい年度・期の追加</h3>
+          <button class="modal-close-btn" onclick="closeAddTermModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="slot-modal-body">
+          <div class="form-group">
+            <label><strong>年度 (西暦)</strong></label>
+            <input type="number" id="newTermYear" class="form-control" value="2027" min="2020" max="2040">
+          </div>
+          <div class="form-group">
+            <label><strong>学期・期名</strong></label>
+            <select id="newTermType" class="form-control" onchange="onNewTermTypeChange()">
+              <option value="前期">前期基本時間割</option>
+              <option value="後期">後期基本時間割</option>
+              <option value="1学期">1学期基本時間割</option>
+              <option value="2学期">2学期基本時間割</option>
+              <option value="3学期">3学期基本時間割</option>
+              <option value="通年">通年基本時間割</option>
+              <option value="custom">その他 (直接入力)</option>
+            </select>
+          </div>
+          <div class="form-group hidden" id="customTermNameGroup">
+            <label><strong>任意の期名</strong></label>
+            <input type="text" id="newTermCustomName" class="form-control" placeholder="例: 前期後半 など">
+          </div>
+          <div class="form-group">
+            <label><strong>初期時間割データ</strong></label>
+            <select id="newTermSource" class="form-control">
+              <option value="empty">白紙（完全な空っぽ）からスタート</option>
+              <!-- 既存の期からコピーする選択肢を動的生成 -->
+            </select>
+            <span class="sub-tip">※既存の学期の時間割を引き継いで、少しだけコマを変更したい時に便利です。</span>
+          </div>
+        </div>
+        <div class="slot-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeAddTermModal()">キャンセル</button>
+          <button type="button" class="btn btn-primary" onclick="saveNewTerm()">
+            <i class="fa-solid fa-check"></i> この期を追加して切り替え
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 他学期から時間割コピーモーダル -->
+    <div id="copyTermModal" class="modal-overlay hidden">
+      <div class="slot-modal-content">
+        <div class="slot-modal-header">
+          <h3><i class="fa-solid fa-copy text-primary"></i> 時間割のコピー・複製</h3>
+          <button class="modal-close-btn" onclick="closeCopyTermModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="slot-modal-body">
+          <p style="font-size: 0.88rem; color: #475569;">
+            他の年度や学期に登録した時間割の内容を、現在選択中の期（<strong id="copyTargetTermLabel" class="text-primary"></strong>）にコピーします。
+          </p>
+          <div class="form-group mt-2">
+            <label><strong>コピー元の期（時間割データ）</strong></label>
+            <select id="copySourceTermSelector" class="form-control">
+              <!-- 動的生成 -->
+            </select>
+          </div>
+          <div class="alert-box alert-warning mt-2" style="font-size: 0.8rem; padding: 0.65rem 0.85rem; border-radius: 4px; background: #fffbeb; border: 1px solid #fef3c7; color: #92400e;">
+            <i class="fa-solid fa-triangle-exclamation"></i> ※コピーを実行すると、現在選択中の期の時間割内容は上書きされます。
+          </div>
+        </div>
+        <div class="slot-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeCopyTermModal()">キャンセル</button>
+          <button type="button" class="btn btn-primary" onclick="executeCopyTerm()">
+            <i class="fa-solid fa-check"></i> コピーして適用
           </button>
         </div>
       </div>
