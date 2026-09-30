@@ -2216,9 +2216,16 @@ function disconnectCloudSync() {
 
 // クラウドからデータ取得 (GET)
 async function syncFromCloud(isManual = false) {
+  const urlInput = document.getElementById('gasUrlInput');
+  if (urlInput && urlInput.value.trim()) {
+    state.cloudSettings.gasUrl = urlInput.value.trim();
+    localStorage.setItem('math_portal_gas_url', state.cloudSettings.gasUrl);
+    updateCloudStatusUI();
+  }
+
   const url = state.cloudSettings.gasUrl;
   if (!url) {
-    if (isManual) alert('先にGoogle Apps ScriptのウェブアプリURLを設定してください。');
+    if (isManual) alert('先にGoogle Apps ScriptのウェブアプリURLを入力してください。');
     return;
   }
 
@@ -2299,9 +2306,16 @@ async function syncFromCloud(isManual = false) {
 
 // クラウドへデータ送信 (POST)
 async function syncToCloud(isManual = false) {
+  const urlInput = document.getElementById('gasUrlInput');
+  if (urlInput && urlInput.value.trim()) {
+    state.cloudSettings.gasUrl = urlInput.value.trim();
+    localStorage.setItem('math_portal_gas_url', state.cloudSettings.gasUrl);
+    updateCloudStatusUI();
+  }
+
   const url = state.cloudSettings.gasUrl;
   if (!url) {
-    if (isManual) alert('先にGoogle Apps ScriptのウェブアプリURLを設定してください。');
+    if (isManual) alert('先にGoogle Apps ScriptのウェブアプリURLを入力してください。');
     return;
   }
 
