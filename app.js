@@ -521,7 +521,7 @@ function getSubjectThemeClass(subjectName) {
   if (s === '道徳' || s.includes('道徳')) return 'theme-morality';
   if (s === '学活' || s.includes('学活') || s.includes('HR') || s.includes('ホームルーム') || s.includes('生徒会')) return 'theme-homeroom';
   if (s === '総合' || s.includes('総合') || s.includes('探究')) return 'theme-integrated';
-  if (s === '会議' || s.includes('会議') || s.includes('学年') || s.includes('校務') || s.includes('部会') || s.includes('研修')) return 'theme-meeting';
+  if (s === '会議' || s.includes('会議') || s.includes('学年') || s.includes('校務') || s.includes('部会') || s.includes('研修') || s.includes('儀式') || s.includes('式典')) return 'theme-meeting';
   return 'theme-other';
 }
 
@@ -641,6 +641,15 @@ function getActualSlotsForDate(dateStr, dayKey) {
         isOverridden: true,
         sourceCode: 'カット'
       };
+    } else if (sourceCode.startsWith('special_')) {
+      const specialName = sourceCode.replace('special_', '');
+      slots[p] = {
+        class: '',
+        subject: specialName,
+        type: 'special',
+        isOverridden: true,
+        sourceCode: specialName
+      };
     } else {
       const [srcDay, srcPeriod] = sourceCode.split('_');
       const baseSlot = getBaseSlot(srcDay, Number(srcPeriod));
@@ -657,6 +666,9 @@ function getActualSlotsForDate(dateStr, dayKey) {
 
 function formatSourceCodeName(code) {
   if (!code || code === 'none') return '';
+  if (code.startsWith('special_')) {
+    return code.replace('special_', '');
+  }
   const dayMap = { mon: '月', tue: '火', wed: '水', thu: '木', fri: '金' };
   const [d, p] = code.split('_');
   return `${dayMap[d] || d}${p}`;
@@ -768,13 +780,16 @@ function renderRealTimetableGrid() {
       const isMath = (slot.subject === '数学' || (slot.subject && slot.subject.includes('数学')));
       const planKey = `${w.dateStr}_${t.p}`;
       const currentPlan = state.lessonPlans[planKey] || '';
+      const isSpecial = slot.type === 'special';
+      const badgeText = isSpecial ? `⚡ ${slot.sourceCode}` : (slot.isOverridden ? `⚡ ${slot.sourceCode} 振替` : slot.sourceCode);
+      const isShiftBadge = isSpecial || slot.isOverridden;
 
       return `
         <td class="${activeClass}">
           <div class="timetable-cell-content ${themeClass}">
             <div>
-              ${slot.isOverridden ? `<span class="override-badge">⚡ ${slot.sourceCode} 振替</span>` : `<span class="slot-code-badge">${slot.sourceCode}</span>`}
-              <div class="tt-class-name">${escapeHtml(slot.class)}</div>
+              <span class="${isShiftBadge ? 'override-badge' : 'slot-code-badge'}">${badgeText}</span>
+              ${slot.class ? `<div class="tt-class-name">${escapeHtml(slot.class)}</div>` : ''}
               <div><span class="tt-subject-badge">${escapeHtml(slot.subject)}</span></div>
             </div>
 
@@ -860,12 +875,24 @@ function renderWeekOverrideColumns(weekDays) {
         for (let pOpt = 1; pOpt <= 6; pOpt++) {
           const val = `${day.code}_${pOpt}`;
           const isSelected = (val === currentVal) ? 'selected' : '';
-          const baseInfo = getBaseSlot(day.code, pOpt);
-          const classLabel = baseInfo.class ? ` (${baseInfo.class})` : '';
-          opts += `<option value="${val}" ${isSelected}>${day.label}${pOpt}${classLabel}</option>`;
+          opts += `<option value="${val}" ${isSelected}>${day.label}${pOpt}</option>`;
         }
         optGroupsHtml += `<optgroup label="${day.label}曜">${opts}</optgroup>`;
       });
+
+      const specialOptions = [
+        { code: 'special_総合', label: '総合' },
+        { code: 'special_学活', label: '学活' },
+        { code: 'special_学年', label: '学年' },
+        { code: 'special_儀式', label: '儀式' },
+        { code: 'special_道徳', label: '道徳' }
+      ];
+      let specialOpts = '';
+      specialOptions.forEach(sp => {
+        const isSelected = (sp.code === currentVal) ? 'selected' : '';
+        specialOpts += `<option value="${sp.code}" ${isSelected}>${sp.label}</option>`;
+      });
+      optGroupsHtml += `<optgroup label="特活・行事・道徳">${specialOpts}</optgroup>`;
       optGroupsHtml += `<optgroup label="その他"><option value="none" ${isCut ? 'selected' : ''}>（カット）</option></optgroup>`;
 
       slotsHtml += `
@@ -1019,9 +1046,9 @@ function renderTodayScheduleMini() {
       html += `
         <div class="mini-slot-card" onclick="goToLessonPrep('${slot.class}', '${slot.subject}')">
           <span class="slot-period">${p}限</span>
-          <span class="slot-class">${slot.class}</span>
+          ${slot.class ? `<span class="slot-class">${slot.class}</span>` : ''}
           <span class="slot-subject">${slot.subject}</span>
-          ${slot.isOverridden ? `<span class="override-badge" style="font-size: 0.65rem;">${slot.sourceCode}振替</span>` : ''}
+          ${slot.isOverridden ? `<span class="override-badge" style="font-size: 0.65rem;">${slot.type === 'special' ? slot.sourceCode : slot.sourceCode + '振替'}</span>` : ''}
           <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem; color: #94a3b8;"></i>
         </div>
       `;

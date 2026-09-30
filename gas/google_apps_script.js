@@ -107,6 +107,42 @@ function saveAllData(ss, payload) {
     memoSheet.getRange(2, 1, memoRows.length, 5).setValues(memoRows);
     memoSheet.getRange('A1:E1').setBackground('#b45309').setFontColor('#ffffff').setFontWeight('bold');
   }
+
+  // 6. 各週の日程・校時振替一覧シート更新（先生が見てパッと確認できる専用シート）
+  if (payload.dateOverrides) {
+    const overrideSheet = getOrCreateSheet(ss, '校時振替・特時履歴');
+    overrideSheet.clear();
+    overrideSheet.getRange('A1:H1').setValues([['日付', '行事・メモ', '1限', '2限', '3限', '4限', '5限', '6限']]);
+    
+    const dates = Object.keys(payload.dateOverrides).sort();
+    const rows = dates.map(dStr => {
+      const item = payload.dateOverrides[dStr];
+      const slots = item.slots || {};
+      const formatSlot = (val) => {
+        if (!val) return '';
+        if (val === 'none') return 'カット';
+        if (val.startsWith('special_')) return val.replace('special_', '');
+        const dayMap = { mon: '月', tue: '火', wed: '水', thu: '木', fri: '金' };
+        const [d, p] = val.split('_');
+        return `${dayMap[d] || d}${p}`;
+      };
+      return [
+        dStr,
+        item.memo || '',
+        formatSlot(slots[1]),
+        formatSlot(slots[2]),
+        formatSlot(slots[3]),
+        formatSlot(slots[4]),
+        formatSlot(slots[5]),
+        formatSlot(slots[6])
+      ];
+    });
+
+    if (rows.length > 0) {
+      overrideSheet.getRange(2, 1, rows.length, 8).setValues(rows);
+      overrideSheet.getRange('A1:H1').setBackground('#4338ca').setFontColor('#ffffff').setFontWeight('bold');
+    }
+  }
 }
 
 // 時間割を表形式でシートに書き出す共通ヘルパー関数

@@ -62,12 +62,15 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  gap: 1.2rem;
+  overflow-x: auto;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1.8rem;
+  gap: 1.4rem;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -75,6 +78,8 @@ body {
   align-items: center;
   gap: 0.75rem;
   transition: opacity 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .logo:hover {
@@ -87,23 +92,27 @@ body {
   background: rgba(96, 165, 250, 0.15);
   padding: 0.45rem;
   border-radius: var(--radius-md);
+  flex-shrink: 0;
 }
 
 .logo h1 {
   font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .logo .subtitle {
   font-size: 0.7rem;
   color: #94a3b8;
   display: block;
+  white-space: nowrap;
 }
 
 .nav-tabs {
   display: flex;
   gap: 0.35rem;
+  flex-shrink: 0;
 }
 
 .nav-tab {
@@ -119,6 +128,8 @@ body {
   align-items: center;
   gap: 0.45rem;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .nav-tab:hover {
@@ -136,12 +147,15 @@ body {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  flex-shrink: 0;
 }
 
 .backup-actions {
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .backup-actions .btn {
@@ -301,6 +315,8 @@ body {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* ========================================================
@@ -319,6 +335,8 @@ body {
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-primary {
@@ -1277,6 +1295,7 @@ body {
   color: #475569;
   font-weight: 600;
   transition: all 0.1s;
+  white-space: nowrap;
 }
 
 .day-preset-btn:hover {
@@ -1309,6 +1328,7 @@ body {
   font-weight: 700;
   color: var(--text-muted);
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .day-slot-picker-btn {
@@ -1551,6 +1571,7 @@ body {
   align-items: center;
   gap: 0.4rem;
   transition: all 0.15s;
+  white-space: nowrap;
 }
 
 .tt-mode-btn:hover {
@@ -1591,6 +1612,7 @@ body {
   font-size: 0.95rem;
   color: var(--text-main);
   padding: 0 0.5rem;
+  white-space: nowrap;
 }
 
 .info-banner-tip {
@@ -1616,6 +1638,7 @@ body {
   padding: 1px 4px;
   border-radius: 3px;
   margin-bottom: 3px;
+  white-space: nowrap;
 }
 
 .slot-code-badge {
@@ -1626,6 +1649,7 @@ body {
   border-radius: 3px;
   display: inline-block;
   margin-bottom: 2px;
+  white-space: nowrap;
 }
 
 /* 時程設定カード */
