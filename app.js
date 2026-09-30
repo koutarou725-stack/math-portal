@@ -693,20 +693,13 @@ function renderWeekLessonSummary(weekDays) {
     return;
   }
 
-  const countsList = sortedClasses.map(c => classCounts[c]);
-  const maxCount = Math.max(...countsList);
-
   const pillsHtml = sortedClasses.map(cls => {
     const count = classCounts[cls];
-    const isFewer = (count < maxCount && maxCount > 1);
-    const pillClass = isFewer ? 'class-count-pill pill-warning' : 'class-count-pill';
-    const warningIcon = isFewer ? '<i class="fa-solid fa-triangle-exclamation" title="今週のコマ数が他のクラスより少なめです。進度を調整してください"></i> ' : '';
     const slotsDetail = (slotsByClass[cls] || []).join(', ');
 
     return `
-      <div class="${pillClass}" title="${cls}: 今週 ${slotsDetail}">
+      <div class="class-count-pill" title="${cls}: 今週 ${slotsDetail}">
         <span>${cls}</span>
-        ${warningIcon}
         <span class="class-count-badge">${count}コマ</span>
       </div>
     `;
@@ -841,11 +834,11 @@ function renderWeekOverrideColumns(weekDays) {
   if (!container) return;
 
   const daysOptions = [
-    { code: 'mon', label: '月曜' },
-    { code: 'tue', label: '火曜' },
-    { code: 'wed', label: '水曜' },
-    { code: 'thu', label: '木曜' },
-    { code: 'fri', label: '金曜' }
+    { code: 'mon', label: '月' },
+    { code: 'tue', label: '火' },
+    { code: 'wed', label: '水' },
+    { code: 'thu', label: '木' },
+    { code: 'fri', label: '金' }
   ];
 
   let html = '';
@@ -871,9 +864,9 @@ function renderWeekOverrideColumns(weekDays) {
           const classLabel = baseInfo.class ? ` (${baseInfo.class})` : '';
           opts += `<option value="${val}" ${isSelected}>${day.label}${pOpt}${classLabel}</option>`;
         }
-        optGroupsHtml += `<optgroup label="${day.label}日課">${opts}</optgroup>`;
+        optGroupsHtml += `<optgroup label="${day.label}曜">${opts}</optgroup>`;
       });
-      optGroupsHtml += `<optgroup label="短縮・行事"><option value="none" ${isCut ? 'selected' : ''}>（授業カット・短縮）</option></optgroup>`;
+      optGroupsHtml += `<optgroup label="その他"><option value="none" ${isCut ? 'selected' : ''}>（カット）</option></optgroup>`;
 
       slotsHtml += `
         <div class="day-slot-assign-row">
