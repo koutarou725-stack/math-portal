@@ -2820,7 +2820,7 @@ body.show-answers .answer-text {
   margin: 0;
 }
 
-/* 印刷用紙モック (中学生向け コンパクト＆A4用紙1枚収容最適化) */
+/* 印刷用紙モック (A4用紙1枚の縦横比・プロポーションを忠実に再現) */
 .test-paper-mock {
   background: #ffffff;
   color: #1e293b;
@@ -2828,13 +2828,24 @@ body.show-answers .answer-text {
   border-radius: 4px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   padding: 14px 18px 10px 18px;
-  min-height: 700px;
+  height: 820px; /* A4用紙の高さを確定！印刷プレビューと完全に一致 */
+  min-height: 820px;
+  max-height: 820px;
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
   font-family: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   font-size: 0.84rem;
   line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+}
+
+#testAnswerPaper {
+  overflow-y: auto; /* 模範解答でステップが多い場合でも用紙枠を崩さずスクロール可能 */
 }
 
 .test-paper-header {
@@ -2968,17 +2979,12 @@ body.show-answers .answer-text {
 .test-student-cell, .name-underline, .teacher-mark { display: none; }
 
 /* 問題グリッド (A4用紙の縦スペースを上手に使うフレックス＋グリッド) */
-.test-paper-mock {
-  display: flex;
-  flex-direction: column;
-  min-height: 780px;
-}
-
 .test-problem-grid {
   display: grid;
-  flex: 1;
-  gap: 0;
+  flex: 1 1 0;
+  min-height: 0;
   height: 100%;
+  gap: 0;
 }
 
 /* 4問・5問・6問: 1列レイアウト (横幅を贅沢に使い、問題文の折返しを解消＆下余りを均等配分) */
@@ -3218,39 +3224,41 @@ body.show-answers .answer-text {
   font-weight: 700;
 }
 
-/* 先生用 途中式・解法ステップボックス */
+/* 先生用 途中式・解法ステップボックス（A4 1枚収容最適化） */
 .answer-steps-box {
-  margin-top: 6px;
-  margin-left: 18px;
-  padding-left: 8px;
-  border-left: 2.5px solid #fca5a5;
-  font-size: 0.8rem;
+  margin-top: 3px;
+  margin-left: 10px;
+  padding: 2px 6px;
+  border-left: 2px solid #fca5a5;
+  background: rgba(254, 242, 242, 0.4);
+  border-radius: 2px;
+  font-size: 0.74rem;
   color: #7f1d1d;
-  line-height: 1.45;
+  line-height: 1.35;
 }
 
 .steps-heading {
   font-weight: 700;
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   color: #b45309;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   white-space: nowrap;
 }
 
 .steps-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .step-item {
   font-family: 'Times New Roman', Times, 'Cambria Math', "BIZ UDPGothic", sans-serif;
   color: #451a03;
-  font-size: 0.76rem;
-  line-height: 1.35;
+  font-size: 0.72rem;
+  line-height: 1.3;
   word-break: break-all;
 }
 
@@ -3291,6 +3299,7 @@ body.show-answers .answer-text {
 
 .test-problem-item {
   height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -3298,9 +3307,9 @@ body.show-answers .answer-text {
 }
 
 .problem-workspace {
-  margin-top: 4px;
-  flex: 1;
-  min-height: 20px;
+  margin-top: 2px;
+  flex: 1 1 auto;
+  min-height: 10px;
 }
 
 /* MathML 根号 & 分数 スタイル (ブラウザネイティブのベクターレンダリング) */

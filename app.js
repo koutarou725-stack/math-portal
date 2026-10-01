@@ -3391,6 +3391,16 @@ function formatMathRich(text) {
     return pushSafe(`<span class="math-unit">${unit}</span>`);
   });
 
+  // 3.5. タイトル・本文中の関数・等式表記: y = ax², y = ax ＋ b, y = a/x, y = -2x² など
+  s = s.replace(/\b([y])\s*=\s*([a-zA-Z0-9+－＋\-\s/²³√()]+?)(?=[,、。.\s)<]|$)/g, (m) => {
+    return pushSafe(renderTeXSafe(convertMathToTeX(m.trim())));
+  });
+
+  // 3.6. 係数付き平方根: a√b, 3√5 など
+  s = s.replace(/([0-9a-zA-Z])√([0-9a-zA-Z]+)/g, (m, coef, num) => {
+    return pushSafe(renderTeXSafe(`${coef}\\sqrt{${num}}`));
+  });
+
   // 4. 本文中に残っている平方根: √45, 3√5, 4√2 など
   s = s.replace(/√([0-9a-zA-Z]+)/g, (m, num) => {
     return pushSafe(renderTeXSafe(`\\sqrt{${num}}`));
@@ -3410,7 +3420,7 @@ function formatMathRich(text) {
   });
 
   // 7. 本文中の単独の数式変数: x, y, a, b (プレースホルダー ___MATH_TOKEN_X___ は触らない)
-  s = s.replace(/___MATH_TOKEN_\d+___|(?<![a-zA-Z0-9_])([xyabcpqmnkt])(?![a-zA-Z0-9_])/g, (m, v) => {
+  s = s.replace(/___MATH_TOKEN_\d+___|(?<![a-zA-Z0-9])([xyabcpqmnkt])(?![a-zA-Z0-9])/g, (m, v) => {
     if (!v) return m;
     return pushSafe(renderTeXSafe(v));
   });
@@ -3506,15 +3516,19 @@ function generateQuickTest() {
   // タイトルの文字数に応じた文字サイズ自動調整（長い単元名でも改行を完全防止）
   const titleClass = titleLine2.length > 13 ? ' title-mini' : (titleLine2.length > 8 ? ' title-compact' : '');
 
+  // タイトル内の数式（y = ax², a√b 等）も教科書品質 KaTeX TeX組版を適用！
+  const formattedTitleLine1 = formatMathRich(titleLine1);
+  const formattedTitleLine2 = formatMathRich(titleLine2);
+
   // 1. 生徒用プリント用紙のHTML構築（1行目: 大単元全幅、2行目: 左小単元・右生徒情報）
   const studentEl = document.getElementById('testStudentPaper');
   if (studentEl) {
     studentEl.setAttribute('data-count', count);
     studentEl.innerHTML = `
       <div class="test-paper-header">
-        <div class="test-header-line1">${titleLine1}</div>
+        <div class="test-header-line1">${formattedTitleLine1}</div>
         <div class="test-header-line2">
-          <div class="test-title-line2${titleClass}">${titleLine2}</div>
+          <div class="test-title-line2${titleClass}">${formattedTitleLine2}</div>
           <div class="test-student-info">
             <div class="student-entry-line">
               <span class="student-grade-label">${grade}年</span>
@@ -3551,9 +3565,9 @@ function generateQuickTest() {
     answerEl.setAttribute('data-count', count);
     answerEl.innerHTML = `
       <div class="test-paper-header answer-header">
-        <div class="test-header-line1 answer-line1">${titleLine1}</div>
+        <div class="test-header-line1 answer-line1">${formattedTitleLine1}</div>
         <div class="test-header-line2">
-          <div class="test-title-line2 answer-line2${titleClass}">【模範解答】${titleLine2}</div>
+          <div class="test-title-line2 answer-line2${titleClass}">【模範解答】${formattedTitleLine2}</div>
         </div>
       </div>
 
