@@ -2833,9 +2833,9 @@ body.show-answers .answer-text {
 }
 
 .test-paper-header {
-  border-bottom: 2px solid #0f172a;
+  border-bottom: 1px solid #334155;
   padding-bottom: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .test-paper-header.answer-header {
@@ -2879,14 +2879,11 @@ body.show-answers .answer-text {
 }
 
 .test-paper-title {
-  font-size: 1.05rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: #0f172a;
   margin: 0;
   line-height: 1.25;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .test-paper-title.answer-title {
@@ -2935,18 +2932,15 @@ body.show-answers .answer-text {
 }
 
 .test-problem-item {
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
-  border-radius: 5px;
-  padding: 7px 10px;
+  background: transparent;
+  padding: 4px 10px 10px 10px;
   position: relative;
   break-inside: avoid;
   box-sizing: border-box;
 }
 
 .test-problem-item.answer-mode {
-  background: #fffcf8;
-  border-color: #fed7aa;
+  /* No special background, keep it clean */
 }
 
 .problem-header {
@@ -2961,17 +2955,16 @@ body.show-answers .answer-text {
 
 .problem-num {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 19px;
-  height: 19px;
-  background: #0f172a;
-  color: #ffffff;
-  border-radius: 3px;
-  font-size: 0.74rem;
-  font-weight: 800;
+  align-items: baseline;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 700;
   flex-shrink: 0;
-  margin-top: 1px;
+  margin-right: 4px;
+}
+
+.problem-num.answer-num {
+  color: #dc2626;
 }
 
 .problem-text {
@@ -3017,6 +3010,12 @@ body.show-answers .answer-text {
   white-space: nowrap;
 }
 
+.answer-label {
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
 .answer-badge-label {
   white-space: nowrap;
   flex-shrink: 0;
@@ -3043,14 +3042,13 @@ body.show-answers .answer-text {
 
 /* 先生用 途中式・解法ステップボックス */
 .answer-steps-box {
-  margin-top: 4px;
-  background: #fffdf5;
-  border: 1px solid #fde68a;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 0.73rem;
-  color: #78350f;
-  line-height: 1.35;
+  margin-top: 6px;
+  margin-left: 20px;
+  padding-left: 8px;
+  border-left: 2px solid #fca5a5;
+  font-size: 0.8rem;
+  color: #7f1d1d;
+  line-height: 1.4;
 }
 
 .steps-heading {

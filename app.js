@@ -3344,8 +3344,7 @@ function generateQuickTest() {
       <div class="test-paper-header">
         <div class="test-header-bar">
           <div class="test-header-left">
-            <span class="test-paper-badge">第${grade}学年 数学</span>
-            <h3 class="test-paper-title">${cleanTitle}</h3>
+            <h3 class="test-paper-title">第${grade}学年 数学 ${cleanTitle}</h3>
           </div>
           <div class="test-header-right">
             <span class="test-student-cell">${grade} 年 _____ 組 _____ 番</span>
@@ -3358,23 +3357,16 @@ function generateQuickTest() {
         ${questions.map(q => `
           <div class="test-problem-item">
             <div class="problem-header">
-              <span class="problem-num">${q.num}</span>
+              <span class="problem-num">(${q.num})</span>
               <div class="problem-text">${q.q}</div>
             </div>
-            <div class="problem-workspace">
-              <span class="problem-workspace-label">計算スペース</span>
-            </div>
+            <div class="problem-workspace"></div>
             <div class="problem-answer-line">
-              <span>【答】</span>
+              <span class="answer-label">答.</span>
               <span class="problem-answer-fill"></span>
             </div>
           </div>
         `).join('')}
-      </div>
-
-      <div class="test-paper-footer">
-        <span>中学校 数学科 授業・確認プリント [${majorName}]</span>
-        <span>出題数: 全${count}問</span>
       </div>
     `;
   }
@@ -3387,8 +3379,7 @@ function generateQuickTest() {
       <div class="test-paper-header answer-header">
         <div class="test-header-bar">
           <div class="test-header-left">
-            <span class="test-paper-badge answer-badge">第${grade}学年 数学</span>
-            <h3 class="test-paper-title answer-title">【模範解答・途中式】 ${cleanTitle}</h3>
+            <h3 class="test-paper-title answer-title">第${grade}学年 数学 【模範解答】 ${cleanTitle}</h3>
           </div>
           <div class="test-header-right">
             <span class="test-student-cell teacher-tag"><i class="fa-solid fa-chalkboard-user"></i> 教員用控 (途中式付き)</span>
@@ -3400,7 +3391,7 @@ function generateQuickTest() {
         ${questions.map(q => `
           <div class="test-problem-item answer-mode">
             <div class="problem-header">
-              <span class="problem-num" style="background: #dc2626;">${q.num}</span>
+              <span class="problem-num answer-num">(${q.num})</span>
               <div class="problem-text">${q.q}</div>
             </div>
             <div class="problem-answer-line" style="margin-top: 4px;">
@@ -3422,11 +3413,6 @@ function generateQuickTest() {
             ` : '')}
           </div>
         `).join('')}
-      </div>
-
-      <div class="test-paper-footer">
-        <span style="color: #dc2626;">中学校 数学科 指導用模範解答 [${majorName}]</span>
-        <span>正答数: 全${count}問</span>
       </div>
     `;
   }
