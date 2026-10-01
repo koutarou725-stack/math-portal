@@ -3307,8 +3307,62 @@ function getGeneratorsForSubUnit(grade, subUnitId) {
   return Object.keys(problemGenerators).filter(k => k.startsWith(prefix));
 }
 
-// 数式テキストの教科書品質リッチフォーマッター
-// (Times New Romanイタリック変数、MathMLによる完全な一体型平方根、上下2段分数)
+// TeX記法への変換関数
+function convertMathToTeX(str) {
+  if (!str || typeof str !== 'string') return '';
+  let s = str;
+
+  // 1. 全角記号のTeX標準化
+  s = s.replace(/＝/g, ' = ');
+  s = s.replace(/＋/g, ' + ');
+  s = s.replace(/－/g, ' - ');
+  s = s.replace(/×/g, ' \\times ');
+  s = s.replace(/÷/g, ' \\div ');
+  s = s.replace(/±/g, ' \\pm ');
+  s = s.replace(/≦/g, ' \\le ');
+  s = s.replace(/≧/g, ' \\ge ');
+
+  // 2. 累乗
+  s = s.replace(/([a-zA-Z0-9\)])²/g, '$1^2');
+  s = s.replace(/([a-zA-Z0-9\)])³/g, '$1^3');
+
+  // 3. 平方根
+  s = s.replace(/√\(([^)]+)\)/g, '\\sqrt{$1}');
+  s = s.replace(/√([0-9a-zA-Z]+)/g, '\\sqrt{$1}');
+
+  // 4. 分数
+  s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, '\\frac{$1}{$2}');
+  s = s.replace(/([0-9a-zA-Z\\{}]+)\s*\/\s*([0-9a-zA-Z\\{}]+)/g, '\\frac{$1}{$2}');
+
+  return s;
+}
+
+// TeX レンダリング（KaTeX使用、万が一の未ロード時はフォールバック）
+function renderTeXSafe(tex, displayMode = false) {
+  if (typeof window !== 'undefined' && window.katex && typeof window.katex.renderToString === 'function') {
+    try {
+      return window.katex.renderToString(tex, {
+        displayMode: displayMode,
+        throwOnError: false
+      });
+    } catch (e) {
+      console.warn('KaTeX render error:', e);
+    }
+  }
+  // フォールバック
+  let fb = tex
+    .replace(/\\sqrt\{([^}]+)\}/g, '<span class="math-sqrt-box"><span class="sqrt-sym">√</span><span class="sqrt-num">$1</span></span>')
+    .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '<span class="math-frac"><span class="math-num">$1</span><span class="math-den">$2</span></span>')
+    .replace(/\\times/g, '×')
+    .replace(/\\div/g, '÷')
+    .replace(/\\pm/g, '±')
+    .replace(/\\le/g, '≦')
+    .replace(/\\ge/g, '≧')
+    .replace(/([xyabcpqmnktABCD])/g, '<i class="math-var">$1</i>');
+  return `<span class="tex-fallback">${fb}</span>`;
+}
+
+// 数式テキストの教科書品質リッチフォーマッター (KaTeX TeX組版エンジン)
 function formatMathRich(text) {
   if (!text || typeof text !== 'string') return text;
 
@@ -3321,39 +3375,41 @@ function formatMathRich(text) {
     return `__UNIT_${unitPlaceholders.length - 1}__`;
   });
 
-  // 1. 平方根（√）の変換: MathML <msqrt> により、√記号と上線が完全に一体化し段差0
-  // パターンA: 括弧つき根号 √(b² － 4ac)
-  s = s.replace(/√\(([^)]+)\)/g, (m, inside) => {
-    return `<math class="math-expr" display="inline"><msqrt><mrow>${inside}</mrow></msqrt></math>`;
-  });
-  // パターンB: 通常の根号 √20, √5, √b, √45
-  s = s.replace(/√([0-9a-zA-Z]+)/g, (m, inside) => {
-    return `<math class="math-expr" display="inline"><msqrt><mrow>${inside}</mrow></msqrt></math>`;
+  // 1. problem-body-math の中身を丸ごと TeX レンダリング
+  s = s.replace(/<span class="problem-body-math">([\s\S]*?)<\/span>/g, (m, inner) => {
+    if (inner.includes('<')) {
+      return `<span class="problem-body-math">${formatMathRich(inner)}</span>`;
+    }
+    const tex = convertMathToTeX(inner);
+    return `<span class="problem-body-math">${renderTeXSafe(tex)}</span>`;
   });
 
-  // 2. 分数の変換: MathML <mfrac> による上下2段分数
-  // パターンA: 括弧つき分子 / 分母 (例: (－5 ± <math...>) / 4)
+  // 2. 本文中に残っている平方根: √45, 3√5, 4√2 cm など
+  s = s.replace(/√([0-9a-zA-Z]+)/g, (m, num) => {
+    return renderTeXSafe(`\\sqrt{${num}}`);
+  });
+
+  // 3. 本文中に残っている分数: A / B
   s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, (m, num, den) => {
-    return `<math class="math-expr" display="inline"><mfrac><mrow>${num}</mrow><mrow>${den}</mrow></mfrac></math>`;
+    return renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`);
+  });
+  s = s.replace(/([0-9a-zA-Z\\{}]+)\s*\/\s*([0-9a-zA-Z\\{}]+)/g, (m, num, den) => {
+    return renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`);
   });
 
-  // パターンB: 単純な分数 A / B (例: 12 / <math...>, a / x, 1 / 2)
-  s = s.replace(/([0-9a-zA-Z√]+|\<math[^>]*\>.*?\<\/math\>)\s*\/\s*([0-9a-zA-Z√]+|\<math[^>]*\>.*?\<\/math\>)/g, (m, num, den) => {
-    return `<math class="math-expr" display="inline"><mfrac><mrow>${num}</mrow><mrow>${den}</mrow></mfrac></math>`;
+  // 4. 本文中の累乗: x², y² など
+  s = s.replace(/(?<!c|m|k)([xyabcpqmnktABCD])²/g, (m, v) => {
+    return renderTeXSafe(`${v}^2`);
   });
 
-  // 3. 上付き添字: x² → x<sup class="math-sup">2</sup>
-  s = s.replace(/([a-zA-Z0-9\)])²/g, '$1<sup class="math-sup">2</sup>');
-  s = s.replace(/([a-zA-Z0-9\)])³/g, '$1<sup class="math-sup">3</sup>');
-
-  // 4. 英字変数の Times New Roman イタリック化 (HTML/MathMLタグ・プレースホルダー除外)
-  s = s.replace(/(<[^>]+>)|(__UNIT_\d+__)|(?<![a-zA-Z])([xyabcpqmnktABCD])(?![a-zA-Z0-9_])/g, (m, tag, unit, v) => {
+  // 5. 本文中の単独の数式変数: x, y, a, b (HTMLタグ・プレースホルダー除外)
+  s = s.replace(/(<[^>]+>)|(__UNIT_\d+__)|(?<![a-zA-Z0-9_])([xyabcpqmnkt])(?![a-zA-Z0-9_])/g, (m, tag, unit, v) => {
     if (tag) return tag;
     if (unit) return unit;
-    return `<i class="math-var">${v}</i>`;
+    return renderTeXSafe(v);
   });
 
-  // 5. 単位を復元
+  // 6. 単位を復元
   s = s.replace(/__UNIT_(\d+)__/g, (m, idx) => `<span class="math-unit">${unitPlaceholders[idx]}</span>`);
 
   return s;
@@ -3431,17 +3487,15 @@ function generateQuickTest() {
   // 7問・8問・9問・10問は2列 (cols-2) にしてA4用紙1枚にバランスよく収容
   const gridClass = count > 6 ? 'test-problem-grid cols-2' : 'test-problem-grid cols-1';
 
-  // 1. 生徒用プリント用紙のHTML構築
+  // 1. 生徒用プリント用紙のHTML構築（1行目: 大単元全幅、2行目: 左小単元・右生徒情報）
   const studentEl = document.getElementById('testStudentPaper');
   if (studentEl) {
     studentEl.setAttribute('data-count', count);
     studentEl.innerHTML = `
       <div class="test-paper-header">
-        <div class="test-header-top">
-          <div class="test-title-block">
-            <div class="test-title-line1">${titleLine1}</div>
-            <div class="test-title-line2">${titleLine2}</div>
-          </div>
+        <div class="test-header-line1">${titleLine1}</div>
+        <div class="test-header-line2">
+          <div class="test-title-line2">${titleLine2}</div>
           <div class="test-student-info">
             <div class="student-entry-line">
               <span class="student-grade-label">${grade}年</span>
@@ -3472,17 +3526,15 @@ function generateQuickTest() {
     applyKaTeXIfAvailable(studentEl);
   }
 
-  // 2. 先生用模範解答用紙のHTML構築
+  // 2. 先生用模範解答用紙のHTML構築（1行目: 大単元全幅、2行目: 【模範解答】小単元）
   const answerEl = document.getElementById('testAnswerPaper');
   if (answerEl) {
     answerEl.setAttribute('data-count', count);
     answerEl.innerHTML = `
       <div class="test-paper-header answer-header">
-        <div class="test-header-top">
-          <div class="test-title-block">
-            <div class="test-title-line1 answer-line1">${titleLine1}</div>
-            <div class="test-title-line2 answer-line2">【模範解答】${titleLine2}</div>
-          </div>
+        <div class="test-header-line1 answer-line1">${titleLine1}</div>
+        <div class="test-header-line2">
+          <div class="test-title-line2 answer-line2">【模範解答】${titleLine2}</div>
         </div>
       </div>
 
@@ -4145,3 +4197,10 @@ function triggerAutoCloudSync() {
     syncToCloud(false);
   }, 1200); // 1.2秒後に静かに自動送信
 }
+
+// KaTeX の確実な描画フック (ページロード完了時)
+window.addEventListener('load', () => {
+  if (typeof window.katex !== 'undefined' && document.getElementById('testStudentPaper')) {
+    generateQuickTest();
+  }
+});
