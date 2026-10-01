@@ -3295,6 +3295,76 @@ function getGeneratorsForSubUnit(grade, subUnitId) {
   return Object.keys(problemGenerators).filter(k => k.startsWith(prefix));
 }
 
+// 数式テキストの教科書品質リッチフォーマッター
+// (Times New Romanイタリック変数、上線付き平方根、上下2段分数)
+function formatMathRich(text) {
+  if (!text || typeof text !== 'string') return text;
+
+  let s = text;
+
+  // 0. 単位（cm, mm, km, cm², cm³ 等）を一時退避
+  const unitPlaceholders = [];
+  s = s.replace(/\b(cm²|cm³|cm|mm|km|kg|mL|dL|min|sec)\b/g, (match) => {
+    unitPlaceholders.push(match);
+    return `__UNIT_${unitPlaceholders.length - 1}__`;
+  });
+
+  // 1. 分数の変換
+  // パターンA: 括弧つき分子 / 分母 (例: (－5 ± √33) / 4, (num × √b) / b)
+  s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, (m, num, den) => {
+    return `<span class="math-frac"><span class="math-num">${num}</span><span class="math-den">${den}</span></span>`;
+  });
+
+  // パターンB: 単純な分数 A / B (例: 12 / √3, a / x, 1 / 2)
+  s = s.replace(/([0-9a-zA-Z√]+)\s*\/\s*([0-9a-zA-Z√]+)/g, (m, num, den) => {
+    return `<span class="math-frac"><span class="math-num">${num}</span><span class="math-den">${den}</span></span>`;
+  });
+
+  // 2. 平方根（√）の変換
+  // パターンA: 括弧つき根号 √(b² － 4ac)
+  s = s.replace(/√\(([^)]+)\)/g, (m, inside) => {
+    return `<span class="math-sqrt"><span class="math-sqrt-sym">√</span><span class="math-sqrt-content">${inside}</span></span>`;
+  });
+  // パターンB: 通常の根号 √20, √5, √b
+  s = s.replace(/√([0-9a-zA-Z]+)/g, (m, inside) => {
+    return `<span class="math-sqrt"><span class="math-sqrt-sym">√</span><span class="math-sqrt-content">${inside}</span></span>`;
+  });
+
+  // 3. 上付き添字: x² → x<sup class="math-sup">2</sup>
+  s = s.replace(/([a-zA-Z0-9\)])²/g, '$1<sup class="math-sup">2</sup>');
+  s = s.replace(/([a-zA-Z0-9\)])³/g, '$1<sup class="math-sup">3</sup>');
+
+  // 4. 英字変数の Times New Roman イタリック化 (HTMLタグ・プレースホルダー除外)
+  s = s.replace(/(<[^>]+>)|(__UNIT_\d+__)|(?<![a-zA-Z])([xyabcpqmnktABCD])(?![a-zA-Z0-9_])/g, (m, tag, unit, v) => {
+    if (tag) return tag;
+    if (unit) return unit;
+    return `<i class="math-var">${v}</i>`;
+  });
+
+  // 5. 単位を復元
+  s = s.replace(/__UNIT_(\d+)__/g, (m, idx) => `<span class="math-unit">${unitPlaceholders[idx]}</span>`);
+
+  return s;
+}
+
+// KaTeX の動的適用（読み込み完了時）
+function applyKaTeXIfAvailable(element) {
+  if (!element) return;
+  if (typeof renderMathInElement === 'function') {
+    try {
+      renderMathInElement(element, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false }
+        ],
+        throwOnError: false
+      });
+    } catch (e) {
+      console.warn('KaTeX render error:', e);
+    }
+  }
+}
+
 // 練習プリント・小テストの生成実行
 function generateQuickTest() {
   const grade = document.getElementById('testGrade')?.value || '2';
@@ -3326,8 +3396,6 @@ function generateQuickTest() {
     titleLine1 = `中学${grade}年　${majorName}`;
     titleLine2 = subTitle;
   }
-  // 印刷小枰等で数式ジェネレーターが使う平文名 (steps等の文字列用)
-  const cleanTitle = `${titleLine1}　${titleLine2}`;
 
   // 問題ジェネレーターの選定
   const availableGenKeys = getGeneratorsForSubUnit(grade, subUnitId);
@@ -3339,12 +3407,17 @@ function generateQuickTest() {
     const item = genFn();
     questions.push({
       num: i + 1,
-      ...item
+      q: formatMathRich(item.q),
+      ans: formatMathRich(item.ans),
+      steps: item.steps ? item.steps.map(s => formatMathRich(s)) : [],
+      exp: item.exp ? formatMathRich(item.exp) : ''
     });
   }
 
-  // 1列か2列かの判定 (6問・8問・10問は2列にすることで縦を最大5問分に抑え、A4用紙1枚に確実に収容)
-  const gridClass = count >= 6 ? 'test-problem-grid cols-2' : 'test-problem-grid';
+  // 1列か2列かの判定:
+  // 4問・5問・6問は1列 (cols-1) にして横幅を贅沢に活用。問題文がゆったり収まり、右下に解答欄、十分な計算余白を確保！
+  // 7問・8問・9問・10問は2列 (cols-2) にしてA4用紙1枚にバランスよく収容
+  const gridClass = count > 6 ? 'test-problem-grid cols-2' : 'test-problem-grid cols-1';
 
   // 1. 生徒用プリント用紙のHTML構築
   const studentEl = document.getElementById('testStudentPaper');
@@ -3358,8 +3431,12 @@ function generateQuickTest() {
             <div class="test-title-line2">${titleLine2}</div>
           </div>
           <div class="test-student-info">
-            <div class="test-student-row">${grade} 年 &nbsp;□&nbsp; 組 &nbsp;□&nbsp; 番</div>
-            <div class="test-student-row name-row">氏名：<span class="name-fill-line"></span></div>
+            <div class="student-entry-line">
+              <span class="student-grade-label">${grade}年</span>
+              <span class="student-entry-item"><span class="student-line num-line"></span>組</span>
+              <span class="student-entry-item"><span class="student-line num-line"></span>番</span>
+              <span class="student-entry-item name-item">氏名<span class="student-line name-line"></span></span>
+            </div>
           </div>
         </div>
       </div>
@@ -3380,6 +3457,7 @@ function generateQuickTest() {
         `).join('')}
       </div>
     `;
+    applyKaTeXIfAvailable(studentEl);
   }
 
   // 2. 先生用模範解答用紙のHTML構築
@@ -3424,6 +3502,7 @@ function generateQuickTest() {
         `).join('')}
       </div>
     `;
+    applyKaTeXIfAvailable(answerEl);
   }
 }
 

@@ -2879,80 +2879,116 @@ body.show-answers .answer-text {
   color: #7f1d1d;
 }
 
-/* 生徒情報欄（右側） — 高さを十分に取る */
+/* 生徒情報欄（右側） — 横1行でゆったり配置、「▢」を廃止して書きやすい下線形式に */
 .test-student-info {
   display: flex;
-  flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
   flex-shrink: 0;
+  padding-bottom: 2px;
 }
 
-.test-student-row {
-  font-size: 0.78rem;
-  font-weight: 500;
+.student-entry-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.student-grade-label {
+  font-weight: 700;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.student-entry-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
   color: #334155;
   white-space: nowrap;
 }
 
-.test-student-row.name-row {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: #334155;
+.student-entry-item.name-item {
+  margin-left: 6px;
+  gap: 4px;
 }
 
-.name-fill-line {
+.student-line {
   display: inline-block;
-  width: 140px;
-  border-bottom: 1px solid #475569;
-  height: 1.3em;
+  border-bottom: 1.5px solid #334155;
+  height: 1.4em;
   vertical-align: bottom;
 }
 
-/* 古いクラスは使用なしに */
-.test-header-bar, .test-header-left { display: none; }
+.student-line.num-line {
+  width: 36px; /* 組・番号の記入スペース */
+}
+
+.student-line.name-line {
+  width: 220px; /* 氏名の広大な記入スペース（書くスペースを十分に確保！） */
+}
+
+/* 古いクラスは非表示維持 */
+.test-student-row, .name-fill-line, .test-header-bar, .test-header-left { display: none; }
 .test-student-cell, .name-underline, .teacher-mark { display: none; }
 
-/* 問題グリッド */
+/* 問題グリッド (A4用紙の縦スペースを上手に使うフレックス＋グリッド) */
+.test-paper-mock {
+  display: flex;
+  flex-direction: column;
+}
+
 .test-problem-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  flex: 1;
   gap: 0;
 }
 
+/* 4問・5問・6問: 1列レイアウト (横幅を贅沢に使い、問題文の折返しを解消＆下余りを均等配分) */
+.test-problem-grid.cols-1 {
+  grid-template-columns: 1fr;
+}
+
+/* 7問〜10問: 2列レイアウト */
 .test-problem-grid.cols-2 {
   grid-template-columns: 1fr 1fr;
-  gap: 0 0;
 }
 
 .test-problem-item {
   background: transparent;
-  padding: 8px 8px 10px 8px;
+  padding: 8px 10px 10px 10px;
   position: relative;
   break-inside: avoid;
   box-sizing: border-box;
   border-bottom: 1px solid #e2e8f0; /* 問題間の仕切り線 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* 2列時の右列に縦線 */
+/* 1列表示のときは左右パディングをゆったり取って可読性を最高に */
+.test-problem-grid.cols-1 .test-problem-item {
+  padding: 10px 14px 12px 14px;
+}
+
+/* 2列時の奇数問（左列）に縦の仕切り線 */
 .test-problem-grid.cols-2 .test-problem-item:nth-child(odd) {
   border-right: 1px solid #e2e8f0;
 }
 
 .test-problem-item.answer-mode {
-  /* keep clean */
+  /* 模範解答モード */
 }
 
 .problem-header {
   display: flex;
   align-items: flex-start;
-  gap: 4px;
-  font-size: 0.82rem;
+  gap: 6px;
+  font-size: 0.86rem;
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.55;
   color: #1e293b;
 }
 
@@ -2960,7 +2996,7 @@ body.show-answers .answer-text {
   display: inline-flex;
   align-items: baseline;
   color: #0f172a;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
   flex-shrink: 0;
   margin-right: 2px;
@@ -2973,20 +3009,93 @@ body.show-answers .answer-text {
 
 .problem-text {
   flex: 1;
-  line-height: 1.55;
-  word-break: break-all; /* 長いかつ素文や英数字混在でかしまわらないよう */
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+/* ========================================================
+   数式フォント & 表記 (Times New Romanイタリック・上線つき平方根・上下2段分数)
+   ======================================================== */
+.math-var {
+  font-family: 'Times New Roman', Times, 'Cambria Math', 'Noto Serif JP', serif;
+  font-style: italic;
+  padding: 0 1.5px;
+}
+
+.math-sup {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 0.72em;
+  vertical-align: 0.45em;
+  line-height: 0;
+  font-style: normal;
+}
+
+.math-unit {
+  font-family: inherit;
+  font-style: normal;
+}
+
+/* 教科書品質の平方根（√の上線が数字全体の上に伸びる） */
+.math-sqrt {
+  display: inline-flex;
+  align-items: baseline;
+  vertical-align: baseline;
+  white-space: nowrap;
+  margin: 0 1.5px;
+}
+
+.math-sqrt-sym {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.18em;
+  line-height: 1;
+  margin-right: 0.5px;
+  transform: scaleY(1.08);
+}
+
+.math-sqrt-content {
+  border-top: 1.6px solid currentColor; /* 根号の上線が中身の上全体にしっかり伸びる！ */
+  padding: 0 2px 0 1px;
+  display: inline-block;
+  line-height: 1.15;
+  margin-top: -1px;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
+}
+
+/* 教科書品質の縦積み分数（上が分子、下が分母、中央に分数線） */
+.math-frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: -0.55em;
+  text-align: center;
+  font-size: 0.88em;
+  line-height: 1;
+  padding: 0 2px;
+  margin: 0 2px;
+}
+
+.math-frac .math-num {
+  border-bottom: 1.4px solid currentColor; /* 分数線 */
+  padding-bottom: 1.5px;
+  display: block;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
+}
+
+.math-frac .math-den {
+  padding-top: 1.5px;
+  display: block;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
 }
 
 /* 数式クラス（inline送り仮名・数字） */
 .problem-body-math {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.94rem;
+  font-weight: 500;
   color: #0f172a;
   padding: 1px 0;
   display: inline-block;
   white-space: nowrap;
-  font-family: 'Noto Serif JP', 'Times New Roman', 'Cambria Math', serif;
-  letter-spacing: 0.04em;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
+  letter-spacing: 0.02em;
 }
 
 /* 連立方程式の整形（左大かっこ（｛）＋横に並んだ式2行） */
@@ -2995,9 +3104,9 @@ body.show-answers .answer-text {
   align-items: center;
   gap: 3px;
   margin-top: 3px;
-  font-family: 'Noto Serif JP', 'Times New Roman', serif;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+  font-size: 0.92rem;
+  font-weight: 500;
   color: #0f172a;
 }
 
@@ -3020,17 +3129,17 @@ body.show-answers .answer-text {
 .simul-line {
   white-space: nowrap;
   line-height: 1.5;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 .problem-workspace {
   margin-top: 4px;
-  min-height: 34px;
+  min-height: 36px;
   position: relative;
 }
 
 .problem-workspace-label {
-  display: none; /* 計算スペースのラベルは非表示 */
+  display: none;
 }
 
 .problem-answer-line {
@@ -3039,7 +3148,7 @@ body.show-answers .answer-text {
   align-items: baseline;
   justify-content: flex-end;
   gap: 6px;
-  font-size: 0.8rem;
+  font-size: 0.84rem;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -3059,13 +3168,13 @@ body.show-answers .answer-text {
 
 .problem-answer-fill {
   display: inline-block;
-  min-width: 100px;
+  min-width: 110px;
   border-bottom: 1.5px solid #334155;
-  height: 20px;
+  height: 22px;
   text-align: center;
-  font-size: 0.94rem;
+  font-size: 0.96rem;
   color: #dc2626;
-  font-family: 'Cambria Math', serif;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
   white-space: nowrap;
 }
 
@@ -3077,17 +3186,17 @@ body.show-answers .answer-text {
 /* 先生用 途中式・解法ステップボックス */
 .answer-steps-box {
   margin-top: 6px;
-  margin-left: 20px;
+  margin-left: 18px;
   padding-left: 8px;
-  border-left: 2px solid #fca5a5;
+  border-left: 2.5px solid #fca5a5;
   font-size: 0.8rem;
   color: #7f1d1d;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .steps-heading {
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   color: #b45309;
   margin-bottom: 2px;
   display: flex;
@@ -3099,14 +3208,14 @@ body.show-answers .answer-text {
 .steps-list {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .step-item {
-  font-family: 'Cambria Math', "BIZ UDPGothic", sans-serif;
+  font-family: 'Times New Roman', Times, 'Cambria Math', "BIZ UDPGothic", sans-serif;
   color: #451a03;
-  font-size: 0.72rem;
-  line-height: 1.3;
+  font-size: 0.76rem;
+  line-height: 1.35;
   word-break: break-all;
 }
 
@@ -3120,21 +3229,32 @@ body.show-answers .answer-text {
   color: #94a3b8;
 }
 
-/* 問題数ごとの計算欄微調整 (10問時でもA4用紙1枚に確実に収容) */
+/* 問題数ごとの計算欄自動配分 (A4用紙の下があまらないよう高さを自動調整) */
 .test-paper-mock[data-count="4"] .problem-workspace {
-  min-height: 50px;
+  min-height: 85px;
+  flex: 1;
+}
+
+.test-paper-mock[data-count="5"] .problem-workspace {
+  min-height: 64px;
+  flex: 1;
 }
 
 .test-paper-mock[data-count="6"] .problem-workspace {
-  min-height: 38px;
+  min-height: 48px;
+  flex: 1;
 }
 
+.test-paper-mock[data-count="7"] .problem-workspace,
 .test-paper-mock[data-count="8"] .problem-workspace {
-  min-height: 28px;
+  min-height: 38px;
+  flex: 1;
 }
 
+.test-paper-mock[data-count="9"] .problem-workspace,
 .test-paper-mock[data-count="10"] .problem-workspace {
-  min-height: 18px;
+  min-height: 22px;
+  flex: 1;
 }
 
 .test-paper-mock[data-count="10"] .test-problem-item {
@@ -3242,10 +3362,13 @@ body.show-answers .answer-text {
   }
 
   body[data-print-target="test-student"] #testStudentPaper {
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
     width: 100% !important;
     height: 100% !important;
     max-height: 284mm !important;
+    box-sizing: border-box !important;
     overflow: hidden !important;
     border: none !important;
     box-shadow: none !important;
@@ -3276,10 +3399,13 @@ body.show-answers .answer-text {
   }
 
   body[data-print-target="test-answer"] #testAnswerPaper {
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
     width: 100% !important;
     height: 100% !important;
     max-height: 284mm !important;
+    box-sizing: border-box !important;
     overflow: hidden !important;
     border: none !important;
     box-shadow: none !important;
