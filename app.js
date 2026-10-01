@@ -2293,6 +2293,10 @@ const problemGenerators = {
       return {
         q: `次の計算をしなさい。<br><span class="problem-body-math">${aStr} － ${bStr}</span>`,
         ans: `${ans}`,
+        steps: [
+          `ひき算を加法に直す: ＝ ${aStr} ＋ (${-b < 0 ? -b : '+' + (-b)})`,
+          `計算する: ＝ ${ans}`
+        ],
         exp: `${aStr} ＋ (${-b < 0 ? -b : '+' + (-b)}) ＝ ${ans}`
       };
     } else {
@@ -2300,6 +2304,9 @@ const problemGenerators = {
       return {
         q: `次の計算をしなさい。<br><span class="problem-body-math">${aStr} ＋ ${bStr}</span>`,
         ans: `${ans}`,
+        steps: [
+          `同符号・異符号の規則に従って計算: ＝ ${ans}`
+        ],
         exp: `同符号・異符号の規則に従って計算: ${ans}`
       };
     }
@@ -2313,10 +2320,15 @@ const problemGenerators = {
       const a = b * ans;
       const aStr = a < 0 ? `(${a})` : `(+${a})`;
       const bStr = b < 0 ? `(${b})` : `(+${b})`;
+      const sign = (a < 0 ? 1 : 0) + (b < 0 ? 1 : 0);
       return {
         q: `次の計算をしなさい。<br><span class="problem-body-math">${aStr} ÷ ${bStr}</span>`,
         ans: `${ans >= 0 ? '+' : ''}${ans}`,
-        exp: `負の符号の個数は ${(a < 0 ? 1 : 0) + (b < 0 ? 1 : 0)} 個。答えは ${ans >= 0 ? '+' : ''}${ans}`
+        steps: [
+          `負の符号の個数を判定: ${sign}個 (${sign % 2 === 0 ? '偶数個のため ＋' : '奇数個のため －'})`,
+          `絶対値を計算: ＝ ${ans >= 0 ? '+' : ''}${Math.abs(a)} ÷ ${Math.abs(b)} ＝ ${ans >= 0 ? '+' : ''}${ans}`
+        ],
+        exp: `負の符号の個数は ${sign} 個。答えは ${ans >= 0 ? '+' : ''}${ans}`
       };
     } else {
       const a = randNonZero(-9, 9);
@@ -2324,10 +2336,15 @@ const problemGenerators = {
       const ans = a * b;
       const aStr = a < 0 ? `(${a})` : `(+${a})`;
       const bStr = b < 0 ? `(${b})` : `(+${b})`;
+      const sign = (a < 0 ? 1 : 0) + (b < 0 ? 1 : 0);
       return {
         q: `次の計算をしなさい。<br><span class="problem-body-math">${aStr} × ${bStr}</span>`,
         ans: `${ans >= 0 ? '+' : ''}${ans}`,
-        exp: `負の符号の個数は ${(a < 0 ? 1 : 0) + (b < 0 ? 1 : 0)} 個。答えは ${ans >= 0 ? '+' : ''}${ans}`
+        steps: [
+          `負の符号の個数を判定: ${sign}個 (${sign % 2 === 0 ? '偶数個のため ＋' : '奇数個のため －'})`,
+          `絶対値を計算: ＝ ${ans >= 0 ? '+' : ''}${Math.abs(a)} × ${Math.abs(b)} ＝ ${ans >= 0 ? '+' : ''}${ans}`
+        ],
+        exp: `負の符号の個数は ${sign} 個。答えは ${ans >= 0 ? '+' : ''}${ans}`
       };
     }
   },
@@ -2342,6 +2359,11 @@ const problemGenerators = {
     return {
       q: `次の計算をしなさい。<br><span class="problem-body-math">(${base})² － (${c}) × (${d})</span>`,
       ans: `${ans}`,
+      steps: [
+        `累乗を計算: (${base})² ＝ ${term1}`,
+        `乗法を計算: (${c}) × (${d}) ＝ ${term2}`,
+        `減法を計算: ${term1} － (${term2}) ＝ ${ans}`
+      ],
       exp: `累乗・乗法を先に計算: (${base})²＝${term1}、(${c})×(${d})＝${term2}。よって ${term1} － (${term2}) ＝ ${ans}`
     };
   },
@@ -2355,6 +2377,11 @@ const problemGenerators = {
     return {
       q: `x ＝ ${x} のとき、次の式の値を求めなさい。<br><span class="problem-body-math">${expr}</span>`,
       ans: `${ans}`,
+      steps: [
+        `x に ${x} を代入: ＝ ${a}×(${x})² ＋ (${b})×(${x})`,
+        `累乗と各項を計算: ＝ ${a * (x * x)} ＋ (${b * x})`,
+        `答: ＝ ${ans}`
+      ],
       exp: `${expr} の x に ${x} を代入: ${a * (x * x)} ＋ (${b * x}) ＝ ${ans}`
     };
   },
@@ -2370,6 +2397,11 @@ const problemGenerators = {
     return {
       q: `次の計算をしなさい。<br><span class="problem-body-math">(${p1}) ＋ (${p2})</span>`,
       ans: ansPoly,
+      steps: [
+        `かっこをはずす: ＝ ${p1} ＋ ${p2}`,
+        `同類項をまとめる: ＝ (${a}＋${c})x ＋ (${b}＋${d})`,
+        `答: ＝ ${ansPoly}`
+      ],
       exp: `同類項をまとめる: (${a}＋${c})x ＋ (${b}＋${d}) ＝ ${ansPoly}`
     };
   },
@@ -2383,6 +2415,10 @@ const problemGenerators = {
     return {
       q: `分配法則を使ってかっこをはずし、簡単にしなさい。<br><span class="problem-body-math">${k}(${inner})</span>`,
       ans: ansPoly,
+      steps: [
+        `分配法則でかっこの中の各項にかける: ＝ ${k}×(${formatTerm(a, 'x', true)}) ＋ ${k}×(${b})`,
+        `答: ＝ ${ansPoly}`
+      ],
       exp: `${k}×(${formatTerm(a, 'x', true)}) ＋ ${k}×(${b}) ＝ ${ansPoly}`
     };
   },
@@ -2398,6 +2434,11 @@ const problemGenerators = {
     return {
       q: `次の方程式を解きなさい。<br><span class="problem-body-math">${left} ＝ ${right}</span>`,
       ans: `x ＝ ${x}`,
+      steps: [
+        `xの項を左辺へ、数の項を右辺へ移項: ${a}x － ${c}x ＝ ${d} － (${b})`,
+        `同類項をまとめる: ${formatTerm(a - c, 'x', true)} ＝ ${(a - c) * x}`,
+        `両辺を ${a - c} で割る: x ＝ ${x}`
+      ],
       exp: `xの項を左辺へ、数の項を右辺へ移項: (${a}－${c})x ＝ ${d}－(${b}) → ${formatTerm(a - c, 'x', true)} ＝ ${(a - c) * x} → x ＝ ${x}`
     };
   },
@@ -2413,6 +2454,11 @@ const problemGenerators = {
     return {
       q: `次の方程式を解きなさい。<br><span class="problem-body-math">${k}(${inner}) ＝ ${right}</span>`,
       ans: `x ＝ ${x}`,
+      steps: [
+        `かっこをはずす (分配法則): ${k}x ＋ (${k * a}) ＝ ${right}`,
+        `移項して整理: (${k}－${rhsA})x ＝ ${rhsB} － (${k * a}) → ${formatTerm(k - rhsA, 'x', true)} ＝ ${(k - rhsA) * x}`,
+        `両辺を ${k - rhsA} で割る: x ＝ ${x}`
+      ],
       exp: `かっこを外して整理: ${formatTerm(k - rhsA, 'x', true)} ＝ ${(k - rhsA) * x} → x ＝ ${x}`
     };
   },
@@ -2550,6 +2596,11 @@ const problemGenerators = {
     return {
       q: `次の計算をしなさい。<br><span class="problem-body-math">(${p1}) － (${p2})</span>`,
       ans: ansPoly,
+      steps: [
+        `かっこをはずす (ひく式の符号を反転): ＝ ${p1} ${formatPoly2(-a2, 'x', -b2, 'y')}`,
+        `同類項をまとめる: ＝ (${a1}－${a2})x ＋ (${b1}－(${b2}))y`,
+        `答: ＝ ${ansPoly}`
+      ],
       exp: `ひく式の各項の符号を変えて加える: (${a1}－${a2})x ＋ (${b1}－(${b2}))y ＝ ${ansPoly}`
     };
   },
@@ -2561,6 +2612,11 @@ const problemGenerators = {
     return {
       q: `次の計算をしなさい。<br><span class="problem-body-math">${product}a²b ÷ (－${a}b)</span>`,
       ans: `－${b * 3}a²`,
+      steps: [
+        `全体の符号を決定 (正÷負は負): ＝ －(${product}a²b ÷ ${a}b)`,
+        `数と文字をそれぞれ計算: ＝ －(${product}/${a} × a² × b/b)`,
+        `答: ＝ －${b * 3}a²`
+      ],
       exp: `符号は負。数: ${product}÷(－${a})＝－${b * 3}。文字: a²b÷b ＝ a²。よって －${b * 3}a²`
     };
   },
@@ -2569,9 +2625,16 @@ const problemGenerators = {
     const a = randInt(2, 4);
     const b = randInt(2, 5);
     const c = randInt(6, 18);
+    const ans1 = `y ＝ (${c} － ${a}x) / ${b}`;
+    const ans2 = `y ＝ －${simplifyFraction(a, b)}x ＋ ${simplifyFraction(c, b)}`;
     return {
       q: `等式 <span class="problem-body-math">${a}x ＋ ${b}y ＝ ${c}</span> を y について解きなさい。`,
-      ans: `y ＝ (${c} － ${a}x) / ${b}　または　y ＝ －${a}/${b}x ＋ ${simplifyFraction(c, b)}`,
+      ans: ans1,
+      steps: [
+        `${a}x を右辺へ移項する: ${b}y ＝ ${c} － ${a}x`,
+        `両辺を ${b} で割る: y ＝ (${c} － ${a}x) / ${b}`,
+        `各項ごとに分ける場合: ${ans2}`
+      ],
       exp: `${b}y ＝ ${c} － ${a}x より、両辺を ${b} で割って y ＝ (${c} － ${a}x)/${b}`
     };
   },
@@ -2588,6 +2651,12 @@ const problemGenerators = {
     return {
       q: `次の連立方程式を加減法で解きなさい。<br><span class="problem-body-math">{ 2x ＋ y ＝ ${c1}<br>&nbsp;&nbsp;x － y ＝ ${c2}</span>`,
       ans: `x ＝ ${x},  y ＝ ${y}`,
+      steps: [
+        `①式と②式を加えると y が消去される: (2x＋y) ＋ (x－y) ＝ ${c1} ＋ (${c2}) → 3x ＝ ${c1 + c2}`,
+        `両辺を 3 で割る: x ＝ ${x}`,
+        `x ＝ ${x} を②式に代入: ${x} － y ＝ ${c2} → －y ＝ ${c2 - x} → y ＝ ${y}`,
+        `答: x ＝ ${x},  y ＝ ${y}`
+      ],
       exp: `2つの式を足すと y が消去されて 3x ＝ ${c1 + c2} → x ＝ ${x}。代入して y ＝ ${y}`
     };
   },
@@ -2604,6 +2673,13 @@ const problemGenerators = {
     return {
       q: `次の連立方程式を代入法で解きなさい。<br><span class="problem-body-math">{ y ＝ ${k}x ${mStr}<br>&nbsp;&nbsp;3x ＋ 2y ＝ ${c2}</span>`,
       ans: `x ＝ ${x},  y ＝ ${y}`,
+      steps: [
+        `①式を②式の y に代入: 3x ＋ 2(${k}x ${mStr}) ＝ ${c2}`,
+        `かっこをはずして整理: 3x ＋ ${2 * k}x ${2 * m >= 0 ? '＋ ' + 2 * m : '－ ' + Math.abs(2 * m)} ＝ ${c2} → ${3 + 2 * k}x ＝ ${c2 - 2 * m}`,
+        `両辺を ${3 + 2 * k} で割る: x ＝ ${x}`,
+        `x ＝ ${x} を①式に代入: y ＝ ${k}×(${x}) ${mStr} ＝ ${y}`,
+        `答: x ＝ ${x},  y ＝ ${y}`
+      ],
       exp: `2つ目の式の y に (${k}x ${mStr}) を代入: 3x ＋ 2(${k}x ${mStr}) ＝ ${c2} を解いて x ＝ ${x}, y ＝ ${y}`
     };
   },
@@ -2611,12 +2687,18 @@ const problemGenerators = {
   g2_simul_complex: () => {
     const x = randInt(2, 4);
     const y = randInt(1, 4);
-    // 0.3x + 0.2y = ...
     const c1 = (0.3 * x + 0.2 * y).toFixed(1);
     const c2 = x - y;
     return {
       q: `次の連立方程式を解きなさい。<br><span class="problem-body-math">{ 0.3x ＋ 0.2y ＝ ${c1}<br>&nbsp;&nbsp;x － y ＝ ${c2}</span>`,
       ans: `x ＝ ${x},  y ＝ ${y}`,
+      steps: [
+        `①式の両辺を 10倍して小数をなくす: 3x ＋ 2y ＝ ${Math.round(c1 * 10)}`,
+        `②式の両辺を 2倍して加減法: 2x － 2y ＝ ${2 * c2}`,
+        `2式を足して y を消去: 5x ＝ ${Math.round(c1 * 10) + 2 * c2} → x ＝ ${x}`,
+        `x ＝ ${x} を②式に代入: ${x} － y ＝ ${c2} → y ＝ ${y}`,
+        `答: x ＝ ${x},  y ＝ ${y}`
+      ],
       exp: `第1式の両辺を 10倍して 3x ＋ 2y ＝ ${Math.round(c1 * 10)}。これと第2式を連立させて解く。`
     };
   },
@@ -2630,6 +2712,13 @@ const problemGenerators = {
     return {
       q: `ある博物館の入館料は、大人2人と子ども3人で ${total1}円 です。また、大人1人の入館料は子ども1人の入館料より 200円 高いそうです。大人1人と子ども1人の入館料をそれぞれ求めなさい。`,
       ans: `大人: ${adultPrice} 円 ,  子ども: ${childPrice} 円`,
+      steps: [
+        `未知数を文字でおく: 大人1人を x円、子ども1人を y円とする`,
+        `問題文から連立方程式を立式: { 2x ＋ 3y ＝ ${total1},  x ＝ y ＋ 200 }`,
+        `代入法で解く: 2(y ＋ 200) ＋ 3y ＝ ${total1} → 5y ＋ 400 ＝ ${total1} → y ＝ ${childPrice}`,
+        `x を求める: x ＝ ${childPrice} ＋ 200 ＝ ${adultPrice}`,
+        `答: 大人: ${adultPrice} 円 ,  子ども: ${childPrice} 円`
+      ],
       exp: `大人 x 円、子ども y 円とする。方程式 { 2x ＋ 3y ＝ ${total1}, x ＝ y ＋ 200 } を解く。`
     };
   },
@@ -2644,6 +2733,11 @@ const problemGenerators = {
     return {
       q: `一次関数 <span class="problem-body-math">y ＝ ${a}x ${bStr}</span> について、次の問いに答えなさい。<br>(1) この関数の変化の割合を答えなさい。<br>(2) x の値が ${x1} から ${x2} まで増加するときの y の増加量を求めなさい。`,
       ans: `(1) ${a} ,  (2) ${deltaY}`,
+      steps: [
+        `(1) 一次関数 y ＝ ax ＋ b の変化の割合は常に傾き a に等しい: ＝ ${a}`,
+        `(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${a} × (${x2} － (${x1})) ＝ ${a} × ${x2 - x1} ＝ ${deltaY}`,
+        `答: (1) ${a} ,  (2) ${deltaY}`
+      ],
       exp: `(1) 一次関数の変化の割合は傾き a に等しいので ${a}。<br>(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${a} × (${x2 - x1}) ＝ ${deltaY}`
     };
   },
@@ -2655,6 +2749,10 @@ const problemGenerators = {
     return {
       q: `直線 <span class="problem-body-math">y ＝ ${a}x ${bStr}</span> の傾きと切片をそれぞれ答えなさい。`,
       ans: `傾き: ${a} ,  切片: ${b}`,
+      steps: [
+        `一次関数の基本形: y ＝ ax ＋ b において a が傾き、b が切片`,
+        `答: 傾き ＝ ${a} ,  切片 ＝ ${b}`
+      ],
       exp: `一次関数 y ＝ ax ＋ b において、a が傾き、b が切片です。`
     };
   },
@@ -2668,6 +2766,12 @@ const problemGenerators = {
     return {
       q: `傾きが ${a} で、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
       ans: `y ＝ ${a}x ${bStr}`,
+      steps: [
+        `求める直線の式を y ＝ ${a}x ＋ b とおく`,
+        `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${a}×(${x1}) ＋ b → ${y1} ＝ ${a * x1} ＋ b`,
+        `切片 b を解く: b ＝ ${b}`,
+        `答: y ＝ ${a}x ${bStr}`
+      ],
       exp: `求める式を y ＝ ${a}x ＋ b とおき、x＝${x1}, y＝${y1} を代入: ${y1} ＝ ${a}×(${x1}) ＋ b より b ＝ ${b}`
     };
   },
@@ -2684,6 +2788,12 @@ const problemGenerators = {
     return {
       q: `2直線 <span class="problem-body-math">y ＝ 2x ${b1Str}</span> と <span class="problem-body-math">y ＝ －x ${b2Str}</span> の交点の座標を求めなさい。`,
       ans: `(${x}, ${y})`,
+      steps: [
+        `2直線の交点は連立方程式の解: 2x ${b1Str} ＝ －x ${b2Str}`,
+        `移項して解く: 3x ＝ ${b2 - b1} → x ＝ ${x}`,
+        `代入して y を求める: y ＝ 2×(${x}) ${b1Str} ＝ ${y}`,
+        `答: (${x}, ${y})`
+      ],
       exp: `連立方程式として解く: 2x ${b1Str} ＝ －x ${b2Str} → 3x ＝ ${b2 - b1} → x ＝ ${x}。代入して y ＝ ${y}`
     };
   },
@@ -2695,6 +2805,12 @@ const problemGenerators = {
     return {
       q: `平行な2直線 l, m があります。l と m の間に「くの字」に折れた角があり、上側の角が ${a}°、下側の角が ${b}° のとき、折れ曲がった角 ∠x の大きさを求めなさい。`,
       ans: `∠x ＝ ${ans}°`,
+      steps: [
+        `折れ曲がり点を通る補助線 (l, m に平行な直線) を引く`,
+        `平行線の錯角は等しいので、上側の角は ${a}°、下側の角は ${b}°`,
+        `2つの角を合わせる: ∠x ＝ ${a}° ＋ ${b}° ＝ ${ans}°`,
+        `答: ∠x ＝ ${ans}°`
+      ],
       exp: `折れ曲がり点を通る平行な補助線を引くと、錯角が等しいことから ∠x ＝ ${a}° ＋ ${b}° ＝ ${ans}°`
     };
   },
@@ -2786,9 +2902,15 @@ const problemGenerators = {
       const sign = b > 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
       const mid = 2 * b;
       const last = b * b;
+      const ansStr = `x² ${mid >= 0 ? '＋ ' + mid : '－ ' + Math.abs(mid)}x ＋ ${last}`;
       return {
         q: `次の式を展開しなさい。<br><span class="problem-body-math">(x ${sign})²</span>`,
-        ans: `x² ${mid >= 0 ? '＋ ' + mid : '－ ' + Math.abs(mid)}x ＋ ${last}`,
+        ans: ansStr,
+        steps: [
+          `乗法公式 (x＋a)² ＝ x² ＋ 2ax ＋ a² を利用`,
+          `代入して計算: ＝ x² ＋ 2×(${b})x ＋ (${b})²`,
+          `答: ＝ ${ansStr}`
+        ],
         exp: `公式 (x＋a)² ＝ x² ＋ 2ax ＋ a² を利用: x² ＋ 2×(${b})x ＋ (${b})²`
       };
     } else {
@@ -2796,9 +2918,15 @@ const problemGenerators = {
       const bStr = b >= 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
       const sum = a + b;
       const prod = a * b;
+      const ansStr = `x² ${sum >= 0 ? '＋ ' + sum : '－ ' + Math.abs(sum)}x ${prod >= 0 ? '＋ ' + prod : '－ ' + Math.abs(prod)}`;
       return {
         q: `次の式を展開しなさい。<br><span class="problem-body-math">(x ${aStr})(x ${bStr})</span>`,
-        ans: `x² ${sum >= 0 ? '＋ ' + sum : '－ ' + Math.abs(sum)}x ${prod >= 0 ? '＋ ' + prod : '－ ' + Math.abs(prod)}`,
+        ans: ansStr,
+        steps: [
+          `乗法公式 (x＋a)(x＋b) ＝ x² ＋ (a＋b)x ＋ ab を利用`,
+          `和と積を計算: 和は ${a}＋(${b})＝${sum}、積は (${a})×(${b})＝${prod}`,
+          `答: ＝ ${ansStr}`
+        ],
         exp: `公式 (x＋a)(x＋b) ＝ x² ＋ (a＋b)x ＋ ab を利用: 和は ${sum}、積は ${prod}`
       };
     }
@@ -2807,9 +2935,15 @@ const problemGenerators = {
   g3_poly_common_factor: () => {
     const m = randInt(2, 4);
     const a = randInt(2, 5);
+    const ansStr = `${m}a(${a}x ＋ y)`;
     return {
       q: `次の式を因数分解しなさい。<br><span class="problem-body-math">${m * a}ax ＋ ${m}ay</span>`,
-      ans: `${m}a(${a}x ＋ y)`,
+      ans: ansStr,
+      steps: [
+        `各項の共通因数を見つける: 両方の項に ${m}a が含まれる`,
+        `共通因数 ${m}a でくくり出す: ＝ ${m}a(${a}x ＋ y)`,
+        `答: ＝ ${ansStr}`
+      ],
       exp: `共通因数 ${m}a をくくり出す: ${m}a(${a}x ＋ y)`
     };
   },
@@ -2821,15 +2955,27 @@ const problemGenerators = {
     const prod = a * b;
     const isDiff = Math.random() > 0.5;
     if (isDiff) {
+      const ansStr = `(x ＋ ${a})(x － ${a})`;
       return {
         q: `次の式を因数分解しなさい。<br><span class="problem-body-math">x² － ${a * a}</span>`,
-        ans: `(x ＋ ${a})(x － ${a})`,
+        ans: ansStr,
+        steps: [
+          `公式 a² － b² ＝ (a＋b)(a－b) [平方の差] を利用`,
+          `${a * a} ＝ ${a}² なので: x² － ${a}²`,
+          `答: ＝ ${ansStr}`
+        ],
         exp: `平方の差 a²－b² ＝ (a＋b)(a－b) の公式を利用`
       };
     } else {
+      const ansStr = `(x ＋ ${a})(x ＋ ${b})`;
       return {
         q: `次の式を因数分解しなさい。<br><span class="problem-body-math">x² ＋ ${sum}x ＋ ${prod}</span>`,
-        ans: `(x ＋ ${a})(x ＋ ${b})`,
+        ans: ansStr,
+        steps: [
+          `足して ${sum}、かけて ${prod} になる2数を探す`,
+          `該当する2数は ${a} と ${b} (${a}＋${b}＝${sum}, ${a}×${b}＝${prod})`,
+          `答: ＝ ${ansStr}`
+        ],
         exp: `足して ${sum}、かけて ${prod} になる2数は ${a} と ${b}`
       };
     }
@@ -2842,6 +2988,11 @@ const problemGenerators = {
     return {
       q: `x ＝ ${x}、y ＝ ${y} のとき、<span class="problem-body-math">x² － y²</span> の値を因数分解を利用して計算しなさい。`,
       ans: `${ans}`,
+      steps: [
+        `因数分解の公式を利用: x² － y² ＝ (x ＋ y)(x － y)`,
+        `x＝${x}, y＝${y} を代入: (${x} ＋ ${y}) × (${x} － ${y})`,
+        `計算する: ${x + y} × ${x - y} ＝ ${ans}`
+      ],
       exp: `x² － y² ＝ (x ＋ y)(x － y) ＝ (${x} ＋ ${y})(${x} － ${y}) ＝ ${x + y} × ${x - y} ＝ ${ans}`
     };
   },
@@ -2853,6 +3004,11 @@ const problemGenerators = {
     return {
       q: `根号の中をできるだけ簡単な自然数にしなさい。<br><span class="problem-body-math">√${inside}</span>`,
       ans: `${a}√${b}`,
+      steps: [
+        `${inside} を素因数分解する: ${inside} ＝ ${a * a} × ${b} ＝ ${a}² × ${b}`,
+        `平方を根号の外に出す: √(${a}² × ${b}) ＝ ${a}√${b}`,
+        `答: ＝ ${a}√${b}`
+      ],
       exp: `√${inside} ＝ √(${a}² × ${b}) ＝ ${a}√${b}`
     };
   },
@@ -2864,6 +3020,11 @@ const problemGenerators = {
     return {
       q: `次の数の分母を有理化しなさい。<br><span class="problem-body-math">${num} / √${b}</span>`,
       ans: `${k}√${b}`,
+      steps: [
+        `分母と分子に √${b} をかける: (${num} × √${b}) / (√${b} × √${b})`,
+        `分母の根号を外す: ＝ ${num}√${b} / ${b}`,
+        `約分する (${num}÷${b}＝${k}): ＝ ${k}√${b}`
+      ],
       exp: `分母と分子に √${b} をかける: (${num} × √${b}) / (√${b} × √${b}) ＝ ${num}√${b} / ${b} ＝ ${k}√${b}`
     };
   },
@@ -2872,6 +3033,11 @@ const problemGenerators = {
     return {
       q: `次の計算をしなさい。<br><span class="problem-body-math">√24 × √18</span>`,
       ans: `12√3`,
+      steps: [
+        `それぞれの根号を簡単にする: √24 ＝ 2√6、√18 ＝ 3√2`,
+        `かけ合わせる: 2√6 × 3√2 ＝ 6√12`,
+        `√12 ＝ 2√3 を代入して整理: 6 × 2√3 ＝ 12√3`
+      ],
       exp: `2√6 × 3√2 ＝ 6√12 ＝ 6 × 2√3 ＝ 12√3`
     };
   },
@@ -2880,6 +3046,11 @@ const problemGenerators = {
     return {
       q: `次の計算をしなさい。<br><span class="problem-body-math">3√5 ＋ √20 － √45</span>`,
       ans: `2√5`,
+      steps: [
+        `根号の中をできるだけ簡単にする: √20 ＝ 2√5、√45 ＝ 3√5`,
+        `式を置き換える: 3√5 ＋ 2√5 － 3√5`,
+        `同類項のように係数を計算: (3 ＋ 2 － 3)√5 ＝ 2√5`
+      ],
       exp: `根号の中を簡単にする: 3√5 ＋ 2√5 － 3√5 ＝ 2√5`
     };
   },
@@ -2892,6 +3063,12 @@ const problemGenerators = {
     return {
       q: `次の方程式を解きなさい。<br><span class="problem-body-math">(x － ${m})² ＝ ${k * k}</span>`,
       ans: `x ＝ ${x1},  x ＝ ${x2}`,
+      steps: [
+        `両辺の平方根をとる: x － ${m} ＝ ±${k}`,
+        `移項して整理: x ＝ ${m} ± ${k}`,
+        `それぞれの値を計算: x ＝ ${m}＋${k} ＝ ${x1}、x ＝ ${m}－${k} ＝ ${x2}`,
+        `答: x ＝ ${x1},  x ＝ ${x2}`
+      ],
       exp: `平方根をとる: x － ${m} ＝ ±${k} → x ＝ ${m} ± ${k} → x ＝ ${x1}, ${x2}`
     };
   },
@@ -2904,6 +3081,11 @@ const problemGenerators = {
     return {
       q: `次の方程式を因数分解を利用して解きなさい。<br><span class="problem-body-math">x² － ${sum}x ＋ ${prod} ＝ 0</span>`,
       ans: `x ＝ ${a},  x ＝ ${b}`,
+      steps: [
+        `左辺を因数分解する: (x － ${a})(x － ${b}) ＝ 0`,
+        `AB＝0 ならば A＝0 または B＝0: x － ${a} ＝ 0 または x － ${b} ＝ 0`,
+        `答: x ＝ ${a},  x ＝ ${b}`
+      ],
       exp: `因数分解して (x － ${a})(x － ${b}) ＝ 0 より x ＝ ${a}, ${b}`
     };
   },
@@ -2912,6 +3094,12 @@ const problemGenerators = {
     return {
       q: `解の公式を用いて、次の方程式を解きなさい。<br><span class="problem-body-math">2x² ＋ 5x － 1 ＝ 0</span>`,
       ans: `x ＝ (－5 ± √33) / 4`,
+      steps: [
+        `二次方程式 ax² ＋ bx ＋ c ＝ 0 の解の公式: x ＝ (－b ± √(b² － 4ac)) / 2a`,
+        `a＝2, b＝5, c＝－1 を代入: x ＝ (－5 ± √(5² － 4×2×(－1))) / (2×2)`,
+        `根号の中を計算: 5² － 4×2×(－1) ＝ 25 ＋ 8 ＝ 33`,
+        `答: x ＝ (－5 ± √33) / 4`
+      ],
       exp: `解の公式 x ＝ (-b ± √(b²-4ac)) / 2a に a=2, b=5, c=-1 を代入: x ＝ (-5 ± √(25 - 4×2×(-1))) / 4 ＝ (-5 ± √33) / 4`
     };
   },
@@ -2920,6 +3108,13 @@ const problemGenerators = {
     return {
       q: `連続する2つの正の奇数があり、それらの積が 63 である。この2つの奇数を求めなさい。`,
       ans: `7 と 9`,
+      steps: [
+        `小さい奇数を x とおくと、もう一方は x ＋ 2`,
+        `方程式を立式: x(x ＋ 2) ＝ 63 → x² ＋ 2x － 63 ＝ 0`,
+        `因数分解して解く: (x ＋ 9)(x － 7) ＝ 0 → x ＝ －9, 7`,
+        `正の奇数なので x ＞ 0 より x ＝ 7、もう一方は 7 ＋ 2 ＝ 9`,
+        `答: 7 と 9`
+      ],
       exp: `小さい奇数を x とおくと、もう一方は x＋2。方程式 x(x＋2) ＝ 63 → x²＋2x－63 ＝ 0 → (x＋9)(x－7) ＝ 0。x＞0 より x＝7。`
     };
   },
@@ -2931,6 +3126,11 @@ const problemGenerators = {
     return {
       q: `y は x の2乗に比例し、x ＝ ${x} のとき y ＝ ${y} です。<br>(1) y を x の式で表しなさい。<br>(2) x ＝ 3 のときの y の値を求めなさい。`,
       ans: `(1) y ＝ ${a}x² ,  (2) y ＝ ${a * 9}`,
+      steps: [
+        `(1) y ＝ ax² において x＝${x}, y＝${y} を代入: ${y} ＝ a×${x}² → ${y} ＝ ${x * x}a → a ＝ ${a}。よって y ＝ ${a}x²`,
+        `(2) y ＝ ${a}x² に x＝3 を代入: y ＝ ${a}×3² ＝ ${a}×9 ＝ ${a * 9}`,
+        `答: (1) y ＝ ${a}x² ,  (2) y ＝ ${a * 9}`
+      ],
       exp: `y ＝ ax² に x＝${x}, y＝${y} を代入して ${y} ＝ ${x * x}a より a ＝ ${a}。よって y ＝ ${a}x²。x＝3 を代入して y ＝ ${a * 9}`
     };
   },
@@ -2940,6 +3140,12 @@ const problemGenerators = {
     return {
       q: `関数 <span class="problem-body-math">y ＝ －2x²</span> において、x の変域が <span class="problem-body-math">－3 ≦ x ≦ 2</span> のときの y の変域を求めなさい。`,
       ans: `－18 ≦ y ≦ 0`,
+      steps: [
+        `x の変域に 0 を含むか確認: －3 ≦ x ≦ 2 は 0 を含む`,
+        `a ＝ －2 ＜ 0 (上に凸の放物線) なので、x＝0 のとき最大値 y＝0`,
+        `原点から遠い端点 x＝－3 で最小値: y ＝ －2×(－3)² ＝ －2×9 ＝ －18`,
+        `答: －18 ≦ y ≦ 0`
+      ],
       exp: `a＜0 の放物線は原点(0, 0)が最大値となり y の最大値は 0。x＝－3 のとき y＝－2×9＝－18(最小値)。よって －18 ≦ y ≦ 0`
     };
   },
@@ -2952,6 +3158,11 @@ const problemGenerators = {
     return {
       q: `関数 <span class="problem-body-math">y ＝ ${a}x²</span> について、x の値が ${x1} から ${x2} まで増加するときの変化の割合を求めなさい。`,
       ans: `${rate}`,
+      steps: [
+        `変化の割合の公式: a(p ＋ q) を利用 (放物線 y ＝ ax² で x が p から q まで変化)`,
+        `代入して計算: ＝ ${a} × (${x1} ＋ ${x2}) ＝ ${a} × ${x1 + x2}`,
+        `答: ＝ ${rate}`
+      ],
       exp: `変化の割合 ＝ a(p＋q) ＝ ${a} × (${x1} ＋ ${x2}) ＝ ${rate}`
     };
   },
@@ -2960,6 +3171,12 @@ const problemGenerators = {
     return {
       q: `相似比が 2 : 3 である相似な2つの三角形 ABC と DEF があります。AB ＝ 6cm のとき、対応する辺 DE の長さを求めなさい。`,
       ans: `9 cm`,
+      steps: [
+        `相似な図形の対応する辺の比は等しい: AB : DE ＝ 2 : 3`,
+        `比例式を解く: 6 : DE ＝ 2 : 3 → 2 × DE ＝ 6 × 3 → 2DE ＝ 18`,
+        `両辺を 2 で割る: DE ＝ 9 cm`,
+        `答: 9 cm`
+      ],
       exp: `2 : 3 ＝ 6 : DE より 2DE ＝ 18 → DE ＝ 9 cm`
     };
   },
@@ -2968,6 +3185,11 @@ const problemGenerators = {
     return {
       q: `相似な2つの立体 P と Q があり、相似比は 2 : 3 です。<br>(1) P と Q の表面積の比を求めなさい。<br>(2) P と Q の体積の比を求めなさい。`,
       ans: `(1) 4 : 9 ,  (2) 8 : 27`,
+      steps: [
+        `(1) 相似比 m : n のとき、面積比は m² : n² ＝ 2² : 3² ＝ 4 : 9`,
+        `(2) 相似比 m : n のとき、体積比は m³ : n³ ＝ 2³ : 3³ ＝ 8 : 27`,
+        `答: (1) 4 : 9 ,  (2) 8 : 27`
+      ],
       exp: `相似比が m : n のとき、面積比は m² : n² ＝ 2² : 3² ＝ 4 : 9、体積比は m³ : n³ ＝ 2³ : 3³ ＝ 8 : 27`
     };
   },
@@ -2978,6 +3200,11 @@ const problemGenerators = {
     return {
       q: `円Oの弧ABに対する中心角が ${centerAngle}° のとき、同じ弧に対する円周角の大きさを求めなさい。`,
       ans: `${circumAngle}°`,
+      steps: [
+        `円周角の定理: 1つの弧に対する円周角の大きさは中心角の半分 (1/2)`,
+        `計算する: ＝ ${centerAngle}° ÷ 2 ＝ ${circumAngle}°`,
+        `答: ＝ ${circumAngle}°`
+      ],
       exp: `円周角の定理より、円周角の大きさは中心角の半分です: ${centerAngle}° ÷ 2 ＝ ${circumAngle}°`
     };
   },
@@ -2992,6 +3219,12 @@ const problemGenerators = {
     return {
       q: `直角をはさむ2辺の長さが ${a}cm, ${b}cm である直角三角形の斜辺の長さを求めなさい。`,
       ans: `${c} cm`,
+      steps: [
+        `三平方の定理 (ピタゴラスの定理): 斜辺 c² ＝ a² ＋ b²`,
+        `代入して計算: c² ＝ ${a}² ＋ ${b}² ＝ ${a * a} ＋ ${b * b} ＝ ${c * c}`,
+        `c ＞ 0 より平方根をとる: c ＝ ${c} cm`,
+        `答: ${c} cm`
+      ],
       exp: `三平方の定理 c² ＝ a² ＋ b² より、c² ＝ ${a}² ＋ ${b}² ＝ ${a * a} ＋ ${b * b} ＝ ${c * c} → c ＝ ${c} cm`
     };
   },
@@ -3000,6 +3233,11 @@ const problemGenerators = {
     return {
       q: `直角二等辺三角形の直角をはさむ1辺の長さが 4cm のとき、斜辺の長さを求めなさい。`,
       ans: `4√2 cm`,
+      steps: [
+        `特別な直角三角形の辺の比: 45°-45°-90° の直角二等辺三角形は 1 : 1 : √2`,
+        `斜辺の長さを求める: 4 × √2 ＝ 4√2 cm`,
+        `答: 4√2 cm`
+      ],
       exp: `45°-45°-90° の直角三角形の辺の比は 1 : 1 : √2 なので、斜辺は 4 × √2 ＝ 4√2 cm`
     };
   },
@@ -3104,21 +3342,12 @@ function generateQuickTest() {
     studentEl.setAttribute('data-count', count);
     studentEl.innerHTML = `
       <div class="test-paper-header">
-        <div class="test-header-upper">
-          <div class="test-header-title-box">
-            <span class="test-paper-badge">第${grade}学年 数学科</span>
+        <div class="test-header-bar">
+          <div class="test-header-left">
+            <span class="test-paper-badge">第${grade}学年 数学</span>
             <h3 class="test-paper-title">${cleanTitle}</h3>
           </div>
-          <div class="test-score-box">
-            <span class="score-label">得点</span>
-            <span class="score-line">/ 100</span>
-          </div>
-        </div>
-        <div class="test-header-lower">
-          <div class="test-instruction-note">
-            ※ 途中式や計算のあとをしっかり残して解答しなさい。
-          </div>
-          <div class="test-student-info">
+          <div class="test-header-right">
             <span class="test-student-cell">${grade} 年 _____ 組 _____ 番</span>
             <span class="test-student-cell name-cell">氏名: ___________________________</span>
           </div>
@@ -3156,22 +3385,13 @@ function generateQuickTest() {
     answerEl.setAttribute('data-count', count);
     answerEl.innerHTML = `
       <div class="test-paper-header answer-header">
-        <div class="test-header-upper">
-          <div class="test-header-title-box">
-            <span class="test-paper-badge answer-badge">第${grade}学年 模範解答</span>
-            <h3 class="test-paper-title answer-title">【模範解答】 ${cleanTitle}</h3>
+        <div class="test-header-bar">
+          <div class="test-header-left">
+            <span class="test-paper-badge answer-badge">第${grade}学年 数学</span>
+            <h3 class="test-paper-title answer-title">【模範解答・途中式】 ${cleanTitle}</h3>
           </div>
-          <div class="test-score-box answer-score">
-            <span class="score-label">満点</span>
-            <span class="score-line">100</span>
-          </div>
-        </div>
-        <div class="test-header-lower">
-          <div class="test-instruction-note" style="color: #b91c1c;">
-            ※ 生徒のつまずきやすい点や、途中式の確認にご活用ください。
-          </div>
-          <div class="test-student-info">
-            <span class="test-student-cell teacher-tag"><i class="fa-solid fa-chalkboard-user"></i> 教員用控 (模範解答・解説)</span>
+          <div class="test-header-right">
+            <span class="test-student-cell teacher-tag"><i class="fa-solid fa-chalkboard-user"></i> 教員用控 (途中式付き)</span>
           </div>
         </div>
       </div>
@@ -3183,16 +3403,23 @@ function generateQuickTest() {
               <span class="problem-num" style="background: #dc2626;">${q.num}</span>
               <div class="problem-text">${q.q}</div>
             </div>
-            <div class="problem-answer-line" style="margin-top: 6px;">
-              <span style="color: #dc2626; font-weight: 800;">【正答】</span>
-              <span class="problem-answer-fill" style="border-bottom-color: #dc2626; font-weight: 800;">${q.ans}</span>
+            <div class="problem-answer-line" style="margin-top: 4px;">
+              <span class="answer-badge-label">【正答】</span>
+              <span class="problem-answer-fill red-fill">${q.ans}</span>
             </div>
-            ${q.exp ? `
-              <div class="answer-explanation-box">
-                <strong><i class="fa-solid fa-lightbulb"></i> 解き方のポイント:</strong><br>
-                ${q.exp}
+            ${q.steps && q.steps.length > 0 ? `
+              <div class="answer-steps-box">
+                <div class="steps-heading"><i class="fa-solid fa-stairs text-danger"></i> 【途中式・解法ステップ】</div>
+                <div class="steps-list">
+                  ${q.steps.map(s => `<div class="step-item">・${s}</div>`).join('')}
+                </div>
               </div>
-            ` : ''}
+            ` : (q.exp ? `
+              <div class="answer-steps-box">
+                <div class="steps-heading"><i class="fa-solid fa-lightbulb text-danger"></i> 【解き方のポイント】</div>
+                <div class="step-item">・${q.exp}</div>
+              </div>
+            ` : '')}
           </div>
         `).join('')}
       </div>
