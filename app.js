@@ -2251,6 +2251,32 @@ function simplifyFraction(num, den) {
   return `${num}/${den}`;
 }
 
+// 数学用項フォーマッター (係数1の省略, 符号の適正化)
+function formatTerm(coeff, variable = '', isFirst = false) {
+  if (coeff === 0) return '';
+  const isPos = coeff > 0;
+  const abs = Math.abs(coeff);
+  const coeffStr = (abs === 1 && variable !== '') ? '' : `${abs}`;
+  
+  if (isFirst) {
+    const sign = isPos ? '' : '－';
+    return `${sign}${coeffStr}${variable}`;
+  } else {
+    const sign = isPos ? '＋ ' : '－ ';
+    return `${sign}${coeffStr}${variable}`;
+  }
+}
+
+// 2項多項式フォーマッター (例: 4x － y, x ＋ 5)
+function formatPoly2(c1, v1, c2, v2) {
+  const t1 = formatTerm(c1, v1, true);
+  if (!t1) {
+    return formatTerm(c2, v2, true) || '0';
+  }
+  const t2 = formatTerm(c2, v2, false);
+  return t2 ? `${t1} ${t2}` : t1;
+}
+
 // ----------------------------------------------------
 // 各単元・小単元の問題ジェネレーター集
 // ----------------------------------------------------
@@ -2290,7 +2316,7 @@ const problemGenerators = {
       return {
         q: `次の計算をしなさい。<br><span class="problem-body-math">${aStr} ÷ ${bStr}</span>`,
         ans: `${ans >= 0 ? '+' : ''}${ans}`,
-        exp: `負の符号の個数は ${(a < 0 ? 1 : 0) + (b < 0 ? 1 : 0)} 個。符号は ${ans >= 0 ? '＋' : '－'} で ${Math.abs(a)}÷${Math.abs(b)} ＝ ${ans}`
+        exp: `負の符号の個数は ${(a < 0 ? 1 : 0) + (b < 0 ? 1 : 0)} 個。答えは ${ans >= 0 ? '+' : ''}${ans}`
       };
     } else {
       const a = randNonZero(-9, 9);
@@ -2301,7 +2327,7 @@ const problemGenerators = {
       return {
         q: `次の計算をしなさい。<br><span class="problem-body-math">${aStr} × ${bStr}</span>`,
         ans: `${ans >= 0 ? '+' : ''}${ans}`,
-        exp: `負の符号の個数は ${(a < 0 ? 1 : 0) + (b < 0 ? 1 : 0)} 個。答えは ${ans}`
+        exp: `負の符号の個数は ${(a < 0 ? 1 : 0) + (b < 0 ? 1 : 0)} 個。答えは ${ans >= 0 ? '+' : ''}${ans}`
       };
     }
   },
@@ -2325,12 +2351,11 @@ const problemGenerators = {
     const a = randNonZero(-3, 3);
     const b = randNonZero(-6, 6);
     const ans = a * (x * x) + b * x;
-    const aStr = a === 1 ? '' : (a === -1 ? '-' : `${a}`);
-    const bStr = b > 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
+    const expr = formatPoly2(a, 'x²', b, 'x');
     return {
-      q: `x ＝ ${x} のとき、次の式の値を求めなさい。<br><span class="problem-body-math">${aStr}x² ${bStr}x</span>`,
+      q: `x ＝ ${x} のとき、次の式の値を求めなさい。<br><span class="problem-body-math">${expr}</span>`,
       ans: `${ans}`,
-      exp: `${aStr}(${x})² ${bStr}(${x}) ＝ ${a * (x * x)} ＋ (${b * x}) ＝ ${ans}`
+      exp: `${expr} の x に ${x} を代入: ${a * (x * x)} ＋ (${b * x}) ＝ ${ans}`
     };
   },
 
@@ -2339,15 +2364,13 @@ const problemGenerators = {
     const b = randInt(-9, 9);
     const c = randNonZero(-5, 5);
     const d = randInt(-9, 9);
-    const ansA = a + c;
-    const ansB = b + d;
-    const bStr = b >= 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
-    const dStr = d >= 0 ? `＋ ${d}` : `－ ${Math.abs(d)}`;
-    const ansStr = `${ansA === 0 ? '' : (ansA === 1 ? 'x' : (ansA === -1 ? '-x' : `${ansA}x`))} ${ansB >= 0 ? (ansA !== 0 ? '＋ ' : '') + ansB : '－ ' + Math.abs(ansB)}`.trim();
+    const p1 = formatPoly2(a, 'x', b, '');
+    const p2 = formatPoly2(c, 'x', d, '');
+    const ansPoly = formatPoly2(a + c, 'x', b + d, '');
     return {
-      q: `次の計算をしなさい。<br><span class="problem-body-math">(${a}x ${bStr}) ＋ (${c}x ${dStr})</span>`,
-      ans: ansStr || '0',
-      exp: `同類項をまとめる: (${a}＋${c})x ＋ (${b}＋${d}) ＝ ${ansStr}`
+      q: `次の計算をしなさい。<br><span class="problem-body-math">(${p1}) ＋ (${p2})</span>`,
+      ans: ansPoly,
+      exp: `同類項をまとめる: (${a}＋${c})x ＋ (${b}＋${d}) ＝ ${ansPoly}`
     };
   },
 
@@ -2355,14 +2378,12 @@ const problemGenerators = {
     const k = randInt(2, 4);
     const a = randNonZero(-4, 4);
     const b = randInt(-6, 6);
-    const ansA = k * a;
-    const ansB = k * b;
-    const bStr = b >= 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
-    const ansStr = `${ansA}x ${ansB >= 0 ? '＋ ' + ansB : '－ ' + Math.abs(ansB)}`;
+    const inner = formatPoly2(a, 'x', b, '');
+    const ansPoly = formatPoly2(k * a, 'x', k * b, '');
     return {
-      q: `分配法則を使ってかっこをはずし、簡単にしなさい。<br><span class="problem-body-math">${k}(${a}x ${bStr})</span>`,
-      ans: ansStr,
-      exp: `${k}×(${a}x) ＋ ${k}×(${b}) ＝ ${ansStr}`
+      q: `分配法則を使ってかっこをはずし、簡単にしなさい。<br><span class="problem-body-math">${k}(${inner})</span>`,
+      ans: ansPoly,
+      exp: `${k}×(${formatTerm(a, 'x', true)}) ＋ ${k}×(${b}) ＝ ${ansPoly}`
     };
   },
 
@@ -2371,14 +2392,13 @@ const problemGenerators = {
     const a = randInt(2, 5);
     const c = randInt(1, a - 1);
     const b = randInt(-12, 12);
-    // ax + b = cx + d => (a-c)x = d - b => d = (a-c)*x + b
     const d = (a - c) * x + b;
-    const bStr = b >= 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
-    const dStr = d >= 0 ? `＋ ${d}` : `－ ${Math.abs(d)}`;
+    const left = formatPoly2(a, 'x', b, '');
+    const right = formatPoly2(c, 'x', d, '');
     return {
-      q: `次の方程式を解きなさい。<br><span class="problem-body-math">${a}x ${bStr} ＝ ${c}x ${dStr}</span>`,
+      q: `次の方程式を解きなさい。<br><span class="problem-body-math">${left} ＝ ${right}</span>`,
       ans: `x ＝ ${x}`,
-      exp: `xの項を左辺へ、数の項を右辺へ移項: (${a}－${c})x ＝ ${d}－(${b}) → ${a - c}x ＝ ${(a - c) * x} → x ＝ ${x}`
+      exp: `xの項を左辺へ、数の項を右辺へ移項: (${a}－${c})x ＝ ${d}－(${b}) → ${formatTerm(a - c, 'x', true)} ＝ ${(a - c) * x} → x ＝ ${x}`
     };
   },
 
@@ -2388,12 +2408,12 @@ const problemGenerators = {
     const a = randInt(-5, 5);
     const rhsA = randInt(1, 3);
     const rhsB = k * (x + a) - rhsA * x;
-    const aStr = a >= 0 ? `＋ ${a}` : `－ ${Math.abs(a)}`;
-    const rhsBStr = rhsB >= 0 ? `＋ ${rhsB}` : `－ ${Math.abs(rhsB)}`;
+    const inner = formatPoly2(1, 'x', a, '');
+    const right = formatPoly2(rhsA, 'x', rhsB, '');
     return {
-      q: `次の方程式を解きなさい。<br><span class="problem-body-math">${k}(x ${aStr}) ＝ ${rhsA}x ${rhsBStr}</span>`,
+      q: `次の方程式を解きなさい。<br><span class="problem-body-math">${k}(${inner}) ＝ ${right}</span>`,
       ans: `x ＝ ${x}`,
-      exp: `かっこを外す: ${k}x ＋ ${k * a} ＝ ${rhsA}x ${rhsBStr} → 移項して整理: ${k - rhsA}x ＝ ${(k - rhsA) * x} → x ＝ ${x}`
+      exp: `かっこを外して整理: ${formatTerm(k - rhsA, 'x', true)} ＝ ${(k - rhsA) * x} → x ＝ ${x}`
     };
   },
 
@@ -2524,14 +2544,13 @@ const problemGenerators = {
     const b2 = randNonZero(-6, 6);
     const ansA = a1 - a2;
     const ansB = b1 - b2;
-    const b1Str = b1 >= 0 ? `＋ ${b1}y` : `－ ${Math.abs(b1)}y`;
-    const b2Str = b2 >= 0 ? `＋ ${b2}y` : `－ ${Math.abs(b2)}y`;
-    const ansAStr = ansA === 1 ? 'x' : (ansA === -1 ? '-x' : `${ansA}x`);
-    const ansBStr = ansB >= 0 ? `＋ ${ansB}y` : `－ ${Math.abs(ansB)}y`;
+    const p1 = formatPoly2(a1, 'x', b1, 'y');
+    const p2 = formatPoly2(a2, 'x', b2, 'y');
+    const ansPoly = formatPoly2(ansA, 'x', ansB, 'y');
     return {
-      q: `次の計算をしなさい。<br><span class="problem-body-math">(${a1}x ${b1Str}) － (${a2}x ${b2Str})</span>`,
-      ans: `${ansAStr} ${ansBStr}`,
-      exp: `ひく式の各項の符号を変えて加える: (${a1}－${a2})x ＋ (${b1}－(${b2}))y ＝ ${ansAStr} ${ansBStr}`
+      q: `次の計算をしなさい。<br><span class="problem-body-math">(${p1}) － (${p2})</span>`,
+      ans: ansPoly,
+      exp: `ひく式の各項の符号を変えて加える: (${a1}－${a2})x ＋ (${b1}－(${b2}))y ＝ ${ansPoly}`
     };
   },
 
@@ -3054,7 +3073,12 @@ function generateQuickTest() {
   const currentMajor = gradeUnits.find(m => m.id === majorId) || gradeUnits[0];
   const currentSub = currentMajor?.subUnits?.find(s => s.id === subUnitId) || { name: '練習テスト' };
 
-  const testTitle = currentSub.name.replace(/【.*】/, '') || currentMajor.name;
+  let cleanTitle = currentSub.name.replace(/【.*?】/, '').trim();
+  if (cleanTitle.includes('全領域からランダム') || cleanTitle.includes('全単元からランダム')) {
+    cleanTitle = `第${grade}学年 数学 総合確認テスト`;
+  } else if (!cleanTitle) {
+    cleanTitle = currentMajor.name;
+  }
   const majorName = currentMajor ? currentMajor.name : '数学科';
 
   // 問題ジェネレーターの選定
@@ -3080,22 +3104,24 @@ function generateQuickTest() {
     studentEl.setAttribute('data-count', count);
     studentEl.innerHTML = `
       <div class="test-paper-header">
-        <div class="test-paper-top-row">
-          <div class="test-paper-title-area">
-            <span class="test-paper-badge">第${grade}学年 数学科 小テストプリント</span>
-            <h3 class="test-paper-title">${testTitle}</h3>
+        <div class="test-header-upper">
+          <div class="test-header-title-box">
+            <span class="test-paper-badge">第${grade}学年 数学科</span>
+            <h3 class="test-paper-title">${cleanTitle}</h3>
           </div>
-          <div class="test-paper-student-info">
-            <div class="test-student-box">${grade}年 _____組 _____番</div>
-            <div class="test-student-box name-box">氏名: </div>
-            <div class="test-score-box">
-              <div>得点</div>
-              <div class="test-score-huge">/ 100</div>
-            </div>
+          <div class="test-score-box">
+            <span class="score-label">得点</span>
+            <span class="score-line">/ 100</span>
           </div>
         </div>
-        <div class="test-instruction-note">
-          ※ 途中式や計算のあとをしっかり残して解答しなさい。丁寧な文字で書きましょう。
+        <div class="test-header-lower">
+          <div class="test-instruction-note">
+            ※ 途中式や計算のあとをしっかり残して解答しなさい。
+          </div>
+          <div class="test-student-info">
+            <span class="test-student-cell">${grade} 年 _____ 組 _____ 番</span>
+            <span class="test-student-cell name-cell">氏名: ___________________________</span>
+          </div>
         </div>
       </div>
 
@@ -3129,24 +3155,24 @@ function generateQuickTest() {
   if (answerEl) {
     answerEl.setAttribute('data-count', count);
     answerEl.innerHTML = `
-      <div class="test-paper-header" style="border-bottom-color: #dc2626;">
-        <div class="test-paper-top-row">
-          <div class="test-paper-title-area">
-            <span class="test-paper-badge answer-badge">第${grade}学年 模範解答 & 指導用解説</span>
-            <h3 class="test-paper-title" style="color: #991b1b;">【模範解答】 ${testTitle}</h3>
+      <div class="test-paper-header answer-header">
+        <div class="test-header-upper">
+          <div class="test-header-title-box">
+            <span class="test-paper-badge answer-badge">第${grade}学年 模範解答</span>
+            <h3 class="test-paper-title answer-title">【模範解答】 ${cleanTitle}</h3>
           </div>
-          <div class="test-paper-student-info">
-            <div class="test-student-box" style="border-color: #f87171; background: #fff5f5; color: #dc2626;">
-              <i class="fa-solid fa-chalkboard-user"></i> 教員用控
-            </div>
-            <div class="test-score-box" style="border-color: #dc2626; color: #dc2626;">
-              <div>満点</div>
-              <div class="test-score-huge">100</div>
-            </div>
+          <div class="test-score-box answer-score">
+            <span class="score-label">満点</span>
+            <span class="score-line">100</span>
           </div>
         </div>
-        <div class="test-instruction-note" style="color: #b91c1c;">
-          ※ 生徒のつまずきやすい点や、途中式の確認にご活用ください。
+        <div class="test-header-lower">
+          <div class="test-instruction-note" style="color: #b91c1c;">
+            ※ 生徒のつまずきやすい点や、途中式の確認にご活用ください。
+          </div>
+          <div class="test-student-info">
+            <span class="test-student-cell teacher-tag"><i class="fa-solid fa-chalkboard-user"></i> 教員用控 (模範解答・解説)</span>
+          </div>
         </div>
       </div>
 

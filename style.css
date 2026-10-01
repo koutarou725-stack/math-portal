@@ -2817,7 +2817,7 @@ body.show-answers .answer-text {
   margin: 0;
 }
 
-/* 印刷用紙モック (A4縦比率のリアル用紙スタイル - 1枚収容最適化) */
+/* 印刷用紙モック (中学生向け 12pt基準 & A4用紙1枚収容最適化) */
 .test-paper-mock {
   background: #ffffff;
   color: #1e293b;
@@ -2828,112 +2828,154 @@ body.show-answers .answer-text {
   min-height: 750px;
   box-sizing: border-box;
   font-family: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
-  font-size: 0.88rem;
-  line-height: 1.4;
+  font-size: 1rem; /* 12pt相当 */
+  line-height: 1.45;
 }
 
 .test-paper-header {
   border-bottom: 2px solid #0f172a;
-  padding-bottom: 6px;
-  margin-bottom: 10px;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
 }
 
-.test-paper-top-row {
+.test-paper-header.answer-header {
+  border-bottom-color: #dc2626;
+}
+
+/* 上段: タイトルと得点欄 (タイトルに横幅を広く確保し改行を防止) */
+.test-header-upper {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 6px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.test-paper-title-area {
+.test-header-title-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   flex: 1;
+  min-width: 0;
 }
 
 .test-paper-badge {
-  display: inline-block;
-  font-size: 0.72rem;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: #2563eb;
+  color: #1d4ed8;
   background: #eff6ff;
   border: 1px solid #bfdbfe;
-  padding: 1px 6px;
-  border-radius: 3px;
-  margin-bottom: 2px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .test-paper-badge.answer-badge {
-  color: #dc2626;
+  color: #b91c1c;
   background: #fef2f2;
   border-color: #fecaca;
 }
 
 .test-paper-title {
-  font-size: 1.12rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: #0f172a;
   margin: 0;
   line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.test-paper-student-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-
-.test-student-box {
-  border: 1px solid #475569;
-  padding: 2px 8px;
-  border-radius: 3px;
-  background: #fafafa;
-}
-
-.test-student-box.name-box {
-  min-width: 120px;
+.test-paper-title.answer-title {
+  color: #991b1b;
 }
 
 .test-score-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   border: 2px solid #0f172a;
-  padding: 1px 8px;
-  text-align: center;
-  font-size: 0.72rem;
-  font-weight: 700;
-  border-radius: 3px;
-  min-width: 55px;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-weight: 800;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.test-score-huge {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #0f172a;
-  line-height: 1;
+.test-score-box.answer-score {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.test-score-box .score-label {
+  font-size: 0.8rem;
+}
+
+.test-score-box .score-line {
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
+}
+
+/* 下段: 注意書き (左) と 生徒氏名欄 (右) */
+.test-header-lower {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
 .test-instruction-note {
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   color: #64748b;
-  margin-top: 2px;
+  flex: 1;
+}
+
+.test-student-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.test-student-cell {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.test-student-cell.name-cell {
+  min-width: 170px;
+}
+
+.test-student-cell.teacher-tag {
+  color: #dc2626;
+  font-size: 0.85rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 2px 10px;
+  border-radius: 4px;
 }
 
 /* 問題グリッド */
 .test-problem-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 12px;
 }
 
 .test-problem-grid.cols-2 {
   grid-template-columns: 1fr 1fr;
-  gap: 8px 12px;
+  gap: 8px 14px;
 }
 
 .test-problem-item {
-  border: 1px solid #e2e8f0;
+  border: 1px solid #cbd5e1;
   background: #ffffff;
-  border-radius: 5px;
-  padding: 8px 10px;
+  border-radius: 6px;
+  padding: 8px 12px;
   position: relative;
   break-inside: avoid;
   box-sizing: border-box;
@@ -2947,10 +2989,10 @@ body.show-answers .answer-text {
 .problem-header {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
-  font-size: 0.88rem;
+  gap: 8px;
+  font-size: 0.98rem;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.45;
   color: #1e293b;
 }
 
@@ -2958,12 +3000,12 @@ body.show-answers .answer-text {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  height: 20px;
+  min-width: 22px;
+  height: 22px;
   background: #0f172a;
   color: #ffffff;
-  border-radius: 3px;
-  font-size: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
   font-weight: 800;
   flex-shrink: 0;
   margin-top: 1px;
@@ -2972,13 +3014,13 @@ body.show-answers .answer-text {
 .problem-item-body {
   margin-top: 4px;
   padding: 2px 4px;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-family: 'Cambria Math', 'Times New Roman', 'KaTeX_Main', serif;
   letter-spacing: 0.01em;
 }
 
 .problem-body-math {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: #0f172a;
   padding: 2px 0;
@@ -2987,7 +3029,7 @@ body.show-answers .answer-text {
 
 .problem-workspace {
   margin-top: 6px;
-  min-height: 40px;
+  min-height: 38px;
   border-bottom: 1px dashed #cbd5e1;
   position: relative;
 }
@@ -2996,10 +3038,10 @@ body.show-answers .answer-text {
   position: absolute;
   top: -7px;
   left: 4px;
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   color: #94a3b8;
   background: #ffffff;
-  padding: 0 3px;
+  padding: 0 4px;
 }
 
 .problem-answer-line {
@@ -3007,18 +3049,18 @@ body.show-answers .answer-text {
   display: flex;
   align-items: baseline;
   justify-content: flex-end;
-  gap: 4px;
-  font-size: 0.82rem;
+  gap: 6px;
+  font-size: 0.92rem;
   font-weight: 700;
 }
 
 .problem-answer-fill {
   display: inline-block;
-  min-width: 100px;
+  min-width: 120px;
   border-bottom: 2px solid #334155;
-  height: 18px;
+  height: 22px;
   text-align: center;
-  font-size: 0.98rem;
+  font-size: 1.12rem;
   color: #dc2626;
   font-family: 'Cambria Math', serif;
 }
@@ -3028,8 +3070,8 @@ body.show-answers .answer-text {
   background: #fffbeb;
   border: 1px solid #fef3c7;
   border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 0.74rem;
+  padding: 5px 9px;
+  font-size: 0.78rem;
   color: #92400e;
   line-height: 1.35;
 }
@@ -3040,25 +3082,25 @@ body.show-answers .answer-text {
   border-top: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   color: #94a3b8;
 }
 
-/* 問題数ごとの高さ微調整 (10問時でもA4用紙1枚に確実に収容) */
+/* 問題数ごとの計算欄微調整 (10問時でもA4用紙1枚に確実に収容) */
 .test-paper-mock[data-count="4"] .problem-workspace {
-  min-height: 60px;
+  min-height: 52px;
 }
 
 .test-paper-mock[data-count="6"] .problem-workspace {
-  min-height: 48px;
+  min-height: 42px;
 }
 
 .test-paper-mock[data-count="8"] .problem-workspace {
-  min-height: 36px;
+  min-height: 32px;
 }
 
 .test-paper-mock[data-count="10"] .problem-workspace {
-  min-height: 24px;
+  min-height: 22px;
 }
 
 .test-paper-mock[data-count="10"] .test-problem-item {
@@ -3070,7 +3112,7 @@ body.show-answers .answer-text {
 }
 
 /* ========================================================
-   印刷用スタイル (@media print) - A4用紙1枚収容完全対応
+   印刷用スタイル (@media print) - 12pt & A4 1枚収容完全対応
    ======================================================== */
 @media print {
   @page {
@@ -3081,7 +3123,7 @@ body.show-answers .answer-text {
   body {
     background: #ffffff !important;
     color: #000000 !important;
-    font-size: 9.5pt !important;
+    font-size: 12pt !important;
     margin: 0 !important;
     padding: 0 !important;
     -webkit-print-color-adjust: exact !important;
@@ -3152,7 +3194,7 @@ body.show-answers .answer-text {
   }
 
   /* ==============================
-     2. 生徒用練習プリント印刷モード (A4 1枚)
+     2. 生徒用練習プリント印刷モード (A4 1枚・12pt)
      body[data-print-target="test-student"]
      ============================== */
   body[data-print-target="test-student"] .main-content,
@@ -3186,7 +3228,7 @@ body.show-answers .answer-text {
   }
 
   /* ==============================
-     3. 先生用模範解答プリント印刷モード (A4 1枚)
+     3. 先生用模範解答プリント印刷モード (A4 1枚・12pt)
      body[data-print-target="test-answer"]
      ============================== */
   body[data-print-target="test-answer"] .main-content,
@@ -3224,14 +3266,23 @@ body.show-answers .answer-text {
     page-break-inside: avoid !important;
   }
 
-  /* 印刷時のフォントサイズ微調整 */
+  /* 印刷時フォントサイズ (12pt基準) */
   .problem-body-math {
-    font-size: 1.0rem !important;
+    font-size: 13pt !important;
+  }
+
+  .problem-header {
+    font-size: 11.5pt !important;
+  }
+
+  .problem-answer-line {
+    font-size: 11pt !important;
   }
 
   .test-paper-mock[data-count="10"] .problem-workspace {
     min-height: 18px !important;
   }
 }
+
 
 
