@@ -2649,7 +2649,7 @@ const problemGenerators = {
     const b2 = -1;
     const c2 = a2 * x + b2 * y;
     return {
-      q: `次の連立方程式を加減法で解きなさい。<br><span class="problem-body-math">{ 2x ＋ y ＝ ${c1}<br>&nbsp;&nbsp;x － y ＝ ${c2}</span>`,
+      q: `次の連立方程式を加減法で解きなさい。<br><span class="simul-eq"><span class="simul-brace">{</span><span class="simul-lines"><span class="simul-line">2x ＋ y ＝ ${c1}</span><span class="simul-line">　x － y ＝ ${c2}</span></span></span>`,
       ans: `x ＝ ${x},  y ＝ ${y}`,
       steps: [
         `①式と②式を加えると y が消去される: (2x＋y) ＋ (x－y) ＝ ${c1} ＋ (${c2}) → 3x ＝ ${c1 + c2}`,
@@ -2671,7 +2671,7 @@ const problemGenerators = {
     const c2 = a2 * x + b2 * y;
     const mStr = m >= 0 ? `＋ ${m}` : `－ ${Math.abs(m)}`;
     return {
-      q: `次の連立方程式を代入法で解きなさい。<br><span class="problem-body-math">{ y ＝ ${k}x ${mStr}<br>&nbsp;&nbsp;3x ＋ 2y ＝ ${c2}</span>`,
+      q: `次の連立方程式を代入法で解きなさい。<br><span class="simul-eq"><span class="simul-brace">{</span><span class="simul-lines"><span class="simul-line">y ＝ ${k}x ${mStr}</span><span class="simul-line">3x ＋ 2y ＝ ${c2}</span></span></span>`,
       ans: `x ＝ ${x},  y ＝ ${y}`,
       steps: [
         `①式を②式の y に代入: 3x ＋ 2(${k}x ${mStr}) ＝ ${c2}`,
@@ -2690,7 +2690,7 @@ const problemGenerators = {
     const c1 = (0.3 * x + 0.2 * y).toFixed(1);
     const c2 = x - y;
     return {
-      q: `次の連立方程式を解きなさい。<br><span class="problem-body-math">{ 0.3x ＋ 0.2y ＝ ${c1}<br>&nbsp;&nbsp;x － y ＝ ${c2}</span>`,
+      q: `次の連立方程式を解きなさい。<br><span class="simul-eq"><span class="simul-brace">{</span><span class="simul-lines"><span class="simul-line">0.3x ＋ 0.2y ＝ ${c1}</span><span class="simul-line">　　x －　　y ＝ ${c2}</span></span></span>`,
       ans: `x ＝ ${x},  y ＝ ${y}`,
       steps: [
         `①式の両辺を 10倍して小数をなくす: 3x ＋ 2y ＝ ${Math.round(c1 * 10)}`,
@@ -3314,15 +3314,20 @@ function generateQuickTest() {
   let subTitle = currentSub.name.replace(/【.*?】/, '').trim();
   const majorName = currentMajor ? currentMajor.name : '数学科';
 
-  // タイトル: 「中学X年 ＞ 大単元 ＞ 小単元」の形式でシンプルに
-  let cleanTitle;
+  // タイトル行1: 「中学X年　大単元名」 行2: 「小単元名」
+  let titleLine1, titleLine2;
   if (subTitle.includes('全領域からランダム') || subTitle.includes('全単元からランダム')) {
-    cleanTitle = `中学${grade}年 数学 総合テスト`;
+    titleLine1 = `中学${grade}年　数学`;
+    titleLine2 = '総合確認テスト';
   } else if (!subTitle || subTitle === majorName) {
-    cleanTitle = `中学${grade}年 ${majorName}`;
+    titleLine1 = `中学${grade}年　数学`;
+    titleLine2 = majorName;
   } else {
-    cleanTitle = `中学${grade}年 ${majorName} ＞ ${subTitle}`;
+    titleLine1 = `中学${grade}年　${majorName}`;
+    titleLine2 = subTitle;
   }
+  // 印刷小枰等で数式ジェネレーターが使う平文名 (steps等の文字列用)
+  const cleanTitle = `${titleLine1}　${titleLine2}`;
 
   // 問題ジェネレーターの選定
   const availableGenKeys = getGeneratorsForSubUnit(grade, subUnitId);
@@ -3347,13 +3352,14 @@ function generateQuickTest() {
     studentEl.setAttribute('data-count', count);
     studentEl.innerHTML = `
       <div class="test-paper-header">
-        <div class="test-header-bar">
-          <div class="test-header-left">
-            <h3 class="test-paper-title">${cleanTitle}</h3>
+        <div class="test-header-top">
+          <div class="test-title-block">
+            <div class="test-title-line1">${titleLine1}</div>
+            <div class="test-title-line2">${titleLine2}</div>
           </div>
-          <div class="test-header-right">
-            <span class="test-student-cell">${grade} 年 &nbsp; 組 &nbsp; 番</span>
-            <span class="test-student-cell name-cell">氏名：<span class="name-underline"></span></span>
+          <div class="test-student-info">
+            <div class="test-student-row">${grade} 年 &nbsp;□&nbsp; 組 &nbsp;□&nbsp; 番</div>
+            <div class="test-student-row name-row">氏名：<span class="name-fill-line"></span></div>
           </div>
         </div>
       </div>
@@ -3382,12 +3388,10 @@ function generateQuickTest() {
     answerEl.setAttribute('data-count', count);
     answerEl.innerHTML = `
       <div class="test-paper-header answer-header">
-        <div class="test-header-bar">
-          <div class="test-header-left">
-            <h3 class="test-paper-title answer-title">【模範解答】 ${cleanTitle}</h3>
-          </div>
-          <div class="test-header-right">
-            <span class="test-student-cell teacher-mark">教員用</span>
+        <div class="test-header-top">
+          <div class="test-title-block">
+            <div class="test-title-line1 answer-line1">${titleLine1}</div>
+            <div class="test-title-line2 answer-line2">【模範解答】${titleLine2}</div>
           </div>
         </div>
       </div>

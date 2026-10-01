@@ -2834,7 +2834,7 @@ body.show-answers .answer-text {
 
 .test-paper-header {
   border-bottom: 1.5px solid #1e293b;
-  padding-bottom: 5px;
+  padding-bottom: 6px;
   margin-bottom: 12px;
 }
 
@@ -2842,81 +2842,79 @@ body.show-answers .answer-text {
   border-bottom-color: #dc2626;
 }
 
-/* 1段すっきりヘッダー */
-.test-header-bar {
+/* 2行ヘッダー: タイトルブロック（左）と生徒情報（右）の左右配置 */
+.test-header-top {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  gap: 10px;
-  overflow: hidden;
+  align-items: flex-start;
+  gap: 12px;
 }
 
-.test-header-left {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex: 0 0 auto; /* タイトルは縮まない */
+.test-title-block {
+  flex: 1;
   min-width: 0;
-  overflow: hidden;
 }
 
-.test-paper-badge {
-  display: none; /* 使用なし */
+.test-title-line1 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.3;
+  letter-spacing: 0.03em;
 }
 
-.test-paper-title {
-  font-size: 1rem;
-  font-weight: 700;
+.test-title-line2 {
+  font-size: 1.05rem;
+  font-weight: 800;
   color: #0f172a;
-  margin: 0;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 340px; /* 長すぎる場合は省略表示 */
+  line-height: 1.25;
+  letter-spacing: 0.02em;
 }
 
-.test-paper-title.answer-title {
+.test-title-line2.answer-line2 {
   color: #991b1b;
 }
 
-.test-header-right {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-shrink: 0;
-  white-space: nowrap;
+.test-title-line1.answer-line1 {
+  color: #7f1d1d;
 }
 
-.test-student-cell {
-  font-size: 0.8rem;
+/* 生徒情報欄（右側） — 高さを十分に取る */
+.test-student-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.test-student-row {
+  font-size: 0.78rem;
   font-weight: 500;
   color: #334155;
   white-space: nowrap;
 }
 
-.test-student-cell.name-cell {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 2px;
+.test-student-row.name-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #334155;
 }
 
-.name-underline {
+.name-fill-line {
   display: inline-block;
-  width: 120px;
-  border-bottom: 1px solid #334155;
-  height: 1.1em;
+  width: 140px;
+  border-bottom: 1px solid #475569;
+  height: 1.3em;
+  vertical-align: bottom;
 }
 
-.test-student-cell.teacher-mark {
-  color: #dc2626;
-  font-size: 0.72rem;
-  font-weight: 700;
-  border: 1px solid #fca5a5;
-  padding: 1px 6px;
-  border-radius: 3px;
-  background: #fff5f5;
-}
+/* 古いクラスは使用なしに */
+.test-header-bar, .test-header-left { display: none; }
+.test-student-cell, .name-underline, .teacher-mark { display: none; }
 
 /* 問題グリッド */
 .test-problem-grid {
@@ -2979,14 +2977,50 @@ body.show-answers .answer-text {
   word-break: break-all; /* 長いかつ素文や英数字混在でかしまわらないよう */
 }
 
+/* 数式クラス（inline送り仮名・数字） */
 .problem-body-math {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #0f172a;
   padding: 1px 0;
   display: inline-block;
   white-space: nowrap;
-  font-family: 'Cambria Math', 'Times New Roman', 'KaTeX_Main', serif;
+  font-family: 'Noto Serif JP', 'Times New Roman', 'Cambria Math', serif;
+  letter-spacing: 0.04em;
+}
+
+/* 連立方程式の整形（左大かっこ（｛）＋横に並んだ式2行） */
+.simul-eq {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 3px;
+  font-family: 'Noto Serif JP', 'Times New Roman', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.simul-brace {
+  font-size: 2.2em;
+  line-height: 1;
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+  font-weight: 400;
+  color: #0f172a;
+  margin-right: 2px;
+  align-self: center;
+}
+
+.simul-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.simul-line {
+  white-space: nowrap;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
 }
 
 .problem-workspace {
