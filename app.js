@@ -2317,6 +2317,20 @@ function importBackupFile(event) {
 let autoSyncDebounceTimer = null;
 
 function initCloudSync() {
+  // URLパラメータ（?gas=...）があれば自動連携（タブレット用QRスキャン時など）
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const gasParam = urlParams.get('gas');
+    if (gasParam && gasParam.startsWith('https://script.google.com/')) {
+      state.cloudSettings.gasUrl = gasParam.trim();
+      localStorage.setItem('math_portal_gas_url', state.cloudSettings.gasUrl);
+      window.history.replaceState({}, document.title, window.location.pathname);
+      showToast('<i class="fa-solid fa-circle-check text-emerald"></i> スプレッドシート連携を設定しました！');
+    }
+  } catch (e) {
+    console.error('URL parse error:', e);
+  }
+
   updateCloudStatusUI();
   // URLが登録されていて、かつオンラインなら起動時に自動でスプレッドシートから最新データ取得
   if (state.cloudSettings.gasUrl && navigator.onLine) {
@@ -2374,11 +2388,38 @@ function updateCloudStatusUI() {
     }
   }
 
+  // タブレット連携QRコード表示更新
+  const tabletSection = document.getElementById('tabletShareSection');
+  const qrImage = document.getElementById('tabletQrImage');
+  if (tabletSection && qrImage) {
+    if (hasUrl) {
+      tabletSection.style.display = 'block';
+      const shareUrl = `${window.location.origin}${window.location.pathname}?gas=${encodeURIComponent(state.cloudSettings.gasUrl)}`;
+      qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(shareUrl)}`;
+    } else {
+      tabletSection.style.display = 'none';
+    }
+  }
+
   const urlInput = document.getElementById('gasUrlInput');
   if (urlInput) urlInput.value = state.cloudSettings.gasUrl;
 
   const autoBox = document.getElementById('autoSyncCheckbox');
   if (autoBox) autoBox.checked = state.cloudSettings.autoSync;
+}
+
+function copyTabletShareUrl() {
+  if (!state.cloudSettings.gasUrl) return;
+  const shareUrl = `${window.location.origin}${window.location.pathname}?gas=${encodeURIComponent(state.cloudSettings.gasUrl)}`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      showToast('<i class="fa-solid fa-copy text-emerald"></i> タブレット連携用のURLをコピーしました！');
+    }).catch(() => {
+      prompt('以下の連携URLをコピーしてタブレットで開いてください：', shareUrl);
+    });
+  } else {
+    prompt('以下の連携URLをコピーしてタブレットで開いてください：', shareUrl);
+  }
 }
 
 function openCloudSyncModal() {

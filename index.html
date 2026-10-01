@@ -637,6 +637,31 @@
             </label>
           </div>
 
+          <!-- タブレット・スマホ連携用QRコードセクション -->
+          <div class="tablet-share-section mt-4" id="tabletShareSection" style="display: none;">
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-md); padding: 1rem 1.25rem;">
+              <h4 style="font-size: 0.95rem; color: #166534; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-tablet-screen-button"></i> iPadやスマホと一瞬で連携する（QRコード）
+              </h4>
+              <p style="font-size: 0.8rem; color: #15803d; margin-bottom: 0.75rem;">
+                タブレット端末のカメラで下記のQRコードを読み取るだけで、URLの打ち込み不要で即座にデータが全自動同期されます！
+              </p>
+              <div style="display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;">
+                <div style="background: #ffffff; padding: 6px; border-radius: 6px; border: 1px solid #cbd5e1; display: inline-block;">
+                  <img id="tabletQrImage" src="" alt="Tablet Sync QR" style="width: 140px; height: 140px; display: block;">
+                </div>
+                <div style="flex: 1; min-width: 180px;">
+                  <div style="font-size: 0.76rem; color: #475569; margin-bottom: 0.5rem; line-height: 1.5;">
+                    ※カメラで読み取って開くだけで、この端末と同じスプレッドシート連携が自動設定されます。
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline" onclick="copyTabletShareUrl()" style="font-size: 0.8rem;">
+                    <i class="fa-solid fa-copy"></i> 連携用URLをコピー
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- セットアップ手順ガイド -->
           <div class="setup-guide-card mt-4">
             <div class="guide-header">
