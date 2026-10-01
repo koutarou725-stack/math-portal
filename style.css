@@ -2834,8 +2834,9 @@ body.show-answers .answer-text {
 
 .test-paper-header {
   border-bottom: 1.5px solid #1e293b;
-  padding-bottom: 6px;
-  margin-bottom: 12px;
+  padding-top: 4px;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
 }
 
 .test-paper-header.answer-header {
@@ -2847,28 +2848,37 @@ body.show-answers .answer-text {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
 }
 
 .test-title-block {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .test-title-line1 {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: #475569;
-  line-height: 1.3;
-  letter-spacing: 0.03em;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  white-space: nowrap; /* 3行に折り返されるのを完全防止！ */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .test-title-line2 {
   font-size: 1.05rem;
   font-weight: 800;
   color: #0f172a;
-  line-height: 1.25;
+  line-height: 1.3;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .test-title-line2.answer-line2 {
@@ -2890,7 +2900,7 @@ body.show-answers .answer-text {
 .student-entry-line {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 8px;
   font-size: 0.88rem;
   font-weight: 600;
   color: #1e293b;
@@ -2923,11 +2933,11 @@ body.show-answers .answer-text {
 }
 
 .student-line.num-line {
-  width: 36px; /* 組・番号の記入スペース */
+  width: 26px; /* 組・番号の記入スペース */
 }
 
 .student-line.name-line {
-  width: 220px; /* 氏名の広大な記入スペース（書くスペースを十分に確保！） */
+  width: 140px; /* 氏名欄を140pxに適正化し、左のタイトルが3行になるのを完全防止！ */
 }
 
 /* 古いクラスは非表示維持 */
@@ -2938,12 +2948,14 @@ body.show-answers .answer-text {
 .test-paper-mock {
   display: flex;
   flex-direction: column;
+  min-height: 780px;
 }
 
 .test-problem-grid {
   display: grid;
   flex: 1;
   gap: 0;
+  height: 100%;
 }
 
 /* 4問・5問・6問: 1列レイアウト (横幅を贅沢に使い、問題文の折返しを解消＆下余りを均等配分) */
@@ -3229,32 +3241,59 @@ body.show-answers .answer-text {
   color: #94a3b8;
 }
 
-/* 問題数ごとの計算欄自動配分 (A4用紙の下があまらないよう高さを自動調整) */
-.test-paper-mock[data-count="4"] .problem-workspace {
-  min-height: 85px;
-  flex: 1;
+/* ========================================================
+   問題数ごとのグリッド行均等配分 (A4用紙の下端まで100%均等に使い切る！)
+   ======================================================== */
+.test-paper-mock[data-count="4"] .test-problem-grid {
+  grid-template-rows: repeat(4, 1fr);
 }
 
-.test-paper-mock[data-count="5"] .problem-workspace {
-  min-height: 64px;
-  flex: 1;
+.test-paper-mock[data-count="5"] .test-problem-grid {
+  grid-template-rows: repeat(5, 1fr);
 }
 
-.test-paper-mock[data-count="6"] .problem-workspace {
-  min-height: 48px;
-  flex: 1;
+.test-paper-mock[data-count="6"] .test-problem-grid {
+  grid-template-rows: repeat(6, 1fr);
 }
 
-.test-paper-mock[data-count="7"] .problem-workspace,
-.test-paper-mock[data-count="8"] .problem-workspace {
-  min-height: 38px;
-  flex: 1;
+.test-paper-mock[data-count="7"] .test-problem-grid,
+.test-paper-mock[data-count="8"] .test-problem-grid {
+  grid-template-rows: repeat(4, 1fr);
 }
 
-.test-paper-mock[data-count="9"] .problem-workspace,
-.test-paper-mock[data-count="10"] .problem-workspace {
-  min-height: 22px;
+.test-paper-mock[data-count="9"] .test-problem-grid,
+.test-paper-mock[data-count="10"] .test-problem-grid {
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.test-problem-item {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.problem-workspace {
+  margin-top: 4px;
   flex: 1;
+  min-height: 20px;
+}
+
+/* MathML 根号 & 分数 スタイル (ブラウザネイティブのベクターレンダリング) */
+math.math-expr {
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+  font-size: 1.05em;
+  line-height: 1;
+  vertical-align: -0.06em;
+}
+
+math.math-expr msqrt {
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+}
+
+math.math-expr mfrac {
+  font-family: 'Times New Roman', 'Cambria Math', serif;
 }
 
 .test-paper-mock[data-count="10"] .test-problem-item {
@@ -3366,8 +3405,9 @@ body.show-answers .answer-text {
     flex-direction: column !important;
     justify-content: space-between !important;
     width: 100% !important;
-    height: 100% !important;
-    max-height: 284mm !important;
+    height: 278mm !important; /* A4用紙の縦をぴったり100%使い切る！ */
+    min-height: 278mm !important;
+    max-height: 280mm !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
     border: none !important;
@@ -3403,8 +3443,9 @@ body.show-answers .answer-text {
     flex-direction: column !important;
     justify-content: space-between !important;
     width: 100% !important;
-    height: 100% !important;
-    max-height: 284mm !important;
+    height: 278mm !important; /* 模範解答も下端まで美しく均等配分！ */
+    min-height: 278mm !important;
+    max-height: 280mm !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
     border: none !important;
@@ -3414,7 +3455,6 @@ body.show-answers .answer-text {
     page-break-after: avoid !important;
     break-after: avoid !important;
     page-break-inside: avoid !important;
-    break-inside: avoid !important;
   }
 
   .test-problem-item {

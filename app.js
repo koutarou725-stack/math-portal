@@ -2356,15 +2356,19 @@ const problemGenerators = {
     const term1 = base * base; // (-3)^2 = 9
     const term2 = c * d;
     const ans = term1 - term2;
+    // 正の数にはカッコを付けず「5」、負の数のみ「(-3)」とする（教科書の標準表記）
+    const cStr = c < 0 ? `(${c})` : `${c}`;
+    const dStr = d < 0 ? `(${d})` : `${d}`;
+    const term2Disp = term2 < 0 ? `(${term2})` : `${term2}`;
     return {
-      q: `次の計算をしなさい。<br><span class="problem-body-math">(${base})² － (${c}) × (${d})</span>`,
+      q: `次の計算をしなさい。<br><span class="problem-body-math">(${base})² － ${cStr} × ${dStr}</span>`,
       ans: `${ans}`,
       steps: [
         `累乗を計算: (${base})² ＝ ${term1}`,
-        `乗法を計算: (${c}) × (${d}) ＝ ${term2}`,
-        `減法を計算: ${term1} － (${term2}) ＝ ${ans}`
+        `乗法を計算: ${cStr} × ${dStr} ＝ ${term2Disp}`,
+        `減法を計算: ${term1} － ${term2Disp} ＝ ${ans}`
       ],
-      exp: `累乗・乗法を先に計算: (${base})²＝${term1}、(${c})×(${d})＝${term2}。よって ${term1} － (${term2}) ＝ ${ans}`
+      exp: `累乗・乗法を先に計算: (${base})²＝${term1}、${cStr}×${dStr}＝${term2Disp}。よって ${term1} － ${term2Disp} ＝ ${ans}`
     };
   },
 
@@ -2729,29 +2733,35 @@ const problemGenerators = {
     const x1 = randInt(-3, 1);
     const x2 = x1 + randInt(2, 4);
     const deltaY = a * (x2 - x1);
-    const bStr = b >= 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
+    const aTerm = formatTerm(a, 'x', true);
+    const bStr = b !== 0 ? (b > 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`) : '';
+    const aDisp = a < 0 ? `－${Math.abs(a)}` : `${a}`;
+    const dyDisp = deltaY < 0 ? `－${Math.abs(deltaY)}` : `${deltaY}`;
     return {
-      q: `一次関数 <span class="problem-body-math">y ＝ ${a}x ${bStr}</span> について、次の問いに答えなさい。<br>(1) この関数の変化の割合を答えなさい。<br>(2) x の値が ${x1} から ${x2} まで増加するときの y の増加量を求めなさい。`,
-      ans: `(1) ${a} ,  (2) ${deltaY}`,
+      q: `一次関数 <span class="problem-body-math">y ＝ ${aTerm} ${bStr}</span> について、次の問いに答えなさい。<br>(1) この関数の変化の割合を答えなさい。<br>(2) x の値が ${x1} から ${x2} まで増加するときの y の増加量を求めなさい。`,
+      ans: `(1) ${aDisp} ,  (2) ${dyDisp}`,
       steps: [
-        `(1) 一次関数 y ＝ ax ＋ b の変化の割合は常に傾き a に等しい: ＝ ${a}`,
-        `(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${a} × (${x2} － (${x1})) ＝ ${a} × ${x2 - x1} ＝ ${deltaY}`,
-        `答: (1) ${a} ,  (2) ${deltaY}`
+        `(1) 一次関数 y ＝ ax ＋ b の変化の割合は常に傾き a に等しい: ＝ ${aDisp}`,
+        `(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${aDisp} × (${x2} － (${x1})) ＝ ${aDisp} × ${x2 - x1} ＝ ${dyDisp}`,
+        `答: (1) ${aDisp} ,  (2) ${dyDisp}`
       ],
-      exp: `(1) 一次関数の変化の割合は傾き a に等しいので ${a}。<br>(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${a} × (${x2 - x1}) ＝ ${deltaY}`
+      exp: `(1) 一次関数の変化の割合は傾き a に等しいので ${aDisp}。<br>(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${aDisp} × (${x2 - x1}) ＝ ${dyDisp}`
     };
   },
 
   g2_lfunc_graph: () => {
     const a = randNonZero(-4, 4);
     const b = randNonZero(-6, 6);
-    const bStr = b >= 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
+    const aTerm = formatTerm(a, 'x', true);
+    const bStr = b > 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
+    const aDisp = a < 0 ? `－${Math.abs(a)}` : `${a}`;
+    const bDisp = b < 0 ? `－${Math.abs(b)}` : `${b}`;
     return {
-      q: `直線 <span class="problem-body-math">y ＝ ${a}x ${bStr}</span> の傾きと切片をそれぞれ答えなさい。`,
-      ans: `傾き: ${a} ,  切片: ${b}`,
+      q: `直線 <span class="problem-body-math">y ＝ ${aTerm} ${bStr}</span> の傾きと切片をそれぞれ答えなさい。`,
+      ans: `傾き: ${aDisp} ,  切片: ${bDisp}`,
       steps: [
         `一次関数の基本形: y ＝ ax ＋ b において a が傾き、b が切片`,
-        `答: 傾き ＝ ${a} ,  切片 ＝ ${b}`
+        `答: 傾き ＝ ${aDisp} ,  切片 ＝ ${bDisp}`
       ],
       exp: `一次関数 y ＝ ax ＋ b において、a が傾き、b が切片です。`
     };
@@ -2762,17 +2772,19 @@ const problemGenerators = {
     const x1 = randInt(1, 4);
     const b = randInt(-5, 5);
     const y1 = a * x1 + b;
-    const bStr = b >= 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`;
+    const aTerm = formatTerm(a, 'x', true);
+    const bStr = b !== 0 ? (b > 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`) : '';
+    const aDisp = a < 0 ? `－${Math.abs(a)}` : `${a}`;
     return {
-      q: `傾きが ${a} で、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
-      ans: `y ＝ ${a}x ${bStr}`,
+      q: `傾きが ${aDisp} で、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
+      ans: `y ＝ ${aTerm} ${bStr}`.trim(),
       steps: [
-        `求める直線の式を y ＝ ${a}x ＋ b とおく`,
-        `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${a}×(${x1}) ＋ b → ${y1} ＝ ${a * x1} ＋ b`,
+        `求める直線の式を y ＝ ${aTerm} ＋ b とおく`,
+        `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b → ${y1} ＝ ${a * x1} ＋ b`,
         `切片 b を解く: b ＝ ${b}`,
-        `答: y ＝ ${a}x ${bStr}`
+        `答: y ＝ ${aTerm} ${bStr}`.trim()
       ],
-      exp: `求める式を y ＝ ${a}x ＋ b とおき、x＝${x1}, y＝${y1} を代入: ${y1} ＝ ${a}×(${x1}) ＋ b より b ＝ ${b}`
+      exp: `求める式を y ＝ ${aTerm} ＋ b とおき、x＝${x1}, y＝${y1} を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b より b ＝ ${b}`
     };
   },
 
@@ -3296,7 +3308,7 @@ function getGeneratorsForSubUnit(grade, subUnitId) {
 }
 
 // 数式テキストの教科書品質リッチフォーマッター
-// (Times New Romanイタリック変数、上線付き平方根、上下2段分数)
+// (Times New Romanイタリック変数、MathMLによる完全な一体型平方根、上下2段分数)
 function formatMathRich(text) {
   if (!text || typeof text !== 'string') return text;
 
@@ -3309,32 +3321,32 @@ function formatMathRich(text) {
     return `__UNIT_${unitPlaceholders.length - 1}__`;
   });
 
-  // 1. 分数の変換
-  // パターンA: 括弧つき分子 / 分母 (例: (－5 ± √33) / 4, (num × √b) / b)
-  s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, (m, num, den) => {
-    return `<span class="math-frac"><span class="math-num">${num}</span><span class="math-den">${den}</span></span>`;
-  });
-
-  // パターンB: 単純な分数 A / B (例: 12 / √3, a / x, 1 / 2)
-  s = s.replace(/([0-9a-zA-Z√]+)\s*\/\s*([0-9a-zA-Z√]+)/g, (m, num, den) => {
-    return `<span class="math-frac"><span class="math-num">${num}</span><span class="math-den">${den}</span></span>`;
-  });
-
-  // 2. 平方根（√）の変換
+  // 1. 平方根（√）の変換: MathML <msqrt> により、√記号と上線が完全に一体化し段差0
   // パターンA: 括弧つき根号 √(b² － 4ac)
   s = s.replace(/√\(([^)]+)\)/g, (m, inside) => {
-    return `<span class="math-sqrt"><span class="math-sqrt-sym">√</span><span class="math-sqrt-content">${inside}</span></span>`;
+    return `<math class="math-expr" display="inline"><msqrt><mrow>${inside}</mrow></msqrt></math>`;
   });
-  // パターンB: 通常の根号 √20, √5, √b
+  // パターンB: 通常の根号 √20, √5, √b, √45
   s = s.replace(/√([0-9a-zA-Z]+)/g, (m, inside) => {
-    return `<span class="math-sqrt"><span class="math-sqrt-sym">√</span><span class="math-sqrt-content">${inside}</span></span>`;
+    return `<math class="math-expr" display="inline"><msqrt><mrow>${inside}</mrow></msqrt></math>`;
+  });
+
+  // 2. 分数の変換: MathML <mfrac> による上下2段分数
+  // パターンA: 括弧つき分子 / 分母 (例: (－5 ± <math...>) / 4)
+  s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, (m, num, den) => {
+    return `<math class="math-expr" display="inline"><mfrac><mrow>${num}</mrow><mrow>${den}</mrow></mfrac></math>`;
+  });
+
+  // パターンB: 単純な分数 A / B (例: 12 / <math...>, a / x, 1 / 2)
+  s = s.replace(/([0-9a-zA-Z√]+|\<math[^>]*\>.*?\<\/math\>)\s*\/\s*([0-9a-zA-Z√]+|\<math[^>]*\>.*?\<\/math\>)/g, (m, num, den) => {
+    return `<math class="math-expr" display="inline"><mfrac><mrow>${num}</mrow><mrow>${den}</mrow></mfrac></math>`;
   });
 
   // 3. 上付き添字: x² → x<sup class="math-sup">2</sup>
   s = s.replace(/([a-zA-Z0-9\)])²/g, '$1<sup class="math-sup">2</sup>');
   s = s.replace(/([a-zA-Z0-9\)])³/g, '$1<sup class="math-sup">3</sup>');
 
-  // 4. 英字変数の Times New Roman イタリック化 (HTMLタグ・プレースホルダー除外)
+  // 4. 英字変数の Times New Roman イタリック化 (HTML/MathMLタグ・プレースホルダー除外)
   s = s.replace(/(<[^>]+>)|(__UNIT_\d+__)|(?<![a-zA-Z])([xyabcpqmnktABCD])(?![a-zA-Z0-9_])/g, (m, tag, unit, v) => {
     if (tag) return tag;
     if (unit) return unit;
