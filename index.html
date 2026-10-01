@@ -61,8 +61,11 @@
       
       <!-- データ保存 & スプレッドシート同期ボタン -->
       <div class="backup-actions">
-        <button class="btn btn-sm btn-cloud-sync" id="cloudSyncHeaderBtn" onclick="openCloudSyncModal()" title="Googleスプレッドシートと自動同期・スマホやタブレットで活用">
-          <i class="fa-solid fa-cloud"></i> <span id="cloudSyncStatusText">スプレッドシート同期</span>
+        <button class="btn btn-sm btn-cloud-sync" id="cloudSyncHeaderBtn" onclick="handleHeaderSyncBtnClick()" title="クリックでスプレッドシートから最新データを即時取得">
+          <i class="fa-solid fa-arrows-rotate"></i> <span id="cloudSyncStatusText">スプレッドシート同期</span>
+        </button>
+        <button class="btn btn-sm btn-ghost" onclick="openCloudSyncModal()" title="同期設定・タブレット連携QRコードを開く" style="padding: 0.35rem 0.55rem; color: #94a3b8;">
+          <i class="fa-solid fa-gear"></i>
         </button>
         <button class="btn btn-sm btn-outline" onclick="exportAllDataBackup()" title="時間割・設定データをファイルとしてダウンロード保存">
           <i class="fa-solid fa-download"></i> 保存

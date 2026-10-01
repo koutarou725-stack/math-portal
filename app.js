@@ -2332,9 +2332,38 @@ function initCloudSync() {
   }
 
   updateCloudStatusUI();
-  // URLが登録されていて、かつオンラインなら起動時に自動でスプレッドシートから最新データ取得
+
+  // 起動時の自動取得
   if (state.cloudSettings.gasUrl && navigator.onLine) {
     syncFromCloud(false);
+  }
+
+  // 画面に戻ってきた時（タブ復帰・ウィンドウフォーカス時）に最新データを自動同期
+  window.addEventListener('focus', () => {
+    if (state.cloudSettings.gasUrl && navigator.onLine && !state.cloudSettings.isSyncing) {
+      syncFromCloud(false);
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && state.cloudSettings.gasUrl && navigator.onLine && !state.cloudSettings.isSyncing) {
+      syncFromCloud(false);
+    }
+  });
+
+  // 30秒ごとにバックグラウンドで他端末の変更を自動チェック
+  setInterval(() => {
+    if (state.cloudSettings.gasUrl && state.cloudSettings.autoSync && navigator.onLine && !state.cloudSettings.isSyncing) {
+      syncFromCloud(false);
+    }
+  }, 30000);
+}
+
+function handleHeaderSyncBtnClick() {
+  if (state.cloudSettings.gasUrl) {
+    syncFromCloud(true);
+  } else {
+    openCloudSyncModal();
   }
 }
 
@@ -2487,11 +2516,22 @@ async function syncFromCloud(isManual = false) {
   if (isManual) showToast('<i class="fa-solid fa-cloud-arrow-down"></i> スプレッドシートから読み込み中...');
 
   try {
+    const isEditingModalOpen = !document.getElementById('slotEditModal')?.classList.contains('hidden') ||
+                              !document.getElementById('dayOverrideModal')?.classList.contains('hidden') ||
+                              !document.getElementById('lessonPlanModal')?.classList.contains('hidden') ||
+                              !document.getElementById('timetableBatchModal')?.classList.contains('hidden');
+    if (isEditingModalOpen && !isManual) {
+      return; // ユーザーが入力作業中の場合はバックグラウンド更新をスキップ
+    }
+
     const res = await fetch(url);
     const json = await res.json();
 
     if (json.status === 'success' && json.data) {
       const data = json.data;
+
+      const prevExportDate = localStorage.getItem('math_portal_last_data_export_date');
+      const hasNewerData = data.exportDate && prevExportDate && data.exportDate !== prevExportDate;
 
       if (data.bellSettings) {
         state.bellSettings = data.bellSettings;
@@ -2529,6 +2569,9 @@ async function syncFromCloud(isManual = false) {
         state.memos = data.memos;
         localStorage.setItem('math_portal_memos', JSON.stringify(data.memos));
       }
+      if (data.exportDate) {
+        localStorage.setItem('math_portal_last_data_export_date', data.exportDate);
+      }
 
       initBellSettingsUI();
       previewBellSchedule();
@@ -2542,8 +2585,12 @@ async function syncFromCloud(isManual = false) {
       state.cloudSettings.lastSyncTime = timeStr;
       localStorage.setItem('math_portal_last_sync_time', timeStr);
 
-      showToast(`<i class="fa-solid fa-cloud-arrow-down text-emerald"></i> スプレッドシートと同期完了 (${timeStr})`);
-      if (isManual) closeCloudSyncModal();
+      if (isManual) {
+        showToast(`<i class="fa-solid fa-cloud-arrow-down text-emerald"></i> スプレッドシートと同期完了 (${timeStr})`);
+        closeCloudSyncModal();
+      } else if (hasNewerData) {
+        showToast(`<i class="fa-solid fa-arrows-rotate text-emerald"></i> 他端末の最新の変更を画面に反映しました (${timeStr})`);
+      }
     } else if (json.status === 'success' && !json.data) {
       // スプレッドシート側が初回で空の場合、現在のローカルデータを送信
       if (isManual) {
@@ -2600,8 +2647,11 @@ async function syncToCloud(isManual = false) {
     await fetch(url, {
       method: 'POST',
       body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'text/plain' }
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      mode: 'no-cors'
     });
+
+    localStorage.setItem('math_portal_last_data_export_date', payload.exportDate);
 
     const timeStr = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
     state.cloudSettings.lastSyncTime = timeStr;
