@@ -3071,12 +3071,13 @@ function generateQuickTest() {
     });
   }
 
-  // 1列か2列かの判定 (問題数が8問以上の場合は2列グリッドで見やすく配置)
-  const gridClass = count >= 8 ? 'test-problem-grid cols-2' : 'test-problem-grid';
+  // 1列か2列かの判定 (6問・8問・10問は2列にすることで縦を最大5問分に抑え、A4用紙1枚に確実に収容)
+  const gridClass = count >= 6 ? 'test-problem-grid cols-2' : 'test-problem-grid';
 
   // 1. 生徒用プリント用紙のHTML構築
   const studentEl = document.getElementById('testStudentPaper');
   if (studentEl) {
+    studentEl.setAttribute('data-count', count);
     studentEl.innerHTML = `
       <div class="test-paper-header">
         <div class="test-paper-top-row">
@@ -3126,6 +3127,7 @@ function generateQuickTest() {
   // 2. 先生用模範解答用紙のHTML構築
   const answerEl = document.getElementById('testAnswerPaper');
   if (answerEl) {
+    answerEl.setAttribute('data-count', count);
     answerEl.innerHTML = `
       <div class="test-paper-header" style="border-bottom-color: #dc2626;">
         <div class="test-paper-top-row">
@@ -3155,7 +3157,7 @@ function generateQuickTest() {
               <span class="problem-num" style="background: #dc2626;">${q.num}</span>
               <div class="problem-text">${q.q}</div>
             </div>
-            <div class="problem-answer-line" style="margin-top: 14px;">
+            <div class="problem-answer-line" style="margin-top: 6px;">
               <span style="color: #dc2626; font-weight: 800;">【正答】</span>
               <span class="problem-answer-fill" style="border-bottom-color: #dc2626; font-weight: 800;">${q.ans}</span>
             </div>
