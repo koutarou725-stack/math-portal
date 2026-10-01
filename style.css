@@ -2274,7 +2274,7 @@ body.show-answers .answer-text {
 
 .test-preview-dual {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.5rem;
 }
 
@@ -2780,7 +2780,7 @@ body.show-answers .answer-text {
 
 .test-preview-dual {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
@@ -2797,6 +2797,9 @@ body.show-answers .answer-text {
   border-radius: var(--radius-lg);
   padding: 1.25rem;
   box-shadow: var(--shadow-sm);
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .test-box-header {
@@ -2826,6 +2829,8 @@ body.show-answers .answer-text {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   padding: 14px 18px 10px 18px;
   min-height: 700px;
+  min-width: 0;
+  width: 100%;
   box-sizing: border-box;
   font-family: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   font-size: 0.84rem;
@@ -2845,7 +2850,7 @@ body.show-answers .answer-text {
 
 /* 2段階ヘッダー: 
    1行目: 学年＋大単元名（横幅100%フル活用で長いタイトルも絶対に切れない）
-   2行目: 小単元名（左） ＋ 生徒情報欄（右）
+   2行目: 小単元名（左・絶対に改行されない） ＋ 生徒情報欄（右・スリム化でスペース確保）
 */
 .test-header-line1 {
   font-size: 0.88rem;
@@ -2855,6 +2860,9 @@ body.show-answers .answer-text {
   letter-spacing: 0.02em;
   margin-bottom: 4px;
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .test-header-line1.answer-line1 {
@@ -2865,24 +2873,35 @@ body.show-answers .answer-text {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 16px;
+  gap: 12px;
 }
 
 .test-title-line2 {
-  font-size: 1.15rem;
+  font-size: 1.08rem;
   font-weight: 800;
   color: #0f172a;
   line-height: 1.25;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   flex: 1;
   min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.test-title-line2.title-compact {
+  font-size: 0.94rem;
+}
+
+.test-title-line2.title-mini {
+  font-size: 0.84rem;
 }
 
 .test-title-line2.answer-line2 {
   color: #991b1b;
 }
 
-/* 生徒情報欄（2行目の右側） — 名前欄を2行目に落としたことで広々と170px確保！ */
+/* 生徒情報欄（2行目の右側） — 氏名記入欄を適正化(120px)し、左側の小単元タイトルが絶対に改行されない広々スペースを創出 */
 .test-student-info {
   display: flex;
   align-items: flex-end;
@@ -2893,16 +2912,17 @@ body.show-answers .answer-text {
 .student-entry-line {
   display: flex;
   align-items: baseline;
-  gap: 8px;
-  font-size: 0.88rem;
+  gap: 5px;
+  font-size: 0.86rem;
   font-weight: 600;
   color: #1e293b;
+  white-space: nowrap;
 }
 
 .student-grade-label {
   font-weight: 700;
   color: #334155;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .student-entry-item {
@@ -2914,8 +2934,8 @@ body.show-answers .answer-text {
 }
 
 .student-entry-item.name-item {
-  margin-left: 6px;
-  gap: 4px;
+  margin-left: 4px;
+  gap: 3px;
 }
 
 .student-line {
@@ -2926,11 +2946,11 @@ body.show-answers .answer-text {
 }
 
 .student-line.num-line {
-  width: 30px; /* 組・番号の記入スペース */
+  width: 22px; /* 組・番号の記入スペース */
 }
 
 .student-line.name-line {
-  width: 170px; /* 氏名の広大な記入スペース（2行目に配置したためゆったり確保！） */
+  width: 120px; /* 氏名の広大な記入スペース（手書きで十分書ける幅を確保しつつタイトルの改行を完全阻止） */
 }
 
 /* KaTeX 数式スタイル最適化 (教科書品質) */

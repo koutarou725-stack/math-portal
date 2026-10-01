@@ -3362,60 +3362,75 @@ function renderTeXSafe(tex, displayMode = false) {
   return `<span class="tex-fallback">${fb}</span>`;
 }
 
-// 数式テキストの教科書品質リッチフォーマッター (KaTeX TeX組版エンジン)
+// 数式テキストの教科書品質リッチフォーマッター (KaTeX TeX組版エンジン & トークン完全隔離)
 function formatMathRich(text) {
   if (!text || typeof text !== 'string') return text;
 
   let s = text;
+  const placeholders = [];
+  const pushSafe = (html) => {
+    placeholders.push(html);
+    return `___MATH_TOKEN_${placeholders.length - 1}___`;
+  };
 
-  // 0. 単位（cm, mm, km, cm², cm³ 等）を一時退避
-  const unitPlaceholders = [];
-  s = s.replace(/\b(cm²|cm³|cm|mm|km|kg|mL|dL|min|sec)\b/g, (match) => {
-    unitPlaceholders.push(match);
-    return `__UNIT_${unitPlaceholders.length - 1}__`;
-  });
-
-  // 1. problem-body-math の中身を丸ごと TeX レンダリング
+  // 1. problem-body-math の中身を TeX レンダリングして即座に隔離
   s = s.replace(/<span class="problem-body-math">([\s\S]*?)<\/span>/g, (m, inner) => {
-    if (inner.includes('<')) {
-      return `<span class="problem-body-math">${formatMathRich(inner)}</span>`;
-    }
     const tex = convertMathToTeX(inner);
-    return `<span class="problem-body-math">${renderTeXSafe(tex)}</span>`;
+    const rendered = renderTeXSafe(tex);
+    return pushSafe(`<span class="problem-body-math">${rendered}</span>`);
   });
 
-  // 2. 本文中に残っている平方根: √45, 3√5, 4√2 cm など
+  // 2. 既存の HTML タグ（<br>, <div...>, <i...> 等）をすべて隔離
+  s = s.replace(/<[^>]+>/g, (tag) => pushSafe(tag));
+
+  // 3. 単位記号（カッコ付き単位および単語単位）を隔離
+  s = s.replace(/\((cm²|cm³|cm|mm|km|kg|g|mL|dL|min|sec|m)\)/g, (m, u) => {
+    return pushSafe(`(<span class="math-unit">${u}</span>)`);
+  });
+  s = s.replace(/\b(cm²|cm³|cm|mm|km|kg|mL|dL|min|sec)\b/g, (unit) => {
+    return pushSafe(`<span class="math-unit">${unit}</span>`);
+  });
+
+  // 4. 本文中に残っている平方根: √45, 3√5, 4√2 など
   s = s.replace(/√([0-9a-zA-Z]+)/g, (m, num) => {
-    return renderTeXSafe(`\\sqrt{${num}}`);
+    return pushSafe(renderTeXSafe(`\\sqrt{${num}}`));
   });
 
-  // 3. 本文中に残っている分数: A / B
+  // 5. 本文中に残っている分数: (A)/(B) や A/B
   s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, (m, num, den) => {
-    return renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`);
+    return pushSafe(renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`));
   });
-  s = s.replace(/([0-9a-zA-Z\\{}]+)\s*\/\s*([0-9a-zA-Z\\{}]+)/g, (m, num, den) => {
-    return renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`);
+  s = s.replace(/(?<![a-zA-Z0-9_])([0-9a-zA-Z]+)\s*\/\s*([0-9a-zA-Z]+)(?![a-zA-Z0-9_])/g, (m, num, den) => {
+    return pushSafe(renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`));
   });
 
-  // 4. 本文中の累乗: x², y² など
+  // 6. 本文中の累乗: x², y² など
   s = s.replace(/(?<!c|m|k)([xyabcpqmnktABCD])²/g, (m, v) => {
-    return renderTeXSafe(`${v}^2`);
+    return pushSafe(renderTeXSafe(`${v}^2`));
   });
 
-  // 5. 本文中の単独の数式変数: x, y, a, b (HTMLタグ・プレースホルダー除外)
-  s = s.replace(/(<[^>]+>)|(__UNIT_\d+__)|(?<![a-zA-Z0-9_])([xyabcpqmnkt])(?![a-zA-Z0-9_])/g, (m, tag, unit, v) => {
-    if (tag) return tag;
-    if (unit) return unit;
-    return renderTeXSafe(v);
+  // 7. 本文中の単独の数式変数: x, y, a, b (プレースホルダー ___MATH_TOKEN_X___ は触らない)
+  s = s.replace(/___MATH_TOKEN_\d+___|(?<![a-zA-Z0-9_])([xyabcpqmnkt])(?![a-zA-Z0-9_])/g, (m, v) => {
+    if (!v) return m;
+    return pushSafe(renderTeXSafe(v));
   });
 
-  // 6. 単位を復元
-  s = s.replace(/__UNIT_(\d+)__/g, (m, idx) => `<span class="math-unit">${unitPlaceholders[idx]}</span>`);
+  // 8. トークンを再帰的に全復元（安全上限10回ループ）
+  let prev;
+  let loops = 0;
+  do {
+    prev = s;
+    s = s.replace(/___MATH_TOKEN_(\d+)___/g, (m, idx) => {
+      const i = parseInt(idx, 10);
+      return placeholders[i] !== undefined ? placeholders[i] : '';
+    });
+    loops++;
+  } while (s !== prev && loops < 10);
 
   return s;
 }
 
-// KaTeX の動的適用（読み込み完了時）
+// KaTeX の動的適用（読み込み完了時、安全ガード付き）
 function applyKaTeXIfAvailable(element) {
   if (!element) return;
   if (typeof renderMathInElement === 'function') {
@@ -3425,7 +3440,8 @@ function applyKaTeXIfAvailable(element) {
           { left: '$$', right: '$$', display: true },
           { left: '$', right: '$', display: false }
         ],
-        throwOnError: false
+        throwOnError: false,
+        ignoredClasses: ['katex', 'katex-html', 'katex-mathml']
       });
     } catch (e) {
       console.warn('KaTeX render error:', e);
@@ -3487,6 +3503,9 @@ function generateQuickTest() {
   // 7問・8問・9問・10問は2列 (cols-2) にしてA4用紙1枚にバランスよく収容
   const gridClass = count > 6 ? 'test-problem-grid cols-2' : 'test-problem-grid cols-1';
 
+  // タイトルの文字数に応じた文字サイズ自動調整（長い単元名でも改行を完全防止）
+  const titleClass = titleLine2.length > 13 ? ' title-mini' : (titleLine2.length > 8 ? ' title-compact' : '');
+
   // 1. 生徒用プリント用紙のHTML構築（1行目: 大単元全幅、2行目: 左小単元・右生徒情報）
   const studentEl = document.getElementById('testStudentPaper');
   if (studentEl) {
@@ -3495,7 +3514,7 @@ function generateQuickTest() {
       <div class="test-paper-header">
         <div class="test-header-line1">${titleLine1}</div>
         <div class="test-header-line2">
-          <div class="test-title-line2">${titleLine2}</div>
+          <div class="test-title-line2${titleClass}">${titleLine2}</div>
           <div class="test-student-info">
             <div class="student-entry-line">
               <span class="student-grade-label">${grade}年</span>
@@ -3534,7 +3553,7 @@ function generateQuickTest() {
       <div class="test-paper-header answer-header">
         <div class="test-header-line1 answer-line1">${titleLine1}</div>
         <div class="test-header-line2">
-          <div class="test-title-line2 answer-line2">【模範解答】${titleLine2}</div>
+          <div class="test-title-line2 answer-line2${titleClass}">【模範解答】${titleLine2}</div>
         </div>
       </div>
 
