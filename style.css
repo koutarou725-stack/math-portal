@@ -2846,6 +2846,22 @@ body.show-answers .answer-text {
 
 #testAnswerPaper {
   overflow-y: auto; /* 模範解答でステップが多い場合でも用紙枠を崩さずスクロール可能 */
+  justify-content: flex-start;
+}
+
+#testAnswerPaper::-webkit-scrollbar {
+  width: 6px;
+}
+#testAnswerPaper::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+#testAnswerPaper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+#testAnswerPaper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .test-paper-header {
@@ -3273,37 +3289,48 @@ body.show-answers .answer-text {
 }
 
 /* ========================================================
-   問題数ごとのグリッド行均等配分 (A4用紙の下端まで100%均等に使い切る！)
+   生徒用プリント: 問題数ごとのグリッド行均等配分 (A4用紙の下端まで100%均等に使い切る！)
    ======================================================== */
-.test-paper-mock[data-count="4"] .test-problem-grid {
+#testStudentPaper[data-count="4"] .test-problem-grid {
   grid-template-rows: repeat(4, 1fr);
 }
 
-.test-paper-mock[data-count="5"] .test-problem-grid {
+#testStudentPaper[data-count="5"] .test-problem-grid {
   grid-template-rows: repeat(5, 1fr);
 }
 
-.test-paper-mock[data-count="6"] .test-problem-grid {
+#testStudentPaper[data-count="6"] .test-problem-grid {
   grid-template-rows: repeat(6, 1fr);
 }
 
-.test-paper-mock[data-count="7"] .test-problem-grid,
-.test-paper-mock[data-count="8"] .test-problem-grid {
+#testStudentPaper[data-count="7"] .test-problem-grid,
+#testStudentPaper[data-count="8"] .test-problem-grid {
   grid-template-rows: repeat(4, 1fr);
 }
 
-.test-paper-mock[data-count="9"] .test-problem-grid,
-.test-paper-mock[data-count="10"] .test-problem-grid {
+#testStudentPaper[data-count="9"] .test-problem-grid,
+#testStudentPaper[data-count="10"] .test-problem-grid {
   grid-template-rows: repeat(5, 1fr);
 }
 
-.test-problem-item {
-  height: 100%;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-sizing: border-box;
+/* ========================================================
+   先生用模範解答: 途中式ステップが絶対に重ならない自動伸縮レイアウト
+   ======================================================== */
+#testAnswerPaper .test-problem-grid {
+  grid-template-rows: auto !important;
+  height: auto !important;
+  flex: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+#testAnswerPaper .test-problem-item {
+  height: auto !important;
+  min-height: auto !important;
+  justify-content: flex-start !important;
+  padding: 10px 12px 12px 12px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
 }
 
 .problem-workspace {
