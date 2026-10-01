@@ -2824,66 +2824,56 @@ body.show-answers .answer-text {
   border: 1px solid #cbd5e1;
   border-radius: 4px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  padding: 12px 18px;
+  padding: 14px 18px 10px 18px;
   min-height: 700px;
   box-sizing: border-box;
   font-family: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
-  font-size: 0.88rem; /* 小さめで見やすく引き締まった文字 */
-  line-height: 1.4;
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .test-paper-header {
-  border-bottom: 1px solid #334155;
-  padding-bottom: 6px;
-  margin-bottom: 15px;
+  border-bottom: 1.5px solid #1e293b;
+  padding-bottom: 5px;
+  margin-bottom: 12px;
 }
 
 .test-paper-header.answer-header {
   border-bottom-color: #dc2626;
 }
 
-/* 1段すっきりヘッダー (得点欄を廃止し、タイトルと生徒氏名欄を左右に配置) */
+/* 1段すっきりヘッダー */
 .test-header-bar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+  align-items: baseline;
+  gap: 10px;
+  overflow: hidden;
 }
 
 .test-header-left {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
-  flex: 1;
+  flex: 0 0 auto; /* タイトルは縮まない */
   min-width: 0;
+  overflow: hidden;
 }
 
 .test-paper-badge {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #1d4ed8;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  padding: 1px 7px;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.test-paper-badge.answer-badge {
-  color: #b91c1c;
-  background: #fef2f2;
-  border-color: #fecaca;
+  display: none; /* 使用なし */
 }
 
 .test-paper-title {
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
-  line-height: 1.25;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 340px; /* 長すぎる場合は省略表示 */
 }
 
 .test-paper-title.answer-title {
@@ -2892,64 +2882,79 @@ body.show-answers .answer-text {
 
 .test-header-right {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  white-space: nowrap;
+  align-items: baseline;
+  gap: 8px;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .test-student-cell {
-  font-size: 0.84rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
   color: #334155;
   white-space: nowrap;
 }
 
 .test-student-cell.name-cell {
-  min-width: 170px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
 }
 
-.test-student-cell.teacher-tag {
+.name-underline {
+  display: inline-block;
+  width: 120px;
+  border-bottom: 1px solid #334155;
+  height: 1.1em;
+}
+
+.test-student-cell.teacher-mark {
   color: #dc2626;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  padding: 2px 8px;
-  border-radius: 4px;
+  border: 1px solid #fca5a5;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #fff5f5;
 }
 
 /* 問題グリッド */
 .test-problem-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 10px;
+  gap: 0;
 }
 
 .test-problem-grid.cols-2 {
   grid-template-columns: 1fr 1fr;
-  gap: 8px 12px;
+  gap: 0 0;
 }
 
 .test-problem-item {
   background: transparent;
-  padding: 4px 10px 10px 10px;
+  padding: 8px 8px 10px 8px;
   position: relative;
   break-inside: avoid;
   box-sizing: border-box;
+  border-bottom: 1px solid #e2e8f0; /* 問題間の仕切り線 */
+}
+
+/* 2列時の右列に縦線 */
+.test-problem-grid.cols-2 .test-problem-item:nth-child(odd) {
+  border-right: 1px solid #e2e8f0;
 }
 
 .test-problem-item.answer-mode {
-  /* No special background, keep it clean */
+  /* keep clean */
 }
 
 .problem-header {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
-  font-size: 0.86rem;
-  font-weight: 600;
-  line-height: 1.35;
+  gap: 4px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.5;
   color: #1e293b;
 }
 
@@ -2957,10 +2962,11 @@ body.show-answers .answer-text {
   display: inline-flex;
   align-items: baseline;
   color: #0f172a;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   flex-shrink: 0;
-  margin-right: 4px;
+  margin-right: 2px;
+  padding-top: 1px;
 }
 
 .problem-num.answer-num {
@@ -2969,43 +2975,37 @@ body.show-answers .answer-text {
 
 .problem-text {
   flex: 1;
-  line-height: 1.35;
+  line-height: 1.55;
+  word-break: break-all; /* 長いかつ素文や英数字混在でかしまわらないよう */
 }
 
 .problem-body-math {
-  font-size: 0.94rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: #0f172a;
   padding: 1px 0;
   display: inline-block;
-  white-space: nowrap; /* 数式が不自然に折れ曲がらないよう nowrap 指定 */
+  white-space: nowrap;
   font-family: 'Cambria Math', 'Times New Roman', 'KaTeX_Main', serif;
 }
 
 .problem-workspace {
-  margin-top: 5px;
-  min-height: 36px;
-  border-bottom: 1px dashed #cbd5e1;
+  margin-top: 4px;
+  min-height: 34px;
   position: relative;
 }
 
 .problem-workspace-label {
-  position: absolute;
-  top: -7px;
-  left: 4px;
-  font-size: 0.62rem;
-  color: #94a3b8;
-  background: #ffffff;
-  padding: 0 4px;
+  display: none; /* 計算スペースのラベルは非表示 */
 }
 
 .problem-answer-line {
-  margin-top: 5px;
+  margin-top: 4px;
   display: flex;
   align-items: baseline;
   justify-content: flex-end;
   gap: 6px;
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -3088,27 +3088,23 @@ body.show-answers .answer-text {
 
 /* 問題数ごとの計算欄微調整 (10問時でもA4用紙1枚に確実に収容) */
 .test-paper-mock[data-count="4"] .problem-workspace {
-  min-height: 52px;
+  min-height: 50px;
 }
 
 .test-paper-mock[data-count="6"] .problem-workspace {
-  min-height: 40px;
+  min-height: 38px;
 }
 
 .test-paper-mock[data-count="8"] .problem-workspace {
-  min-height: 30px;
+  min-height: 28px;
 }
 
 .test-paper-mock[data-count="10"] .problem-workspace {
-  min-height: 20px;
+  min-height: 18px;
 }
 
 .test-paper-mock[data-count="10"] .test-problem-item {
-  padding: 4px 8px;
-}
-
-.test-paper-mock[data-count="10"] .test-problem-grid.cols-2 {
-  gap: 4px 8px;
+  padding: 5px 8px;
 }
 
 /* ========================================================
@@ -3268,53 +3264,53 @@ body.show-answers .answer-text {
 
   /* 印刷時フォントサイズ (コンパクト最適化) */
   .test-paper-title {
-    font-size: 11pt !important;
+    font-size: 10.5pt !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
   }
 
   .test-student-cell {
-    font-size: 8.5pt !important;
+    font-size: 8pt !important;
   }
 
   .problem-header {
     font-size: 8.5pt !important;
+    line-height: 1.5 !important;
   }
 
   .problem-body-math {
-    font-size: 9.5pt !important;
+    font-size: 9pt !important;
     white-space: nowrap !important;
   }
 
   .problem-answer-line {
-    font-size: 8.5pt !important;
+    font-size: 8pt !important;
     white-space: nowrap !important;
   }
 
   .problem-answer-fill {
-    font-size: 9.2pt !important;
+    font-size: 9pt !important;
   }
 
   .answer-steps-box {
-    font-size: 7.2pt !important;
+    font-size: 7pt !important;
     padding: 2px 4px !important;
     margin-top: 2px !important;
   }
 
   .steps-heading {
-    font-size: 7.2pt !important;
+    font-size: 7pt !important;
   }
 
   .step-item {
-    font-size: 7.2pt !important;
+    font-size: 7pt !important;
     line-height: 1.25 !important;
   }
 
-  .test-paper-footer {
-    font-size: 7pt !important;
-    margin-top: 4px !important;
-  }
-
   .test-paper-mock[data-count="10"] .problem-workspace {
-    min-height: 16px !important;
+    min-height: 14px !important;
   }
 }
 

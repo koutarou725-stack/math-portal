@@ -3311,13 +3311,18 @@ function generateQuickTest() {
   const currentMajor = gradeUnits.find(m => m.id === majorId) || gradeUnits[0];
   const currentSub = currentMajor?.subUnits?.find(s => s.id === subUnitId) || { name: '練習テスト' };
 
-  let cleanTitle = currentSub.name.replace(/【.*?】/, '').trim();
-  if (cleanTitle.includes('全領域からランダム') || cleanTitle.includes('全単元からランダム')) {
-    cleanTitle = `第${grade}学年 数学 総合確認テスト`;
-  } else if (!cleanTitle) {
-    cleanTitle = currentMajor.name;
-  }
+  let subTitle = currentSub.name.replace(/【.*?】/, '').trim();
   const majorName = currentMajor ? currentMajor.name : '数学科';
+
+  // タイトル: 「中学X年 ＞ 大単元 ＞ 小単元」の形式でシンプルに
+  let cleanTitle;
+  if (subTitle.includes('全領域からランダム') || subTitle.includes('全単元からランダム')) {
+    cleanTitle = `中学${grade}年 数学 総合テスト`;
+  } else if (!subTitle || subTitle === majorName) {
+    cleanTitle = `中学${grade}年 ${majorName}`;
+  } else {
+    cleanTitle = `中学${grade}年 ${majorName} ＞ ${subTitle}`;
+  }
 
   // 問題ジェネレーターの選定
   const availableGenKeys = getGeneratorsForSubUnit(grade, subUnitId);
@@ -3344,11 +3349,11 @@ function generateQuickTest() {
       <div class="test-paper-header">
         <div class="test-header-bar">
           <div class="test-header-left">
-            <h3 class="test-paper-title">第${grade}学年 数学 ${cleanTitle}</h3>
+            <h3 class="test-paper-title">${cleanTitle}</h3>
           </div>
           <div class="test-header-right">
-            <span class="test-student-cell">${grade} 年 _____ 組 _____ 番</span>
-            <span class="test-student-cell name-cell">氏名: ___________________________</span>
+            <span class="test-student-cell">${grade} 年 &nbsp; 組 &nbsp; 番</span>
+            <span class="test-student-cell name-cell">氏名：<span class="name-underline"></span></span>
           </div>
         </div>
       </div>
@@ -3379,10 +3384,10 @@ function generateQuickTest() {
       <div class="test-paper-header answer-header">
         <div class="test-header-bar">
           <div class="test-header-left">
-            <h3 class="test-paper-title answer-title">第${grade}学年 数学 【模範解答】 ${cleanTitle}</h3>
+            <h3 class="test-paper-title answer-title">【模範解答】 ${cleanTitle}</h3>
           </div>
           <div class="test-header-right">
-            <span class="test-student-cell teacher-tag"><i class="fa-solid fa-chalkboard-user"></i> 教員用控 (途中式付き)</span>
+            <span class="test-student-cell teacher-mark">教員用</span>
           </div>
         </div>
       </div>
