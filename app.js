@@ -2524,7 +2524,8 @@ async function syncFromCloud(isManual = false) {
       return; // ユーザーが入力作業中の場合はバックグラウンド更新をスキップ
     }
 
-    const res = await fetch(url);
+    const fetchUrl = url + (url.includes('?') ? '&' : '?') + `_t=${Date.now()}`;
+    const res = await fetch(fetchUrl, { cache: 'no-store' });
     const json = await res.json();
 
     if (json.status === 'success' && json.data) {
