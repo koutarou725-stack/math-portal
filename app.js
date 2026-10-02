@@ -79,6 +79,8 @@ function loadStorage(key, fallback) {
 // 状態管理 (State)
 // ==========================================
 const state = {
+  blocksLeft: [],
+  blocksRight: [],
   activeTab: 'home',
   timetableMode: 'schedule', // 'schedule' | 'base' | 'bell'
   showAnswers: false,
@@ -165,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initCloudSync();
 
+  selectB4Grade('3');
   loadSampleSheet();
   renderLinearGraph();
   renderGeometryFig();
@@ -2184,7 +2187,7 @@ function loadLessonPreset(presetKey, classInfo = null) {
 
 // 授業例テンプレート読込（旧loadSampleSheetの進化版）
 function loadSampleSheet() {
-  loadLessonPreset(currentWorksheetPresetKey || 'g2_linear_graph');
+  loadBoardLessonPreset(currentB4Grade || '3', currentB4UnitId || 'u_3_1', currentB4Hour || 5);
 }
 
 // サイドバーの学年切り替え
@@ -2317,8 +2320,30 @@ function jumpToWorksheetFromSlot() {
 
   closeLessonPlanModal();
   switchTab('worksheet');
-  switchWorksheetGrade(grade);
-  loadLessonPreset(targetPresetKey, className);
+
+  // B4見開き板書プリセットへのマッピング
+  let b4UnitId = 'u_3_1';
+  let b4Hour = 5;
+
+  if (targetPresetKey === 'g3_poly_expand') { b4UnitId = 'u_3_1'; b4Hour = 5; }
+  else if (targetPresetKey === 'g3_sqrt_calc') { b4UnitId = 'u_3_2'; b4Hour = 3; }
+  else if (targetPresetKey === 'g3_quad_factor') { b4UnitId = 'u_3_3'; b4Hour = 4; }
+  else if (targetPresetKey === 'g2_linear_graph') { b4UnitId = 'u_2_3'; b4Hour = 2; }
+  else if (targetPresetKey === 'g1_equation') { b4UnitId = 'u_1_3'; b4Hour = 3; }
+  else if (grade === '1') { b4UnitId = 'u_1_3'; b4Hour = 3; }
+  else if (grade === '2') { b4UnitId = 'u_2_3'; b4Hour = 2; }
+  else { b4UnitId = 'u_3_1'; b4Hour = 5; }
+
+  selectB4Grade(grade);
+  loadBoardLessonPreset(grade, b4UnitId, b4Hour);
+
+  // クラス情報の反映
+  if (className) {
+    const classCell = document.querySelector('.info-cell.class-cell');
+    if (classCell) {
+      classCell.innerHTML = className + '組';
+    }
+  }
 }
 
 // 授業プリント工房 ➔ 時間割の授業予定（週案）へ反映
@@ -5480,3 +5505,787 @@ window.addEventListener('DOMContentLoaded', () => {
   setTimeout(checkServerEnvironment, 500);
 });
 
+
+
+// ========================================================
+// 中学数学科 板書＆展開例 授業データベース（B4横見開きプリント完全対応）
+// 明治図書『板書＆展開例でよくわかる 365日の全授業』シリーズ準拠
+// ========================================================
+const boardLessonDatabase = {
+  '3': {
+    gradeLabel: '第3学年',
+    units: [
+      {
+        id: 'u_3_1',
+        unitName: '第1章 多項式・展開と因数分解',
+        totalHours: 11,
+        bookRef: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+        lessons: [
+          {
+            hour: 1,
+            title: '多項式と単項式の乗法・除法',
+            leftBlocks: [
+              { type: 'objective', data: { text: '分配法則を利用して、多項式と単項式の乗法・除法を計算できる。' } },
+              { type: 'review', data: { title: '1・2年の復習', content: '分配法則: $a(b+c) = ab + ac$' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '長方形の面積をもとに、多項式 $2x(x + 3y)$ の展開方法を考えよう。', guide: 'たてが $2x$、横が $x+3y$ の長方形を2つに分けてみよう。', thinkingSpaceHeight: 90, answer: '$2x(x) + 2x(3y) = 2x^2 + 6xy$' } },
+              { type: 'point-box', data: { badge: '板書まとめ', title: '多項式と単項式の計算', content: '多項式に単項式をかけるときは、カッコの中の <strong>すべての項に単項式をかける</strong>（分配法則）。' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '次の計算をしなさい。<br>(1) $3a(2a - b)$<br>(2) $(4x^2 - 6xy) \\div 2x$', answer: '(1) $6a^2 - 3ab$<br>(2) $2x - 3y$', spaceHeight: 65 } },
+              { type: 'question', data: { qNum: '問 2 (発展)', text: '次の式を展開して整理しなさい。<br>$x(x + 2) + 2x(x - 3)$', answer: '$x^2 + 2x + 2x^2 - 6x = 3x^2 - 4x$', spaceHeight: 60 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          },
+          {
+            hour: 2,
+            title: '多項式どうしの乗法 (a+b)(c+d)',
+            leftBlocks: [
+              { type: 'objective', data: { text: '多項式どうしの積 $(a+b)(c+d)$ を、面積図や文字の置き換えを用いて展開できる。' } },
+              { type: 'review', data: { title: '前時のふりかえり', content: '$M(c+d) = Mc + Md$' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: 'たて $a+b$、横 $c+d$ の長方形の面積は、どのように表せるだろうか？', guide: '4つの小さな長方形の面積の和として表してみよう。', thinkingSpaceHeight: 90, answer: '$(a+b)(c+d) = ac + ad + bc + bd$' } },
+              { type: 'point-box', data: { badge: '板書まとめ', title: '多項式の展開の基本', content: '$(a+b)(c+d) = ac + ad + bc + bd$<br>一方のカッコの各項に、他方の各項をもれなくかけて同類項をまとめる！' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '次の式を展開しなさい。<br>(1) $(x + 2)(y + 3)$<br>(2) $(2x - 1)(x + 4)$', answer: '(1) $xy + 3x + 2y + 6$<br>(2) $2x^2 + 7x - 4$', spaceHeight: 65 } },
+              { type: 'question', data: { qNum: '問 2', text: '$(a - 3)(b - 2)$ を展開しなさい。符号に注意！', answer: '$ab - 2a - 3b + 6$', spaceHeight: 50 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          },
+          {
+            hour: 3,
+            title: '乗法公式① (x+a)(x+b)',
+            leftBlocks: [
+              { type: 'objective', data: { text: '公式 $(x+a)(x+b) = x^2 + (a+b)x + ab$ を理解し、素早く展開できる。' } },
+              { type: 'review', data: { title: '前時の確認', content: '$(x+2)(x+3) = x^2 + 3x + 2x + 6 = x^2 + 5x + 6$' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '$(x+a)(x+b)$ を展開したとき、$x$ の係数と数の項にはどのようなきまりがあるだろうか？', guide: '$5 = 2+3$、$6 = 2 \\times 3$。たし算とかけ算の関係に注目！', thinkingSpaceHeight: 85, answer: '$x$ の係数は「和 $a+b$」、最後の項は「積 $ab$」になる。' } },
+              { type: 'point-box', data: { badge: '重要公式①', title: '乗法公式 1 (和と積の公式)', content: '<strong>$(x + a)(x + b) = x^2 + (a + b)x + ab$</strong><br>真ん中は「たして」、最後は「かけて」！' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1 (基本演習)', text: '公式を使って次の式を展開しなさい。<br>(1) $(x + 3)(x + 4)$<br>(2) $(x - 5)(x + 2)$<br>(3) $(x - 3)(x - 7)$', answer: '(1) $x^2 + 7x + 12$<br>(2) $x^2 - 3x - 10$<br>(3) $x^2 - 10x + 21$', spaceHeight: 80 } },
+              { type: 'question', data: { qNum: '問 2 (符号注意)', text: '$(a + 6)(a - 4)$ を計算しなさい。', answer: '$a^2 + 2a - 24$', spaceHeight: 45 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          },
+          {
+            hour: 4,
+            title: '乗法公式②③ 平方の公式・和と差の積',
+            leftBlocks: [
+              { type: 'objective', data: { text: '平方の公式 $(a \\pm b)^2$ および和と差の積 $(a+b)(a-b)$ を理解し活用できる。' } },
+              { type: 'review', data: { title: '前時のふりかえり', content: '$(x+3)(x+3) = x^2 + 6x + 9$　/　$(x+3)(x-3) = x^2 - 9$' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '正方形の面積をもとに、$(a+b)^2$ の展開公式を導こう。真ん中の項はどうなる？', guide: 'たて $a+b$、横 $a+b$ の正方形は、4つのパーツに分かれるね。', thinkingSpaceHeight: 85, answer: '$(a+b)^2 = a^2 + 2ab + b^2$。長方形が2つあるので $2ab$ になる。' } },
+              { type: 'point-box', data: { badge: '重要公式②③', title: '平方の公式 & 和と差の積', content: '② <strong>$(a + b)^2 = a^2 + 2ab + b^2$</strong><br>③ <strong>$(a - b)^2 = a^2 - 2ab + b^2$</strong><br>④ <strong>$(a + b)(a - b) = a^2 - b^2$</strong>' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '公式を使って展開しなさい。<br>(1) $(x + 5)^2$<br>(2) $(x - 4)^2$<br>(3) $(x + 7)(x - 7)$', answer: '(1) $x^2 + 10x + 25$<br>(2) $x^2 - 8x + 16$<br>(3) $x^2 - 49$', spaceHeight: 80 } },
+              { type: 'question', data: { qNum: '問 2 (ミス防止)', text: '$(2x + 3)^2$ を展開しなさい。先頭の項は $(2x)^2$ だよ！', answer: '$4x^2 + 12x + 9$', spaceHeight: 50 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          },
+          {
+            hour: 5,
+            title: '式の展開の工夫（置き換えの利用）',
+            leftBlocks: [
+              { type: 'objective', data: { text: '共通な部分に着目して文字におきかえ、乗法公式を使って工夫して展開できる。' } },
+              { type: 'review', data: { title: '前時の公式確認', content: '$(M+2)(M-5) = M^2 - 3M - 10$' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '式 $(a+b+2)(a+b-5)$ を展開するにはどうすればよいだろうか？共通な部分を見つけて工夫しよう。', guide: '着眼点: $a+b$ がどちらのカッコにもあるね。1つのまとまり $M$ とおいてみよう。', thinkingSpaceHeight: 90, answer: '$a+b=M$ とおくと、$(M+2)(M-5) = M^2 - 3M - 10$。元に戻して $(a+b)^2 - 3(a+b) - 10 = a^2 + 2ab + b^2 - 3a - 3b - 10$' } },
+              { type: 'point-box', data: { badge: '板書まとめ', title: '置き換えによる工夫のポイント', content: '式の中に同じまとまりがあるときは、それを <strong>1つの文字 $M$</strong> とおくことで、知っている乗法公式にあてはめて簡単に展開できる！' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1 (確かめ)', text: '置き換えを利用して展開しなさい。<br>$(x + y + 3)(x + y - 3)$', answer: '$x+y=M$ とおくと $(M+3)(M-3) = M^2 - 9 = (x+y)^2 - 9 = x^2 + 2xy + y^2 - 9$', spaceHeight: 65 } },
+              { type: 'question', data: { qNum: '問 2 (発展に挑戦)', text: '$(a - b + 2)^2$ を展開しなさい。', answer: '$a-b=M$ とおくと $(M+2)^2 = M^2 + 4M + 4 = a^2 - 2ab + b^2 + 4a - 4b + 4$', spaceHeight: 65 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          },
+          {
+            hour: 6,
+            title: '因数分解の導入・共通因数のくくり出し',
+            leftBlocks: [
+              { type: 'objective', data: { text: '因数分解の意味を理解し、各項に共通な因数をくくり出して式を因数分解できる。' } },
+              { type: 'review', data: { title: '展開と因数分解', content: '展開: $ma + mb \\leftarrow m(a+b)$　この逆の変形を考えよう！' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '$ax + ay$ をかけ算の形（積の形）になおすにはどうすればよいだろうか？', guide: '共通に含まれている文字 $a$ に着目しよう。', thinkingSpaceHeight: 85, answer: '$a(x + y)$ と積の形にできる。この $a$ や $x+y$ を因数といい、因数の積になおすことを「因数分解する」という。' } },
+              { type: 'point-box', data: { badge: '重要定義', title: '因数分解と共通因数', content: '・ <strong>因数分解</strong>: 多項式をいくつかの因数の積の形に表すこと。<br>・ <strong>共通因数のくくり出し</strong>: すべての項に共通な文字や数をカッコの外に出す。<br>$ma + mb = m(a + b)$' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '次の式を因数分解しなさい。<br>(1) $ax - ay$<br>(2) $3x^2 + 6x$<br>(3) $2ab - 4bc + 6b$', answer: '(1) $a(x - y)$<br>(2) $3x(x + 2)$<br>(3) $2b(a - 2c + 3)$', spaceHeight: 80 } },
+              { type: 'question', data: { qNum: '問 2 (注意点)', text: '$4x^2 - 2x$ を $2(2x^2 - x)$ とした。どこが不十分？正しく直しなさい。', answer: '文字 $x$ も共通因数なので外に出す。正解: $2x(2x - 1)$', spaceHeight: 50 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'u_3_2',
+        unitName: '第2章 平方根',
+        totalHours: 7,
+        bookRef: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+        lessons: [
+          {
+            hour: 1,
+            title: '平方根の意味と根号の表し方',
+            leftBlocks: [
+              { type: 'objective', data: { text: '平方根の意味を理解し、根号 $\\sqrt{}$ を用いて正しく表すことができる。' } },
+              { type: 'review', data: { title: '2乗の計算', content: '$3^2 = 9$、$(-3)^2 = 9$。2乗して9になる数は $3$ と $-3$。' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '面積が $5$ の正方形の1辺の長さは、どのような数になるだろうか？', guide: '2乗して5になる正の数。小数で表せるかな？表せないときは新しい記号 $\\sqrt{}$ を使おう！', thinkingSpaceHeight: 90, answer: '1辺の長さを $\\sqrt{5}$ と表す。2乗して $a$ になる数を $a$ の平方根といい、$\\pm\\sqrt{a}$ と表す。' } },
+              { type: 'point-box', data: { badge: '板書まとめ', title: '平方根と根号', content: '・ $a > 0$ のとき、$a$ の平方根は正と負の2つある（絶対値が等しい）。<br>・ 記号 $\\sqrt{}$ を <strong>根号（ルート）</strong> という。<br>・ 正の平方根を $\\sqrt{a}$、負の平方根を $-\\sqrt{a}$ と表す。' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '次の数の平方根を答えなさい。<br>(1) $25$<br>(2) $0.49$<br>(3) $7$', answer: '(1) $\\pm 5$<br>(2) $\\pm 0.7$<br>(3) $\\pm \\sqrt{7}$', spaceHeight: 65 } },
+              { type: 'question', data: { qNum: '問 2', text: '次の値を求めなさい。<br>(1) $\\sqrt{36}$　(2) $-\\sqrt{64}$　(3) $(\\sqrt{11})^2$', answer: '(1) $6$　(2) $-8$　(3) $11$', spaceHeight: 65 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          },
+          {
+            hour: 3,
+            title: '根号をふくむ式の乗法と除法',
+            leftBlocks: [
+              { type: 'objective', data: { text: '$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$ の性質を理解し、根号を含む式の計算ができる。' } },
+              { type: 'review', data: { title: '平方根の定義', content: '面積2の正方形の1辺は $\\sqrt{2}$、面積3の正方形の1辺は $\\sqrt{3}$' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '$\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}$ になる理由を、面積や2乗の計算をもとに説明しよう。', guide: '2乗して6になる正の数は何だろう？ $(\\sqrt{2} \\times \\sqrt{3})^2$ を計算してみよう。', thinkingSpaceHeight: 90, answer: '$(\\sqrt{2}\\times\\sqrt{3})^2 = 2 \\times 3 = 6$。2乗して6になる正の数だから $\\sqrt{6}$ である。' } },
+              { type: 'point-box', data: { badge: '計算公式', title: '根号の乗法・除法（$a>0, b>0$）', content: '① <strong>$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$</strong><br>② <strong>$\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$</strong>' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '次の計算をしなさい。<br>(1) $\\sqrt{3} \\times \\sqrt{5}$<br>(2) $\\sqrt{2} \\times \\sqrt{7}$<br>(3) $\\sqrt{18} \\div \\sqrt{2}$', answer: '(1) $\\sqrt{15}$<br>(2) $\\sqrt{14}$<br>(3) $\\sqrt{9} = 3$', spaceHeight: 75 } },
+              { type: 'question', data: { qNum: '問 2', text: '$\\sqrt{12} = \\sqrt{4 \\times 3}$ を $a\\sqrt{b}$ の形にしなさい。', answer: '$\\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}$', spaceHeight: 50 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'u_3_3',
+        unitName: '第3章 2次方程式',
+        totalHours: 6,
+        bookRef: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+        lessons: [
+          {
+            hour: 4,
+            title: '因数分解を利用した解き方',
+            leftBlocks: [
+              { type: 'objective', data: { text: '$AB=0$ ならば $A=0$ または $B=0$ の性質を利用して、2次方程式を因数分解して解くことができる。' } },
+              { type: 'review', data: { title: '前時のふりかえり', content: '$x^2 - 5x + 6 = (x - 2)(x - 3)$' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '2次方程式 $x^2 - 5x + 6 = 0$ の解を見つけるには、左辺をどう変形すればよいか？', guide: '2つの数をかけて0になるとき、どちらかは必ず0だね！', thinkingSpaceHeight: 90, answer: '$(x-2)(x-3)=0$ より $x-2=0$ または $x-3=0$。よって $x=2, 3$。' } },
+              { type: 'point-box', data: { badge: '解法のポイント', title: '因数分解による2次方程式の解き方', content: '① 方程式を $ax^2 + bx + c = 0$ の形に整理する。<br>② 左辺を因数分解して $(x - \\alpha)(x - \\beta) = 0$ にする。<br>③ 解は <strong>$x = \\alpha, \\beta$</strong> ！' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '次の方程式を解きなさい。<br>(1) $(x - 3)(x + 5) = 0$<br>(2) $x^2 - 7x + 10 = 0$<br>(3) $x^2 + 6x = 0$', answer: '(1) $x = 3, -5$<br>(2) $(x-2)(x-5)=0 \\rightarrow x=2, 5$<br>(3) $x(x+6)=0 \\rightarrow x=0, -6$', spaceHeight: 85 } },
+              { type: 'question', data: { qNum: '問 2 (重解)', text: '$x^2 - 8x + 16 = 0$ を解きなさい。解は何個？', answer: '$(x-4)^2 = 0$ より $x = 4$（解は1個。重解）', spaceHeight: 50 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  '2': {
+    gradeLabel: '第2学年',
+    units: [
+      {
+        id: 'u_2_3',
+        unitName: '第3章 一次関数',
+        totalHours: 10,
+        bookRef: '',
+        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+        officialRef: '数学学習プリント/02_2年生/数学_3-1一次関数とグラフ.pdf',
+        lessons: [
+          {
+            hour: 2,
+            title: '一次関数のグラフと傾き・切片',
+            leftBlocks: [
+              { type: 'objective', data: { text: '一次関数の式 $y = ax + b$ から傾きと切片を読み取り、グラフの特徴を理解する。' } },
+              { type: 'review', data: { title: '比例のグラフ', content: '比例 $y = 2x$ は原点 $(0, 0)$ を通る直線。' } },
+              { type: 'graph-block', data: { qNum: '【本時の課題】', text: '右の図は $y = 2x + 1$ のグラフである。<br>① 切片の座標を答えなさい。<br>② 傾き（$x$が1増えるときの$y$の増加量）を答えなさい。', answer: '① $(0, 1)$　② 傾き $= 2$', svgHtml: '' } },
+              { type: 'point-box', data: { badge: '板書まとめ', title: '一次関数のグラフ', content: '・ <strong>$a$（傾き）</strong>: 変化の割合。右に1進むと上下にどれだけ進むか。<br>・ <strong>$b$（切片）</strong>: $y$軸との交点 $(0, b)$。' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '次の直線の傾きと切片を答えなさい。<br>(1) $y = 3x - 5$<br>(2) $y = -2x + 4$', answer: '(1) 傾き: $3$, 切片: $-5$<br>(2) 傾き: $-2$, 切片: $4$', spaceHeight: 65 } },
+              { type: 'question', data: { qNum: '問 2', text: '傾きが $-1$ で、切片が $3$ の直線の式を求めなさい。', answer: '$y = -x + 3$', spaceHeight: 50 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  '1': {
+    gradeLabel: '第1学年',
+    units: [
+      {
+        id: 'u_1_3',
+        unitName: '第3章 一次方程式',
+        totalHours: 8,
+        bookRef: '',
+        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中1数学をひとつひとつわかりやすく。.pdf',
+        officialRef: '数学学習プリント/01_1年生/数学_3-1方程式.pdf',
+        lessons: [
+          {
+            hour: 3,
+            title: '移項を利用した方程式の解き方',
+            leftBlocks: [
+              { type: 'objective', data: { text: '等式の性質をもとに「移項」の仕組みを理解し、方程式をスムーズに解くことができる。' } },
+              { type: 'review', data: { title: '等式の性質', content: '両辺に同じ数をたしてもひいても等式は成り立つ。' } },
+              { type: 'board-task', data: { qNum: '【本時の課題】', text: '$3x - 5 = 7$ を解くとき、両辺に $+5$ すると項はどう動いたように見える？', guide: '左辺の $-5$ が消えて、右辺に $+5$ が現れるね！', thinkingSpaceHeight: 85, answer: '符号を変えて他方の辺へ移すことができる。これを「移項」という。' } },
+              { type: 'point-box', data: { badge: '移項のルール', title: '方程式を解く手順', content: '① <strong>移項</strong>: $x$の項を左辺へ、数の項を右辺へ符号を変えて移す。<br>② <strong>整理</strong>: $ax = b$ の形にまとめる。<br>③ <strong>割る</strong>: $x = \\frac{b}{a}$ を求める。' } }
+            ],
+            rightBlocks: [
+              { type: 'question', data: { qNum: '問 1', text: '移項を利用して次の方程式を解きなさい。<br>(1) $4x - 3 = 9$<br>(2) $5x + 2 = 2x + 11$', answer: '(1) $4x = 12 \\rightarrow x = 3$<br>(2) $3x = 9 \\rightarrow x = 3$', spaceHeight: 70 } },
+              { type: 'question', data: { qNum: '問 2', text: '方程式 $7x - 4 = 3x + 12$ を解きなさい。', answer: '$4x = 16 \\rightarrow x = 4$', spaceHeight: 50 } },
+              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+};
+
+// 状態管理: 選択中の学年・単元・時数
+let currentB4Grade = '3';
+let currentB4UnitId = 'u_3_1';
+let currentB4Hour = 5; // デフォルト: 3年多項式 5時間目 (工夫して展開)
+
+// マイ授業プリント保存データ（localStorage管理）
+const SAVED_WORKSHEETS_KEY = 'math_portal_saved_worksheets';
+
+function getSavedWorksheets() {
+  try {
+    const raw = localStorage.getItem(SAVED_WORKSHEETS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveWorksheetToStorage(customName = null) {
+  const currentTitle = document.getElementById('paperTitle')?.textContent || '数学 授業プリント';
+  const unitInfo = getUnitInfo(currentB4Grade, currentB4UnitId);
+  const name = customName || prompt('保存する授業プリントの名前を入力してください:', currentTitle);
+  if (!name) return;
+
+  const savedList = getSavedWorksheets();
+  const newEntry = {
+    id: 'ws_' + Date.now(),
+    name: name,
+    title: currentTitle,
+    grade: currentB4Grade,
+    unitId: currentB4UnitId,
+    unitName: unitInfo ? unitInfo.unitName : '',
+    hour: currentB4Hour,
+    totalHours: unitInfo ? unitInfo.totalHours : 10,
+    savedAt: new Date().toLocaleString('ja-JP'),
+    blocksLeft: state.blocksLeft || [],
+    blocksRight: state.blocksRight || []
+  };
+
+  savedList.unshift(newEntry);
+  localStorage.setItem(SAVED_WORKSHEETS_KEY, JSON.stringify(savedList));
+  renderSavedWorksheetsModalList();
+  showToast('<i class="fa-solid fa-floppy-disk text-success"></i> 「' + name + '」をマイプリントに保存しました！');
+}
+
+function deleteSavedWorksheet(id) {
+  if (!confirm('この保存済みプリントを削除しますか？')) return;
+  let list = getSavedWorksheets();
+  list = list.filter(item => item.id !== id);
+  localStorage.setItem(SAVED_WORKSHEETS_KEY, JSON.stringify(list));
+  renderSavedWorksheetsModalList();
+  showToast('保存済みプリントを削除しました');
+}
+
+function loadSavedWorksheet(id) {
+  const list = getSavedWorksheets();
+  const item = list.find(w => w.id === id);
+  if (!item) return;
+
+  currentB4Grade = item.grade;
+  currentB4UnitId = item.unitId;
+  currentB4Hour = item.hour;
+
+  // 用紙に反映
+  state.blocksLeft = item.blocksLeft || [];
+  state.blocksRight = item.blocksRight || [];
+  // 互換性用
+  state.blocks = [...state.blocksLeft, ...state.blocksRight];
+
+  // タイトル等
+  document.getElementById('paperTitle').textContent = item.title;
+  document.getElementById('paperGradeBadge').textContent = '第' + item.grade + '学年 数学科 授業プリント';
+  document.getElementById('paperUnitBadge').textContent = item.unitName;
+  document.getElementById('paperHourBadge').textContent = '【第 ' + item.hour + ' 時 / 全 ' + item.totalHours + ' 時】';
+
+  renderWorksheetB4();
+  closeSavedWorksheetsModal();
+  showToast('<i class="fa-solid fa-folder-open text-primary"></i> 「' + item.name + '」を読み込みました');
+}
+
+// データベースから単元情報を取得
+function getUnitInfo(grade, unitId) {
+  const gData = boardLessonDatabase[grade];
+  if (!gData) return null;
+  return gData.units.find(u => u.id === unitId) || gData.units[0];
+}
+
+// データベースから時数情報を取得
+function getLessonInfo(grade, unitId, hour) {
+  const unit = getUnitInfo(grade, unitId);
+  if (!unit) return null;
+  return unit.lessons.find(l => l.hour === Number(hour)) || unit.lessons[0];
+}
+
+// 学年・単元・時数を選んだ時のテンプレート自動流し込み
+function loadBoardLessonPreset(grade, unitId, hour) {
+  currentB4Grade = String(grade);
+  currentB4UnitId = unitId;
+  currentB4Hour = Number(hour);
+
+  const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
+  if (!unit) return;
+
+  const lesson = getLessonInfo(currentB4Grade, currentB4UnitId, currentB4Hour);
+  if (!lesson) return;
+
+  // タイトルとバッジを更新
+  const titleEl = document.getElementById('paperTitle');
+  if (titleEl) titleEl.textContent = lesson.title;
+
+  const gradeBadge = document.getElementById('paperGradeBadge');
+  if (gradeBadge) gradeBadge.textContent = '第' + currentB4Grade + '学年 数学科 授業プリント';
+
+  const unitBadge = document.getElementById('paperUnitBadge');
+  if (unitBadge) unitBadge.textContent = unit.unitName;
+
+  const hourBadge = document.getElementById('paperHourBadge');
+  if (hourBadge) hourBadge.textContent = '【第 ' + lesson.hour + ' 時 / 全 ' + unit.totalHours + ' 時】';
+
+  // 左面・右面のブロックを初期化＆複製流し込み
+  state.blocksLeft = JSON.parse(JSON.stringify(lesson.leftBlocks)).map(b => {
+    b.id = generateBlockId();
+    if (b.type === 'graph-block' && !b.data.svgHtml) {
+      b.data.svgHtml = generateLinearSvg(2, 1, true, true, 190, 180);
+    }
+    return b;
+  });
+
+  state.blocksRight = JSON.parse(JSON.stringify(lesson.rightBlocks)).map(b => {
+    b.id = generateBlockId();
+    return b;
+  });
+
+  state.blocks = [...state.blocksLeft, ...state.blocksRight];
+
+  // UIドロップダウンの同期
+  updateB4SelectorUI();
+
+  // B4横見開きレンダリング
+  renderWorksheetB4();
+
+  showToast('<i class="fa-solid fa-wand-magic-sparkles text-primary"></i> 【' + unit.unitName + ' 第' + lesson.hour + '時】の板書テンプレートを展開しました');
+}
+
+// B4横見開きの描画関数
+function renderWorksheetB4() {
+  const leftCol = document.getElementById('blocksLeftCol');
+  const rightCol = document.getElementById('blocksRightCol');
+  if (!leftCol || !rightCol) return;
+
+  leftCol.innerHTML = renderBlockColumn(state.blocksLeft || [], 'left');
+  rightCol.innerHTML = renderBlockColumn(state.blocksRight || [], 'right');
+
+  // KaTeXの数式レンダリングを必ず適用（ドル記号 $...$ を数式に変換）
+  const sheet = document.getElementById('printableSheet');
+  if (sheet) {
+    applyKaTeXIfAvailable(sheet);
+  }
+}
+
+// カラム内ブロックのHTML生成
+function renderBlockColumn(blocks, colSide) {
+  if (blocks.length === 0) {
+    return '<div class="empty-col-drop" onclick="addBlockToSide(\'question\', \'' + colSide + '\')"><i class="fa-solid fa-plus"></i> パーツを追加</div>';
+  }
+
+  return blocks.map((block, index) => {
+    let blockContentHtml = '';
+
+    if (block.type === 'objective') {
+      blockContentHtml = `
+        <div class="objective-box">
+          <span class="objective-label">めあて</span>
+          <div class="objective-text" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'text', this.innerHTML)">
+            ${block.data.text}
+          </div>
+        </div>
+      `;
+    } else if (block.type === 'review') {
+      blockContentHtml = `
+        <div class="review-box">
+          <div class="review-title" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'title', this.innerHTML)">
+            <i class="fa-solid fa-clock-rotate-left"></i> ${block.data.title}
+          </div>
+          <div class="q-body" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'content', this.innerHTML)">
+            ${block.data.content}
+          </div>
+        </div>
+      `;
+    } else if (block.type === 'board-task') {
+      blockContentHtml = `
+        <div class="board-task-box">
+          <div class="board-task-header">
+            <span class="board-task-badge"><i class="fa-solid fa-chalkboard-user"></i> ${block.data.qNum}</span>
+            <div class="board-task-text" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'text', this.innerHTML)">
+              ${block.data.text}
+            </div>
+          </div>
+          ${block.data.guide ? `
+            <div class="board-task-guide" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'guide', this.innerHTML)">
+              <i class="fa-solid fa-compass text-primary"></i> ${block.data.guide}
+            </div>
+          ` : ''}
+          <div class="board-task-canvas" style="min-height: ${block.data.thinkingSpaceHeight || 85}px;">
+            <div class="canvas-grid-label">【自分の考え・途中式・説明】</div>
+            <div class="answer-space answer-text-inline">
+              <span class="answer-label">【板書まとめ・模範解】</span>
+              <span class="answer-text">${block.data.answer}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (block.type === 'point-box') {
+      blockContentHtml = `
+        <div class="point-summary-box">
+          <div class="point-summary-header">
+            <span class="point-badge"><i class="fa-solid fa-bookmark"></i> ${block.data.badge || '要点公式'}</span>
+            <strong contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'title', this.innerText)">${block.data.title}</strong>
+          </div>
+          <div class="point-summary-body" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'content', this.innerHTML)">
+            ${block.data.content}
+          </div>
+        </div>
+      `;
+    } else if (block.type === 'question') {
+      blockContentHtml = `
+        <div class="question-item">
+          <div class="q-header">
+            <span class="q-num" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'qNum', this.innerText)">${block.data.qNum}</span>
+            <div class="q-body" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'text', this.innerHTML)">
+              ${block.data.text}
+            </div>
+          </div>
+          <div class="answer-space" style="min-height: ${block.data.spaceHeight || 50}px;">
+            <span class="answer-label">【答】</span>
+            <span class="answer-text">（解答例: ${block.data.answer}）</span>
+          </div>
+        </div>
+      `;
+    } else if (block.type === 'graph-block') {
+      blockContentHtml = `
+        <div class="question-item">
+          <div class="graph-question-layout">
+            <div>
+              <div class="q-header">
+                <span class="q-num" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'qNum', this.innerText)">${block.data.qNum}</span>
+                <div class="q-body" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'text', this.innerHTML)">
+                  ${block.data.text}
+                </div>
+              </div>
+              <div class="answer-space">
+                <span class="answer-label">【答】</span>
+                <span class="answer-text">（解答例: ${block.data.answer}）</span>
+              </div>
+            </div>
+            <div class="sheet-svg-wrapper">
+              ${block.data.svgHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (block.type === 'summary') {
+      blockContentHtml = `
+        <div class="summary-box">
+          <div class="summary-header">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'title', this.innerText)">${block.data.title}</span>
+          </div>
+          <div class="summary-content" contenteditable="true" onblur="updateColBlockData('${colSide}', ${index}, 'content', this.innerHTML)">
+            ${block.data.content}
+          </div>
+        </div>
+      `;
+    } else if (block.type === 'reflection') {
+      blockContentHtml = `
+        <div class="reflection-box">
+          <div class="reflection-scales">
+            <strong>${block.data.title}</strong>
+            <div class="scale-options">
+              理解度: <span>[ A: よくわかった ]</span> <span>[ B: だいたい ]</span> <span>[ C: もう少し ]</span>
+            </div>
+          </div>
+          <div class="reflection-comment-line">
+            今日の授業で学んだこと・疑問点:
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="sheet-block" id="${block.id}">
+        <div class="block-hover-controls no-print">
+          <button class="block-ctrl-btn" onclick="moveColBlock('${colSide}', ${index}, -1)" title="上へ"><i class="fa-solid fa-arrow-up"></i></button>
+          <button class="block-ctrl-btn" onclick="moveColBlock('${colSide}', ${index}, 1)" title="下へ"><i class="fa-solid fa-arrow-down"></i></button>
+          <button class="block-ctrl-btn" onclick="transferColBlock('${colSide}', ${index})" title="反対側の面へ移動"><i class="fa-solid fa-arrows-left-right"></i></button>
+          <button class="block-ctrl-btn danger" onclick="removeColBlock('${colSide}', ${index})" title="削除"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        ${blockContentHtml}
+      </div>
+    `;
+  }).join('');
+}
+
+function updateColBlockData(colSide, index, field, value) {
+  const blocks = colSide === 'left' ? state.blocksLeft : state.blocksRight;
+  if (blocks && blocks[index]) {
+    blocks[index].data[field] = value;
+  }
+}
+
+function moveColBlock(colSide, index, direction) {
+  const blocks = colSide === 'left' ? state.blocksLeft : state.blocksRight;
+  const targetIndex = index + direction;
+  if (targetIndex < 0 || targetIndex >= blocks.length) return;
+  const temp = blocks[index];
+  blocks[index] = blocks[targetIndex];
+  blocks[targetIndex] = temp;
+  renderWorksheetB4();
+}
+
+function transferColBlock(colSide, index) {
+  const source = colSide === 'left' ? state.blocksLeft : state.blocksRight;
+  const target = colSide === 'left' ? state.blocksRight : state.blocksLeft;
+  const item = source.splice(index, 1)[0];
+  if (item) {
+    target.push(item);
+    renderWorksheetB4();
+  }
+}
+
+function removeColBlock(colSide, index) {
+  const blocks = colSide === 'left' ? state.blocksLeft : state.blocksRight;
+  blocks.splice(index, 1);
+  renderWorksheetB4();
+}
+
+function addBlockToSide(type, colSide = 'left') {
+  let block = { id: generateBlockId(), type: type, data: {} };
+  if (type === 'objective') block.data = { text: '本時の学習目標を入力してください。' };
+  else if (type === 'review') block.data = { title: '前時のふりかえり', content: '前時の重要公式や既習内容' };
+  else if (type === 'board-task') block.data = { qNum: '【本時の課題】', text: '板書の発問・生徒が取り組む活動課題', guide: '着眼点・見通し', thinkingSpaceHeight: 90, answer: '解決のポイント' };
+  else if (type === 'point-box') block.data = { badge: '板書まとめ', title: '重要ポイント・公式', content: '公式や定理の整理' };
+  else if (type === 'question') block.data = { qNum: '問', text: '練習問題・適用問題を入力してください。', answer: '解答例', spaceHeight: 55 };
+  else if (type === 'graph-block') block.data = { qNum: '問', text: 'グラフの直線の式を答えなさい。', answer: 'y = 2x + 1', svgHtml: generateLinearSvg(2, 1, true, true, 190, 180) };
+  else if (type === 'summary') block.data = { title: '本時のまとめ', content: '授業のまとめ・ポイント' };
+  else if (type === 'reflection') block.data = { title: '本時の自己評価 & 振り返り' };
+
+  if (colSide === 'left') state.blocksLeft.push(block);
+  else state.blocksRight.push(block);
+  renderWorksheetB4();
+}
+
+// 学年ピルボタン切り替え
+function selectB4Grade(grade) {
+  currentB4Grade = String(grade);
+  ['1', '2', '3'].forEach(g => {
+    const btn = document.getElementById('b4GradeBtn_' + g);
+    if (btn) btn.classList.toggle('active', currentB4Grade === g);
+  });
+  updateB4UnitDropdown();
+  applyB4LessonSelection();
+}
+
+// 単元ドロップダウンの更新
+function updateB4UnitDropdown() {
+  const unitSelect = document.getElementById('b4UnitSelect');
+  if (!unitSelect) return;
+
+  const gData = boardLessonDatabase[currentB4Grade];
+  if (!gData || !gData.units) return;
+
+  unitSelect.innerHTML = gData.units.map((u, idx) => {
+    return '<option value="' + u.id + '">' + u.unitName + ' (全' + u.totalHours + '時)</option>';
+  }).join('');
+
+  currentB4UnitId = gData.units[0].id;
+  updateB4HourDropdown();
+}
+
+// ◯時間目ドロップダウンの更新
+function updateB4HourDropdown() {
+  const hourSelect = document.getElementById('b4HourSelect');
+  if (!hourSelect) return;
+
+  const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
+  if (!unit || !unit.lessons) return;
+
+  hourSelect.innerHTML = unit.lessons.map(l => {
+    return '<option value="' + l.hour + '">第 ' + l.hour + ' 時: ' + l.title + '</option>';
+  }).join('');
+
+  currentB4Hour = unit.lessons[0].hour;
+  updateReferenceLinksUI(unit);
+}
+
+function onB4UnitChange() {
+  const unitSelect = document.getElementById('b4UnitSelect');
+  if (unitSelect) {
+    currentB4UnitId = unitSelect.value;
+    updateB4HourDropdown();
+    applyB4LessonSelection();
+  }
+}
+
+function onB4HourChange() {
+  const hourSelect = document.getElementById('b4HourSelect');
+  if (hourSelect) {
+    currentB4Hour = Number(hourSelect.value);
+    applyB4LessonSelection();
+  }
+}
+
+// 「この時間のプリントを生成」ボタン押下
+function applyB4LessonSelection() {
+  loadBoardLessonPreset(currentB4Grade, currentB4UnitId, currentB4Hour);
+}
+
+// 教材リファレンスリンクの更新
+function updateReferenceLinksUI(unit) {
+  const btnBoard = document.getElementById('btnWsViewBoard');
+  const btnPoint = document.getElementById('btnWsViewPoint');
+  const btnOfficial = document.getElementById('btnWsViewOfficial');
+
+  if (btnBoard) btnBoard.style.display = (unit && unit.bookRef) ? 'inline-flex' : 'none';
+  if (btnPoint) btnPoint.style.display = (unit && unit.pointRef) ? 'inline-flex' : 'none';
+  if (btnOfficial) btnOfficial.style.display = (unit && unit.officialRef) ? 'inline-flex' : 'none';
+}
+
+function openCurrentB4BoardPdf() {
+  const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
+  if (unit && unit.bookRef) {
+    openPdfPreviewModal(encodeURIComponent(unit.bookRef), '【中' + currentB4Grade + ' 板書＆展開例】' + unit.unitName);
+  } else {
+    showToast('この単元の板書書籍PDFは準備中です');
+  }
+}
+
+function openCurrentB4PointPdf() {
+  const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
+  if (unit && unit.pointRef) {
+    openPdfPreviewModal(encodeURIComponent(unit.pointRef), '【中' + currentB4Grade + ' 要点ブック】' + unit.unitName);
+  }
+}
+
+function openCurrentB4OfficialPdf() {
+  const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
+  if (unit && unit.officialRef) {
+    openPdfPreviewModal(encodeURIComponent(unit.officialRef), '【中' + currentB4Grade + ' 公式学習プリント】' + unit.unitName);
+  }
+}
+
+// UIのセレクターの状態を最新に同期
+function updateB4SelectorUI() {
+  ['1', '2', '3'].forEach(g => {
+    const btn = document.getElementById('b4GradeBtn_' + g);
+    if (btn) btn.classList.toggle('active', currentB4Grade === g);
+  });
+
+  const unitSelect = document.getElementById('b4UnitSelect');
+  if (unitSelect) unitSelect.value = currentB4UnitId;
+
+  const hourSelect = document.getElementById('b4HourSelect');
+  if (hourSelect) hourSelect.value = String(currentB4Hour);
+
+  const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
+  updateReferenceLinksUI(unit);
+}
+
+// ========================================================
+// 保存済みマイ授業プリント モーダル管理
+// ========================================================
+function openSavedWorksheetsModal() {
+  renderSavedWorksheetsModalList();
+  document.getElementById('savedWorksheetsModal')?.classList.remove('hidden');
+}
+
+function closeSavedWorksheetsModal() {
+  document.getElementById('savedWorksheetsModal')?.classList.add('hidden');
+}
+
+function renderSavedWorksheetsModalList() {
+  const container = document.getElementById('savedWorksheetsList');
+  if (!container) return;
+
+  const list = getSavedWorksheets();
+  if (list.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 2.5rem; color: var(--text-muted);"><i class="fa-solid fa-folder-open" style="font-size: 2.5rem; margin-bottom: 0.8rem; color: #cbd5e1; display: block;"></i><p>まだ保存されたマイプリントはありません。<br>「マイプリントに保存」ボタンを押すとここに蓄積されます。</p></div>';
+    return;
+  }
+
+  container.innerHTML = list.map(item => {
+    return `
+      <div class="saved-ws-item-card">
+        <div class="saved-ws-item-header">
+          <div class="saved-ws-item-meta">
+            <span class="saved-ws-grade-badge">中${item.grade}</span>
+            <span class="saved-ws-unit-text">${item.unitName} (第${item.hour}時)</span>
+            <span class="saved-ws-date-text">${item.savedAt}</span>
+          </div>
+          <h4 class="saved-ws-item-title">${item.name}</h4>
+        </div>
+        <div class="saved-ws-item-actions">
+          <button class="btn btn-sm btn-primary" onclick="loadSavedWorksheet('${item.id}')">
+            <i class="fa-solid fa-folder-open"></i> 開いて編集
+          </button>
+          <button class="btn btn-sm btn-ghost text-danger" onclick="deleteSavedWorksheet('${item.id}')" title="削除">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 全プリントのJSONバックアップ書き出し
+function exportWorksheetsBackup() {
+  const list = getSavedWorksheets();
+  const blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '中学数学_マイ授業プリントバックアップ_' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('マイプリントのバックアップファイルを保存しました');
+}
+
+// 全プリントのJSONバックアップ読み込み
+function importWorksheetsBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (Array.isArray(imported)) {
+        const existing = getSavedWorksheets();
+        const merged = [...imported, ...existing.filter(ex => !imported.some(im => im.id === ex.id))];
+        localStorage.setItem(SAVED_WORKSHEETS_KEY, JSON.stringify(merged));
+        renderSavedWorksheetsModalList();
+        showToast('マイプリントデータを復元・追加しました（' + imported.length + '件）');
+      }
+    } catch (err) {
+      alert('ファイルの読み込みに失敗しました。正しいJSONファイルを選択してください。');
+    }
+  };
+  reader.readAsText(file);
+}

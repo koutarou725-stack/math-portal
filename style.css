@@ -4505,3 +4505,281 @@ math.math-expr mfrac {
     color: #ffffff !important;
   }
 }
+
+
+/* ========================================================
+   B4横 見開き授業プリント & 3段階セレクター スタイル
+   ======================================================== */
+.b4-mode-workspace {
+  display: grid;
+  grid-template-columns: 360px 1fr 340px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1400px) {
+  .b4-mode-workspace {
+    grid-template-columns: 320px 1fr;
+  }
+  .b4-mode-workspace .memo-panel {
+    grid-column: 1 / -1;
+  }
+}
+
+.b4-paper-container {
+  overflow-x: auto;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 実際のB4横用紙 (364mm x 257mm プレビュー) */
+.sheet-paper.paper-b4-landscape {
+  width: 1160px;
+  min-height: 820px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  color: #0f172a;
+  transition: transform 0.2s ease;
+}
+
+/* B4 ヘッダー */
+.b4-sheet-header {
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.sheet-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.sheet-unit-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+}
+
+.sheet-hour-badge {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+}
+
+.b4-sheet-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* B4 左右2カラム見開きグリッド */
+.b4-columns-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+  position: relative;
+}
+
+.b4-center-fold-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  border-left: 1px dashed #cbd5e1;
+  pointer-events: none;
+}
+
+.b4-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-col-drop {
+  border: 2px dashed #cbd5e1;
+  border-radius: var(--radius-md);
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafafa;
+}
+.empty-col-drop:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #f0f7ff;
+}
+
+/* 3段階セレクター スタイル */
+.b4-stepper-panel {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border: 1px solid #bae6fd;
+  border-left: 4px solid #0284c7;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.step-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #0369a1;
+  margin-bottom: 0.25rem;
+}
+
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: #0284c7;
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* マイプリント保存カード */
+.my-worksheet-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid #16a34a;
+  border-radius: var(--radius-md);
+  padding: 0.9rem;
+}
+
+.my-ws-btn-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* 保存済みマイプリント アイテムカード */
+.saved-ws-item-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s ease;
+}
+.saved-ws-item-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.saved-ws-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.saved-ws-grade-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.saved-ws-unit-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.saved-ws-date-text {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.saved-ws-item-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.saved-ws-item-actions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+/* B4横 印刷スタイル (@media print) */
+@media print {
+  @page {
+    size: B4 landscape !important;
+    margin: 6mm 8mm !important;
+  }
+
+  body[data-print-target="worksheet"] .sheet-paper.paper-b4-landscape {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-height: 242mm !important;
+    max-height: 245mm !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  body[data-print-target="worksheet"] .b4-sheet-header {
+    border-bottom: 1.5pt solid #000000 !important;
+    margin-bottom: 4mm !important;
+    padding-bottom: 2mm !important;
+  }
+
+  body[data-print-target="worksheet"] .b4-columns-container {
+    gap: 8mm !important;
+  }
+
+  body[data-print-target="worksheet"] .b4-center-fold-line {
+    border-left: 0.5pt dashed #94a3b8 !important;
+  }
+
+  body[data-print-target="worksheet"] .sheet-unit-badge,
+  body[data-print-target="worksheet"] .sheet-hour-badge {
+    border: 0.5pt solid #000000 !important;
+    background: transparent !important;
+    color: #000000 !important;
+  }
+}
