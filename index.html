@@ -18,7 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   
-  <link rel="stylesheet" href="style.css?v=20261002i">
+  <link rel="stylesheet" href="style.css?v=20261002k">
 </head>
 <body>
 
@@ -563,6 +563,9 @@
           <button type="button" class="btn btn-outline text-primary" onclick="jumpToOfficialPrintsFromSlot()" title="この学年の単元別学習プリント(PDF)一覧を開く">
             <i class="fa-solid fa-file-pdf"></i> 公式プリント・要点ブック
           </button>
+          <button type="button" class="btn btn-outline text-info" onclick="jumpToBoardingPrintsFromSlot()" title="この学年・単元の板書＆指導展開例書籍を開く">
+            <i class="fa-solid fa-chalkboard-user"></i> 板書・展開例
+          </button>
           <button type="button" class="btn btn-outline" onclick="closeLessonPlanModal()">キャンセル</button>
           <button type="button" class="btn btn-primary" onclick="saveLessonPlan()">
             <i class="fa-solid fa-check"></i> 学習内容を保存
@@ -974,6 +977,9 @@
           <button class="test-mode-btn" id="btnModeOfficialPrint" onclick="switchTestViewMode('official')">
             <i class="fa-solid fa-file-pdf"></i> 単元別 公式学習プリント & 要点ブック (PDFライブラリ)
           </button>
+          <button class="test-mode-btn" id="btnModeBoarding" onclick="switchTestViewMode('boarding')">
+            <i class="fa-solid fa-chalkboard-user"></i> 板書・展開例ライブラリ
+          </button>
         </div>
 
         <!-- 1. 小テスト自動生成エリア -->
@@ -1085,6 +1091,55 @@
 
             <!-- 単元別プリントカードグリッド -->
             <div class="official-cards-grid" id="officialCardsGrid">
+              <!-- JSで動的にカードを生成 -->
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3. 板書・展開例ライブラリエリア -->
+        <div id="boardingLibraryArea" class="hidden">
+          <div class="boarding-library-container">
+
+            <!-- 上部ヘッダー: 学年切替 & 検索バー -->
+            <div class="library-header-card">
+              <div class="library-grade-selector">
+                <label><i class="fa-solid fa-chalkboard-user"></i> 学年で絞り込む:</label>
+                <div class="grade-pill-group">
+                  <button class="grade-pill-btn active" id="boardGradeBtn_all" onclick="switchBoardGrade('all')">
+                    すべて
+                  </button>
+                  <button class="grade-pill-btn" id="boardGradeBtn_1" onclick="switchBoardGrade('1')">
+                    1年生
+                  </button>
+                  <button class="grade-pill-btn" id="boardGradeBtn_2" onclick="switchBoardGrade('2')">
+                    2年生
+                  </button>
+                  <button class="grade-pill-btn" id="boardGradeBtn_3" onclick="switchBoardGrade('3')">
+                    3年生
+                  </button>
+                </div>
+              </div>
+              <div class="library-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="boardingSearchInput" class="form-control" placeholder="単元名・キーワードで検索 (例: 因数分解, 平方根)..." oninput="filterBoardingLibrary()">
+              </div>
+            </div>
+
+            <!-- 説明バナー -->
+            <div class="boarding-info-banner">
+              <div class="boarding-info-icon">
+                <i class="fa-solid fa-circle-info"></i>
+              </div>
+              <div class="boarding-info-content">
+                <strong>板書・展開例ライブラリとは？</strong>
+                各授業の板書計画・展開例をそのまま参照できる書籍データです。授業準備の時短や板書のアイデア収集に活用してください。
+                現在は <strong>中3上巻</strong> を収録しています。今後、他の学年・巻も順次追加予定です。
+              </div>
+            </div>
+
+            <!-- 板書書籍カードグリッド -->
+            <div class="boarding-cards-grid" id="boardingLibraryCards">
               <!-- JSで動的にカードを生成 -->
             </div>
 
@@ -1307,9 +1362,13 @@
       <div class="pdf-modal-body">
         <iframe id="pdfPreviewIframe" src="" class="pdf-preview-frame"></iframe>
       </div>
+      <div class="pdf-modal-footer-note" style="padding: 0.6rem 1.25rem; background: #f8fafc; border-top: 1px solid var(--border-color); font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;">
+        <span><i class="fa-solid fa-circle-question text-primary"></i> プレビューが「File not found」等の場合は、ローカルサーバー（<strong>http://localhost:3000</strong>）でポータルを開いてください。</span>
+        <button class="btn btn-sm btn-outline" onclick="openCurrentPdfNewTab()" style="font-size:0.75rem;padding:0.2rem 0.6rem;">全画面で開く</button>
+      </div>
     </div>
   </div>
 
-  <script src="app.js?v=20261002i"></script>
+  <script src="app.js?v=20261002k"></script>
 </body>
 </html>

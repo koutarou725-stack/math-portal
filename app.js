@@ -4373,28 +4373,106 @@ const referenceBookLibrary = {
   }
 };
 
+// 板書・展開例ライブラリ データ（明治図書『板書＆展開例でよくわかる 365日の全授業』シリーズ）
+const boardingLibrary = {
+  books: [
+    {
+      id: 'board_3_1',
+      grade: '3',
+      volume: '3年上巻',
+      title: '板書＆展開例でよくわかる 中学校数学 3年上',
+      fullTitle: '板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上',
+      publisher: '明治図書',
+      badge: '明治図書 / 板書＆展開例',
+      color: '#0284c7',
+      file: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+      desc: '3年前期の全単元を収録。見開きで各1時間の板書計画・発問・生徒のつまずきへの指導展開例をそのまま参照できます。',
+      units: ['第1章 多項式・展開と因数分解', '第2章 平方根と無理数', '第3章 2次方程式と解の公式'],
+      available: true
+    },
+    {
+      id: 'board_3_2',
+      grade: '3',
+      volume: '3年下巻',
+      title: '中学校数学 3年下巻（関数y=ax², 相似, 円, 三平方, 標本調査）',
+      fullTitle: '中学校数学 3年下巻（板書＆展開例でよくわかる 365日の全授業）',
+      publisher: '明治図書',
+      badge: '明治図書 / 今後追加予定',
+      color: '#0369a1',
+      file: '',
+      desc: '3年後期の単元（関数y=ax²、図形の相似、円周角の定理、三平方の定理、標本調査）の板書展開例。フォルダにPDFを追加すると閲覧可能になります。',
+      units: ['第4章 関数 y=ax²', '第5章 相似な図形', '第6章 円の性質', '第7章 三平方の定理', '第8章 標本調査'],
+      available: false
+    },
+    {
+      id: 'board_2_1',
+      grade: '2',
+      volume: '2年巻',
+      title: '中学校数学 2年（式と計算, 連立方程式, 1次関数, 図形の性質・合同, 確率）',
+      fullTitle: '中学校数学 2年（板書＆展開例でよくわかる 365日の全授業）',
+      publisher: '明治図書',
+      badge: '明治図書 / 今後追加予定',
+      color: '#059669',
+      file: '',
+      desc: '中2の全単元（式の計算、連立方程式、一次関数、平行と合同、三角形・四角形、確率）の板書展開例。フォルダにPDFを追加すると閲覧可能になります。',
+      units: ['第1章 式の計算', '第2章 連立方程式', '第3章 1次関数', '第4章 平行と合同', '第5章 三角形と四角形', '第6章 確率・データの活用'],
+      available: false
+    },
+    {
+      id: 'board_1_1',
+      grade: '1',
+      volume: '1年巻',
+      title: '中学校数学 1年（正負の数, 文字と式, 方程式, 比例と反比例, 平面・空間図形）',
+      fullTitle: '中学校数学 1年（板書＆展開例でよくわかる 365日の全授業）',
+      publisher: '明治図書',
+      badge: '明治図書 / 今後追加予定',
+      color: '#d97706',
+      file: '',
+      desc: '中1の全単元（正負の数、文字式、一次方程式、比例・反比例、平面・空間図形、データの分析）の板書展開例。フォルダにPDFを追加すると閲覧可能になります。',
+      units: ['第1章 正の数・負の数', '第2章 文字と式', '第3章 1次方程式', '第4章 比例と反比例', '第5章 平面図形', '第6章 空間図形', '第7章 データの活用'],
+      available: false
+    }
+  ]
+};
+
+let currentBoardGrade = 'all';
+let currentBoardSearch = '';
+
 let currentLibraryGrade = '1';
 let currentLibrarySearch = '';
 let currentPreviewPdfPath = '';
 
-// モード切替: 小テスト自動生成 ⇔ 公式プリントライブラリ
+// モード切替: 小テスト自動生成 ⇔ 公式プリントライブラリ ⇔ 板書・展開例ライブラリ
 function switchTestViewMode(mode) {
   const btnAuto = document.getElementById('btnModeAutoTest');
   const btnOff = document.getElementById('btnModeOfficialPrint');
+  const btnBoard = document.getElementById('btnModeBoarding');
+
   const autoArea = document.getElementById('autoTestArea');
   const offArea = document.getElementById('officialPrintsArea');
+  const boardArea = document.getElementById('boardingLibraryArea');
+
+  // 全ボタンのactive解除
+  btnAuto?.classList.remove('active');
+  btnOff?.classList.remove('active');
+  btnBoard?.classList.remove('active');
+
+  // 全エリアを隠す
+  autoArea?.classList.add('hidden');
+  offArea?.classList.add('hidden');
+  boardArea?.classList.add('hidden');
 
   if (mode === 'auto') {
     btnAuto?.classList.add('active');
-    btnOff?.classList.remove('active');
     autoArea?.classList.remove('hidden');
-    offArea?.classList.add('hidden');
-  } else {
-    btnAuto?.classList.remove('active');
+  } else if (mode === 'official') {
     btnOff?.classList.add('active');
-    autoArea?.classList.add('hidden');
     offArea?.classList.remove('hidden');
     renderOfficialPrintLibrary();
+  } else if (mode === 'boarding') {
+    btnBoard?.classList.add('active');
+    boardArea?.classList.remove('hidden');
+    renderBoardingLibrary();
   }
 }
 
@@ -4572,4 +4650,169 @@ function jumpToOfficialPrintsFromSlot() {
     }
   }
 }
+
+// 時間割スロットから板書・展開例ライブラリへジャンプ
+function jumpToBoardingPrintsFromSlot() {
+  let grade = '3';
+  if (state.editingLessonPlan && state.editingLessonPlan.className) {
+    const cls = state.editingLessonPlan.className;
+    if (cls.includes('1') || cls.startsWith('1-')) grade = '1';
+    else if (cls.includes('2') || cls.startsWith('2-')) grade = '2';
+    else if (cls.includes('3') || cls.startsWith('3-')) grade = '3';
+  }
+  const input = document.getElementById('lessonPlanInput');
+  const planKeyword = input ? input.value : '';
+
+  closeLessonPlanModal();
+  switchTab('practice-test');
+  switchTestViewMode('boarding');
+  switchBoardGrade(grade);
+
+  if (planKeyword) {
+    const searchInput = document.getElementById('boardingSearchInput');
+    if (searchInput) {
+      if (planKeyword.includes('展開') || planKeyword.includes('因数分解')) searchInput.value = '因数分解';
+      else if (planKeyword.includes('平方根') || planKeyword.includes('ルート')) searchInput.value = '平方根';
+      else if (planKeyword.includes('方程式') || planKeyword.includes('2次方程式')) searchInput.value = '2次方程式';
+      else if (planKeyword.includes('関数')) searchInput.value = '関数';
+      else if (planKeyword.includes('図形') || planKeyword.includes('証明')) searchInput.value = '図形';
+      filterBoardingLibrary();
+    }
+  }
+}
+
+// ========================================================
+// 板書・展開例ライブラリ 描画
+// ========================================================
+function renderBoardingLibrary() {
+  const containerEl = document.getElementById('boardingLibraryCards');
+  if (!containerEl) return;
+
+  const searchEl = document.getElementById('boardingSearchInput');
+  const keyword = searchEl ? searchEl.value.trim().toLowerCase() : '';
+
+  let filtered = boardingLibrary.books;
+
+  if (currentBoardGrade !== 'all') {
+    filtered = filtered.filter(b => b.grade === currentBoardGrade);
+  }
+  if (keyword) {
+    filtered = filtered.filter(b =>
+      b.title.toLowerCase().includes(keyword) ||
+      b.fullTitle.toLowerCase().includes(keyword) ||
+      b.desc.toLowerCase().includes(keyword) ||
+      b.units.some(u => u.toLowerCase().includes(keyword))
+    );
+  }
+
+  // 学年ピルボタンのアクティブ更新
+  ['all', '1', '2', '3'].forEach(g => {
+    const btn = document.getElementById('boardGradeBtn_' + g);
+    if (btn) btn.classList.toggle('active', currentBoardGrade === g);
+  });
+
+  if (filtered.length === 0) {
+    containerEl.innerHTML = `
+      <div style="grid-column: 1 / -1; padding: 3rem; text-align: center; color: var(--text-muted);">
+        <i class="fa-solid fa-folder-open" style="font-size:2.5rem;margin-bottom:1rem;display:block;color:#cbd5e1;"></i>
+        <h4>該当する板書・展開例データが見つかりませんでした</h4>
+        <p style="font-size:0.85rem;margin-top:0.5rem;">検索キーワードを変更するか、「すべて」の学年を選択してください。</p>
+      </div>
+    `;
+    return;
+  }
+
+  containerEl.innerHTML = filtered.map(book => {
+    const encFile = encodeURIComponent(book.file);
+    const gradeLabel = book.grade === '1' ? '中1' : book.grade === '2' ? '中2' : '中3';
+    const unitTags = book.units.map(u => `<span class="boarding-unit-tag">${u}</span>`).join('');
+    
+    let actionButtonsHtml = '';
+    if (book.available) {
+      actionButtonsHtml = `
+        <button class="btn btn-outline" onclick="openPdfPreviewModal('${encFile}', '${book.volume} 板書・展開例')">
+          <i class="fa-solid fa-eye"></i> プレビュー
+        </button>
+        <button class="btn btn-primary" onclick="openPdfInNewTab('${encFile}')">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> 開く / 印刷
+        </button>
+      `;
+    } else {
+      actionButtonsHtml = `
+        <button class="btn btn-outline" disabled style="opacity: 0.6; cursor: not-allowed; width: 100%;">
+          <i class="fa-solid fa-clock"></i> 今後データ追加で利用可能
+        </button>
+      `;
+    }
+
+    return `
+      <div class="boarding-book-card ${book.available ? '' : 'is-upcoming'}">
+        <div class="boarding-card-header" style="border-top: 4px solid ${book.color};">
+          <div class="boarding-card-meta-row">
+            <span class="boarding-grade-badge" style="background:${book.color}18;color:${book.color};border:1px solid ${book.color}35;">
+              ${gradeLabel} ${book.volume}
+            </span>
+            <span class="boarding-publisher-badge">${book.badge}</span>
+          </div>
+          <div class="boarding-card-icon" style="background:${book.color}15;">
+            <i class="fa-solid fa-chalkboard-user" style="color:${book.color};"></i>
+          </div>
+        </div>
+        <div class="boarding-card-body">
+          <h4 class="boarding-book-title">${book.title}</h4>
+          <p class="boarding-book-desc">${book.desc}</p>
+          <div class="boarding-units-row">
+            <span class="boarding-units-label"><i class="fa-solid fa-list-ul"></i> 収録単元:</span>
+            <div class="boarding-unit-tags">${unitTags}</div>
+          </div>
+        </div>
+        <div class="boarding-card-actions">
+          ${actionButtonsHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function switchBoardGrade(grade) {
+  currentBoardGrade = grade;
+  renderBoardingLibrary();
+}
+
+function filterBoardingLibrary() {
+  renderBoardingLibrary();
+}
+
+// ========================================================
+// サーバー環境チェック（GitHub Pages等で開かれた時の親切バナー）
+// ========================================================
+function checkServerEnvironment() {
+  const host = window.location.hostname;
+  const port = window.location.port;
+  const isLocalServer = (host === 'localhost' || host === '127.0.0.1') && port === '3000';
+  const isGitHubPages = host.includes('github.io');
+
+  if (isGitHubPages) {
+    const banner = document.createElement('div');
+    banner.id = 'serverEnvironmentBanner';
+    banner.style.cssText = 'background: linear-gradient(90deg, #1e293b, #0f172a); color: #f8fafc; padding: 0.65rem 1.25rem; font-size: 0.84rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #38bdf8; z-index: 1000; position: relative;';
+    banner.innerHTML = `
+      <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <span style="background:#0284c7;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;font-weight:700;">
+          <i class="fa-solid fa-circle-info"></i> PDF利用ガイド
+        </span>
+        <span>公式学習プリントや板書書籍のPDF閲覧・印刷は、パソコン内のローカルサーバー（<strong>http://localhost:3000</strong>）での実行を推奨しています。</span>
+      </div>
+      <button onclick="document.getElementById('serverEnvironmentBanner').remove()" style="background:transparent;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;padding:0 0.5rem;" title="閉じる">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    `;
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+}
+
+// ページ読み込み時に環境チェックを実行
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(checkServerEnvironment, 500);
+});
 
