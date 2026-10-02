@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initCloudSync();
 
-  selectB4Grade('3');
+  selectB4Grade('3', true);
   renderDigitalLibrary();
   loadSampleSheet();
   renderLinearGraph();
@@ -5270,16 +5270,15 @@ function generateQuickTest() {
 
   const questions = [];
   const seenSignatures = new Set();
+  const seenAnswers = new Set(); // 解答だけの重複もチェック
 
-  let genIndex = 0;
-  let attempts = 0;
-  const maxAttempts = count * 25;
+  // フェーズ1: 全ジェネレーターをシャッフルして順番に試す（最大50回）
+  const shuffledKeys = [...availableGenKeys].sort(() => Math.random() - 0.5);
+  let phase1Attempts = 0;
+  const phase1Max = count * 50;
 
-  while (questions.length < count && attempts < maxAttempts) {
-    attempts++;
-    const key = availableGenKeys[genIndex % availableGenKeys.length];
-    genIndex++;
-
+  for (let i = 0; questions.length < count && phase1Attempts < phase1Max; i++, phase1Attempts++) {
+    const key = shuffledKeys[i % shuffledKeys.length];
     const genFn = problemGenerators[key] || problemGenerators['g1_pos_neg_add_sub'];
     const item = genFn();
 
@@ -5287,24 +5286,22 @@ function generateQuickTest() {
     if (reqDifficulty !== 'all') {
       const targetLevel = parseInt(reqDifficulty.replace('level_', ''), 10) || 2;
       const itemLevel = item.level || 2;
-      if (Math.abs(itemLevel - targetLevel) > 1 && attempts < maxAttempts - 10) {
-        continue;
-      }
+      if (Math.abs(itemLevel - targetLevel) > 1) continue;
     }
 
-    // 重複チェック (問題文のテキスト本体と解答の組み合わせ)
+    // 重複チェック: 問題文テキスト + 解答の組み合わせ
     const rawQText = (item.q || '').replace(/<[^>]+>/g, '').trim();
     const sig = `${rawQText}__ANS__${item.ans}`;
 
-    if (seenSignatures.has(sig) && attempts < maxAttempts - 5) {
-      continue;
-    }
+    // 同じシグネチャは絶対スキップ
+    if (seenSignatures.has(sig)) continue;
+    // 同じ解答もなるべくスキップ（ただしジェネレーターが1つだけの時は許容）
+    if (seenAnswers.has(String(item.ans)) && availableGenKeys.length > 1 && seenAnswers.size < count * 0.7) continue;
 
     seenSignatures.add(sig);
+    seenAnswers.add(String(item.ans));
 
-    // 図・表HTMLの抽出
     const fig = item.figureHtml || item.svgHtml || item.tableHtml || '';
-
     questions.push({
       num: questions.length + 1,
       q: formatMathRich(item.q),
@@ -5314,6 +5311,32 @@ function generateQuickTest() {
       exp: item.exp ? formatMathRich(item.exp) : ''
     });
   }
+
+  // フェーズ2: まだ足りない場合は解答重複のみ許可して補充
+  if (questions.length < count) {
+    for (let i = 0; questions.length < count; i++) {
+      const key = shuffledKeys[i % shuffledKeys.length];
+      const genFn = problemGenerators[key] || problemGenerators['g1_pos_neg_add_sub'];
+      const item = genFn();
+      const rawQText = (item.q || '').replace(/<[^>]+>/g, '').trim();
+      const sig = `${rawQText}__ANS__${item.ans}`;
+      if (seenSignatures.has(sig)) {
+        if (i > count * 30) break; // 無限ループ防止
+        continue;
+      }
+      seenSignatures.add(sig);
+      const fig = item.figureHtml || item.svgHtml || item.tableHtml || '';
+      questions.push({
+        num: questions.length + 1,
+        q: formatMathRich(item.q),
+        ans: formatMathRich(item.ans),
+        figureHtml: fig,
+        steps: item.steps ? item.steps.map(s => formatMathRich(s)) : [],
+        exp: item.exp ? formatMathRich(item.exp) : ''
+      });
+    }
+  }
+
 
   const gridClass = count > 6 ? 'test-problem-grid cols-2' : 'test-problem-grid cols-1';
   const titleClass = titleLine2.length > 13 ? ' title-mini' : (titleLine2.length > 8 ? ' title-compact' : '');
@@ -9313,7 +9336,7 @@ function getLessonInfo(grade, unitId, hour) {
 }
 
 // 学年・単元・時数を選んだ時のテンプレート自動流し込み
-function loadBoardLessonPreset(grade, unitId, hour) {
+function loadBoardLessonPreset(grade, unitId, hour, isInitialLoad = false) {
   currentB4Grade = String(grade);
   currentB4UnitId = unitId;
   currentB4Hour = Number(hour);
@@ -9359,7 +9382,9 @@ function loadBoardLessonPreset(grade, unitId, hour) {
   // B4横見開きレンダリング
   renderWorksheetB4();
 
-  showToast('<i class="fa-solid fa-wand-magic-sparkles text-primary"></i> 【' + unit.unitName + ' 第' + lesson.hour + '時】の板書テンプレートを展開しました');
+  if (!isInitialLoad) {
+    showToast('<i class="fa-solid fa-wand-magic-sparkles text-primary"></i> 【' + unit.unitName + ' 第' + lesson.hour + '時】の板書テンプレートを展開しました');
+  }
 }
 
 // B4横見開きの描画関数
@@ -9571,14 +9596,14 @@ function addBlockToSide(type, colSide = 'left') {
 }
 
 // 学年ピルボタン切り替え
-function selectB4Grade(grade) {
+function selectB4Grade(grade, isInitialLoad = false) {
   currentB4Grade = String(grade);
   ['1', '2', '3'].forEach(g => {
     const btn = document.getElementById('b4GradeBtn_' + g);
     if (btn) btn.classList.toggle('active', currentB4Grade === g);
   });
   updateB4UnitDropdown();
-  applyB4LessonSelection();
+  applyB4LessonSelection(isInitialLoad);
 }
 
 // 単元ドロップダウンの更新
@@ -9631,8 +9656,8 @@ function onB4HourChange() {
 }
 
 // 「この時間のプリントを生成」ボタン押下
-function applyB4LessonSelection() {
-  loadBoardLessonPreset(currentB4Grade, currentB4UnitId, currentB4Hour);
+function applyB4LessonSelection(isInitialLoad = false) {
+  loadBoardLessonPreset(currentB4Grade, currentB4UnitId, currentB4Hour, isInitialLoad);
 }
 
 // 教材リファレンスリンクの更新

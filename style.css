@@ -3508,6 +3508,7 @@ math.math-expr mfrac {
   body[data-print-target="test-student"] #tab-practice-test,
   body[data-print-target="test-student"] .test-gen-container,
   body[data-print-target="test-student"] .test-preview-dual,
+  body[data-print-target="test-student"] .test-preview-box,
   body[data-print-target="test-student"] .test-preview-box:first-child {
     display: block !important;
     padding: 0 !important;
@@ -3516,6 +3517,11 @@ math.math-expr mfrac {
     background: transparent !important;
     box-shadow: none !important;
     width: 100% !important;
+  }
+
+  /* 生徒用以外の2枚目previewBoxを隠す */
+  body[data-print-target="test-student"] .test-preview-box:last-child {
+    display: none !important;
   }
 
   body[data-print-target="test-student"] #testStudentPaper {
@@ -3546,6 +3552,7 @@ math.math-expr mfrac {
   body[data-print-target="test-answer"] #tab-practice-test,
   body[data-print-target="test-answer"] .test-gen-container,
   body[data-print-target="test-answer"] .test-preview-dual,
+  body[data-print-target="test-answer"] .test-preview-box,
   body[data-print-target="test-answer"] .test-preview-box:last-child {
     display: block !important;
     padding: 0 !important;
@@ -3554,6 +3561,11 @@ math.math-expr mfrac {
     background: transparent !important;
     box-shadow: none !important;
     width: 100% !important;
+  }
+
+  /* 解答用以外の1枚目previewBoxを隠す */
+  body[data-print-target="test-answer"] .test-preview-box:first-child {
+    display: none !important;
   }
 
   /* 印刷プレビューおよび印刷結果でのスクロールバー完全消去 */
