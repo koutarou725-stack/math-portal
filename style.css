@@ -2099,7 +2099,7 @@ body {
   position: relative;
 }
 
-.answer-label {
+.answer-space .answer-label {
   font-size: 0.75rem;
   color: #888;
   position: absolute;
@@ -2973,7 +2973,7 @@ body.show-answers .answer-text {
 }
 
 .student-line.num-line {
-  width: 22px; /* 組・番号の記入スペース */
+  width: 32px; /* 組・番号の記入スペース（半角分広げて手書きしやすい幅を確保） */
 }
 
 .student-line.name-line {
@@ -3204,16 +3204,21 @@ body.show-answers .answer-text {
   display: flex;
   align-items: baseline;
   justify-content: flex-end;
-  gap: 6px;
-  font-size: 0.84rem;
+  gap: 4px;
+  font-size: 0.86rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
-.answer-label {
+.problem-answer-line .answer-label {
+  position: static !important;
+  color: #1e293b;
+  font-size: 0.88rem;
+  font-weight: 700;
   white-space: nowrap;
   flex-shrink: 0;
-  font-weight: 700;
+  line-height: 1;
+  margin-right: 2px;
 }
 
 .answer-badge-label {
@@ -3221,13 +3226,16 @@ body.show-answers .answer-text {
   flex-shrink: 0;
   color: #dc2626;
   font-weight: 700;
+  font-size: 0.88rem;
 }
 
 .problem-answer-fill {
   display: inline-block;
+  width: 140px;
   min-width: 110px;
-  border-bottom: 1.5px solid #334155;
-  height: 22px;
+  border-bottom: 1.5px solid #1e293b;
+  height: 1.3em;
+  vertical-align: bottom;
   text-align: center;
   font-size: 0.96rem;
   color: #dc2626;
@@ -3570,6 +3578,177 @@ math.math-expr mfrac {
 
   .test-paper-mock[data-count="10"] .problem-workspace {
     min-height: 14px !important;
+  }
+}
+
+/* ========================================================
+   テストヘッダー アクションボタングループ
+   ======================================================== */
+.test-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+/* ========================================================
+   A4正確印刷プレビューモーダル (画面上でA4印刷用紙を100%正確に再現)
+   ======================================================== */
+.print-preview-dialog {
+  background: #1e293b;
+  border-radius: var(--radius-lg);
+  width: 95vw;
+  max-width: 980px;
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.print-preview-modal-bar {
+  background: #0f172a;
+  padding: 0.65rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.preview-mode-switch {
+  display: flex;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 3px;
+}
+
+.preview-tab {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.95rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.preview-tab:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.preview-tab.active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+}
+
+.preview-tab#btnPreviewAnswer.active {
+  background: #dc2626;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
+}
+
+.preview-modal-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.preview-info-tag {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.print-preview-viewport {
+  flex: 1;
+  background: #334155;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1.5rem 1rem;
+}
+
+/* 本物のA4用紙を画面上で100%忠実に再現するシート */
+.a4-preview-sheet {
+  background: #ffffff;
+  color: #1e293b;
+  width: 210mm;
+  min-height: 297mm;
+  height: 297mm;
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.1);
+  padding: 8mm 10mm; /* A4用紙印刷マージンと完全同期 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  font-family: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.5;
+  transform-origin: top center;
+}
+
+.a4-preview-sheet .test-problem-grid {
+  display: grid;
+  flex: 1 1 0;
+  height: 100%;
+  gap: 0;
+}
+
+.a4-preview-sheet .test-problem-item {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 6px 10px;
+}
+
+.a4-preview-sheet .problem-workspace {
+  flex: 1 1 auto;
+}
+
+/* シート内の印刷フォントサイズ同期 */
+.a4-preview-sheet .problem-header {
+  font-size: 9pt;
+  line-height: 1.5;
+}
+
+.a4-preview-sheet .problem-answer-line {
+  font-size: 8.5pt;
+}
+
+.a4-preview-sheet .answer-steps-box {
+  font-size: 7pt;
+  padding: 2px 4px;
+  margin-top: 2px;
+}
+
+@media (max-width: 900px) {
+  .a4-preview-sheet {
+    transform: scale(0.85);
+    margin-bottom: -15%;
+  }
+}
+
+@media (max-width: 720px) {
+  .a4-preview-sheet {
+    transform: scale(0.68);
+    margin-bottom: -32%;
   }
 }
 
