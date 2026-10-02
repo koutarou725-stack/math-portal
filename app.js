@@ -3664,6 +3664,7 @@ function switchA4Preview(target) {
       sheetContent.innerHTML = sourceEl.innerHTML;
       const count = sourceEl.getAttribute('data-count') || '6';
       sheetContent.setAttribute('data-count', count);
+      sheetContent.setAttribute('data-sheet-type', target);
       // KaTeX 数式の適用
       applyKaTeXIfAvailable(sheetContent);
     }
