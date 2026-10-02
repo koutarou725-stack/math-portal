@@ -18,7 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   
-  <link rel="stylesheet" href="style.css?v=20261002f">
+  <link rel="stylesheet" href="style.css?v=20261002h">
 </head>
 <body>
 
@@ -101,7 +101,6 @@
             <div class="hero-content">
               <span class="hero-tag"><i class="fa-solid fa-graduation-cap"></i> 中学校 数学科 教員ポータル</span>
               <h2 class="hero-title">数学科 授業ハブ & ワークスペース</h2>
-              <p class="hero-sub">時間割の確認、授業プリントの即時作成・改善、小テストの印刷まで。毎日の授業づくりをこの場所から始めましょう。</p>
               
               <div class="hero-quick-status">
                 <div class="quick-status-item">
@@ -130,108 +129,102 @@
           </button>
         </div>
 
-        <!-- メインポータル ナビゲーションカード群 -->
+        <!-- メインポータル クイックアクセスタイル群（シンプル＆高視認性） -->
         <div class="portal-cards-grid">
           
-          <!-- カード1: 時間割 -->
-          <div class="portal-card" onclick="switchTab('timetable')">
+          <!-- タイル1: 時間割 -->
+          <div class="portal-card" onclick="switchTab('timetable')" role="button" tabindex="0">
             <div class="card-icon-wrap bg-indigo">
               <i class="fa-solid fa-calendar-days"></i>
             </div>
             <div class="card-info">
-              <div class="card-title-row">
-                <h3>時間割</h3>
+              <div class="card-badge-wrap">
                 <span class="card-badge">週間予定</span>
               </div>
-              <p>月〜金の時間割と担当クラスの確認。コマをクリックしてその日のプリント準備へ直結。</p>
-              <div class="card-footer-action">
-                <span>時間割を開く</span> <i class="fa-solid fa-chevron-right"></i>
-              </div>
+              <h3 class="card-title">時間割</h3>
+            </div>
+            <div class="card-arrow">
+              <i class="fa-solid fa-arrow-right"></i>
             </div>
           </div>
 
-          <!-- カード2: 授業プリント -->
-          <div class="portal-card featured" onclick="switchTab('worksheet')">
+          <!-- タイル2: 授業プリント工房 -->
+          <div class="portal-card featured" onclick="switchTab('worksheet')" role="button" tabindex="0">
             <div class="card-icon-wrap bg-blue">
               <i class="fa-solid fa-file-pen"></i>
             </div>
             <div class="card-info">
-              <div class="card-title-row">
-                <h3>授業プリント工房</h3>
+              <div class="card-badge-wrap">
                 <span class="card-badge badge-primary">PDCAエディタ</span>
               </div>
-              <p>めあて・復習・問い・グラフ・まとめをブロックで自在に組み立て。授業後の改善メモも一緒に保存。</p>
-              <div class="card-footer-action">
-                <span>ワークシートを作る</span> <i class="fa-solid fa-chevron-right"></i>
-              </div>
+              <h3 class="card-title">授業プリント工房</h3>
+            </div>
+            <div class="card-arrow">
+              <i class="fa-solid fa-arrow-right"></i>
             </div>
           </div>
 
-          <!-- カード3: 練習プリント・小テスト -->
-          <div class="portal-card" onclick="switchTab('practice-test')">
+          <!-- タイル3: 練習プリント・小テスト -->
+          <div class="portal-card" onclick="switchTab('practice-test')" role="button" tabindex="0">
             <div class="card-icon-wrap bg-emerald">
               <i class="fa-solid fa-calculator"></i>
             </div>
             <div class="card-info">
-              <div class="card-title-row">
-                <h3>練習プリント・小テスト</h3>
+              <div class="card-badge-wrap">
                 <span class="card-badge">ワンクリック生成</span>
               </div>
-              <p>計算・方程式・因数分解などの5分間テストを数値ランダムで自動作成。先生用模範解答も同時出力。</p>
-              <div class="card-footer-action">
-                <span>テストを作成する</span> <i class="fa-solid fa-chevron-right"></i>
-              </div>
+              <h3 class="card-title">練習プリント・小テスト</h3>
+            </div>
+            <div class="card-arrow">
+              <i class="fa-solid fa-arrow-right"></i>
             </div>
           </div>
 
-          <!-- カード4: 作図・グラフジェネレーター -->
-          <div class="portal-card" onclick="switchTab('math-tools')">
+          <!-- タイル4: 作図・グラフジェネレーター -->
+          <div class="portal-card" onclick="switchTab('math-tools')" role="button" tabindex="0">
             <div class="card-icon-wrap bg-purple">
               <i class="fa-solid fa-shapes"></i>
             </div>
             <div class="card-info">
-              <div class="card-title-row">
-                <h3>作図・グラフジェネレーター</h3>
+              <div class="card-badge-wrap">
                 <span class="card-badge">SVG動的作図</span>
               </div>
-              <p>一次関数のきれいな方眼紙グラフや、平行線・円周角などの角度問題をパラメータ指定で即作図・挿入。</p>
-              <div class="card-footer-action">
-                <span>図形・グラフを作る</span> <i class="fa-solid fa-chevron-right"></i>
-              </div>
+              <h3 class="card-title">作図・グラフジェネレーター</h3>
+            </div>
+            <div class="card-arrow">
+              <i class="fa-solid fa-arrow-right"></i>
             </div>
           </div>
 
-          <!-- カード5: 授業改善メモ & 進度 -->
-          <div class="portal-card" onclick="switchTab('progress-log')">
+          <!-- タイル5: 授業改善メモ & 進度 -->
+          <div class="portal-card" onclick="switchTab('progress-log')" role="button" tabindex="0">
             <div class="card-icon-wrap bg-amber">
               <i class="fa-solid fa-book-bookmark"></i>
             </div>
             <div class="card-info">
-              <div class="card-title-row">
-                <h3>授業改善メモ & 進度</h3>
+              <div class="card-badge-wrap">
                 <span class="card-badge">ナレッジ蓄積</span>
               </div>
-              <p>「この問題でつまずいた」「ここを工夫した」という日々の指導の気づきを蓄積し、来年の指導案に活用。</p>
-              <div class="card-footer-action">
-                <span>メモ一覧を見る</span> <i class="fa-solid fa-chevron-right"></i>
-              </div>
+              <h3 class="card-title">授業改善メモ & 進度</h3>
+            </div>
+            <div class="card-arrow">
+              <i class="fa-solid fa-arrow-right"></i>
             </div>
           </div>
 
-          <!-- カード6: 外部リンク・便利ツール -->
-          <div class="portal-card" onclick="scrollToLauncher()">
+          <!-- タイル6: クイックランチャー -->
+          <div class="portal-card" onclick="scrollToLauncher()" role="button" tabindex="0">
             <div class="card-icon-wrap bg-cyan">
               <i class="fa-solid fa-up-right-from-square"></i>
             </div>
             <div class="card-info">
-              <div class="card-title-row">
-                <h3>クイックランチャー</h3>
+              <div class="card-badge-wrap">
                 <span class="card-badge">外部ツール</span>
               </div>
-              <p>GeoGebra、NHK for School、Google Classroom、Desmosなど、授業準備や授業中に使う外部サービスへ直結。</p>
-              <div class="card-footer-action">
-                <span>ツール一覧へ</span> <i class="fa-solid fa-chevron-right"></i>
-              </div>
+              <h3 class="card-title">クイックランチャー</h3>
+            </div>
+            <div class="card-arrow">
+              <i class="fa-solid fa-arrow-right"></i>
             </div>
           </div>
 
@@ -1236,6 +1229,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20261002f"></script>
+  <script src="app.js?v=20261002h"></script>
 </body>
 </html>

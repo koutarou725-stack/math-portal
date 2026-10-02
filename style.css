@@ -514,7 +514,7 @@ body {
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  min-height: 280px;
+  min-height: 220px;
   display: flex;
   align-items: center;
   background-color: #0b1120;
@@ -534,7 +534,7 @@ body {
 .hero-overlay {
   position: relative;
   z-index: 2;
-  padding: 2.5rem 3rem;
+  padding: 2rem 2.75rem;
   width: 100%;
   background: linear-gradient(90deg, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.7) 50%, rgba(15, 23, 42, 0.2) 100%);
 }
@@ -555,7 +555,7 @@ body {
   font-weight: 600;
   padding: 0.25rem 0.65rem;
   border-radius: 20px;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
   backdrop-filter: blur(4px);
 }
 
@@ -563,15 +563,8 @@ body {
   font-size: 1.95rem;
   font-weight: 800;
   letter-spacing: 0.02em;
-  margin-bottom: 0.6rem;
+  margin-bottom: 1rem;
   line-height: 1.25;
-}
-
-.hero-sub {
-  font-size: 0.92rem;
-  color: #cbd5e1;
-  line-height: 1.6;
-  margin-bottom: 1.25rem;
 }
 
 .hero-quick-status {
@@ -664,49 +657,61 @@ body {
   font-weight: 600;
 }
 
-/* メインポータル カードグリッド */
+/* メインポータル クイックアクセスタイル群 (シンプル・見やすいUI) */
 .portal-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.1rem;
 }
 
 .portal-card {
   background: var(--bg-panel);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 1.4rem;
+  padding: 1.15rem 1.35rem;
   display: flex;
-  gap: 1.2rem;
+  align-items: center;
+  gap: 1.15rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: var(--shadow-sm);
   position: relative;
   overflow: hidden;
+  user-select: none;
 }
 
 .portal-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px -4px rgba(30, 41, 59, 0.08), 0 4px 6px -2px rgba(30, 41, 59, 0.04);
+  border-color: #93c5fd;
 }
 
 .portal-card.featured {
-  border-color: #93c5fd;
-  background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
+  border-color: #bfdbfe;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+}
+
+.portal-card.featured:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.14), 0 4px 8px -2px rgba(37, 99, 235, 0.06);
 }
 
 .card-icon-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md);
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   color: #fff;
   flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.22s ease;
+}
+
+.portal-card:hover .card-icon-wrap {
+  transform: scale(1.05);
 }
 
 .bg-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
@@ -720,45 +725,59 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
 }
 
-.card-title-row {
+.card-badge-wrap {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.35rem;
-}
-
-.card-title-row h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--text-main);
+  margin-bottom: 2px;
 }
 
 .card-badge {
   font-size: 0.7rem;
   font-weight: 600;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
   background: #f1f5f9;
   color: #475569;
+  letter-spacing: 0.02em;
 }
 
-.card-info p {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: 0.8rem;
-  flex: 1;
+.card-badge.badge-primary {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #dbeafe;
 }
 
-.card-footer-action {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--primary);
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.card-arrow {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f8fafc;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.22s ease;
+}
+
+.portal-card:hover .card-arrow {
+  color: var(--primary);
+  background: #eff6ff;
+  transform: translateX(4px);
 }
 
 /* ========================================================

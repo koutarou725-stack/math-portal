@@ -2653,15 +2653,15 @@ const problemGenerators = {
     const b2 = -1;
     const c2 = a2 * x + b2 * y;
     return {
-      q: `次の連立方程式を加減法で解きなさい。<br><span class="simul-eq"><span class="simul-brace">{</span><span class="simul-lines"><span class="simul-line">2x ＋ y ＝ ${c1}</span><span class="simul-line">　x － y ＝ ${c2}</span></span></span>`,
-      ans: `x ＝ ${x},  y ＝ ${y}`,
+      q: `次の連立方程式を加減法で解きなさい。<br><span class="problem-body-math">\\begin{cases} 2x + y = ${c1} \\\\ x - y = ${c2} \\end{cases}</span>`,
+      ans: `x = ${x},  y = ${y}`,
       steps: [
-        `①式と②式を加えると y が消去される: (2x＋y) ＋ (x－y) ＝ ${c1} ＋ (${c2}) → 3x ＝ ${c1 + c2}`,
-        `両辺を 3 で割る: x ＝ ${x}`,
-        `x ＝ ${x} を②式に代入: ${x} － y ＝ ${c2} → －y ＝ ${c2 - x} → y ＝ ${y}`,
-        `答: x ＝ ${x},  y ＝ ${y}`
+        `①式と②式を加えると y が消去される: (2x + y) + (x - y) = ${c1} + (${c2}) → 3x = ${c1 + c2}`,
+        `両辺を 3 で割る: x = ${x}`,
+        `x = ${x} を②式に代入: ${x} - y = ${c2} → -y = ${c2 - x} → y = ${y}`,
+        `答: x = ${x},  y = ${y}`
       ],
-      exp: `2つの式を足すと y が消去されて 3x ＝ ${c1 + c2} → x ＝ ${x}。代入して y ＝ ${y}`
+      exp: `2つの式を足すと y が消去されて 3x = ${c1 + c2} → x = ${x}。代入して y = ${y}`
     };
   },
 
@@ -2673,18 +2673,18 @@ const problemGenerators = {
     const a2 = 3;
     const b2 = 2;
     const c2 = a2 * x + b2 * y;
-    const mStr = m >= 0 ? `＋ ${m}` : `－ ${Math.abs(m)}`;
+    const mStr = m >= 0 ? `+ ${m}` : `- ${Math.abs(m)}`;
     return {
-      q: `次の連立方程式を代入法で解きなさい。<br><span class="simul-eq"><span class="simul-brace">{</span><span class="simul-lines"><span class="simul-line">y ＝ ${k}x ${mStr}</span><span class="simul-line">3x ＋ 2y ＝ ${c2}</span></span></span>`,
-      ans: `x ＝ ${x},  y ＝ ${y}`,
+      q: `次の連立方程式を代入法で解きなさい。<br><span class="problem-body-math">\\begin{cases} y = ${k}x ${mStr} \\\\ 3x + 2y = ${c2} \\end{cases}</span>`,
+      ans: `x = ${x},  y = ${y}`,
       steps: [
-        `①式を②式の y に代入: 3x ＋ 2(${k}x ${mStr}) ＝ ${c2}`,
-        `かっこをはずして整理: 3x ＋ ${2 * k}x ${2 * m >= 0 ? '＋ ' + 2 * m : '－ ' + Math.abs(2 * m)} ＝ ${c2} → ${3 + 2 * k}x ＝ ${c2 - 2 * m}`,
-        `両辺を ${3 + 2 * k} で割る: x ＝ ${x}`,
-        `x ＝ ${x} を①式に代入: y ＝ ${k}×(${x}) ${mStr} ＝ ${y}`,
-        `答: x ＝ ${x},  y ＝ ${y}`
+        `①式を②式の y に代入: 3x + 2(${k}x ${mStr}) = ${c2}`,
+        `かっこをはずして整理: 3x + ${2 * k}x ${2 * m >= 0 ? '+ ' + 2 * m : '- ' + Math.abs(2 * m)} = ${c2} → ${3 + 2 * k}x = ${c2 - 2 * m}`,
+        `両辺を ${3 + 2 * k} で割る: x = ${x}`,
+        `x = ${x} を①式に代入: y = ${k} × (${x}) ${mStr} = ${y}`,
+        `答: x = ${x},  y = ${y}`
       ],
-      exp: `2つ目の式の y に (${k}x ${mStr}) を代入: 3x ＋ 2(${k}x ${mStr}) ＝ ${c2} を解いて x ＝ ${x}, y ＝ ${y}`
+      exp: `2つ目の式の y に (${k}x ${mStr}) を代入: 3x + 2(${k}x ${mStr}) = ${c2} を解いて x = ${x}, y = ${y}`
     };
   },
 
@@ -2694,16 +2694,16 @@ const problemGenerators = {
     const c1 = (0.3 * x + 0.2 * y).toFixed(1);
     const c2 = x - y;
     return {
-      q: `次の連立方程式を解きなさい。<br><span class="simul-eq"><span class="simul-brace">{</span><span class="simul-lines"><span class="simul-line">0.3x ＋ 0.2y ＝ ${c1}</span><span class="simul-line">　　x －　　y ＝ ${c2}</span></span></span>`,
-      ans: `x ＝ ${x},  y ＝ ${y}`,
+      q: `次の連立方程式を解きなさい。<br><span class="problem-body-math">\\begin{cases} 0.3x + 0.2y = ${c1} \\\\ x - y = ${c2} \\end{cases}</span>`,
+      ans: `x = ${x},  y = ${y}`,
       steps: [
-        `①式の両辺を 10倍して小数をなくす: 3x ＋ 2y ＝ ${Math.round(c1 * 10)}`,
-        `②式の両辺を 2倍して加減法: 2x － 2y ＝ ${2 * c2}`,
-        `2式を足して y を消去: 5x ＝ ${Math.round(c1 * 10) + 2 * c2} → x ＝ ${x}`,
-        `x ＝ ${x} を②式に代入: ${x} － y ＝ ${c2} → y ＝ ${y}`,
-        `答: x ＝ ${x},  y ＝ ${y}`
+        `①式の両辺を 10倍して小数をなくす: 3x + 2y = ${Math.round(c1 * 10)}`,
+        `②式の両辺を 2倍して加減法: 2x - 2y = ${2 * c2}`,
+        `2式を足して y を消去: 5x = ${Math.round(c1 * 10) + 2 * c2} → x = ${x}`,
+        `x = ${x} を②式に代入: ${x} - y = ${c2} → y = ${y}`,
+        `答: x = ${x},  y = ${y}`
       ],
-      exp: `第1式の両辺を 10倍して 3x ＋ 2y ＝ ${Math.round(c1 * 10)}。これと第2式を連立させて解く。`
+      exp: `第1式の両辺を 10倍して 3x + 2y = ${Math.round(c1 * 10)}。これと第2式を連立させて解く。`
     };
   },
 
@@ -3314,13 +3314,18 @@ function convertMathToTeX(str) {
 
   // 1. 全角記号のTeX標準化
   s = s.replace(/＝/g, ' = ');
-  s = s.replace(/＋/g, ' + ');
+  s = s.replace(/(^|[\s(])－/g, '$1-');
   s = s.replace(/－/g, ' - ');
+  s = s.replace(/＋/g, ' + ');
   s = s.replace(/×/g, ' \\times ');
   s = s.replace(/÷/g, ' \\div ');
   s = s.replace(/±/g, ' \\pm ');
   s = s.replace(/≦/g, ' \\le ');
   s = s.replace(/≧/g, ' \\ge ');
+  s = s.replace(/°/g, '^\\circ');
+  s = s.replace(/π/g, '\\pi');
+  s = s.replace(/∠([A-Za-z0-9]+)/g, '\\angle $1');
+  s = s.replace(/△([A-Za-z0-9]+)/g, '\\triangle $1');
 
   // 2. 累乗
   s = s.replace(/([a-zA-Z0-9\)])²/g, '$1^2');
@@ -3332,7 +3337,6 @@ function convertMathToTeX(str) {
 
   // 4. 分数
   s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, '\\frac{$1}{$2}');
-  // 分母が数字＋英字変数の場合（例: 4/3x -> \frac{4}{3}x）
   s = s.replace(/([0-9a-zA-Z\\{}]+)\s*\/\s*([0-9]+)([a-zA-Z])/g, '\\frac{$1}{$2}$3');
   s = s.replace(/([0-9a-zA-Z\\{}]+)\s*\/\s*([0-9a-zA-Z\\{}]+)/g, '\\frac{$1}{$2}');
 
@@ -3386,34 +3390,84 @@ function formatMathRich(text) {
   // 2. 既存の HTML タグ（<br>, <div...>, <i...> 等）をすべて隔離
   s = s.replace(/<[^>]+>/g, (tag) => pushSafe(tag));
 
-  // 3. 単位記号（カッコ付き単位および単語単位）を隔離
+  // 2.5. 問題番号・小問番号（(1), (2), ①, ②等）を隔離して数式化から保護
+  s = s.replace(/(^|[\s,、。])(\([0-9]+\)|[①-⑩])(?=[\s　]|$)/g, (m, pre, num) => {
+    return `${pre}${pushSafe(num)}`;
+  });
+
+  // 3. 単位記号（カッコ付き単位および数値直後の単位）を隔離
   s = s.replace(/\((cm²|cm³|cm|mm|km|kg|g|mL|dL|min|sec|m)\)/g, (m, u) => {
     return pushSafe(`(<span class="math-unit">${u}</span>)`);
   });
-  s = s.replace(/\b(cm²|cm³|cm|mm|km|kg|mL|dL|min|sec)\b/g, (unit) => {
-    return pushSafe(`<span class="math-unit">${unit}</span>`);
+  s = s.replace(/(?<=[0-9\s]|^)(cm²|cm³|cm|mm|km|kg|mL|dL|min|sec)\b/g, (m, u) => {
+    return pushSafe(`<span class="math-unit">${u}</span>`);
   });
 
-  // 3.5. タイトル・本文中の関数・等式表記: y = ax², y = ax ＋ b, y = a/x, y = -2x² など
-  s = s.replace(/\b([y])\s*=\s*([a-zA-Z0-9+－＋\-\s/²³√()]+?)(?=[,、。.\s)<]|$)/g, (m) => {
+  // 4. 連立方程式の解のペア: x ＝ 4, y ＝ 3 や x = -2, y = 5
+  s = s.replace(/\b([xyabcpqmnkt])\s*[＝=]\s*([-+－＋]?[0-9/.]+)\s*,\s*([xyabcpqmnkt])\s*[＝=]\s*([-+－＋]?[0-9/.]+)/g, (m, v1, val1, v2, val2) => {
+    return pushSafe(renderTeXSafe(`${v1} = ${convertMathToTeX(val1)}, \\; ${v2} = ${convertMathToTeX(val2)}`));
+  });
+
+  // 5. 幾何等式・線分等式・角の等式: AB ＝ AC, ∠A ＝ 67°, ∠x ＝ 103°, ∠AOB ＝ 48°, AB ＝ 6cm
+  s = s.replace(/(∠[A-Za-z0-9]+|[A-Z]{2})\s*[＝=]\s*([∠A-Za-z0-9°+－＋\-\s/²³√()]+?)(?=[,、。\n<]|$|[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]|___MATH_TOKEN_)/g, (m) => {
     return pushSafe(renderTeXSafe(convertMathToTeX(m.trim())));
   });
 
-  // 3.6. 係数付き平方根: a√b, 3√5 など
+  // 6. 一般の等式・関数表記: y ＝ 2x ＋ 3, y ＝ -5x, 2x ＋ y ＝ 14, x ＝ 5 など
+  s = s.replace(/(?<=^|[\s,、。(])([-+－＋]?[0-9a-zA-Z()²³√/＋－+\-\s]+?)\s*[＝=]\s*([-+－＋]?[0-9a-zA-Z()²³√/＋－+\-\s]+?)(?=[,、。\n<]|$|[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF])/g, (m, left, right) => {
+    if (!/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(left) && !/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(right)) {
+      const l = left.trim();
+      const r = right.trim();
+      if (l.length > 0 && r.length > 0) {
+        return pushSafe(renderTeXSafe(convertMathToTeX(`${l} = ${r}`)));
+      }
+    }
+    return m;
+  });
+
+  // 7. 因数分解・多項式の積: 4a(4x ＋ y), (x ＋ 2)(x － 3), (a ＋ b)²
+  s = s.replace(/(?<![a-zA-Z0-9_])([-+－＋]?(?:[0-9]*[a-zA-Z\u03C0])?\([0-9a-zA-Z\u03C0²³√+－＋\-\s/]+\)(?:\([0-9a-zA-Z\u03C0²³√+－＋\-\s/]+\)|²|³)?)(?![a-zA-Z0-9_])/g, (m) => {
+    if (!/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(m)) {
+      return pushSafe(renderTeXSafe(convertMathToTeX(m.trim())));
+    }
+    return m;
+  });
+
+  // 8. 多項式・計算式: 例: x² ＋ 5x ＋ 6, 3x － 9y, －6x － 1, 9x ＋ 9, 2x － 12y
+  s = s.replace(/(?<![a-zA-Z0-9_])([-+－＋]?\s*(?:[0-9]*[a-zA-Z\u03C0](?:²|³|\^[0-9]+)?|[0-9]+)\s*(?:[＋－+×÷\\/]\s*(?:[0-9]*[a-zA-Z\u03C0](?:²|³|\^[0-9]+)?|[0-9]+)\s*)+)(?![a-zA-Z0-9_])/g, (m) => {
+    if (!/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/.test(m)) {
+      return pushSafe(renderTeXSafe(convertMathToTeX(m.trim())));
+    }
+    return m;
+  });
+
+  // 9. 係数付き円周率: 6π, 36π, 144π
+  s = s.replace(/([0-9]+)\s*π/g, (m, num) => {
+    return pushSafe(renderTeXSafe(`${num}\\pi`));
+  });
+
+  // 10. 単独の幾何記号: ∠A, ∠B, ∠x, △ABC
+  s = s.replace(/∠([A-Za-z0-9]+)/g, (m, name) => {
+    return pushSafe(renderTeXSafe(`\\angle ${name}`));
+  });
+  s = s.replace(/△([A-Z]{3})/g, (m, name) => {
+    return pushSafe(renderTeXSafe(`\\triangle ${name}`));
+  });
+
+  // 11. 係数付き平方根: a√b, 3√5 など
   s = s.replace(/([0-9a-zA-Z])√([0-9a-zA-Z]+)/g, (m, coef, num) => {
     return pushSafe(renderTeXSafe(`${coef}\\sqrt{${num}}`));
   });
 
-  // 4. 本文中に残っている平方根: √45, 3√5, 4√2 など
+  // 12. 平方根: √45
   s = s.replace(/√([0-9a-zA-Z]+)/g, (m, num) => {
     return pushSafe(renderTeXSafe(`\\sqrt{${num}}`));
   });
 
-  // 5. 本文中に残っている分数: (A)/(B) や A/B
+  // 13. 分数: (A)/(B) や A/B
   s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, (m, num, den) => {
     return pushSafe(renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`));
   });
-  // 分母が数字＋英字変数の場合（例: 4/3x -> \frac{4}{3}x）
   s = s.replace(/(?<![a-zA-Z0-9_])([0-9a-zA-Z]+)\s*\/\s*([0-9]+)([a-zA-Z])/g, (m, num, den, v) => {
     return pushSafe(renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}${v}`));
   });
@@ -3421,18 +3475,24 @@ function formatMathRich(text) {
     return pushSafe(renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`));
   });
 
-  // 6. 本文中の累乗: x², y² など
+  // 14. 累乗: x², y² など
   s = s.replace(/(?<!c|m|k)([xyabcpqmnktABCD])²/g, (m, v) => {
     return pushSafe(renderTeXSafe(`${v}^2`));
   });
 
-  // 7. 本文中の単独の数式変数: x, y, a, b (プレースホルダー ___MATH_TOKEN_X___ は触らない)
-  s = s.replace(/___MATH_TOKEN_\d+___|(?<![a-zA-Z0-9])([xyabcpqmnkt])(?![a-zA-Z0-9])/g, (m, v) => {
+  // 15. 係数付き変数: 5x, -3y (ただし単位 cm, mm 等を除く)
+  s = s.replace(/(?<![a-zA-Z0-9_])([-+－＋]?[0-9]+)([xyabcpqmnkt])(?![a-zA-Z0-9_])/g, (m, coef, v) => {
+    return pushSafe(renderTeXSafe(convertMathToTeX(`${coef}${v}`)));
+  });
+
+  // 16. 単独変数・円周率: x, y, a, b, π
+  s = s.replace(/___MATH_TOKEN_\d+___|(?<![a-zA-Z0-9])([xyabcpqmnktπ])(?![a-zA-Z0-9])/g, (m, v) => {
     if (!v) return m;
+    if (v === 'π') return pushSafe(renderTeXSafe('\\pi'));
     return pushSafe(renderTeXSafe(v));
   });
 
-  // 8. トークンを再帰的に全復元（安全上限10回ループ）
+  // 17. トークンを再帰的に全復元（安全上限10回ループ）
   let prev;
   let loops = 0;
   do {
