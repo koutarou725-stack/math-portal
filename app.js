@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCloudSync();
 
   selectB4Grade('3');
+  renderDigitalLibrary();
   loadSampleSheet();
   renderLinearGraph();
   renderGeometryFig();
@@ -6289,3 +6290,385 @@ function importWorksheetsBackup(event) {
   };
   reader.readAsText(file);
 }
+
+
+// ========================================================
+// 授業プリント B4 表示倍率（ズーム）制御
+// ========================================================
+let currentWorksheetZoom = 1.0;
+
+function setWorksheetZoom(scale) {
+  currentWorksheetZoom = scale;
+  const container = document.getElementById('b4ZoomScaledContainer');
+  if (container) {
+    container.style.transform = scale === 1.0 ? 'none' : `scale(${scale})`;
+    container.style.transformOrigin = 'top center';
+    // 縮小時に余計な下部余白を詰める
+    if (scale < 1.0) {
+      const approxHeight = 840;
+      container.style.marginBottom = `-${Math.round((1 - scale) * approxHeight)}px`;
+    } else {
+      container.style.marginBottom = '0px';
+    }
+  }
+
+  ['100', '85', '75'].forEach(z => {
+    const btn = document.getElementById('zoomBtn_' + z);
+    if (btn) btn.classList.toggle('active', Math.round(scale * 100) === Number(z));
+  });
+}
+
+
+// ========================================================
+// TAB 7: 📚 教材資料室 (デジタルライブラリ) ロジック
+// ========================================================
+let currentDigitalLibraryGrade = 'all';
+let currentDigitalLibrarySearch = '';
+
+function renderDigitalLibrary() {
+  renderMeijiBookshelf();
+  renderGakkenBookshelf();
+  renderOfficialBookshelf();
+}
+
+function filterDigitalLibrary(grade) {
+  currentDigitalLibraryGrade = grade;
+  ['all', '1', '2', '3'].forEach(g => {
+    const btn = document.getElementById('libFilterBtn_' + g);
+    if (btn) btn.classList.toggle('active', currentDigitalLibraryGrade === g);
+  });
+  renderDigitalLibrary();
+}
+
+function onDigitalLibrarySearch() {
+  const input = document.getElementById('digitalLibrarySearchInput');
+  currentDigitalLibrarySearch = (input?.value || '').toLowerCase().trim();
+  renderDigitalLibrary();
+}
+
+// 1. 明治図書『板書＆展開例』本棚
+function renderMeijiBookshelf() {
+  const container = document.getElementById('meijiBookshelfGrid');
+  if (!container) return;
+
+  const books = [
+    {
+      grade: '3',
+      gradeLabel: '中3',
+      title: '板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 3年上',
+      desc: '多項式・平方根・2次方程式・関数y=ax²の全授業展開案と黒板レイアウトを収録。発問・活動の工夫が満載。',
+      file: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+      units: ['多項式', '平方根', '2次方程式', '関数 y=ax²']
+    },
+    {
+      grade: '2',
+      gradeLabel: '中2',
+      title: '板書＆展開例でよくわかる 365日の全授業 中学校数学 2年 (近日追加)',
+      desc: '式の計算・連立方程式・一次関数・図形の証明・確率の板書計画と指導案。',
+      file: '',
+      units: ['式の計算', '連立方程式', '一次関数', '図形の合同', '確率']
+    },
+    {
+      grade: '1',
+      gradeLabel: '中1',
+      title: '板書＆展開例でよくわかる 365日の全授業 中学校数学 1年 (近日追加)',
+      desc: '正負の数・文字と式・方程式・比例と反比例・平面空間図形・データの活用の板書計画。',
+      file: '',
+      units: ['正負の数', '文字と式', '一次方程式', '比例と反比例', '空間図形']
+    }
+  ];
+
+  let filtered = books;
+  if (currentDigitalLibraryGrade !== 'all') {
+    filtered = filtered.filter(b => b.grade === currentDigitalLibraryGrade);
+  }
+  if (currentDigitalLibrarySearch) {
+    filtered = filtered.filter(b => 
+      b.title.toLowerCase().includes(currentDigitalLibrarySearch) ||
+      b.desc.toLowerCase().includes(currentDigitalLibrarySearch) ||
+      b.units.some(u => u.toLowerCase().includes(currentDigitalLibrarySearch))
+    );
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="grid-column: 1/-1; padding: 1.5rem; text-align: center; color: var(--text-muted);">該当する書籍はありません</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(b => {
+    const enc = encodeURIComponent(b.file);
+    const unitTags = b.units.map(u => `<span class="badge" style="background:#e0f2fe; color:#0369a1; font-size:0.72rem; padding:2px 6px;">${u}</span>`).join(' ');
+    const actionBtns = b.file ? `
+      <button class="btn btn-sm btn-outline text-primary" onclick="openPdfPreviewModal('${enc}', '${b.title}')">
+        <i class="fa-solid fa-eye"></i> プレビュー
+      </button>
+      <button class="btn btn-sm btn-primary" onclick="openPdfInNewTab('${enc}')">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> 別タブ / 印刷
+      </button>
+    ` : `
+      <button class="btn btn-sm btn-ghost text-muted" disabled style="font-size:0.78rem;">
+        <i class="fa-solid fa-clock"></i> 順次追加予定
+      </button>
+    `;
+
+    return `
+      <div class="library-book-card theme-meiji">
+        <div class="library-card-header">
+          <div class="library-card-meta">
+            <span class="library-grade-tag" style="background:#0284c7;">${b.gradeLabel}</span>
+            <span class="library-category-tag">明治図書 指導書</span>
+          </div>
+          <h4 class="library-book-title">${b.title}</h4>
+          <p class="library-book-desc">${b.desc}</p>
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.75rem;">${unitTags}</div>
+        </div>
+        <div class="library-card-actions">
+          ${actionBtns}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 2. 学研『数学をひとつひとつわかりやすく。』本棚
+function renderGakkenBookshelf() {
+  const container = document.getElementById('gakkenBookshelfGrid');
+  if (!container) return;
+
+  const books = [
+    {
+      grade: '1',
+      gradeLabel: '中1',
+      title: '中1数学をひとつひとつわかりやすく。',
+      desc: '中学1年生の全単元をスモールステップで超基礎から解説。左ページに要点、右ページに基本練習の安心構成。',
+      file: '書籍「数学をひとつひとつわかりやすく。」/260610 中1数学をひとつひとつわかりやすく。.pdf',
+      features: ['スモールステップ', '基本の穴埋め', 'つまずき防止']
+    },
+    {
+      grade: '2',
+      gradeLabel: '中2',
+      title: '中2数学をひとつひとつわかりやすく。',
+      desc: '式の計算・連立方程式・一次関数・合同証明・確率を図解でわかりやすく解説。苦手な生徒の個別指導に最適。',
+      file: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+      features: ['図解まとめ', '式の変形', '証明の書き方ステップ']
+    },
+    {
+      grade: '3',
+      gradeLabel: '中3',
+      title: '中3数学をひとつひとつわかりやすく。',
+      desc: '展開・因数分解・平方根・2次方程式・関数y=ax²・相似・円・三平方を網羅。高校入試対策の土台固めに。',
+      file: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+      features: ['公式の導き方', '置き換えの工夫', '計算ミス防止']
+    }
+  ];
+
+  let filtered = books;
+  if (currentDigitalLibraryGrade !== 'all') {
+    filtered = filtered.filter(b => b.grade === currentDigitalLibraryGrade);
+  }
+  if (currentDigitalLibrarySearch) {
+    filtered = filtered.filter(b => 
+      b.title.toLowerCase().includes(currentDigitalLibrarySearch) ||
+      b.desc.toLowerCase().includes(currentDigitalLibrarySearch)
+    );
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="grid-column: 1/-1; padding: 1.5rem; text-align: center; color: var(--text-muted);">該当する書籍はありません</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(b => {
+    const enc = encodeURIComponent(b.file);
+    const featTags = b.features.map(f => `<span class="badge" style="background:#ecfdf5; color:#065f46; font-size:0.72rem; padding:2px 6px;">${f}</span>`).join(' ');
+
+    return `
+      <div class="library-book-card theme-gakken">
+        <div class="library-card-header">
+          <div class="library-card-meta">
+            <span class="library-grade-tag" style="background:#10b981;">${b.gradeLabel}</span>
+            <span class="library-category-tag">学研 要点ブック</span>
+          </div>
+          <h4 class="library-book-title">${b.title}</h4>
+          <p class="library-book-desc">${b.desc}</p>
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.75rem;">${featTags}</div>
+        </div>
+        <div class="library-card-actions">
+          <button class="btn btn-sm btn-outline text-success" onclick="openPdfPreviewModal('${enc}', '${b.title}')">
+            <i class="fa-solid fa-eye"></i> プレビュー
+          </button>
+          <button class="btn btn-sm btn-primary" onclick="openPdfInNewTab('${enc}')" style="background:#10b981; border-color:#059669;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> 別タブ / 印刷
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 3. 単元別 数学学習プリント本棚
+function renderOfficialBookshelf() {
+  const container = document.getElementById('officialBookshelfGrid');
+  if (!container) return;
+
+  // officialPrintLibrary から取得
+  const allPrints = [];
+  ['1', '2', '3'].forEach(g => {
+    const list = officialPrintLibrary[g] || [];
+    list.forEach(p => {
+      allPrints.push({ ...p, grade: g, gradeLabel: '中' + g });
+    });
+  });
+
+  let filtered = allPrints;
+  if (currentDigitalLibraryGrade !== 'all') {
+    filtered = filtered.filter(p => p.grade === currentDigitalLibraryGrade);
+  }
+  if (currentDigitalLibrarySearch) {
+    filtered = filtered.filter(p => 
+      p.title.toLowerCase().includes(currentDigitalLibrarySearch) ||
+      p.unit.toLowerCase().includes(currentDigitalLibrarySearch) ||
+      p.category.toLowerCase().includes(currentDigitalLibrarySearch)
+    );
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div style="grid-column: 1/-1; padding: 2rem; text-align: center; color: var(--text-muted);">一致する単元プリントはありません</div>';
+    return;
+  }
+
+  // 最大12件表示 + 全件表示
+  container.innerHTML = filtered.map(p => {
+    const enc = encodeURIComponent(p.file);
+    return `
+      <div class="library-book-card theme-official">
+        <div class="library-card-header">
+          <div class="library-card-meta">
+            <span class="library-grade-tag" style="background:#f59e0b;">${p.gradeLabel}</span>
+            <span class="library-category-tag">${p.unit}</span>
+          </div>
+          <h4 class="library-book-title" style="font-size: 0.95rem;">${p.title}</h4>
+          <p class="library-book-desc" style="font-size: 0.76rem; margin-bottom: 0.5rem;">領域: ${p.category} | 問題・解答付き</p>
+        </div>
+        <div class="library-card-actions">
+          <button class="btn btn-sm btn-outline" onclick="openPdfPreviewModal('${enc}', '【${p.gradeLabel}】${p.unit} ${p.title}')">
+            <i class="fa-solid fa-eye"></i> プレビュー
+          </button>
+          <button class="btn btn-sm btn-primary" onclick="openPdfInNewTab('${enc}')" style="background:#f59e0b; border-color:#d97706;">
+            <i class="fa-solid fa-print"></i> 印刷 / 開く
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+
+// ========================================================
+// 『ひとつひとつわかりやすく』＆『数学学習プリント』分析に基づく
+// 多彩な問い方ジェネレーター（穴埋め・つまずき・工夫・文章題）
+// ========================================================
+
+// 【穴埋め・基礎】展開公式・因数分解の空欄穴埋め
+problemGenerators['g3_poly_fill_blank'] = () => {
+  const type = randInt(1, 3);
+  if (type === 1) {
+    const a = randInt(2, 6);
+    const b = randInt(2, 6);
+    const sum = a + b;
+    const prod = a * b;
+    return {
+      q: `次の空欄 $\\boxed{\\phantom{00}}$ にあてはまる数を入れて、乗法公式を完成させなさい。<br><span class="problem-body-math">$(x + a)(x + b) = x^2 + (\\;\\boxed{\\phantom{a+b}}\\;)x + \\boxed{\\phantom{ab}}$</span><br>【適用】$(x + ${a})(x + ${b}) = x^2 + \\boxed{\\phantom{00}}x + \\boxed{\\phantom{00}}$`,
+      ans: `公式: $a+b$, $ab$ ｜ 適用: $x^2 + ${sum}x + ${prod}$`,
+      steps: [
+        `公式: $(x+a)(x+b) = x^2 + (a+b)x + ab$`,
+        `$x$ の係数: $${a} + ${b} = ${sum}$`,
+        `定数項: $${a} \\times ${b} = ${prod}$`
+      ],
+      exp: `和が ${sum}、積が ${prod} となります。`
+    };
+  } else if (type === 2) {
+    const a = randInt(2, 8);
+    return {
+      q: `乗法公式 $(a - b)^2 = a^2 - 2ab + b^2$ を利用して、次の空欄をうめなさい。<br><span class="problem-body-math">$(x - ${a})^2 = x^2 - \\boxed{\\phantom{00}}x + \\boxed{\\phantom{00}}$</span>`,
+      ans: `$x^2 - ${2 * a}x + ${a * a}$`,
+      steps: [
+        `公式の $-2ab$ にあたる部分: $2 \\times x \\times ${a} = ${2 * a}x$`,
+        `公式の $+b^2$ にあたる部分: $${a}^2 = ${a * a}$`
+      ],
+      exp: `真ん中の項は「2倍」することを忘れないようにしましょう。`
+    };
+  } else {
+    const a = randInt(2, 7);
+    return {
+      q: `因数分解公式を利用して空欄にあてはまる数を答えなさい。<br><span class="problem-body-math">$x^2 - ${a * a} = (x + \\boxed{\\phantom{0}})(x - \\boxed{\\phantom{0}})$</span>`,
+      ans: `$(x + ${a})(x - ${a})$`,
+      steps: [
+        `平方の差の公式: $a^2 - b^2 = (a+b)(a-b)$`,
+        `$${a * a} = ${a}^2$ より、空欄には双方 ${a} が入ります。`
+      ],
+      exp: `2乗の差は (和)×(差) に因数分解できます。`
+    };
+  }
+};
+
+// 【つまずき克服・工夫】符号ミス・置き換えの利用
+problemGenerators['g3_poly_trick_mistake'] = () => {
+  const isReplace = Math.random() > 0.4;
+  if (isReplace) {
+    const mStr = pickRandom(['a+b', 'x-y', 'x+2']);
+    const p = randInt(2, 5);
+    const q = randInt(2, 5);
+    const prod = p * q;
+    return {
+      q: `【置き換えの工夫】共通な部分に着目して、次の式を展開しなさい。<br><span class="problem-body-math">$(${mStr} + ${p})(${mStr} - ${q})$</span>`,
+      ans: `$${mStr}$ を $M$ とおくと、展開の基本公式で計算できます。`,
+      steps: [
+        `$${mStr} = M$ とおく: $(M + ${p})(M - ${q}) = M^2 + ${p - q}M - ${prod}$`,
+        `$M$ をもとの $${mStr}$ に戻して計算を展開・整理します。`
+      ],
+      exp: `同じまとまりを1つの文字 $M$ とおくことで、乗法公式がそのまま使えます。`
+    };
+  } else {
+    const a = randInt(2, 5);
+    const b = randInt(2, 5);
+    return {
+      q: `【符号注意】負の数のかけ算に注意して、次の式を展開しなさい。<br><span class="problem-body-math">$(-${a}x + ${b})(-${a}x - ${b})$</span>`,
+      ans: `$${a * a}x^2 - ${b * b}$`,
+      steps: [
+        `公式 $(A + B)(A - B) = A^2 - B^2$ において $A = -${a}x$, $B = ${b}$`,
+        `$(-${a}x)^2 - (${b})^2 = ${a * a}x^2 - ${b * b}$`
+      ],
+      exp: `$(-${a}x)^2 = +${a * a}x^2$ と符号が正になる点に注意！`
+    };
+  }
+};
+
+// 【文章題・思考利用】数の性質・証明・図形利用
+problemGenerators['g3_poly_word_applied'] = () => {
+  const type = randInt(1, 2);
+  if (type === 1) {
+    return {
+      q: `【数の性質の証明】「連続する2つの奇数の積に1を加えた数は、偶数の2乗になる。」このことを、整数 $n$ を用いて証明しなさい。`,
+      ans: `$(2n-1)(2n+1) + 1 = 4n^2 = (2n)^2$ より、偶数 $2n$ の2乗となる。`,
+      steps: [
+        `連続する2つの奇数は整数 $n$ を用いて $2n-1, 2n+1$ と表される。`,
+        `積に1を加えると: $(2n-1)(2n+1) + 1 = (4n^2 - 1) + 1 = 4n^2$`,
+        `$4n^2 = (2n)^2$ であり、$2n$ は偶数なので、偶数の2乗になる。`
+      ],
+      exp: `文字式を用いて条件通りに式を作り、目的の形 $(\\text{偶数})^2$ を導きます。`
+    };
+  } else {
+    const r = randInt(3, 8);
+    return {
+      q: `【図形への利用】半径 $r$ の円形の池のまわりに、幅 $a$ の道がついている。道の面積を $S$、道の真ん中を通る円の周の長さを $\\ell$ とするとき、$S = a\\ell$ となることを証明しなさい。`,
+      ans: `$S = \\pi(r+a)^2 - \\pi r^2 = 2\\pi ar + \\pi a^2 = a(2\\pi r + \\pi a) = a\\ell$`,
+      steps: [
+        `外側の円の半径は $r+a$ なので、$S = \\pi(r+a)^2 - \\pi r^2 = \\pi(2ar + a^2)$`,
+        `道の真ん中の円の半径は $r + \\frac{a}{2}$ なので、$\\ell = 2\\pi(r + \\frac{a}{2}) = 2\\pi r + \\pi a$`,
+        `よって $a\\ell = a(2\\pi r + \\pi a) = 2\\pi ar + \\pi a^2 = S$ となり成り立つ。`
+      ],
+      exp: `教科書・学習プリントの重要発展問題です。`
+    };
+  }
+};

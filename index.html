@@ -843,21 +843,20 @@
             </div>
           </div>
 
-          <!-- 3. 教材リファレンス -->
+          <!-- 3. 教材資料室リンク -->
           <div class="panel-section mb-3 ws-reference-card">
-            <div class="panel-header">
-              <h3><i class="fa-solid fa-book-bookmark text-info"></i> 教材リファレンス</h3>
+            <div class="panel-header" style="margin-bottom: 0.2rem;">
+              <h3 style="font-size: 0.88rem;"><i class="fa-solid fa-book-open-reader text-info"></i> 教材資料室で確認</h3>
             </div>
-            <p class="panel-desc">この時間の板書計画や公式解説を今すぐプレビューできます。</p>
-            <div class="ws-ref-buttons">
-              <button class="btn btn-sm btn-outline btn-block text-primary" id="btnWsViewBoard" onclick="openCurrentB4BoardPdf()" style="margin-bottom: 0.35rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+            <div class="ws-ref-buttons" style="display: flex; flex-direction: column; gap: 0.3rem;">
+              <button class="btn btn-sm btn-outline btn-block text-primary" id="btnWsViewBoard" onclick="openCurrentB4BoardPdf()" style="font-size: 0.78rem; padding: 0.4rem;">
                 <i class="fa-solid fa-chalkboard-user"></i> 板書・指導展開例 (明治図書)
               </button>
-              <button class="btn btn-sm btn-outline btn-block" id="btnWsViewPoint" onclick="openCurrentB4PointPdf()" style="margin-bottom: 0.35rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+              <button class="btn btn-sm btn-outline btn-block" id="btnWsViewPoint" onclick="openCurrentB4PointPdf()" style="font-size: 0.78rem; padding: 0.4rem;">
                 <i class="fa-solid fa-book-open"></i> 要点ブック (学研)
               </button>
-              <button class="btn btn-sm btn-outline btn-block" id="btnWsViewOfficial" onclick="openCurrentB4OfficialPdf()" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
-                <i class="fa-solid fa-file-pdf"></i> 単元別 公式学習プリント
+              <button class="btn btn-sm btn-ghost btn-block text-secondary" onclick="switchTab('library')" style="font-size: 0.76rem; padding: 0.25rem;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> 資料室全体を開く
               </button>
             </div>
           </div>
@@ -948,26 +947,39 @@
 
         <!-- 中央: B4用紙 (横) 実物見開きプレビュー領域 -->
         <div class="paper-container b4-paper-container">
-          <div class="paper-toolbar no-print">
-            <div class="paper-status">
-              <span class="status-indicator"></span>
-              <strong><i class="fa-solid fa-newspaper text-primary"></i> B4 横レイアウト（見開き2カラム構成）</strong>
+          <div class="b4-paper-scroll-wrapper" id="b4ScrollWrapper">
+            <div class="paper-toolbar no-print">
+              <div class="paper-status" style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="status-indicator"></span>
+                <strong><i class="fa-solid fa-newspaper text-primary"></i> B4 横レイアウト（見開き2面）</strong>
+                
+                <!-- ズーム切り替え -->
+                <div class="zoom-controls-group">
+                  <span class="zoom-label"><i class="fa-solid fa-magnifying-glass"></i> 表示倍率:</span>
+                  <button type="button" class="zoom-btn active" id="zoomBtn_100" onclick="setWorksheetZoom(1.0)">100%</button>
+                  <button type="button" class="zoom-btn" id="zoomBtn_85" onclick="setWorksheetZoom(0.85)">85%</button>
+                  <button type="button" class="zoom-btn" id="zoomBtn_75" onclick="setWorksheetZoom(0.75)">75%</button>
+                </div>
+              </div>
+              <div class="paper-actions">
+                <button class="btn btn-sm btn-outline text-info" onclick="openCurrentB4BoardPdf()" title="この単元の板書書籍PDFを参照">
+                  <i class="fa-solid fa-book-open"></i> 板書書籍
+                </button>
+                <button class="btn btn-sm btn-outline text-success" onclick="saveWorksheetToStorage()" title="現在の内容をマイプリントに保存">
+                  <i class="fa-solid fa-floppy-disk"></i> マイプリントに保存
+                </button>
+                <button class="btn btn-sm btn-outline text-primary" onclick="applyWorksheetToTimetable()" title="このプリントのめあて・単元名を時間割の週案に反映">
+                  <i class="fa-solid fa-calendar-plus"></i> 時間割の予定にセット
+                </button>
+                <button class="btn btn-sm btn-ghost" onclick="toggleAnswerMode()" id="answerModeBtn">
+                  <i class="fa-solid fa-eye"></i> 解答表示切替
+                </button>
+              </div>
             </div>
-            <div class="paper-actions">
-              <button class="btn btn-sm btn-outline text-success" onclick="saveWorksheetToStorage()" title="現在の内容をマイプリントに保存">
-                <i class="fa-solid fa-floppy-disk"></i> マイプリントに保存
-              </button>
-              <button class="btn btn-sm btn-outline text-primary" onclick="applyWorksheetToTimetable()" title="このプリントのめあて・単元名を時間割の週案に反映">
-                <i class="fa-solid fa-calendar-plus"></i> 時間割の予定にセット
-              </button>
-              <button class="btn btn-sm btn-ghost" onclick="toggleAnswerMode()" id="answerModeBtn">
-                <i class="fa-solid fa-eye"></i> 解答表示切替
-              </button>
-            </div>
-          </div>
 
-          <!-- 実際の印刷用紙 (B4横見開きサイズ: 364mm x 257mm) -->
-          <div class="sheet-paper paper-b4-landscape" id="printableSheet">
+            <div class="b4-zoom-scaled" id="b4ZoomScaledContainer">
+              <!-- 実際の印刷用紙 (B4横見開きサイズ: 364mm x 257mm) -->
+              <div class="sheet-paper paper-b4-landscape" id="printableSheet">
             
             <!-- シート全幅ヘッダー -->
             <div class="sheet-header b4-sheet-header">
@@ -1012,6 +1024,7 @@
 
           </div>
         </div>
+      </div>
 
       </div>
     </section>
@@ -1030,25 +1043,13 @@
         </div>
 
         <!-- モード切替バー: 小テスト自動生成 / 単元別公式プリントライブラリ -->
-        <div class="test-mode-switch-bar no-print">
-          <button class="test-mode-btn active" id="btnModeAutoTest" onclick="switchTestViewMode('auto')">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> 5分間小テスト自動生成 (数値ランダム)
-          </button>
-          <button class="test-mode-btn" id="btnModeOfficialPrint" onclick="switchTestViewMode('official')">
-            <i class="fa-solid fa-file-pdf"></i> 単元別 公式学習プリント & 要点ブック (PDFライブラリ)
-          </button>
-          <button class="test-mode-btn" id="btnModeBoarding" onclick="switchTestViewMode('boarding')">
-            <i class="fa-solid fa-chalkboard-user"></i> 板書・展開例ライブラリ
-          </button>
-        </div>
-
         <!-- 1. 小テスト自動生成エリア -->
         <div id="autoTestArea">
           <div class="test-config-card">
             <h3><i class="fa-solid fa-bolt text-warning"></i> 出題設定</h3>
             <p class="subtitle">学年と単元を選択するだけで、問題用紙と解答がワンクリックでランダム生成されます。</p>
             
-            <div class="test-config-grid">
+            <div class="test-config-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) 160px;">
               <div class="form-group">
                 <label>対象学年</label>
                 <select id="testGrade" class="form-control" onchange="onTestGradeChange()">
@@ -1067,6 +1068,16 @@
                 <label>小単元</label>
                 <select id="testSubUnit" class="form-control" onchange="generateQuickTest()">
                   <!-- JSで動的更新 -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label><i class="fa-solid fa-sliders text-primary"></i> 出題タイプ（問い方）</label>
+                <select id="testQuestionType" class="form-control" onchange="generateQuickTest()">
+                  <option value="all" selected>総合（計算＋工夫・良問ミックス）</option>
+                  <option value="fill_blank">【基礎・穴埋め】公式・手順の空欄補充</option>
+                  <option value="standard_calc">【基本計算】反復・計算スピード</option>
+                  <option value="trick_mistake">【つまずき克服】符号注意・置き換えの工夫</option>
+                  <option value="word_applied">【文章題・利用】思考・図形応用</option>
                 </select>
               </div>
               <div class="form-group">
@@ -1117,99 +1128,100 @@
           </div>
         </div>
 
-        <!-- 2. 公式学習プリント & 要点ブック ライブラリエリア -->
-        <div id="officialPrintsArea" class="hidden">
-          <div class="official-prints-container">
-            
-            <!-- 上部ツールバー: 学年切替 ＆ 検索バー -->
-            <div class="library-header-card">
-              <div class="library-grade-selector">
-                <label><i class="fa-solid fa-graduation-cap"></i> 学年選択:</label>
-                <div class="grade-pill-group">
-                  <button class="grade-pill-btn active" id="libGradeBtn1" onclick="switchLibraryGrade('1')">
-                    1年生 <span class="count-badge">19単元</span>
-                  </button>
-                  <button class="grade-pill-btn" id="libGradeBtn2" onclick="switchLibraryGrade('2')">
-                    2年生 <span class="count-badge">14単元</span>
-                  </button>
-                  <button class="grade-pill-btn" id="libGradeBtn3" onclick="switchLibraryGrade('3')">
-                    3年生 <span class="count-badge">要点ブック</span>
-                  </button>
                 </div>
-              </div>
+      </div>
+    </section>
 
-              <div class="library-search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="librarySearchInput" class="form-control" placeholder="単元名・キーワードで検索 (例: 連立, 比例, 証明)..." oninput="filterOfficialPrints()">
-              </div>
-            </div>
+    <!-- ============================================== -->
+    
+    <!-- ============================================== -->
+    <!-- TAB 7: 📚 教材資料室 (デジタルライブラリ) -->
+    <!-- ============================================== -->
+    <section id="tab-library" class="tab-pane">
+      <div class="library-container">
+        
+        <div class="page-top-nav no-print mb-3">
+          <button class="back-home-btn" onclick="switchTab('home')">
+            <i class="fa-solid fa-arrow-left"></i> ホームに戻る
+          </button>
+        </div>
 
-            <!-- 『ひとつひとつわかりやすく。』要点ブック特別バナー -->
-            <div class="reference-book-banner" id="referenceBookBanner">
-              <!-- JSで現在の学年に応じた書籍情報を表示 -->
-            </div>
-
-            <!-- 単元別プリントカードグリッド -->
-            <div class="official-cards-grid" id="officialCardsGrid">
-              <!-- JSで動的にカードを生成 -->
-            </div>
-
+        <!-- ヒーローバナー -->
+        <div class="library-hero-header">
+          <div class="library-hero-left">
+            <h2><i class="fa-solid fa-book-open-reader text-sky"></i> 数学科 教材・書籍デジタル資料室</h2>
+            <p>
+              明治図書『板書＆展開例 365日の全授業』、学研『中1〜中3 数学をひとつひとつわかりやすく。』、
+              および公立中対応の単元別公式学習プリント（問題・解答）をワンストップで閲覧・印刷できます。
+            </p>
+          </div>
+          <div class="library-hero-actions">
+            <button class="btn btn-outline" onclick="exportWorksheetsBackup()" style="color: #ffffff; border-color: #64748b;">
+              <i class="fa-solid fa-folder-arrow-down"></i> マイプリント一覧
+            </button>
           </div>
         </div>
 
-        <!-- 3. 板書・展開例ライブラリエリア -->
-        <div id="boardingLibraryArea" class="hidden">
-          <div class="boarding-library-container">
+        <!-- フィルターバー: 学年切り替え & 検索バー -->
+        <div class="library-filter-bar no-print">
+          <div class="library-grade-pills">
+            <span style="font-size: 0.85rem; font-weight: 700; color: #475569; margin-right: 0.5rem;"><i class="fa-solid fa-filter"></i> 学年絞り込み:</span>
+            <button class="grade-pill-btn active" id="libFilterBtn_all" onclick="filterDigitalLibrary('all')">全学年</button>
+            <button class="grade-pill-btn" id="libFilterBtn_1" onclick="filterDigitalLibrary('1')">中1</button>
+            <button class="grade-pill-btn" id="libFilterBtn_2" onclick="filterDigitalLibrary('2')">中2</button>
+            <button class="grade-pill-btn" id="libFilterBtn_3" onclick="filterDigitalLibrary('3')">中3</button>
+          </div>
+          <div class="library-search-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="digitalLibrarySearchInput" class="form-control" placeholder="書籍名・単元名・キーワードで検索..." oninput="onDigitalLibrarySearch()">
+          </div>
+        </div>
 
-            <!-- 上部ヘッダー: 学年切替 & 検索バー -->
-            <div class="library-header-card">
-              <div class="library-grade-selector">
-                <label><i class="fa-solid fa-chalkboard-user"></i> 学年で絞り込む:</label>
-                <div class="grade-pill-group">
-                  <button class="grade-pill-btn active" id="boardGradeBtn_all" onclick="switchBoardGrade('all')">
-                    すべて
-                  </button>
-                  <button class="grade-pill-btn" id="boardGradeBtn_1" onclick="switchBoardGrade('1')">
-                    1年生
-                  </button>
-                  <button class="grade-pill-btn" id="boardGradeBtn_2" onclick="switchBoardGrade('2')">
-                    2年生
-                  </button>
-                  <button class="grade-pill-btn" id="boardGradeBtn_3" onclick="switchBoardGrade('3')">
-                    3年生
-                  </button>
-                </div>
-              </div>
-              <div class="library-search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="boardingSearchInput" class="form-control" placeholder="単元名・キーワードで検索 (例: 因数分解, 平方根)..." oninput="filterBoardingLibrary()">
-              </div>
-            </div>
+        <!-- 1. 板書＆指導展開例シリーズ（明治図書） -->
+        <div class="library-section-block" id="libSecMeiji">
+          <div class="library-section-title-row">
+            <h3>
+              <i class="fa-solid fa-chalkboard-user text-primary"></i> 
+              板書＆展開例でよくわかる 数学的活動でつくる365日の全授業
+            </h3>
+            <span class="library-section-badge">明治図書出版 準拠</span>
+          </div>
+          <div class="library-bookshelf-grid" id="meijiBookshelfGrid">
+            <!-- JSで動的生成 -->
+          </div>
+        </div>
 
-            <!-- 説明バナー -->
-            <div class="boarding-info-banner">
-              <div class="boarding-info-icon">
-                <i class="fa-solid fa-circle-info"></i>
-              </div>
-              <div class="boarding-info-content">
-                <strong>板書・展開例ライブラリとは？</strong>
-                各授業の板書計画・展開例をそのまま参照できる書籍データです。授業準備の時短や板書のアイデア収集に活用してください。
-                現在は <strong>中3上巻</strong> を収録しています。今後、他の学年・巻も順次追加予定です。
-              </div>
-            </div>
+        <!-- 2. 要点ブック『数学をひとつひとつわかりやすく。』（学研） -->
+        <div class="library-section-block" id="libSecGakken">
+          <div class="library-section-title-row">
+            <h3>
+              <i class="fa-solid fa-book-bookmark text-emerald"></i> 
+              数学をひとつひとつわかりやすく。 (要点ブック)
+            </h3>
+            <span class="library-section-badge">学研プラス 準拠</span>
+          </div>
+          <div class="library-bookshelf-grid" id="gakkenBookshelfGrid">
+            <!-- JSで動的生成 -->
+          </div>
+        </div>
 
-            <!-- 板書書籍カードグリッド -->
-            <div class="boarding-cards-grid" id="boardingLibraryCards">
-              <!-- JSで動的にカードを生成 -->
-            </div>
-
+        <!-- 3. 単元別 数学学習プリント（公式プリント集） -->
+        <div class="library-section-block" id="libSecOfficial">
+          <div class="library-section-title-row">
+            <h3>
+              <i class="fa-solid fa-file-pdf text-amber"></i> 
+              学年別・単元別 数学学習プリント (公式PDFライブラリ)
+            </h3>
+            <span class="library-section-badge">公立中学校対応 全40+単元</span>
+          </div>
+          <div class="library-bookshelf-grid" id="officialBookshelfGrid">
+            <!-- JSで動的生成 -->
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- ============================================== -->
     <!-- TAB 4: 作図・グラフジェネレーター (SVG動的作図) -->
     <!-- ============================================== -->
     <section id="tab-math-tools" class="tab-pane">
