@@ -3523,21 +3523,34 @@ math.math-expr mfrac {
     width: 100% !important;
   }
 
+  /* 印刷プレビューおよび印刷結果でのスクロールバー完全消去 */
+  *::-webkit-scrollbar,
+  #testAnswerPaper::-webkit-scrollbar,
+  .test-paper-mock::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
   body[data-print-target="test-answer"] #testAnswerPaper {
     display: flex !important;
     flex-direction: column !important;
     justify-content: flex-start !important;
     width: 100% !important;
-    height: auto !important;
-    min-height: auto !important;
+    height: 278mm !important; /* A4用紙縦297mmの印刷可能領域（278mm）を100%フル活用！820px制限を解除し61mm拡大！ */
+    min-height: 278mm !important;
+    max-height: 280mm !important; /* 画面用のmax-height: 820pxを完全上書き */
     box-sizing: border-box !important;
-    overflow: visible !important;
+    overflow: hidden !important; /* 縦スクロールバーの発生を絶対に防止 */
+    overflow-y: hidden !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
     page-break-after: avoid !important;
     break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   /* 模範解答ヘッダー（スリム化で下部余白を最大化） */
