@@ -4303,4 +4303,273 @@ window.addEventListener('load', () => {
   if (typeof window.katex !== 'undefined' && document.getElementById('testStudentPaper')) {
     generateQuickTest();
   }
+  if (document.getElementById('officialCardsGrid')) {
+    renderOfficialPrintLibrary();
+  }
 });
+
+// ========================================================
+// 公式数学学習プリント & 書籍教材ライブラリ
+// ========================================================
+const officialPrintLibrary = {
+  '1': [
+    { id: 'g1_p1_1', unit: '1-1', title: '正の数・負の数', file: '数学学習プリント/01_1年生/数学_1-1正の数・負の数.pdf', category: '正負の数' },
+    { id: 'g1_p1_2', unit: '1-2', title: '正の数・負の数の計算', file: '数学学習プリント/01_1年生/数学_1-2正の数・負の数の計算.pdf', category: '正負の数' },
+    { id: 'g1_p1_3', unit: '1-3', title: '正の数・負の数の利用 (文章題)', file: '数学学習プリント/01_1年生/数学_1-3正の数・負の数の利用.pdf', category: '正負の数' },
+    { id: 'g1_p2_1', unit: '2-1', title: '文字を使った式', file: '数学学習プリント/01_1年生/数学_2-1文字を使った式.pdf', category: '文字と式' },
+    { id: 'g1_p2_2', unit: '2-2', title: '文字式の計算', file: '数学学習プリント/01_1年生/数学_2-2文字式の計算.pdf', category: '文字と式' },
+    { id: 'g1_p3_1', unit: '3-1', title: '方程式の解き方', file: '数学学習プリント/01_1年生/数学_3-1方程式.pdf', category: '方程式' },
+    { id: 'g1_p3_2', unit: '3-2', title: '方程式の利用 (文章題)', file: '数学学習プリント/01_1年生/数学_3-2方程式の利用.pdf', category: '方程式' },
+    { id: 'g1_p4_1', unit: '4-1', title: '関数と座標', file: '数学学習プリント/01_1年生/数学_4-1関数.pdf', category: '比例・反比例' },
+    { id: 'g1_p4_2', unit: '4-2', title: '比例の式とグラフ', file: '数学学習プリント/01_1年生/数学_4-2比例.pdf', category: '比例・反比例' },
+    { id: 'g1_p4_3', unit: '4-3', title: '反比例の式とグラフ', file: '数学学習プリント/01_1年生/数学_4-3反比例.pdf', category: '比例・反比例' },
+    { id: 'g1_p4_4', unit: '4-4', title: '比例・反比例の利用', file: '数学学習プリント/01_1年生/数学_4-4比例，反比例の利用.pdf', category: '比例・反比例' },
+    { id: 'g1_p5_1', unit: '5-1', title: '直線と図形 (垂直・平行・距離)', file: '数学学習プリント/01_1年生/数学_5-1直線と図形.pdf', category: '平面図形' },
+    { id: 'g1_p5_2', unit: '5-2', title: '図形の移動と作図', file: '数学学習プリント/01_1年生/数学_5-2移動と作図.pdf', category: '平面図形' },
+    { id: 'g1_p5_3', unit: '5-3', title: '円とおうぎ形 (弧と面積)', file: '数学学習プリント/01_1年生/数学_5-3円とおうぎ形.pdf', category: '平面図形' },
+    { id: 'g1_p6_1', unit: '6-1', title: '立体と空間図形 (位置関係・展開図)', file: '数学学習プリント/01_1年生/数学_6-1立体と空間図形.pdf', category: '空間図形' },
+    { id: 'g1_p6_2', unit: '6-2', title: '立体の体積と表面積', file: '数学学習プリント/01_1年生/数学_6-2立体の体積と表面積.pdf', category: '空間図形' },
+    { id: 'g1_p7_1', unit: '7-1', title: 'ヒストグラムと相対度数', file: '数学学習プリント/01_1年生/数学_7-1ヒストグラムと相対度数.pdf', category: 'データの活用' },
+    { id: 'g1_p7_2', unit: '7-2', title: 'データにもとづく確率', file: '数学学習プリント/01_1年生/数学_7-2データにもとづく確率.pdf', category: 'データの活用' },
+    { id: 'g1_p8_1', unit: '学年総復習', title: '1年生 数学まとめテスト', file: '数学学習プリント/01_1年生/数学_8まとめ（1年生）.pdf', category: '学年まとめ', isSummary: true }
+  ],
+  '2': [
+    { id: 'g2_p1_1', unit: '1-1', title: '式の計算 (加法・減法・乗除)', file: '数学学習プリント/02_2年生/数学_1-1式の計算.pdf', category: '式の計算' },
+    { id: 'g2_p1_2', unit: '1-2', title: '文字式の利用 (説明・等式変形)', file: '数学学習プリント/02_2年生/数学_1-2文字式の利用.pdf', category: '式の計算' },
+    { id: 'g2_p2_1', unit: '2-1', title: '連立方程式の解き方', file: '数学学習プリント/02_2年生/数学_2-1連立方程式.pdf', category: '連立方程式' },
+    { id: 'g2_p2_2', unit: '2-2', title: '連立方程式の利用 (文章題)', file: '数学学習プリント/02_2年生/数学_2-2連立方程式の利用.pdf', category: '連立方程式' },
+    { id: 'g2_p3_1', unit: '3-1', title: '一次関数とグラフ', file: '数学学習プリント/02_2年生/数学_3-1一次関数とグラフ.pdf', category: '一次関数' },
+    { id: 'g2_p3_2', unit: '3-2', title: '一次関数と方程式 (交点座標)', file: '数学学習プリント/02_2年生/数学_3-2一次関数と方程式.pdf', category: '一次関数' },
+    { id: 'g2_p3_3', unit: '3-3', title: '一次関数の利用 (動点・水そう)', file: '数学学習プリント/02_2年生/数学_3-3一次関数の利用.pdf', category: '一次関数' },
+    { id: 'g2_p4_1', unit: '4-1', title: '平行線と角・多角形の角・合同条件', file: '数学学習プリント/02_2年生/数学_4-1平行と合同.pdf', category: '平行と合同' },
+    { id: 'g2_p4_2', unit: '4-2', title: '合同の証明問題', file: '数学学習プリント/02_2年生/数学_4-2証明.pdf', category: '平行と合同' },
+    { id: 'g2_p5_1', unit: '5-1', title: '二等辺三角形・直角三角形', file: '数学学習プリント/02_2年生/数学_5-1三角形.pdf', category: '三角形と四角形' },
+    { id: 'g2_p5_2', unit: '5-2', title: '平行四辺形と特別な四角形', file: '数学学習プリント/02_2年生/数学_5-2四角形.pdf', category: '三角形と四角形' },
+    { id: 'g2_p6_1', unit: '6-1', title: '場合の数と確率', file: '数学学習プリント/02_2年生/数学_6-1場合の数と確率.pdf', category: '確率' },
+    { id: 'g2_p7_1', unit: '7-1', title: '四分位数と箱ひげ図', file: '数学学習プリント/02_2年生/数学_7-1箱ひげ図.pdf', category: 'データの比較' },
+    { id: 'g2_p8_1', unit: '学年総復習', title: '2年生 数学まとめテスト', file: '数学学習プリント/02_2年生/数学_8まとめ（2年生）.pdf', category: '学年まとめ', isSummary: true }
+  ],
+  '3': []
+};
+
+const referenceBookLibrary = {
+  '1': {
+    title: '中1数学をひとつひとつわかりやすく。',
+    file: '書籍「数学をひとつひとつわかりやすく。」/260610 中1数学をひとつひとつわかりやすく。.pdf',
+    badge: '学研 / 中1要点解説',
+    desc: '中1の全単元をスモールステップで図解。授業前の要点確認やプロジェクター提示に最適。'
+  },
+  '2': {
+    title: '中2数学をひとつひとつわかりやすく。',
+    file: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+    badge: '学研 / 中2要点解説',
+    desc: '中2の連立方程式・一次関数・証明などを超基礎から図解。つまずきポイントの確認に。'
+  },
+  '3': {
+    title: '中3数学をひとつひとつわかりやすく。',
+    file: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+    badge: '学研 / 中3要点解説',
+    desc: '中3の展開・因数分解・平方根・二次方程式・相似・三平方の定理などを丁寧に解説。'
+  }
+};
+
+let currentLibraryGrade = '1';
+let currentLibrarySearch = '';
+let currentPreviewPdfPath = '';
+
+// モード切替: 小テスト自動生成 ⇔ 公式プリントライブラリ
+function switchTestViewMode(mode) {
+  const btnAuto = document.getElementById('btnModeAutoTest');
+  const btnOff = document.getElementById('btnModeOfficialPrint');
+  const autoArea = document.getElementById('autoTestArea');
+  const offArea = document.getElementById('officialPrintsArea');
+
+  if (mode === 'auto') {
+    btnAuto?.classList.add('active');
+    btnOff?.classList.remove('active');
+    autoArea?.classList.remove('hidden');
+    offArea?.classList.add('hidden');
+  } else {
+    btnAuto?.classList.remove('active');
+    btnOff?.classList.add('active');
+    autoArea?.classList.add('hidden');
+    offArea?.classList.remove('hidden');
+    renderOfficialPrintLibrary();
+  }
+}
+
+// ライブラリ学年切替
+function switchLibraryGrade(grade) {
+  currentLibraryGrade = grade;
+  for (let g = 1; g <= 3; g++) {
+    const btn = document.getElementById(`libGradeBtn${g}`);
+    if (btn) {
+      if (String(g) === String(grade)) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    }
+  }
+  renderOfficialPrintLibrary();
+}
+
+// 検索フィルター
+function filterOfficialPrints() {
+  const input = document.getElementById('librarySearchInput');
+  currentLibrarySearch = input ? input.value.trim().toLowerCase() : '';
+  renderOfficialPrintLibrary();
+}
+
+// ライブラリ描画
+function renderOfficialPrintLibrary() {
+  const bannerEl = document.getElementById('referenceBookBanner');
+  const gridEl = document.getElementById('officialCardsGrid');
+  if (!gridEl) return;
+
+  // 1. 書籍バナー描画
+  const book = referenceBookLibrary[currentLibraryGrade];
+  if (bannerEl && book) {
+    bannerEl.innerHTML = `
+      <div class="book-banner-left">
+        <div class="book-icon-wrap">
+          <i class="fa-solid fa-book-bookmark"></i>
+        </div>
+        <div class="book-info">
+          <h4>${book.title} <span class="book-badge">${book.badge}</span></h4>
+          <p>${book.desc}</p>
+        </div>
+      </div>
+      <button class="book-open-btn" onclick="openPdfInNewTab('${encodeURIComponent(book.file)}')">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> 要点ブックを開く
+      </button>
+    `;
+    bannerEl.style.display = 'flex';
+  } else if (bannerEl) {
+    bannerEl.style.display = 'none';
+  }
+
+  // 2. 単元別プリントカード描画
+  const prints = officialPrintLibrary[currentLibraryGrade] || [];
+  let filtered = prints;
+
+  if (currentLibrarySearch) {
+    filtered = prints.filter(p => 
+      p.title.toLowerCase().includes(currentLibrarySearch) ||
+      p.unit.toLowerCase().includes(currentLibrarySearch) ||
+      p.category.toLowerCase().includes(currentLibrarySearch)
+    );
+  }
+
+  if (filtered.length === 0) {
+    if (currentLibraryGrade === '3') {
+      gridEl.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 3rem 1.5rem; text-align: center; color: var(--text-muted); background: var(--bg-panel); border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+          <i class="fa-solid fa-folder-open" style="font-size: 2.2rem; margin-bottom: 0.8rem; color: #94a3b8; display: block;"></i>
+          <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem;">3年生の学習プリントは準備中です</h4>
+          <p style="font-size: 0.85rem; margin: 0;">上部の「要点ブックを開く」から、3年生の全単元解説・要点PDFをご活用いただけます。</p>
+        </div>
+      `;
+    } else {
+      gridEl.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 2.5rem; text-align: center; color: var(--text-muted);">
+          一致する単元プリントが見つかりませんでした。「${currentLibrarySearch}」
+        </div>
+      `;
+    }
+    return;
+  }
+
+  gridEl.innerHTML = filtered.map(p => {
+    const summaryClass = p.isSummary ? ' featured-summary' : '';
+    const unitTagClass = p.isSummary ? 'unit-tag summary-tag' : 'unit-tag';
+    const encFile = encodeURIComponent(p.file);
+    return `
+      <div class="official-print-card${summaryClass}">
+        <div class="card-top-row">
+          <span class="${unitTagClass}">${p.unit}</span>
+          <span class="category-tag">${p.category}</span>
+        </div>
+        <h4 class="print-card-title">${p.title}</h4>
+        <div class="print-card-actions">
+          <button class="btn btn-outline" onclick="openPdfPreviewModal('${encFile}', '${p.unit} ${p.title}')">
+            <i class="fa-solid fa-eye"></i> プレビュー
+          </button>
+          <button class="btn btn-primary" onclick="openPdfInNewTab('${encFile}')">
+            <i class="fa-solid fa-print"></i> 印刷 / 開く
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// PDFプレビューモーダル操作
+function openPdfPreviewModal(encodedPath, title) {
+  const modal = document.getElementById('pdfPreviewModal');
+  const iframe = document.getElementById('pdfPreviewIframe');
+  const titleEl = document.getElementById('pdfModalTitle');
+  const downloadLink = document.getElementById('pdfDownloadLink');
+
+  currentPreviewPdfPath = decodeURIComponent(encodedPath);
+
+  if (titleEl) titleEl.textContent = title || 'プリントプレビュー';
+  if (iframe) iframe.src = currentPreviewPdfPath;
+  if (downloadLink) {
+    downloadLink.href = currentPreviewPdfPath;
+    downloadLink.setAttribute('download', currentPreviewPdfPath.split('/').pop());
+  }
+
+  modal?.classList.remove('hidden');
+}
+
+function closePdfPreviewModal() {
+  const modal = document.getElementById('pdfPreviewModal');
+  const iframe = document.getElementById('pdfPreviewIframe');
+  if (iframe) iframe.src = '';
+  modal?.classList.add('hidden');
+}
+
+function openCurrentPdfNewTab() {
+  if (currentPreviewPdfPath) {
+    window.open(currentPreviewPdfPath, '_blank');
+  }
+}
+
+function openPdfInNewTab(encodedPath) {
+  const path = decodeURIComponent(encodedPath);
+  window.open(path, '_blank');
+}
+
+// 時間割スロットから該当学年の公式プリントライブラリへジャンプ
+function jumpToOfficialPrintsFromSlot() {
+  let grade = '1';
+  if (state.editingLessonPlan && state.editingLessonPlan.className) {
+    const cls = state.editingLessonPlan.className;
+    if (cls.includes('2') || cls.startsWith('2-')) grade = '2';
+    else if (cls.includes('3') || cls.startsWith('3-')) grade = '3';
+    else if (cls.includes('1') || cls.startsWith('1-')) grade = '1';
+  }
+  const input = document.getElementById('lessonPlanInput');
+  const planKeyword = input ? input.value : '';
+
+  closeLessonPlanModal();
+  switchTab('practice-test');
+  switchTestViewMode('official');
+  switchLibraryGrade(grade);
+
+  if (planKeyword) {
+    const searchInput = document.getElementById('librarySearchInput');
+    if (searchInput) {
+      if (planKeyword.includes('一次関数') || planKeyword.includes('1次関数')) searchInput.value = '一次関数';
+      else if (planKeyword.includes('連立')) searchInput.value = '連立';
+      else if (planKeyword.includes('方程式')) searchInput.value = '方程式';
+      else if (planKeyword.includes('証明') || planKeyword.includes('合同')) searchInput.value = '合同';
+      else if (planKeyword.includes('比例')) searchInput.value = '比例';
+      else if (planKeyword.includes('文字')) searchInput.value = '文字';
+      else if (planKeyword.includes('正負') || planKeyword.includes('正の数')) searchInput.value = '正の数';
+      filterOfficialPrints();
+    }
+  }
+}
+

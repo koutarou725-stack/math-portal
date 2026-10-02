@@ -18,7 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   
-  <link rel="stylesheet" href="style.css?v=20261002h">
+  <link rel="stylesheet" href="style.css?v=20261002i">
 </head>
 <body>
 
@@ -560,6 +560,9 @@
             <i class="fa-solid fa-eraser"></i> 予定をクリア
           </button>
           <div style="flex: 1;"></div>
+          <button type="button" class="btn btn-outline text-primary" onclick="jumpToOfficialPrintsFromSlot()" title="この学年の単元別学習プリント(PDF)一覧を開く">
+            <i class="fa-solid fa-file-pdf"></i> 公式プリント・要点ブック
+          </button>
           <button type="button" class="btn btn-outline" onclick="closeLessonPlanModal()">キャンセル</button>
           <button type="button" class="btn btn-primary" onclick="saveLessonPlan()">
             <i class="fa-solid fa-check"></i> 学習内容を保存
@@ -960,80 +963,134 @@
           <button class="back-home-btn" onclick="switchTab('home')">
             <i class="fa-solid fa-arrow-left"></i> ホームに戻る
           </button>
-          <h2><i class="fa-solid fa-calculator text-emerald"></i> 練習プリント & 5分間確認テスト自動生成</h2>
+          <h2><i class="fa-solid fa-calculator text-emerald"></i> 練習プリント & 5分間確認テスト</h2>
         </div>
 
-        <div class="test-config-card">
-          <h3><i class="fa-solid fa-bolt text-warning"></i> 出題設定</h3>
-          <p class="subtitle">学年と単元を選択するだけで、問題用紙と解答がワンクリックでランダム生成されます。</p>
-          
-          <div class="test-config-grid">
-            <div class="form-group">
-              <label>対象学年</label>
-              <select id="testGrade" class="form-control" onchange="onTestGradeChange()">
-                <option value="1">中1</option>
-                <option value="2" selected>中2</option>
-                <option value="3">中3</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>出題大単元（領域）</label>
-              <select id="testMajorUnit" class="form-control" onchange="onTestMajorUnitChange()">
-                <!-- JSで動的更新 -->
-              </select>
-            </div>
-            <div class="form-group">
-              <label>小単元</label>
-              <select id="testSubUnit" class="form-control" onchange="generateQuickTest()">
-                <!-- JSで動的更新 -->
-              </select>
-            </div>
-            <div class="form-group">
-              <label>問題数</label>
-              <select id="testCount" class="form-control" onchange="generateQuickTest()">
-                <option value="4">4問 (じっくり型)</option>
-                <option value="6" selected>6問 (標準・5分テスト)</option>
-                <option value="8">8問 (計算スピード練習)</option>
-                <option value="10">10問 (小テスト本番)</option>
-              </select>
-            </div>
-            <div class="form-group align-self-end">
-              <button class="btn btn-primary btn-block" onclick="generateQuickTest()">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> 別の数値を再生成
-              </button>
-            </div>
-          </div>
+        <!-- モード切替バー: 小テスト自動生成 / 単元別公式プリントライブラリ -->
+        <div class="test-mode-switch-bar no-print">
+          <button class="test-mode-btn active" id="btnModeAutoTest" onclick="switchTestViewMode('auto')">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> 5分間小テスト自動生成 (数値ランダム)
+          </button>
+          <button class="test-mode-btn" id="btnModeOfficialPrint" onclick="switchTestViewMode('official')">
+            <i class="fa-solid fa-file-pdf"></i> 単元別 公式学習プリント & 要点ブック (PDFライブラリ)
+          </button>
         </div>
 
-        <div class="test-preview-dual">
-          <div class="test-preview-box">
-            <div class="test-box-header">
-              <h4><i class="fa-solid fa-file-lines"></i> 生徒用 練習プリント (プレビュー)</h4>
-              <div class="test-header-actions">
-                <button class="btn btn-sm btn-primary" onclick="printStudentTestPaper()" title="生徒用プリントのみをA4印刷">
-                  <i class="fa-solid fa-print"></i> 生徒用を印刷
+        <!-- 1. 小テスト自動生成エリア -->
+        <div id="autoTestArea">
+          <div class="test-config-card">
+            <h3><i class="fa-solid fa-bolt text-warning"></i> 出題設定</h3>
+            <p class="subtitle">学年と単元を選択するだけで、問題用紙と解答がワンクリックでランダム生成されます。</p>
+            
+            <div class="test-config-grid">
+              <div class="form-group">
+                <label>対象学年</label>
+                <select id="testGrade" class="form-control" onchange="onTestGradeChange()">
+                  <option value="1">中1</option>
+                  <option value="2" selected>中2</option>
+                  <option value="3">中3</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>出題大単元（領域）</label>
+                <select id="testMajorUnit" class="form-control" onchange="onTestMajorUnitChange()">
+                  <!-- JSで動的更新 -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label>小単元</label>
+                <select id="testSubUnit" class="form-control" onchange="generateQuickTest()">
+                  <!-- JSで動的更新 -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label>問題数</label>
+                <select id="testCount" class="form-control" onchange="generateQuickTest()">
+                  <option value="4">4問 (じっくり型)</option>
+                  <option value="6" selected>6問 (標準・5分テスト)</option>
+                  <option value="8">8問 (計算スピード練習)</option>
+                  <option value="10">10問 (小テスト本番)</option>
+                </select>
+              </div>
+              <div class="form-group align-self-end">
+                <button class="btn btn-primary btn-block" onclick="generateQuickTest()">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> 別の数値を再生成
                 </button>
               </div>
             </div>
-            <div class="test-paper-mock" id="testStudentPaper">
-              <!-- 問題がここに表示 -->
-            </div>
           </div>
 
-          <div class="test-preview-box">
-            <div class="test-box-header">
-              <h4><i class="fa-solid fa-square-check text-success"></i> 先生用 模範解答</h4>
-              <div class="test-header-actions">
-                <button class="btn btn-sm btn-outline text-danger" onclick="printAnswerTestPaper()" title="模範解答のみをA4印刷">
-                  <i class="fa-solid fa-print"></i> 解答を印刷
-                </button>
+          <div class="test-preview-dual">
+            <div class="test-preview-box">
+              <div class="test-box-header">
+                <h4><i class="fa-solid fa-file-lines"></i> 生徒用 練習プリント (プレビュー)</h4>
+                <div class="test-header-actions">
+                  <button class="btn btn-sm btn-primary" onclick="printStudentTestPaper()" title="生徒用プリントのみをA4印刷">
+                    <i class="fa-solid fa-print"></i> 生徒用を印刷
+                  </button>
+                </div>
+              </div>
+              <div class="test-paper-mock" id="testStudentPaper">
+                <!-- 問題がここに表示 -->
               </div>
             </div>
-            <div class="test-paper-mock" id="testAnswerPaper">
-              <!-- 解答がここに表示 -->
+
+            <div class="test-preview-box">
+              <div class="test-box-header">
+                <h4><i class="fa-solid fa-square-check text-success"></i> 先生用 模範解答</h4>
+                <div class="test-header-actions">
+                  <button class="btn btn-sm btn-outline text-danger" onclick="printAnswerTestPaper()" title="模範解答のみをA4印刷">
+                    <i class="fa-solid fa-print"></i> 解答を印刷
+                  </button>
+                </div>
+              </div>
+              <div class="test-paper-mock" id="testAnswerPaper">
+                <!-- 解答がここに表示 -->
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- 2. 公式学習プリント & 要点ブック ライブラリエリア -->
+        <div id="officialPrintsArea" class="hidden">
+          <div class="official-prints-container">
+            
+            <!-- 上部ツールバー: 学年切替 ＆ 検索バー -->
+            <div class="library-header-card">
+              <div class="library-grade-selector">
+                <label><i class="fa-solid fa-graduation-cap"></i> 学年選択:</label>
+                <div class="grade-pill-group">
+                  <button class="grade-pill-btn active" id="libGradeBtn1" onclick="switchLibraryGrade('1')">
+                    1年生 <span class="count-badge">19単元</span>
+                  </button>
+                  <button class="grade-pill-btn" id="libGradeBtn2" onclick="switchLibraryGrade('2')">
+                    2年生 <span class="count-badge">14単元</span>
+                  </button>
+                  <button class="grade-pill-btn" id="libGradeBtn3" onclick="switchLibraryGrade('3')">
+                    3年生 <span class="count-badge">要点ブック</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="library-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="librarySearchInput" class="form-control" placeholder="単元名・キーワードで検索 (例: 連立, 比例, 証明)..." oninput="filterOfficialPrints()">
+              </div>
+            </div>
+
+            <!-- 『ひとつひとつわかりやすく。』要点ブック特別バナー -->
+            <div class="reference-book-banner" id="referenceBookBanner">
+              <!-- JSで現在の学年に応じた書籍情報を表示 -->
+            </div>
+
+            <!-- 単元別プリントカードグリッド -->
+            <div class="official-cards-grid" id="officialCardsGrid">
+              <!-- JSで動的にカードを生成 -->
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1229,6 +1286,30 @@
     </div>
   </div>
 
-  <script src="app.js?v=20261002h"></script>
+  <!-- PDFプレビュー・即時印刷モーダル -->
+  <div id="pdfPreviewModal" class="modal-overlay hidden">
+    <div class="pdf-modal-content">
+      <div class="pdf-modal-header">
+        <div class="pdf-modal-title-area">
+          <i class="fa-solid fa-file-pdf text-danger"></i>
+          <h3 id="pdfModalTitle">プリントプレビュー</h3>
+        </div>
+        <div class="pdf-modal-actions">
+          <button class="btn btn-sm btn-primary" onclick="openCurrentPdfNewTab()" id="pdfPrintBtn" title="別タブで開いてフルスクリーン閲覧・直接印刷">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> 別タブ / 印刷
+          </button>
+          <a class="btn btn-sm btn-outline" id="pdfDownloadLink" href="#" download title="PDFファイルをパソコンに保存">
+            <i class="fa-solid fa-download"></i> 保存
+          </a>
+          <button class="modal-close-btn" onclick="closePdfPreviewModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="pdf-modal-body">
+        <iframe id="pdfPreviewIframe" src="" class="pdf-preview-frame"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=20261002i"></script>
 </body>
 </html>
