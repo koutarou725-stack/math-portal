@@ -5145,3 +5145,72 @@ math.math-expr mfrac {
 .btn-success-solid:hover {
   background: #15803d !important;
 }
+
+
+/* ========================================================
+   練習プリント: 図・表（関数グラフ・幾何・度数分布・箱ひげ図）表示スタイル
+   ======================================================== */
+.problem-figure-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 6px 0 8px 0;
+  text-align: center;
+  width: 100%;
+  clear: both;
+}
+
+.problem-figure-container svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  background: transparent;
+}
+
+/* 度数分布表・データ表スタイル */
+.math-freq-table {
+  border-collapse: collapse;
+  margin: 6px auto;
+  font-size: 0.82rem;
+  text-align: center;
+  background: #ffffff;
+  border: 1.5px solid #1e293b;
+  min-width: 200px;
+}
+
+.math-freq-table th,
+.math-freq-table td {
+  border: 1px solid #64748b;
+  padding: 3px 10px;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.math-freq-table th {
+  background: #f1f5f9;
+  font-weight: 700;
+}
+
+.math-freq-table tr:last-child {
+  font-weight: 700;
+  background: #f8fafc;
+}
+
+/* 印刷用調整 */
+@media print {
+  .problem-figure-container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .problem-figure-container svg {
+    max-height: 120px;
+  }
+  .math-freq-table {
+    border-color: #000;
+  }
+  .math-freq-table th,
+  .math-freq-table td {
+    border-color: #000;
+  }
+}

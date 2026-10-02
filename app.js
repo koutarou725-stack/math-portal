@@ -2654,6 +2654,174 @@ function insertGeometryToWorksheet() {
 }
 
 // ==========================================
+
+// ========================================================
+// 練習プリント専用 インライン図・表作図エンジン
+// ========================================================
+
+// 1. 一次関数グラフ問題用 SVG (軸・格子点・直線をコンパクトに描画)
+function generateLinearGraphProblemSvg(a, b, width = 190, height = 150) {
+  const halfW = width / 2;
+  const halfH = height / 2;
+  const range = 5;
+  const stepX = (width - 30) / (range * 2);
+  const stepY = (height - 24) / (range * 2);
+
+  let grid = '';
+  for (let i = -range; i <= range; i++) {
+    const x = halfW + i * stepX;
+    const y = halfH - i * stepY;
+    grid += `<line x1="${x}" y1="10" x2="${x}" y2="${height - 10}" stroke="#e2e8f0" stroke-width="1"/>`;
+    grid += `<line x1="10" y1="${y}" x2="${width - 10}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>`;
+  }
+
+  // 軸
+  const axes = `
+    <line x1="8" y1="${halfH}" x2="${width - 8}" y2="${halfH}" stroke="#334155" stroke-width="1.5"/>
+    <text x="${width - 12}" y="${halfH + 13}" font-size="11" font-style="italic" font-family="serif">x</text>
+    <line x1="${halfW}" y1="${height - 8}" x2="${halfW}" y2="8" stroke="#334155" stroke-width="1.5"/>
+    <text x="${halfW - 13}" y="14" font-size="11" font-style="italic" font-family="serif">y</text>
+    <text x="${halfW - 11}" y="${halfH + 12}" font-size="10" font-style="italic" font-family="serif">O</text>
+  `;
+
+  // 直線
+  const x1 = -range, x2 = range;
+  const y1 = a * x1 + b, y2 = a * x2 + b;
+  const px1 = halfW + x1 * stepX, py1 = halfH - y1 * stepY;
+  const px2 = halfW + x2 * stepX, py2 = halfH - y2 * stepY;
+  const line = `<line x1="${px1}" y1="${py1}" x2="${px2}" y2="${py2}" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round"/>`;
+
+  // 切片と整数通過点プロット
+  const intPy = halfH - b * stepY;
+  let points = `<circle cx="${halfW}" cy="${intPy}" r="3.2" fill="#dc2626"/>`;
+  if (b !== 0) {
+    points += `<text x="${halfW + 4}" y="${intPy - 3}" font-size="10" font-weight="bold" fill="#dc2626">${b}</text>`;
+  }
+  // もう1点 (x=1 or x=2)
+  const xPt = (a > 0 ? 1 : (a < 0 ? -1 : 2));
+  const yPt = a * xPt + b;
+  if (Math.abs(yPt) <= range) {
+    const ptX = halfW + xPt * stepX;
+    const ptY = halfH - yPt * stepY;
+    points += `<circle cx="${ptX}" cy="${ptY}" r="3" fill="#2563eb"/>`;
+    points += `<text x="${ptX + 4}" y="${ptY - 3}" font-size="9" fill="#1e3a8a">(${xPt},${yPt})</text>`;
+  }
+
+  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="border:1px solid #cbd5e1;background:#fff;border-radius:4px;">${grid}${axes}${line}${points}</svg>`;
+}
+
+// 2. 相似な三角形 (ピラミッド型 DE // BC)
+function generateSimilarityTriangleSvg(ad, db, ae, ec, de, bc, unknownVar = 'x', width = 180, height = 130) {
+  const topX = width / 2, topY = 16;
+  const leftX = 25, leftY = height - 16;
+  const rightX = width - 25, rightY = height - 16;
+  const ratio = ad / (ad + db);
+  const midLeftX = topX + (leftX - topX) * ratio;
+  const midLeftY = topY + (leftY - topY) * ratio;
+  const midRightX = topX + (rightX - topX) * ratio;
+  const midRightY = topY + (rightY - topY) * ratio;
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="background:#fff;">
+      <polygon points="${topX},${topY} ${leftX},${leftY} ${rightX},${rightY}" fill="none" stroke="#1e293b" stroke-width="1.8"/>
+      <line x1="${midLeftX}" y1="${midLeftY}" x2="${midRightX}" y2="${midRightY}" stroke="#2563eb" stroke-width="2"/>
+      <!-- 平行マーク -->
+      <polygon points="${(midLeftX+midRightX)/2 - 4},${midLeftY - 3} ${(midLeftX+midRightX)/2 + 2},${midLeftY} ${(midLeftX+midRightX)/2 - 4},${midLeftY + 3}" fill="#2563eb"/>
+      <polygon points="${(leftX+rightX)/2 - 4},${leftY - 3} ${(leftX+rightX)/2 + 2},${leftY} ${(leftX+rightX)/2 - 4},${leftY + 3}" fill="#1e293b"/>
+      <!-- 頂点ラベル -->
+      <text x="${topX - 4}" y="${topY - 4}" font-size="11" font-weight="bold">A</text>
+      <text x="${leftX - 12}" y="${leftY + 12}" font-size="11" font-weight="bold">B</text>
+      <text x="${rightX + 4}" y="${rightY + 12}" font-size="11" font-weight="bold">C</text>
+      <text x="${midLeftX - 14}" y="${midLeftY + 4}" font-size="10" font-weight="bold" fill="#2563eb">D</text>
+      <text x="${midRightX + 4}" y="${midRightY + 4}" font-size="10" font-weight="bold" fill="#2563eb">E</text>
+      <!-- 長さラベル -->
+      <text x="${(topX + midLeftX)/2 - 14}" y="${(topY + midLeftY)/2 + 2}" font-size="10" fill="#0f172a">${ad}</text>
+      <text x="${(midLeftX + leftX)/2 - 14}" y="${(midLeftY + leftY)/2 + 2}" font-size="10" fill="#0f172a">${db}</text>
+      <text x="${(midLeftX + midRightX)/2 - 4}" y="${midLeftY - 5}" font-size="10" font-weight="bold" fill="#dc2626">${de === 'x' ? 'x' : de}</text>
+      <text x="${(leftX + rightX)/2 - 4}" y="${leftY + 13}" font-size="10" font-weight="bold" fill="#0f172a">${bc === 'x' ? 'x' : bc}</text>
+    </svg>
+  `;
+}
+
+// 3. 直角三角形 (三平方の定理用 SVG)
+function generatePythagorasTriangleSvg(a, b, c, unknownSide = 'c', width = 160, height = 120) {
+  const oX = 35, oY = height - 25;
+  const bX = width - 25, bY = oY;
+  const aX = oX, aY = 20;
+
+  const aLabel = unknownSide === 'a' ? 'x' : a;
+  const bLabel = unknownSide === 'b' ? 'x' : b;
+  const cLabel = unknownSide === 'c' ? 'x' : c;
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="background:#fff;">
+      <polygon points="${oX},${oY} ${bX},${bY} ${aX},${aY}" fill="none" stroke="#1e293b" stroke-width="1.8"/>
+      <!-- 直角記号 -->
+      <polyline points="${oX},${oY - 12} ${oX + 12},${oY - 12} ${oX + 12},${oY}" fill="none" stroke="#1e293b" stroke-width="1.2"/>
+      <!-- 辺の長さラベル -->
+      <text x="${oX - 16}" y="${(oY + aY)/2 + 4}" font-size="11" font-weight="bold" fill="${unknownSide === 'a' ? '#dc2626' : '#0f172a'}">${aLabel}</text>
+      <text x="${(oX + bX)/2 - 4}" y="${oY + 15}" font-size="11" font-weight="bold" fill="${unknownSide === 'b' ? '#dc2626' : '#0f172a'}">${bLabel}</text>
+      <text x="${(aX + bX)/2 + 4}" y="${(aY + bY)/2 - 4}" font-size="11" font-weight="bold" fill="${unknownSide === 'c' ? '#dc2626' : '#0f172a'}">${cLabel}</text>
+    </svg>
+  `;
+}
+
+// 4. 箱ひげ図 SVG (2クラス比較)
+function generateBoxplotCompareSvg(labelA, qA, labelB, qB, minVal, maxVal, width = 220, height = 100) {
+  const padL = 35, padR = 15;
+  const plotW = width - padL - padR;
+  const toX = (val) => padL + ((val - minVal) / (maxVal - minVal)) * plotW;
+
+  const drawBox = (y, q, color) => {
+    const xMin = toX(q[0]), xQ1 = toX(q[1]), xMed = toX(q[2]), xQ3 = toX(q[3]), xMax = toX(q[4]);
+    return `
+      <!-- ひげ -->
+      <line x1="${xMin}" y1="${y}" x2="${xQ1}" y2="${y}" stroke="${color}" stroke-width="1.5"/>
+      <line x1="${xQ3}" y1="${y}" x2="${xMax}" y2="${y}" stroke="${color}" stroke-width="1.5"/>
+      <line x1="${xMin}" y1="${y-6}" x2="${xMin}" y2="${y+6}" stroke="${color}" stroke-width="1.5"/>
+      <line x1="${xMax}" y1="${y-6}" x2="${xMax}" y2="${y+6}" stroke="${color}" stroke-width="1.5"/>
+      <!-- 箱 -->
+      <rect x="${xQ1}" y="${y-10}" width="${xQ3 - xQ1}" height="20" fill="none" stroke="${color}" stroke-width="1.8"/>
+      <!-- 中央値 -->
+      <line x1="${xMed}" y1="${y-10}" x2="${xMed}" y2="${y+10}" stroke="#dc2626" stroke-width="2"/>
+    `;
+  };
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="background:#fff;border:1px solid #e2e8f0;border-radius:4px;">
+      <!-- ラベル -->
+      <text x="6" y="28" font-size="10" font-weight="bold">${labelA}</text>
+      <text x="6" y="62" font-size="10" font-weight="bold">${labelB}</text>
+      ${drawBox(25, qA, '#2563eb')}
+      ${drawBox(59, qB, '#059669')}
+      <!-- 目盛り軸 -->
+      <line x1="${padL}" y1="80" x2="${width - padR}" y2="80" stroke="#64748b" stroke-width="1"/>
+      <text x="${toX(minVal) - 4}" y="93" font-size="9" fill="#64748b">${minVal}</text>
+      <text x="${toX((minVal+maxVal)/2) - 6}" y="93" font-size="9" fill="#64748b">${Math.round((minVal+maxVal)/2)}</text>
+      <text x="${toX(maxVal) - 6}" y="93" font-size="9" fill="#64748b">${maxVal}</text>
+    </svg>
+  `;
+}
+
+// 5. 度数分布表 HTML テーブル生成
+function generateFrequencyTableHtml(classes, freqs, total) {
+  let rows = '';
+  for (let i = 0; i < classes.length; i++) {
+    rows += `<tr><td>${classes[i]}</td><td>${freqs[i]}</td></tr>`;
+  }
+  return `
+    <table class="math-freq-table">
+      <thead>
+        <tr><th>階級 (cm)</th><th>度数 (人)</th></tr>
+      </thead>
+      <tbody>
+        ${rows}
+        <tr><td>合計</td><td>${total}</td></tr>
+      </tbody>
+    </table>
+  `;
+}
+
 // 練習プリント・小テスト自動生成システム (全学年・全4領域対応)
 // ==========================================
 
@@ -4158,60 +4326,691 @@ const problemGenerators = {
     };
   },
 
-  g3_sample_estimation: () => {
-    const blackPut = 100;
-    const sampled = 50;
-    const sampleBlack = 5;
-    const totalEst = (blackPut * sampled) / sampleBlack;
-    const whiteEst = totalEst - blackPut;
+  // --- 中1: データの活用 (度数分布表) ---
+  g1_data_frequency_table: () => {
+    const minVal = pickRandom([140, 145, 150]);
+    const step = 5;
+    const classes = [
+      `${minVal} 以上 ${minVal + step} 未満`,
+      `${minVal + step} 以上 ${minVal + step * 2} 未満`,
+      `${minVal + step * 2} 以上 ${minVal + step * 3} 未満`,
+      `${minVal + step * 3} 以上 ${minVal + step * 4} 未満`
+    ];
+    const f1 = randInt(3, 7);
+    const f2 = randInt(8, 14); // 最頻値
+    const f3 = randInt(6, 11);
+    const f4 = randInt(2, 5);
+    const freqs = [f1, f2, f3, f4];
+    const total = f1 + f2 + f3 + f4;
+    const modeClassMid = minVal + step + step / 2; // 階級値
+    const tableHtml = generateFrequencyTableHtml(classes, freqs, total);
+
     return {
-      q: `袋の中に大量の白い碁石が入っています。そこに黒い碁石を ${blackPut}個 入れてよくかき混ぜた後、無作為に ${sampled}個 抽出したところ、黒い碁石が ${sampleBlack}個 含まれていました。袋の中に最初に入っていた白い碁石はおよそ何個と推定されますか。`,
-      ans: `およそ ${whiteEst} 個`,
-      exp: `全体の碁石数を N個 とすると、N : ${blackPut} ＝ ${sampled} : ${sampleBlack} より N ＝ ${totalEst}。最初に入っていた白碁石は ${totalEst} － ${blackPut} ＝ ${whiteEst}個`
+      level: 2,
+      q: `右の度数分布表は、あるクラスの生徒の身長をまとめたものです。最も度数の多い階級の「階級値」を求めなさい。`,
+      ans: `${modeClassMid} cm`,
+      figureHtml: tableHtml,
+      steps: [
+        `度数が最も多い階級は「${classes[1]}」 (度数: ${f2}人)`,
+        `階級値 ＝ (階級の下限 ＋ 上限) ÷ 2 ＝ (${minVal + step} ＋ ${minVal + step * 2}) ÷ 2 ＝ ${modeClassMid} cm`,
+        `答: ${modeClassMid} cm`
+      ],
+      exp: `最頻値（モード）の階級は度数が最大（${f2}人）の「${classes[1]}」です。階級値はその中央の値なので ${modeClassMid} cm です。`
+    };
+  },
+
+  // --- 中2: 連立方程式 文章題 (完全ランダム化) ---
+  g2_simul_word: () => {
+    const type = pickRandom(['fruits', 'speed']);
+    if (type === 'fruits') {
+      const priceA = pickRandom([120, 140, 150, 160, 180]); // りんご
+      const priceB = pickRandom([60, 70, 80, 90, 100]);   // みかん
+      const countA = randInt(2, 4);
+      const countB = randInt(3, 5);
+      const total1 = countA * priceA + countB * priceB;
+      const countA2 = countA + 1;
+      const countB2 = countB - 1;
+      const total2 = countA2 * priceA + countB2 * priceB;
+
+      return {
+        level: 3,
+        q: `りんご 1個とみかん 1個の値段をそれぞれ求めなさい。<br>・りんご ${countA}個とみかん ${countB}個を買うと代金は ${total1}円 です。<br>・りんご ${countA2}個とみかん ${countB2}個を買うと代金は ${total2}円 です。`,
+        ans: `りんご: ${priceA} 円 ,  みかん: ${priceB} 円`,
+        steps: [
+          `りんご1個を x 円、みかん1個を y 円とおく`,
+          `連立方程式: { ${countA}x ＋ ${countB}y ＝ ${total1},  ${countA2}x ＋ ${countB2}y ＝ ${total2} }`,
+          `加減法で解く: x ＝ ${priceA}, y ＝ ${priceB}`,
+          `答: りんご ${priceA} 円 ,  みかん ${priceB} 円`
+        ],
+        exp: `りんご x 円、みかん y 円として連立方程式を立てて解きます。`
+      };
+    } else {
+      const dist = pickRandom([1800, 2400, 3000]); // m
+      const speedWalk = 60; // m/min
+      const speedRun = 150; // m/min
+      const timeWalk = pickRandom([10, 15, 20]);
+      const distWalk = speedWalk * timeWalk;
+      const distRun = dist - distWalk;
+      const timeRun = distRun / speedRun;
+      const totalTime = timeWalk + timeRun;
+
+      return {
+        level: 4,
+        q: `家から ${dist}m 離れた駅へ向かいました。初めは分速 ${speedWalk}m で歩き、途中から分速 ${speedRun}m で走ったところ、全体で ${totalTime}分 かかりました。歩いた時間と走った時間をそれぞれ求めなさい。`,
+        ans: `歩いた時間: ${timeWalk} 分 ,  走った時間: ${timeRun} 分`,
+        steps: [
+          `歩いた時間を x 分、走った時間を y 分とおく`,
+          `時間の関係式: x ＋ y ＝ ${totalTime}`,
+          `道のりの関係式: ${speedWalk}x ＋ ${speedRun}y ＝ ${dist}`,
+          `連立方程式を解いて: x ＝ ${timeWalk}, y ＝ ${timeRun}`,
+          `答: 歩いた時間 ${timeWalk} 分 ,  走った時間 ${timeRun} 分`
+        ],
+        exp: `時間の方程式と道のりの方程式を連立させて解きます。`
+      };
+    }
+  },
+
+  // --- 中2: 一次関数 グラフ読み取り (SVG図つき) ---
+  g2_lfunc_graph_read: () => {
+    const a = randNonZero(-3, 3);
+    const b = randInt(-3, 3);
+    const svg = generateLinearGraphProblemSvg(a, b, 190, 150);
+    const aTerm = formatTerm(a, 'x', true);
+    const bStr = b !== 0 ? (b > 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`) : '';
+    const ansEq = `y ＝ ${aTerm} ${bStr}`.trim();
+
+    return {
+      level: 2,
+      q: `右の図の直線について、その直線の式を求めなさい。`,
+      ans: ansEq,
+      figureHtml: svg,
+      steps: [
+        `y 軸との交点より、切片は b ＝ ${b}`,
+        `グラフから直線の傾き a ＝ (yの増加量)/(xの増加量) を読み取ると a ＝ ${a}`,
+        `よって直線の式は y ＝ ${aTerm} ${bStr}`,
+        `答: ${ansEq}`
+      ],
+      exp: `グラフの y 軸との交点から切片 ${b} を読み取り、通る点の座標から傾き ${a} を求めます。`
+    };
+  },
+
+  // --- 中2: 平行線と角 (SVG図つき) ---
+  g2_geom_parallel_chevron: () => {
+    const a1 = randInt(35, 65);
+    const a2 = randInt(25, 55);
+    const ans = a1 + a2;
+    const svg = generateParallelChevronSvg(a1, a2, 190, 140);
+    return {
+      level: 2,
+      q: `右の図において、直線 l // m のとき、折れ曲がった角 ∠x の大きさを求めなさい。`,
+      ans: `∠x ＝ ${ans}°`,
+      figureHtml: svg,
+      steps: [
+        `折れ曲がり点を通る、l, m に平行な補助線を引く`,
+        `平行線の錯角は等しいので、上側の角は ${a1}°、下側の角は ${a2}°`,
+        `2つの角を合わせて: ∠x ＝ ${a1}° ＋ ${a2}° ＝ ${ans}°`,
+        `答: ∠x ＝ ${ans}°`
+      ],
+      exp: `平行線の錯角を利用して、∠x ＝ ${a1}° ＋ ${a2}° ＝ ${ans}° となります。`
+    };
+  },
+
+  // --- 中2: 三角形の外角 (SVG図つき) ---
+  g2_geom_triangle_fig: () => {
+    const a1 = randInt(40, 65);
+    const a2 = randInt(45, 75);
+    const ext = a1 + a2;
+    const svg = generateTriangleExteriorSvg(a1, a2, 190, 140);
+    return {
+      level: 1,
+      q: `右の図の三角形において、外角 ∠x の大きさを求めなさい。`,
+      ans: `∠x ＝ ${ext}°`,
+      figureHtml: svg,
+      steps: [
+        `三角形の外角の性質: 1つの外角の大きさは、それと隣り合わない2つの内角の和に等しい`,
+        `∠x ＝ ${a1}° ＋ ${a2}° ＝ ${ext}°`,
+        `答: ∠x ＝ ${ext}°`
+      ],
+      exp: `外角の定理より、∠x ＝ ${a1}° ＋ ${a2}° ＝ ${ext}° です。`
+    };
+  },
+
+  // --- 中2: 特別な四角形 (完全ランダム化) ---
+  g2_quad_special: () => {
+    const p = pickRandom([0, 1, 2]);
+    if (p === 0) {
+      return {
+        level: 1,
+        q: `四角形について、次の文の空欄に適する四角形の名称を答えなさい。<br>「平行四辺形のうち、4つの辺がすべて等しいものを ( ① ) といい、対角線が ( ② ) に交わる。」`,
+        ans: `① ひし形 ,  ② 垂直`,
+        steps: [
+          `4辺が等しい平行四辺形の定義 ＝ ひし形`,
+          `ひし形の対角線の性質 ＝ 垂直に交わる`,
+          `答: ① ひし形 ,  ② 垂直`
+        ],
+        exp: `ひし形は4辺が等しい四角形で、対角線が垂直に交わります。`
+      };
+    } else if (p === 1) {
+      return {
+        level: 1,
+        q: `四角形について、次の文の空欄に適する語句・四角形の名称を答えなさい。<br>「平行四辺形のうち、4つの角がすべて等しいものを ( ① ) といい、2本の対角線の ( ② ) が等しい。」`,
+        ans: `① 長方形 ,  ② 長さ`,
+        steps: [
+          `4つの角が等しい平行四辺形 ＝ 長方形`,
+          `長方形の対角線の性質 ＝ 長さが等しい`,
+          `答: ① 長方形 ,  ② 長さ`
+        ],
+        exp: `長方形は4つの角がすべて直角（90°）の四角形で、対角線の長さが等しいです。`
+      };
+    } else {
+      return {
+        level: 2,
+        q: `ひし形の性質と長方形の性質をあわせもち、4つの辺がすべて等しく、4つの角もすべて等しい四角形の名称を答えなさい。`,
+        ans: `正方形`,
+        steps: [
+          `4辺が等しく(ひし形の条件)、4角が等しい(長方形の条件)四角形 ＝ 正方形`,
+          `答: 正方形`
+        ],
+        exp: `正方形はひし形と長方形の両方の性質を持ちます。`
+      };
+    }
+  },
+
+  // --- 中2: 確率 (玉の取り出し・完全ランダム化) ---
+  g2_prob_balls: () => {
+    const red = pickRandom([3, 4]);
+    const white = pickRandom([2, 3]);
+    const total = red + white;
+    const totalPairs = (total * (total - 1)) / 2;
+    const whitePairs = (white * (white - 1)) / 2;
+    const atLeastOneRed = totalPairs - whitePairs;
+    const frac = simplifyFraction(atLeastOneRed, totalPairs);
+
+    return {
+      level: 3,
+      q: `赤玉が ${red}個、白玉が ${white}個 入っている袋から、同時に 2個の玉を取り出すとき、少なくとも 1個は赤玉である確率を求めなさい。`,
+      ans: `${frac}`,
+      steps: [
+        `すべての取り出し方: ${total}個から2個選ぶ ＝ (${total}×${total-1})÷2 ＝ ${totalPairs} 通り`,
+        `2個とも白玉になる取り出し方: (${white}×${white-1})÷2 ＝ ${whitePairs} 通り`,
+        `少なくとも1個赤 ＝ 1 － (2個とも白の確率) ＝ 1 － ${whitePairs}/${totalPairs} ＝ ${atLeastOneRed}/${totalPairs} ＝ ${frac}`,
+        `答: ${frac}`
+      ],
+      exp: `余事象（2個とも白玉）を全体の1から引いて求めます: 1 － (${whitePairs}/${totalPairs}) ＝ ${frac}`
+    };
+  },
+
+  // --- 中2: 箱ひげ図分析 (SVG図つき完全ランダム化) ---
+  g2_data_boxplot_svg: () => {
+    const medA = randInt(22, 28);
+    const qA = [medA - 12, medA - 6, medA, medA + 7, medA + 16];
+    const medB = medA + pickRandom([-4, 4]);
+    const qB = [medB - 10, medB - 5, medB, medB + 6, medB + 14];
+    const minVal = Math.min(qA[0], qB[0]) - 2;
+    const maxVal = Math.max(qA[4], qB[4]) + 2;
+
+    const svg = generateBoxplotCompareSvg('A組', qA, 'B組', qB, minVal, maxVal, 220, 100);
+    const ansGroup = medA > medB ? 'A組' : 'B組';
+
+    return {
+      level: 2,
+      q: `右の図は、A組とB組のハンドボール投げの記録を表した箱ひげ図です。中央値（第2四分位数）が大きいのはどちらの組ですか。また、A組の第3四分位数を答えなさい。`,
+      ans: `中央値が大きい組: ${ansGroup} ,  A組の第3四分位数: ${qA[3]} m`,
+      figureHtml: svg,
+      steps: [
+        `箱の中の仕切り線（赤線）が中央値を表す: A組 ＝ ${medA}m, B組 ＝ ${medB}m → ${ansGroup} の方が大きい`,
+        `箱の右端の線が第3四分位数(Q3)を表す: A組 ＝ ${qA[3]}m`,
+        `答: 中央値が大きい組: ${ansGroup} ,  A組の第3四分位数: ${qA[3]} m`
+      ],
+      exp: `箱ひげ図の中央線が中央値、箱の右端が第3四分位数を示します。`
+    };
+  },
+
+  // --- 中3: 平方根の乗除 (完全ランダム化) ---
+  g3_sqrt_mul_div: () => {
+    const p = pickRandom([0, 1]);
+    if (p === 0) {
+      const base = pickRandom([2, 3, 5]);
+      const c = pickRandom([2, 3]);
+      const a = base * c;
+      const b = base;
+      return {
+        level: 2,
+        q: `次の計算をしなさい。<br><span class="problem-body-math">√${a} × √${b}</span>`,
+        ans: `${base}√${c}`,
+        steps: [
+          `√${a} × √${b} ＝ √(${a} × ${b}) ＝ √(${a * b})`,
+          `根号の中を素因数分解: ${a * b} ＝ ${base}² × ${c}`,
+          `＝ ${base}√${c}`,
+          `答: ${base}√${c}`
+        ],
+        exp: `√${a} × √${b} ＝ √${a * b} ＝ ${base}√${c}`
+      };
+    } else {
+      const b = pickRandom([2, 3, 5]);
+      const k = pickRandom([2, 3, 4]);
+      const a = k * b;
+      return {
+        level: 2,
+        q: `次の数の分母を有理化しなさい。<br><span class="problem-body-math">${a} / √${b}</span>`,
+        ans: `${k}√${b}`,
+        steps: [
+          `分母と分子に √${b} をかける: (${a} × √${b}) / (√${b} × √${b})`,
+          `＝ (${a}√${b}) / ${b}`,
+          `約分する: ＝ ${k}√${b}`,
+          `答: ${k}√${b}`
+        ],
+        exp: `分母と分子に √${b} をかけて有理化します: ${a}/√${b} ＝ ${k}√${b}`
+      };
+    }
+  },
+
+  // --- 中3: 平方根の加減・展開 (完全ランダム化) ---
+  g3_sqrt_add_sub: () => {
+    const p = pickRandom([0, 1]);
+    if (p === 0) {
+      const base = pickRandom([2, 3]);
+      const c1 = randInt(2, 4);
+      const c2 = randInt(1, 3);
+      const val1 = c1 * c1 * base;
+      const sumCoeff = c1 + c2;
+      return {
+        level: 2,
+        q: `次の計算をしなさい。<br><span class="problem-body-math">√${val1} ＋ ${c2}√${base}</span>`,
+        ans: `${sumCoeff}√${base}`,
+        steps: [
+          `√${val1} を a√b の形に変形: √${val1} ＝ ${c1}√${base}`,
+          `同類項をまとめる: ${c1}√${base} ＋ ${c2}√${base} ＝ (${c1} ＋ ${c2})√${base} ＝ ${sumCoeff}√${base}`,
+          `答: ${sumCoeff}√${base}`
+        ],
+        exp: `√${val1} ＝ ${c1}√${base} に変形して加算します。`
+      };
+    } else {
+      const a = pickRandom([5, 6, 7]);
+      const b = randInt(1, 3);
+      const ans = a - b * b;
+      return {
+        level: 3,
+        q: `次の式を展開して計算しなさい。<br><span class="problem-body-math">(√${a} ＋ ${b})(√${a} － ${b})</span>`,
+        ans: `${ans}`,
+        steps: [
+          `公式 (x＋y)(x－y) ＝ x² － y² を利用`,
+          `＝ (√${a})² － ${b}²`,
+          `＝ ${a} － ${b * b} ＝ ${ans}`,
+          `答: ${ans}`
+        ],
+        exp: `(√${a}＋${b})(√${a}－${b}) ＝ (√${a})² － ${b}² ＝ ${a} － ${b*b} ＝ ${ans}`
+      };
+    }
+  },
+
+  // --- 中3: 二次方程式 解の公式 (完全ランダム化) ---
+  g3_qeq_formula_method: () => {
+    const list = [
+      { a: 1, b: 3, c: -1, d: 13 },
+      { a: 1, b: 5, c: 1, d: 21 },
+      { a: 1, b: -3, c: -2, d: 17 },
+      { a: 2, b: 5, c: 1, d: 17 },
+      { a: 2, b: 3, c: -1, d: 17 },
+      { a: 3, b: -1, c: -1, d: 13 }
+    ];
+    const item = pickRandom(list);
+    const a = item.a, b = item.b, c = item.c, d = item.d;
+    const aTerm = a === 1 ? 'x²' : `${a}x²`;
+    const bTerm = b > 0 ? `＋ ${b}x` : `－ ${Math.abs(b)}x`;
+    const cTerm = c > 0 ? `＋ ${c}` : `－ ${Math.abs(c)}`;
+    const negB = -b;
+    const den = 2 * a;
+    const ansStr = den === 2 ? `(${negB} ± √${d}) / 2` : `(${negB} ± √${d}) / ${den}`;
+
+    return {
+      level: 3,
+      q: `二次方程式 <span class="problem-body-math">${aTerm} ${bTerm} ${cTerm} ＝ 0</span> を解きなさい。`,
+      ans: `x ＝ ${ansStr}`,
+      steps: [
+        `解の公式 x ＝ (-b ± √(b² - 4ac)) / 2a を適用`,
+        `a ＝ ${a}, b ＝ ${b}, c ＝ ${c} を代入`,
+        `x ＝ (-(${b}) ± √((${b})² - 4×${a}×(${c}))) / (2×${a})`,
+        `＝ (${negB} ± √(${b*b} ＋ ${-4*a*c})) / ${den} ＝ (${negB} ± √${d}) / ${den}`,
+        `答: x ＝ ${ansStr}`
+      ],
+      exp: `解の公式 x ＝ (-b ± √(b²-4ac))/(2a) に代入して計算します。`
+    };
+  },
+
+  // --- 中3: 二次方程式 文章題 (完全ランダム化) ---
+  g3_qeq_word: () => {
+    const n = randInt(4, 9);
+    const prod = n * (n + 1);
+    return {
+      level: 4,
+      q: `連続する2つの正の整数があります。この2つの整数の積が ${prod} であるとき、この2つの整数を求めなさい。`,
+      ans: `${n} と ${n + 1}`,
+      steps: [
+        `小さい方の整数を x とおくと、大きい方は x ＋ 1`,
+        `方程式: x(x ＋ 1) ＝ ${prod} → x² ＋ x － ${prod} ＝ 0`,
+        `因数分解: (x － ${n})(x ＋ ${n + 1}) ＝ 0`,
+        `x > 0 より x ＝ ${n}`,
+        `答: ${n} と ${n + 1}`
+      ],
+      exp: `x(x+1) ＝ ${prod} を解いて正の整数 x ＝ ${n} を求めます。`
+    };
+  },
+
+  // --- 中3: 二次関数 変域 (完全ランダム化・0挟み) ---
+  g3_qfunc_domain: () => {
+    const a = randNonZero(-3, 3);
+    const xMin = -randInt(2, 4);
+    const xMax = randInt(1, 3);
+    const yAtMin = a * xMin * xMin;
+    const yAtMax = a * xMax * xMax;
+
+    let yMin, yMax;
+    if (a > 0) {
+      yMin = 0;
+      yMax = Math.max(yAtMin, yAtMax);
+    } else {
+      yMin = Math.min(yAtMin, yAtMax);
+      yMax = 0;
+    }
+
+    const aStr = a === 1 ? '' : a === -1 ? '-' : ('' + a);
+
+    return {
+      level: 3,
+      q: `関数 <span class="problem-body-math">y ＝ ${aStr}x²</span> において、x の変域が <span class="problem-body-math">${xMin} ≦ x ≦ ${xMax}</span> のときの y の変域を求めなさい。`,
+      ans: `${yMin} ≦ y ≦ ${yMax}`,
+      steps: [
+        `放物線の頂点 (0, 0) を x の変域が含んでいることに注目！`,
+        a > 0 ? `a > 0 なので、x ＝ 0 のとき最小値 0` : `a < 0 なので、x ＝ 0 のとき最大値 0`,
+        `x ＝ ${xMin} のとき y ＝ ${a}×(${xMin})² ＝ ${yAtMin}`,
+        `x ＝ ${xMax} のとき y ＝ ${a}×(${xMax})² ＝ ${yAtMax}`,
+        `答: ${yMin} ≦ y ≦ ${yMax}`
+      ],
+      exp: `xの変域が0を挟むため、${a > 0 ? '最小値は0' : '最大値は0'}となります。`
+    };
+  },
+
+  // --- 中3: 相似比と線分 (完全ランダム化) ---
+  g3_sim_ratio: () => {
+    const m = pickRandom([2, 3, 4]);
+    let n = pickRandom([3, 5]);
+    if (m === n) n = m + 1;
+    const mult = randInt(2, 4);
+    const ab = m * mult;
+    const de = n * mult;
+
+    return {
+      level: 1,
+      q: `相似比が ${m} : ${n} である相似な2つの三角形 ABC と DEF があります。AB ＝ ${ab}cm のとき、対応する辺 DE の長さを求めなさい。`,
+      ans: `${de} cm`,
+      steps: [
+        `対応する辺の比は相似比に等しい: AB : DE ＝ ${m} : ${n}`,
+        `比例式: ${ab} : DE ＝ ${m} : ${n}`,
+        `${m} × DE ＝ ${ab} × ${n} → DE ＝ ${de} cm`,
+        `答: ${de} cm`
+      ],
+      exp: `${m} : ${n} ＝ ${ab} : DE より DE ＝ ${de} cm です。`
+    };
+  },
+
+  // --- 中3: 相似な三角形 (ピラミッド型SVG図つき) ---
+  g3_sim_triangle_fig: () => {
+    const adVal = 4;
+    const dbVal = 2;
+    const deVal = pickRandom([3, 5, 6]);
+    // AD : AB = DE : BC -> 4 : 6 = deVal : bcVal -> bcVal = deVal * 1.5
+    const bcVal = (deVal * 6) / 4;
+    const svg = generateSimilarityTriangleSvg(adVal, dbVal, 'c', 'd', deVal, 'x', 'x', 180, 130);
+
+    return {
+      level: 2,
+      q: `右の図において、DE // BC のとき、線分 BC の長さを求めなさい。`,
+      ans: `BC ＝ ${bcVal} cm`,
+      figureHtml: svg,
+      steps: [
+        `DE // BC より △ADE ∽ △ABC (2組の角がそれぞれ等しい)`,
+        `対応する辺の比: AD : AB ＝ DE : BC`,
+        `AD ＝ ${adVal}, AB ＝ ${adVal} ＋ ${dbVal} ＝ ${adVal + dbVal}`,
+        `${adVal} : ${adVal + dbVal} ＝ ${deVal} : x → ${adVal}x ＝ ${(adVal + dbVal) * deVal} → x ＝ ${bcVal}`,
+        `答: BC ＝ ${bcVal} cm`
+      ],
+      exp: `△ADE ∽ △ABC より AD : AB ＝ DE : BC を解いて ${bcVal} cm を求めます。`
+    };
+  },
+
+  // --- 中3: 相似 面積比・体積比 (完全ランダム化) ---
+  g3_sim_area_volume: () => {
+    const m = pickRandom([1, 2, 3]);
+    const n = m + pickRandom([1, 2]);
+    const areaM = m * m, areaN = n * n;
+    const volM = m * m * m, volN = n * n * n;
+
+    return {
+      level: 2,
+      q: `相似な2つの立体 P と Q があり、その相似比は ${m} : ${n} です。<br>(1) P と Q の表面積の比を求めなさい。<br>(2) P と Q の体積の比を求めなさい。`,
+      ans: `(1) ${areaM} : ${areaN} ,  (2) ${volM} : ${volN}`,
+      steps: [
+        `(1) 相似比 m : n のとき、面積比は m² : n² ＝ ${m}² : ${n}² ＝ ${areaM} : ${areaN}`,
+        `(2) 相似比 m : n のとき、体積比は m³ : n³ ＝ ${m}³ : ${n}³ ＝ ${volM} : ${volN}`,
+        `答: (1) ${areaM} : ${areaN} ,  (2) ${volM} : ${volN}`
+      ],
+      exp: `相似比 m:n に対し、面積比は m²:n²、体積比は m³:n³ となります。`
+    };
+  },
+
+  // --- 中3: 円周角 (SVG図つき) ---
+  g3_circle_angle_fig: () => {
+    const ans = randInt(35, 65);
+    const center = ans * 2;
+    const svg = generateInscribedAngleSvg(ans, 180, 160);
+    return {
+      level: 2,
+      q: `右の図において、円Oの円周角 ∠x の大きさを求めなさい。`,
+      ans: `∠x ＝ ${ans}°`,
+      figureHtml: svg,
+      steps: [
+        `円周角の定理: 1つの弧に対する円周角の大きさは中心角の半分`,
+        `∠x ＝ ${center}° ÷ 2 ＝ ${ans}°`,
+        `答: ∠x ＝ ${ans}°`
+      ],
+      exp: `円周角は中心角の半分なので ${center}° ÷ 2 ＝ ${ans}° です。`
+    };
+  },
+
+  // --- 中3: 三平方の定理 (SVG図つき完全ランダム化) ---
+  g3_pyth_triangle_fig: () => {
+    const triplets = [
+      { a: 3, b: 4, c: 5 },
+      { a: 6, b: 8, c: 10 },
+      { a: 5, b: 12, c: 13 }
+    ];
+    const item = pickRandom(triplets);
+    const unknown = pickRandom(['c', 'b']);
+    const svg = generatePythagorasTriangleSvg(item.a, item.b, item.c, unknown, 160, 120);
+    const ansVal = unknown === 'c' ? item.c : item.b;
+
+    return {
+      level: 2,
+      q: `右の直角三角形において、辺 x の長さを求めなさい。`,
+      ans: `x ＝ ${ansVal} cm`,
+      figureHtml: svg,
+      steps: [
+        `三平方の定理: a² ＋ b² ＝ c² (直角をはさむ2辺の平方の和は斜辺の平方に等しい)`,
+        unknown === 'c' ? `x² ＝ ${item.a}² ＋ ${item.b}² ＝ ${item.a*item.a} ＋ ${item.b*item.b} ＝ ${ansVal*ansVal} → x ＝ ${ansVal}` : `x² ＝ ${item.c}² － ${item.a}² ＝ ${item.c*item.c} － ${item.a*item.a} ＝ ${ansVal*ansVal} → x ＝ ${ansVal}`,
+        `答: x ＝ ${ansVal} cm`
+      ],
+      exp: `三平方の定理より x ＝ ${ansVal} cm です。`
+    };
+  },
+
+  // --- 中3: 特別な直角三角形の比 (完全ランダム化) ---
+  g3_pyth_special_ratios: () => {
+    const p = pickRandom([0, 1]);
+    if (p === 0) {
+      const a = randInt(2, 6);
+      return {
+        level: 2,
+        q: `直角二等辺三角形の直角をはさむ2辺の長さがともに ${a}cm のとき、斜辺の長さを求めなさい。`,
+        ans: `${a}√2 cm`,
+        steps: [
+          `45°, 45°, 90° の直角二等辺三角形の辺の比は 1 : 1 : √2`,
+          `斜辺 ＝ ${a} × √2 ＝ ${a}√2 cm`,
+          `答: ${a}√2 cm`
+        ],
+        exp: `1 : 1 : √2 の比を利用して斜辺 ${a}√2 cm を求めます。`
+      };
+    } else {
+      const a = randInt(2, 5);
+      const hyp = 2 * a;
+      return {
+        level: 2,
+        q: `3つの内角が 30°, 60°, 90° の直角三角形において、最も短い辺が ${a}cm のとき、斜辺の長さを求めなさい。`,
+        ans: `${hyp} cm`,
+        steps: [
+          `30°, 60°, 90° の直角三角形の辺の比は 1 : 2 : √3 (斜辺は最も短い辺の2倍)`,
+          `斜辺 ＝ ${a} × 2 ＝ ${hyp} cm`,
+          `答: ${hyp} cm`
+        ],
+        exp: `1 : 2 : √3 の比より、斜辺は最短辺の2倍の ${hyp} cm です。`
+      };
+    }
+  },
+
+  // --- 中3: 標本調査 (完全ランダム化) ---
+  g3_sample_estimation: () => {
+    const black = pickRandom([100, 200, 300]);
+    const sampled = pickRandom([50, 60, 80]);
+    const sampleBlack = pickRandom([5, 8, 10]);
+    const totalEst = Math.round((black * sampled) / sampleBlack);
+    const whiteEst = totalEst - black;
+
+    return {
+      level: 3,
+      q: `白の碁石がたくさん入っている袋の中に、黒の碁石を ${black}個 入れてよくかき混ぜました。そこから無作為に ${sampled}個 の碁石を取り出したところ、黒の碁石が ${sampleBlack}個 含まれていました。最初に入っていた白の碁石はおよそ何個と推定されますか。四捨五入して百の位までの概数で答えなさい。`,
+      ans: `約 ${Math.round(whiteEst / 100) * 100} 個`,
+      steps: [
+        `全体の碁石の総数を N個 とする`,
+        `標本と母集団の比率: N : ${black} ＝ ${sampled} : ${sampleBlack}`,
+        `${sampleBlack}N ＝ ${black} × ${sampled} → N ＝ ${totalEst} 個`,
+        `白の碁石の数 ＝ ${totalEst} － ${black} ＝ ${whiteEst} ≒ 約 ${Math.round(whiteEst / 100) * 100} 個`,
+        `答: 約 ${Math.round(whiteEst / 100) * 100} 個`
+      ],
+      exp: `標本調査の比例式より、最初に入っていた白碁石は約 ${Math.round(whiteEst / 100) * 100} 個と推定されます。`
     };
   }
 };
 
 // サブユニットIDから該当する問題ジェネレーター関数を取得
-function getGeneratorsForSubUnit(grade, subUnitId) {
-  // 全体ミックスの場合
-  if (subUnitId.includes('all_mix') || subUnitId.includes('_all')) {
-    const prefix = `g${grade}_`;
-    const matchedKeys = Object.keys(problemGenerators).filter(k => k.startsWith(prefix));
-    if (subUnitId.includes('pos_neg')) return matchedKeys.filter(k => k.includes('pos_neg'));
-    if (subUnitId.includes('letters')) return matchedKeys.filter(k => k.includes('letters'));
-    if (subUnitId.includes('eq')) return matchedKeys.filter(k => k.includes('eq'));
-    if (subUnitId.includes('func')) return matchedKeys.filter(k => k.includes('func') || k.includes('prop'));
-    if (subUnitId.includes('plane')) return matchedKeys.filter(k => k.includes('plane'));
-    if (subUnitId.includes('solid')) return matchedKeys.filter(k => k.includes('solid'));
-    if (subUnitId.includes('data')) return matchedKeys.filter(k => k.includes('data'));
-    if (subUnitId.includes('poly')) return matchedKeys.filter(k => k.includes('poly'));
-    if (subUnitId.includes('simul')) return matchedKeys.filter(k => k.includes('simul'));
-    if (subUnitId.includes('lfunc')) return matchedKeys.filter(k => k.includes('lfunc'));
-    if (subUnitId.includes('geom')) return matchedKeys.filter(k => k.includes('geom'));
-    if (subUnitId.includes('quad')) return matchedKeys.filter(k => k.includes('quad'));
-    if (subUnitId.includes('prob')) return matchedKeys.filter(k => k.includes('prob'));
-    if (subUnitId.includes('sqrt')) return matchedKeys.filter(k => k.includes('sqrt'));
-    if (subUnitId.includes('qeq')) return matchedKeys.filter(k => k.includes('qeq'));
-    if (subUnitId.includes('qfunc')) return matchedKeys.filter(k => k.includes('qfunc'));
-    if (subUnitId.includes('sim')) return matchedKeys.filter(k => k.includes('sim'));
-    if (subUnitId.includes('circle')) return matchedKeys.filter(k => k.includes('circle'));
-    if (subUnitId.includes('pyth')) return matchedKeys.filter(k => k.includes('pyth'));
-    if (subUnitId.includes('sample')) return matchedKeys.filter(k => k.includes('sample'));
-    return matchedKeys;
-  }
 
-  // 特定のサブユニットにダイレクト一致
+// ========================================================
+// 単元別ジェネレーター厳密マッピングテーブル
+// （他単元の誤混入を100%防止）
+// ========================================================
+const subUnitGeneratorMap = {
+  // --- 中1 ---
+  'g1_all_mix': ['g1_pos_neg_add_sub', 'g1_pos_neg_mul_div', 'g1_pos_neg_four_ops', 'g1_letters_expression', 'g1_letters_value', 'g1_eq_linear', 'g1_eq_word', 'g1_prop_direct', 'g1_prop_inverse', 'g1_data_frequency_table', 'g1_data_relative_freq'],
+  'g1_pos_neg_all': ['g1_pos_neg_add_sub', 'g1_pos_neg_mul_div', 'g1_pos_neg_four_ops'],
+  'g1_pos_neg_add_sub': ['g1_pos_neg_add_sub'],
+  'g1_pos_neg_mul_div': ['g1_pos_neg_mul_div'],
+  'g1_pos_neg_four_ops': ['g1_pos_neg_four_ops'],
+  'g1_letters_all': ['g1_letters_expression', 'g1_letters_value'],
+  'g1_letters_expression': ['g1_letters_expression'],
+  'g1_letters_value': ['g1_letters_value'],
+  'g1_eq_all': ['g1_eq_linear', 'g1_eq_word'],
+  'g1_eq_linear': ['g1_eq_linear'],
+  'g1_eq_word': ['g1_eq_word'],
+  'g1_prop_all': ['g1_prop_direct', 'g1_prop_inverse'],
+  'g1_prop_direct': ['g1_prop_direct'],
+  'g1_prop_inverse': ['g1_prop_inverse'],
+  'g1_plane_all': ['g1_plane_sector_area', 'g1_plane_symmetry'],
+  'g1_plane_sector_area': ['g1_plane_sector_area'],
+  'g1_plane_symmetry': ['g1_plane_symmetry'],
+  'g1_solid_all': ['g1_solid_cylinder_volume', 'g1_solid_cone_volume', 'g1_solid_sphere_surface_vol'],
+  'g1_solid_cylinder_volume': ['g1_solid_cylinder_volume'],
+  'g1_solid_cone_volume': ['g1_solid_cone_volume'],
+  'g1_solid_sphere_surface_vol': ['g1_solid_sphere_surface_vol'],
+  'g1_data_all': ['g1_data_mean_median_mode', 'g1_data_relative_freq', 'g1_data_frequency_table'],
+  'g1_data_mean_median_mode': ['g1_data_mean_median_mode'],
+  'g1_data_relative_freq': ['g1_data_relative_freq'],
+  'g1_data_frequency_table': ['g1_data_frequency_table'],
+
+  // --- 中2 ---
+  'g2_all_mix': ['g2_poly_add_sub', 'g2_poly_mul_div', 'g2_poly_transform', 'g2_simul_add_sub', 'g2_simul_subst', 'g2_simul_complex', 'g2_simul_word', 'g2_lfunc_rate', 'g2_lfunc_graph', 'g2_lfunc_find_eq', 'g2_lfunc_graph_read', 'g2_lfunc_intersect', 'g2_geom_parallel_angles', 'g2_geom_parallel_chevron', 'g2_geom_polygon_angles', 'g2_geom_triangle_prop', 'g2_quad_parallelogram', 'g2_quad_special', 'g2_prob_dice_coin', 'g2_prob_balls', 'g2_data_boxplot', 'g2_data_boxplot_svg'],
+  'g2_poly_all': ['g2_poly_add_sub', 'g2_poly_mul_div', 'g2_poly_transform'],
+  'g2_poly_add_sub': ['g2_poly_add_sub'],
+  'g2_poly_mul_div': ['g2_poly_mul_div'],
+  'g2_poly_transform': ['g2_poly_transform'],
+  'g2_simul_all': ['g2_simul_add_sub', 'g2_simul_subst', 'g2_simul_complex', 'g2_simul_word'],
+  'g2_simul_add_sub': ['g2_simul_add_sub'],
+  'g2_simul_subst': ['g2_simul_subst'],
+  'g2_simul_complex': ['g2_simul_complex'],
+  'g2_simul_word': ['g2_simul_word'],
+  // ★ 一次関数は一次関数のみを厳密指定！図形は絶対に混入しない！
+  'g2_lfunc_all': ['g2_lfunc_rate', 'g2_lfunc_graph', 'g2_lfunc_find_eq', 'g2_lfunc_graph_read', 'g2_lfunc_intersect'],
+  'g2_lfunc_rate': ['g2_lfunc_rate'],
+  'g2_lfunc_graph': ['g2_lfunc_graph', 'g2_lfunc_graph_read'],
+  'g2_lfunc_find_eq': ['g2_lfunc_find_eq'],
+  'g2_lfunc_intersect': ['g2_lfunc_intersect'],
+  // ★ 図形
+  'g2_geom_all': ['g2_geom_parallel_angles', 'g2_geom_parallel_chevron', 'g2_geom_polygon_angles', 'g2_geom_triangle_prop', 'g2_geom_triangle_fig'],
+  'g2_geom_parallel_angles': ['g2_geom_parallel_angles', 'g2_geom_parallel_chevron'],
+  'g2_geom_polygon_angles': ['g2_geom_polygon_angles'],
+  'g2_geom_triangle_prop': ['g2_geom_triangle_prop', 'g2_geom_triangle_fig'],
+  'g2_quad_all': ['g2_quad_parallelogram', 'g2_quad_special'],
+  'g2_quad_parallelogram': ['g2_quad_parallelogram'],
+  'g2_quad_special': ['g2_quad_special'],
+  // ★ データの活用・確率
+  'g2_prob_all': ['g2_prob_dice_coin', 'g2_prob_balls', 'g2_data_boxplot', 'g2_data_boxplot_svg'],
+  'g2_prob_dice_coin': ['g2_prob_dice_coin'],
+  'g2_prob_balls': ['g2_prob_balls'],
+  'g2_data_boxplot': ['g2_data_boxplot', 'g2_data_boxplot_svg'],
+
+  // --- 中3 ---
+  'g3_all_mix': ['g3_poly_expand_formula', 'g3_poly_common_factor', 'g3_poly_factor_formula', 'g3_poly_value_calc', 'g3_sqrt_meaning', 'g3_sqrt_simplify', 'g3_sqrt_mul_div', 'g3_sqrt_add_sub', 'g3_qeq_factor_method', 'g3_qeq_formula_method', 'g3_qeq_word', 'g3_qfunc_graph', 'g3_qfunc_domain', 'g3_qfunc_rate_change', 'g3_sim_ratio', 'g3_sim_triangle_fig', 'g3_sim_area_volume', 'g3_circle_angle', 'g3_circle_angle_fig', 'g3_pyth_calc', 'g3_pyth_triangle_fig', 'g3_pyth_special_ratios', 'g3_sample_estimation'],
+  'g3_poly_all': ['g3_poly_expand_formula', 'g3_poly_common_factor', 'g3_poly_factor_formula', 'g3_poly_value_calc'],
+  'g3_poly_expand_formula': ['g3_poly_expand_formula'],
+  'g3_poly_common_factor': ['g3_poly_common_factor'],
+  'g3_poly_factor_formula': ['g3_poly_factor_formula'],
+  'g3_poly_value_calc': ['g3_poly_value_calc'],
+  'g3_sqrt_all': ['g3_sqrt_meaning', 'g3_sqrt_simplify', 'g3_sqrt_mul_div', 'g3_sqrt_add_sub'],
+  'g3_sqrt_meaning': ['g3_sqrt_meaning'],
+  'g3_sqrt_simplify': ['g3_sqrt_simplify'],
+  'g3_sqrt_mul_div': ['g3_sqrt_mul_div'],
+  'g3_sqrt_add_sub': ['g3_sqrt_add_sub'],
+  'g3_qeq_all': ['g3_qeq_factor_method', 'g3_qeq_formula_method', 'g3_qeq_word'],
+  'g3_qeq_factor_method': ['g3_qeq_factor_method'],
+  'g3_qeq_formula_method': ['g3_qeq_formula_method'],
+  'g3_qeq_word': ['g3_qeq_word'],
+  'g3_qfunc_all': ['g3_qfunc_graph', 'g3_qfunc_domain', 'g3_qfunc_rate_change'],
+  'g3_qfunc_graph': ['g3_qfunc_graph'],
+  'g3_qfunc_domain': ['g3_qfunc_domain'],
+  'g3_qfunc_rate_change': ['g3_qfunc_rate_change'],
+  // ★ 相似は相似のみを厳密指定！図形SVGも含む！
+  'g3_sim_all': ['g3_sim_ratio', 'g3_sim_triangle_fig', 'g3_sim_area_volume'],
+  'g3_sim_ratio': ['g3_sim_ratio', 'g3_sim_triangle_fig'],
+  'g3_sim_area_volume': ['g3_sim_area_volume'],
+  'g3_circle_all': ['g3_circle_angle', 'g3_circle_angle_fig'],
+  'g3_circle_angle': ['g3_circle_angle', 'g3_circle_angle_fig'],
+  'g3_pyth_all': ['g3_pyth_calc', 'g3_pyth_triangle_fig', 'g3_pyth_special_ratios'],
+  'g3_pyth_calc': ['g3_pyth_calc', 'g3_pyth_triangle_fig'],
+  'g3_pyth_special_ratios': ['g3_pyth_special_ratios'],
+  'g3_sample_all': ['g3_sample_estimation'],
+  'g3_sample_estimation': ['g3_sample_estimation']
+};
+
+function getGeneratorsForSubUnit(grade, subUnitId) {
+  if (subUnitGeneratorMap[subUnitId]) {
+    return subUnitGeneratorMap[subUnitId];
+  }
   if (problemGenerators[subUnitId]) {
     return [subUnitId];
   }
-
-  // フォールバック
   const prefix = `g${grade}_`;
   return Object.keys(problemGenerators).filter(k => k.startsWith(prefix));
 }
 
-// TeX記法への変換関数
+
 function convertMathToTeX(str) {
   if (!str || typeof str !== 'string') return '';
   let s = str;
@@ -4436,10 +5235,12 @@ function generateQuickTest() {
   const majorSelect = document.getElementById('testMajorUnit');
   const subSelect = document.getElementById('testSubUnit');
   const countSelect = document.getElementById('testCount');
+  const qTypeSelect = document.getElementById('testQuestionType');
 
   const majorId = majorSelect ? majorSelect.value : 'all';
   const subUnitId = subSelect ? subSelect.value : 'all_mix';
   const count = parseInt(countSelect?.value, 10) || 6;
+  const reqDifficulty = qTypeSelect ? qTypeSelect.value : 'all'; // all, level_1, level_2, level_3, level_4
 
   // カリキュラム情報からタイトル取得
   const gradeUnits = testCurriculum[grade] || [];
@@ -4449,7 +5250,6 @@ function generateQuickTest() {
   let subTitle = currentSub.name.replace(/【.*?】/, '').trim();
   const majorName = currentMajor ? currentMajor.name : '数学科';
 
-  // タイトル行1: 「中学X年　大単元名」 行2: 「小単元名」
   let titleLine1, titleLine2;
   if (subTitle.includes('全領域からランダム') || subTitle.includes('全単元からランダム')) {
     titleLine1 = `中学${grade}年　数学`;
@@ -4462,36 +5262,65 @@ function generateQuickTest() {
     titleLine2 = subTitle;
   }
 
-  // 問題ジェネレーターの選定
-  const availableGenKeys = getGeneratorsForSubUnit(grade, subUnitId);
-  const questions = [];
+  // 問題ジェネレーターの選定 (厳密マッピング)
+  let availableGenKeys = getGeneratorsForSubUnit(grade, subUnitId);
+  if (!availableGenKeys || availableGenKeys.length === 0) {
+    availableGenKeys = Object.keys(problemGenerators).filter(k => k.startsWith(`g${grade}_`));
+  }
 
-  for (let i = 0; i < count; i++) {
-    const key = availableGenKeys[i % availableGenKeys.length];
+  const questions = [];
+  const seenSignatures = new Set();
+
+  let genIndex = 0;
+  let attempts = 0;
+  const maxAttempts = count * 25;
+
+  while (questions.length < count && attempts < maxAttempts) {
+    attempts++;
+    const key = availableGenKeys[genIndex % availableGenKeys.length];
+    genIndex++;
+
     const genFn = problemGenerators[key] || problemGenerators['g1_pos_neg_add_sub'];
     const item = genFn();
+
+    // 難易度フィルタリング
+    if (reqDifficulty !== 'all') {
+      const targetLevel = parseInt(reqDifficulty.replace('level_', ''), 10) || 2;
+      const itemLevel = item.level || 2;
+      if (Math.abs(itemLevel - targetLevel) > 1 && attempts < maxAttempts - 10) {
+        continue;
+      }
+    }
+
+    // 重複チェック (問題文のテキスト本体と解答の組み合わせ)
+    const rawQText = (item.q || '').replace(/<[^>]+>/g, '').trim();
+    const sig = `${rawQText}__ANS__${item.ans}`;
+
+    if (seenSignatures.has(sig) && attempts < maxAttempts - 5) {
+      continue;
+    }
+
+    seenSignatures.add(sig);
+
+    // 図・表HTMLの抽出
+    const fig = item.figureHtml || item.svgHtml || item.tableHtml || '';
+
     questions.push({
-      num: i + 1,
+      num: questions.length + 1,
       q: formatMathRich(item.q),
       ans: formatMathRich(item.ans),
+      figureHtml: fig,
       steps: item.steps ? item.steps.map(s => formatMathRich(s)) : [],
       exp: item.exp ? formatMathRich(item.exp) : ''
     });
   }
 
-  // 1列か2列かの判定:
-  // 4問・5問・6問は1列 (cols-1) にして横幅を贅沢に活用。問題文がゆったり収まり、右下に解答欄、十分な計算余白を確保！
-  // 7問・8問・9問・10問は2列 (cols-2) にしてA4用紙1枚にバランスよく収容
   const gridClass = count > 6 ? 'test-problem-grid cols-2' : 'test-problem-grid cols-1';
-
-  // タイトルの文字数に応じた文字サイズ自動調整（長い単元名でも改行を完全防止）
   const titleClass = titleLine2.length > 13 ? ' title-mini' : (titleLine2.length > 8 ? ' title-compact' : '');
-
-  // タイトル内の数式（y = ax², a√b 等）も教科書品質 KaTeX TeX組版を適用！
   const formattedTitleLine1 = formatMathRich(titleLine1);
   const formattedTitleLine2 = formatMathRich(titleLine2);
 
-  // 1. 生徒用プリント用紙のHTML構築（1行目: 大単元全幅、2行目: 左小単元・右生徒情報）
+  // 1. 生徒用プリント用紙のHTML構築
   const studentEl = document.getElementById('testStudentPaper');
   if (studentEl) {
     studentEl.setAttribute('data-count', count);
@@ -4518,6 +5347,7 @@ function generateQuickTest() {
               <span class="problem-num">(${q.num})</span>
               <div class="problem-text">${q.q}</div>
             </div>
+            ${q.figureHtml ? `<div class="problem-figure-container">${q.figureHtml}</div>` : ''}
             <div class="problem-workspace"></div>
             <div class="problem-answer-line">
               <span class="answer-label">答.</span>
@@ -4530,7 +5360,7 @@ function generateQuickTest() {
     applyKaTeXIfAvailable(studentEl);
   }
 
-  // 2. 先生用模範解答用紙のHTML構築（1行目: 大単元全幅、2行目: 【模範解答】小単元）
+  // 2. 先生用模範解答用紙のHTML構築
   const answerEl = document.getElementById('testAnswerPaper');
   if (answerEl) {
     answerEl.setAttribute('data-count', count);
@@ -4538,7 +5368,7 @@ function generateQuickTest() {
       <div class="test-paper-header answer-header">
         <div class="test-header-line1 answer-line1">${formattedTitleLine1}</div>
         <div class="test-header-line2">
-          <div class="test-title-line2 answer-line2${titleClass}">【模範解答】${formattedTitleLine2}</div>
+          <div class="test-title-line2${titleClass}">【模範解答】${formattedTitleLine2}</div>
         </div>
       </div>
 
@@ -4549,23 +5379,27 @@ function generateQuickTest() {
               <span class="problem-num answer-num">(${q.num})</span>
               <div class="problem-text">${q.q}</div>
             </div>
-            <div class="problem-answer-line" style="margin-top: 4px;">
-              <span class="answer-badge-label">【正答】</span>
-              <span class="problem-answer-fill red-fill">${q.ans}</span>
-            </div>
-            ${q.steps && q.steps.length > 0 ? `
-              <div class="answer-steps-box">
-                <div class="steps-heading"><i class="fa-solid fa-stairs text-danger"></i> 【途中式・解法ステップ】</div>
-                <div class="steps-list">
-                  ${q.steps.map(s => `<div class="step-item">・${s}</div>`).join('')}
+            ${q.figureHtml ? `<div class="problem-figure-container">${q.figureHtml}</div>` : ''}
+            
+            <div class="answer-box">
+              <div class="answer-main">
+                <span class="answer-tag">【正答】</span>
+                <span class="answer-value">${q.ans}</span>
+              </div>
+              ${q.steps && q.steps.length > 0 ? `
+                <div class="answer-steps-box">
+                  <div class="steps-heading"><i class="fa-solid fa-stairs text-danger"></i> 【途中式・解法ステップ】</div>
+                  <div class="steps-list">
+                    ${q.steps.map(s => `<div class="step-item">・${s}</div>`).join('')}
+                  </div>
                 </div>
-              </div>
-            ` : (q.exp ? `
-              <div class="answer-steps-box">
-                <div class="steps-heading"><i class="fa-solid fa-lightbulb text-danger"></i> 【解き方のポイント】</div>
-                <div class="step-item">・${q.exp}</div>
-              </div>
-            ` : '')}
+              ` : (q.exp ? `
+                <div class="answer-steps-box">
+                  <div class="steps-heading"><i class="fa-solid fa-lightbulb text-danger"></i> 【解き方のポイント】</div>
+                  <div class="step-item">・${q.exp}</div>
+                </div>
+              ` : '')}
+            </div>
           </div>
         `).join('')}
       </div>
@@ -4574,7 +5408,6 @@ function generateQuickTest() {
   }
 }
 
-// 印刷関数群 (各対象のみを完全に独立して印刷)
 function printStudentTestPaper() {
   document.body.setAttribute('data-print-target', 'test-student');
   window.print();

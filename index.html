@@ -18,7 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   
-  <link rel="stylesheet" href="style.css?v=20261002_v6">
+  <link rel="stylesheet" href="style.css?v=20261003_v1">
 </head>
 <body>
 
@@ -1096,13 +1096,13 @@
               <!-- 段2: 出題形式・問い方 & 再生成ボタン -->
               <div class="test-config-row tier-action-row">
                 <div class="form-group flex-qtype">
-                  <label><i class="fa-solid fa-sliders text-primary"></i> 出題タイプ（多彩な問い方・思考力対応）</label>
+                  <label><i class="fa-solid fa-layer-group text-primary"></i> 出題難易度（星1〜4・習熟度別プリント対応）</label>
                   <select id="testQuestionType" class="form-control" onchange="generateQuickTest()">
-                    <option value="all" selected>総合（計算＋工夫・表現パターンをランダム網羅）</option>
-                    <option value="fill_blank">【基礎・穴埋め】公式・手順・定義の空欄補充（ひとつひとつわかりやすく風）</option>
-                    <option value="standard_calc">【基本計算】反復・計算スピード向上</option>
-                    <option value="trick_mistake">【つまずき克服】符号注意・置き換えの工夫・典型ミス対策</option>
-                    <option value="word_applied">【文章題・利用】思考・図形応用・数の性質の証明</option>
+                    <option value="all" selected>全難易度総合 (★〜★★★★をバランスよく網羅)</option>
+                    <option value="level_1">★☆☆☆ レベル1: 基礎・基本確認 (公式当てはめ・定義・基本計算)</option>
+                    <option value="level_2">★★☆☆ レベル2: 標準演習 (定期テスト頻出・典型解法・図表)</option>
+                    <option value="level_3">★★★☆ レベル3: 思考・ミス注意 (符号・分数・置き換え・条件整理)</option>
+                    <option value="level_4">★★★★ レベル4: 応用・実戦発展 (文章題・図形融合・入試対策)</option>
                   </select>
                 </div>
                 <div class="form-group flex-count">
@@ -1500,6 +1500,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20261002_v6"></script>
+  <script src="app.js?v=20261003_v1"></script>
 </body>
 </html>
