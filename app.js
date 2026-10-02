@@ -3332,6 +3332,8 @@ function convertMathToTeX(str) {
 
   // 4. 分数
   s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, '\\frac{$1}{$2}');
+  // 分母が数字＋英字変数の場合（例: 4/3x -> \frac{4}{3}x）
+  s = s.replace(/([0-9a-zA-Z\\{}]+)\s*\/\s*([0-9]+)([a-zA-Z])/g, '\\frac{$1}{$2}$3');
   s = s.replace(/([0-9a-zA-Z\\{}]+)\s*\/\s*([0-9a-zA-Z\\{}]+)/g, '\\frac{$1}{$2}');
 
   return s;
@@ -3343,7 +3345,8 @@ function renderTeXSafe(tex, displayMode = false) {
     try {
       return window.katex.renderToString(tex, {
         displayMode: displayMode,
-        throwOnError: false
+        throwOnError: false,
+        output: 'html' // MathML重複による文字化け・重なりを防止
       });
     } catch (e) {
       console.warn('KaTeX render error:', e);
@@ -3409,6 +3412,10 @@ function formatMathRich(text) {
   // 5. 本文中に残っている分数: (A)/(B) や A/B
   s = s.replace(/\(([^)]+)\)\s*\/\s*([^\s<,()]+)/g, (m, num, den) => {
     return pushSafe(renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`));
+  });
+  // 分母が数字＋英字変数の場合（例: 4/3x -> \frac{4}{3}x）
+  s = s.replace(/(?<![a-zA-Z0-9_])([0-9a-zA-Z]+)\s*\/\s*([0-9]+)([a-zA-Z])/g, (m, num, den, v) => {
+    return pushSafe(renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}${v}`));
   });
   s = s.replace(/(?<![a-zA-Z0-9_])([0-9a-zA-Z]+)\s*\/\s*([0-9a-zA-Z]+)(?![a-zA-Z0-9_])/g, (m, num, den) => {
     return pushSafe(renderTeXSafe(`\\frac{${convertMathToTeX(num)}}{${convertMathToTeX(den)}}`));

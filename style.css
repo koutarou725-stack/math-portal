@@ -2980,10 +2980,22 @@ body.show-answers .answer-text {
   width: 120px; /* 氏名の広大な記入スペース（手書きで十分書ける幅を確保しつつタイトルの改行を完全阻止） */
 }
 
-/* KaTeX 数式スタイル最適化 (教科書品質) */
+/* KaTeX 数式スタイル最適化 (教科書品質 & 分数の上下潰れ・文字重なりを完全防止) */
 .katex {
   font-size: 1.04em !important;
   text-rendering: auto;
+  line-height: normal !important;
+  white-space: nowrap;
+}
+
+.katex * {
+  line-height: normal !important; /* 親のline-heightによる分数・添字の上下潰れを根絶 */
+}
+
+.katex .vlist-t,
+.katex .vlist-r,
+.katex .vlist {
+  line-height: normal !important;
 }
 
 .problem-body-math .katex {
@@ -3244,8 +3256,14 @@ body.show-answers .answer-text {
 }
 
 .problem-answer-fill.red-fill {
-  border-bottom-color: #dc2626;
+  border-bottom: none !important; /* 模範解答に手書き用下線は不要！数式への赤線めり込みを完全解消 */
+  width: auto !important;
+  min-width: auto !important;
+  height: auto !important;
   font-weight: 700;
+  display: inline-flex !important;
+  align-items: baseline !important;
+  color: #dc2626;
 }
 
 /* 先生用 途中式・解法ステップボックス（A4 1枚収容最適化） */
@@ -3510,38 +3528,35 @@ math.math-expr mfrac {
     flex-direction: column !important;
     justify-content: flex-start !important;
     width: 100% !important;
-    height: auto !important; /* 固定高さを解除し、見切れ・クリッピングを根本解決！ */
+    height: auto !important;
     min-height: auto !important;
-    max-height: none !important;
     box-sizing: border-box !important;
-    overflow: visible !important; /* はみ出しによる非表示を防止 */
+    overflow: visible !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    page-break-after: auto !important;
-    break-after: auto !important;
-    page-break-inside: auto !important;
-    break-inside: auto !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
   }
 
-  /* 模範解答ヘッダー（スリム化で下部余白を創出） */
+  /* 模範解答ヘッダー（スリム化で下部余白を最大化） */
   body[data-print-target="test-answer"] .test-paper-header {
-    padding-top: 1mm !important;
-    padding-bottom: 2mm !important;
-    margin-bottom: 2mm !important;
+    padding-top: 0.5mm !important;
+    padding-bottom: 1.5mm !important;
+    margin-bottom: 1.5mm !important;
     border-bottom: 1pt solid #dc2626 !important;
   }
 
   body[data-print-target="test-answer"] .test-header-line1 {
-    font-size: 8.5pt !important;
+    font-size: 8pt !important;
     margin-bottom: 1px !important;
-    line-height: 1.2 !important;
+    line-height: 1.15 !important;
   }
 
   body[data-print-target="test-answer"] .test-title-line2 {
-    font-size: 10pt !important;
-    line-height: 1.2 !important;
+    font-size: 9.5pt !important;
+    line-height: 1.15 !important;
   }
 
   /* 模範解答グリッド（1列／2列両対応） */
@@ -3550,7 +3565,7 @@ math.math-expr mfrac {
     flex-direction: column !important;
     flex: none !important;
     height: auto !important;
-    margin-top: 1mm !important;
+    margin-top: 0 !important;
     gap: 0 !important;
   }
 
@@ -3560,58 +3575,83 @@ math.math-expr mfrac {
     column-gap: 5mm !important;
   }
 
-  /* 各問題アイテム：上下パディングを最適化し、下部見切れを完全防止 */
+  /* 各問題アイテム：上下パディングを極小化し、全6問がA4用紙1枚に余裕で収まるよう調整 */
   body[data-print-target="test-answer"] #testAnswerPaper .test-problem-item {
     height: auto !important;
     min-height: auto !important;
     border-bottom: 0.5pt solid #cbd5e1 !important;
-    padding: 1.2mm 2.5mm !important; /* 上下をコンパクトにし、6問すべてが1枚に収まるよう調整 */
+    padding: 0.6mm 2mm 0.8mm 2mm !important;
     box-sizing: border-box !important;
     break-inside: avoid !important;
     page-break-inside: avoid !important;
   }
 
   body[data-print-target="test-answer"] .problem-header {
-    font-size: 8.2pt !important;
-    line-height: 1.35 !important;
-    gap: 4px !important;
+    font-size: 7.8pt !important;
+    line-height: 1.25 !important;
+    gap: 3px !important;
   }
 
   body[data-print-target="test-answer"] .problem-num {
-    font-size: 8.5pt !important;
+    font-size: 8pt !important;
   }
 
   body[data-print-target="test-answer"] .problem-text {
-    line-height: 1.35 !important;
+    line-height: 1.25 !important;
   }
 
-  body[data-print-target="test-answer"] .problem-answer-line {
-    margin-top: 1.5px !important;
-    margin-bottom: 1px !important;
-    font-size: 7.8pt !important;
+  /* 連立方程式の行間・サイズ最適化 */
+  body[data-print-target="test-answer"] .simul-eq {
+    margin-top: 1px !important;
+    font-size: 8pt !important;
+    gap: 2px !important;
+  }
+
+  body[data-print-target="test-answer"] .simul-brace {
+    font-size: 1.7em !important;
+    line-height: 0.9 !important;
+  }
+
+  body[data-print-target="test-answer"] .simul-lines {
+    gap: 0px !important;
+  }
+
+  body[data-print-target="test-answer"] .simul-line {
     line-height: 1.2 !important;
   }
 
-  body[data-print-target="test-answer"] .problem-answer-fill {
-    font-size: 8.5pt !important;
+  /* 正答行（下線なし・スマート配置） */
+  body[data-print-target="test-answer"] .problem-answer-line {
+    margin-top: 0.5px !important;
+    margin-bottom: 0.5px !important;
+    font-size: 7.5pt !important;
+    line-height: 1.15 !important;
   }
 
+  body[data-print-target="test-answer"] .problem-answer-fill {
+    border-bottom: none !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: 8pt !important;
+  }
+
+  /* 解法ステップボックス（行間・マージン極小化） */
   body[data-print-target="test-answer"] .answer-steps-box {
-    font-size: 6.8pt !important;
-    padding: 1.5px 3.5px !important;
-    margin-top: 1.5px !important;
+    font-size: 6.5pt !important;
+    padding: 1px 3px !important;
+    margin-top: 0.8px !important;
     border-radius: 2px !important;
   }
 
   body[data-print-target="test-answer"] .steps-heading {
-    font-size: 6.8pt !important;
-    line-height: 1.2 !important;
-    margin-bottom: 1px !important;
+    font-size: 6.5pt !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0.5px !important;
   }
 
   body[data-print-target="test-answer"] .step-item {
-    font-size: 6.8pt !important;
-    line-height: 1.2 !important;
+    font-size: 6.5pt !important;
+    line-height: 1.15 !important;
   }
 
   .test-problem-item {
@@ -3812,15 +3852,15 @@ math.math-expr mfrac {
   flex: 1 1 auto;
 }
 
-/* 先生用模範解答プレビューモード：上寄せ配置・自動伸縮（ヘッダー直下の巨大空白根絶＆見切れ防止） */
+/* 先生用模範解答プレビューモード：上寄せ配置・自動伸縮（ヘッダー直下の巨大空白根絶＆A4 1枚完全収容） */
 .a4-preview-sheet[data-sheet-type="answer"] {
   justify-content: flex-start !important;
 }
 
 .a4-preview-sheet[data-sheet-type="answer"] .test-paper-header {
-  padding-top: 2px !important;
-  padding-bottom: 5px !important;
-  margin-bottom: 6px !important;
+  padding-top: 1px !important;
+  padding-bottom: 4px !important;
+  margin-bottom: 4px !important;
 }
 
 .a4-preview-sheet[data-sheet-type="answer"] .test-problem-grid {
@@ -3828,7 +3868,7 @@ math.math-expr mfrac {
   flex-direction: column !important;
   flex: none !important;
   height: auto !important;
-  margin-top: 2px !important;
+  margin-top: 1px !important;
   gap: 0 !important;
 }
 
@@ -3843,29 +3883,35 @@ math.math-expr mfrac {
   min-height: auto !important;
   display: block !important;
   border-bottom: 1px solid #e2e8f0 !important;
-  padding: 4px 8px !important;
+  padding: 2px 6px !important;
 }
 
 .a4-preview-sheet[data-sheet-type="answer"] .problem-header {
-  font-size: 8.5pt !important;
-  line-height: 1.35 !important;
+  font-size: 8pt !important;
+  line-height: 1.25 !important;
 }
 
 .a4-preview-sheet[data-sheet-type="answer"] .problem-answer-line {
-  margin-top: 2px !important;
-  margin-bottom: 2px !important;
-  font-size: 8pt !important;
+  margin-top: 1px !important;
+  margin-bottom: 1px !important;
+  font-size: 7.5pt !important;
+}
+
+.a4-preview-sheet[data-sheet-type="answer"] .problem-answer-fill {
+  border-bottom: none !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 .a4-preview-sheet[data-sheet-type="answer"] .answer-steps-box {
-  font-size: 7pt !important;
-  padding: 2px 4px !important;
-  margin-top: 2px !important;
+  font-size: 6.8pt !important;
+  padding: 1.5px 3px !important;
+  margin-top: 1px !important;
 }
 
 .a4-preview-sheet[data-sheet-type="answer"] .step-item {
-  font-size: 7pt !important;
-  line-height: 1.25 !important;
+  font-size: 6.8pt !important;
+  line-height: 1.2 !important;
 }
 
 /* シート内の印刷フォントサイズ同期 */
