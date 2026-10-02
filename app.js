@@ -5055,19 +5055,19 @@ const officialPrintLibrary = {
 const referenceBookLibrary = {
   '1': {
     title: '中1数学をひとつひとつわかりやすく。',
-    file: '書籍「数学をひとつひとつわかりやすく。」/260610 中1数学をひとつひとつわかりやすく。.pdf',
+    file: CLOUD_DOC_LINKS.pointBooks['1'],
     badge: '学研 / 中1要点解説',
     desc: '中1の全単元をスモールステップで図解。授業前の要点確認やプロジェクター提示に最適。'
   },
   '2': {
     title: '中2数学をひとつひとつわかりやすく。',
-    file: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+    file: CLOUD_DOC_LINKS.pointBooks['2'],
     badge: '学研 / 中2要点解説',
     desc: '中2の連立方程式・一次関数・証明などを超基礎から図解。つまずきポイントの確認に。'
   },
   '3': {
     title: '中3数学をひとつひとつわかりやすく。',
-    file: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+    file: CLOUD_DOC_LINKS.pointBooks['3'],
     badge: '学研 / 中3要点解説',
     desc: '中3の展開・因数分解・平方根・二次方程式・相似・三平方の定理などを丁寧に解説。'
   }
@@ -5085,7 +5085,7 @@ const boardingLibrary = {
       publisher: '明治図書',
       badge: '明治図書 / 板書＆展開例',
       color: '#0284c7',
-      file: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+      file: CLOUD_DOC_LINKS.boardBooks['3'],
       desc: '3年前期の全単元を収録。見開きで各1時間の板書計画・発問・生徒のつまずきへの指導展開例をそのまま参照できます。',
       units: ['第1章 多項式・展開と因数分解', '第2章 平方根と無理数', '第3章 2次方程式と解の公式'],
       available: true
@@ -5509,6 +5509,26 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 // ========================================================
+
+// ========================================================
+// 教材・書籍 OneDrive クラウド共有リンク設定（オンライン完全対応）
+// 先生のOneDrive共有URLにより、Webブラウザ上からどこでも直接PDFを参照可能
+// ========================================================
+const CLOUD_DOC_LINKS = {
+  // 学研『中1〜中3 数学をひとつひとつわかりやすく。』
+  pointBooks: {
+    '1': 'https://1drv.ms/b/c/7afb9670452d4dba/IQC4gcHZTgFoRoBOL7FbI00uAYAo4hpgqWuZtjHhb4r7J_0?e=Ak1hV9',
+    '2': 'https://1drv.ms/b/c/7afb9670452d4dba/IQCGShIQnCM6Ro_fEPW9OmVhAUe0_xiCbUTJC7fY-2_AnUI?e=XJU1aJ',
+    '3': 'https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx'
+  },
+  // 明治図書『板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学』
+  boardBooks: {
+    '3': 'https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY'
+  },
+  // 数学学習プリント (全学年・全単元 OneDrive共有フォルダ)
+  officialPrintsFolder: 'https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F'
+};
+
 // 中学数学科 板書＆展開例 授業データベース（B4横見開きプリント完全対応）
 // 明治図書『板書＆展開例でよくわかる 365日の全授業』シリーズ準拠
 // ========================================================
@@ -5520,8 +5540,8 @@ const boardLessonDatabase = {
         id: 'u_3_1',
         unitName: '第1章 多項式・展開と因数分解',
         totalHours: 11,
-        bookRef: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
-        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+        bookRef: CLOUD_DOC_LINKS.boardBooks['3'],
+        pointRef: CLOUD_DOC_LINKS.pointBooks['3'],
         lessons: [
           {
             hour: 1,
@@ -5619,8 +5639,8 @@ const boardLessonDatabase = {
         id: 'u_3_2',
         unitName: '第2章 平方根',
         totalHours: 7,
-        bookRef: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
-        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+        bookRef: CLOUD_DOC_LINKS.boardBooks['3'],
+        pointRef: CLOUD_DOC_LINKS.pointBooks['3'],
         lessons: [
           {
             hour: 1,
@@ -5658,8 +5678,8 @@ const boardLessonDatabase = {
         id: 'u_3_3',
         unitName: '第3章 2次方程式',
         totalHours: 6,
-        bookRef: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
-        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+        bookRef: CLOUD_DOC_LINKS.boardBooks['3'],
+        pointRef: CLOUD_DOC_LINKS.pointBooks['3'],
         lessons: [
           {
             hour: 4,
@@ -5688,7 +5708,7 @@ const boardLessonDatabase = {
         unitName: '第3章 一次関数',
         totalHours: 10,
         bookRef: '',
-        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+        pointRef: CLOUD_DOC_LINKS.pointBooks['2'],
         officialRef: '数学学習プリント/02_2年生/数学_3-1一次関数とグラフ.pdf',
         lessons: [
           {
@@ -5718,7 +5738,7 @@ const boardLessonDatabase = {
         unitName: '第3章 一次方程式',
         totalHours: 8,
         bookRef: '',
-        pointRef: '書籍「数学をひとつひとつわかりやすく。」/260610 中1数学をひとつひとつわかりやすく。.pdf',
+        pointRef: CLOUD_DOC_LINKS.pointBooks['1'],
         officialRef: '数学学習プリント/01_1年生/数学_3-1方程式.pdf',
         lessons: [
           {
@@ -6441,7 +6461,7 @@ function renderGakkenBookshelf() {
       gradeLabel: '中1',
       title: '中1数学をひとつひとつわかりやすく。',
       desc: '中学1年生の全単元をスモールステップで超基礎から解説。左ページに要点、右ページに基本練習の安心構成。',
-      file: '書籍「数学をひとつひとつわかりやすく。」/260610 中1数学をひとつひとつわかりやすく。.pdf',
+      file: CLOUD_DOC_LINKS.pointBooks['1'],
       features: ['スモールステップ', '基本の穴埋め', 'つまずき防止']
     },
     {
@@ -6449,7 +6469,7 @@ function renderGakkenBookshelf() {
       gradeLabel: '中2',
       title: '中2数学をひとつひとつわかりやすく。',
       desc: '式の計算・連立方程式・一次関数・合同証明・確率を図解でわかりやすく解説。苦手な生徒の個別指導に最適。',
-      file: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+      file: CLOUD_DOC_LINKS.pointBooks['2'],
       features: ['図解まとめ', '式の変形', '証明の書き方ステップ']
     },
     {
@@ -6457,7 +6477,7 @@ function renderGakkenBookshelf() {
       gradeLabel: '中3',
       title: '中3数学をひとつひとつわかりやすく。',
       desc: '展開・因数分解・平方根・2次方程式・関数y=ax²・相似・円・三平方を網羅。高校入試対策の土台固めに。',
-      file: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+      file: CLOUD_DOC_LINKS.pointBooks['3'],
       features: ['公式の導き方', '置き換えの工夫', '計算ミス防止']
     }
   ];
@@ -6511,6 +6531,29 @@ function renderOfficialBookshelf() {
   const container = document.getElementById('officialBookshelfGrid');
   if (!container) return;
 
+  // OneDrive 共有フォルダバナーの追加
+  const folderBannerHtml = `
+    <div style="grid-column: 1 / -1; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1.5px solid #bfdbfe; border-radius: var(--radius-md); padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; box-shadow: var(--shadow-sm);">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="background: #0284c7; color: #ffffff; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+          <i class="fa-solid fa-cloud-arrow-down"></i>
+        </div>
+        <div>
+          <h4 style="font-size: 1.05rem; font-weight: 700; color: #1e3a8a; margin-bottom: 0.25rem;">
+            OneDrive 数学学習プリント 共有フォルダ（全学年・全単元）
+          </h4>
+          <p style="font-size: 0.82rem; color: #1e40af; margin: 0;">
+            1年生・2年生・3年生のすべての単元プリント＆解答PDFをオンラインフォルダからまとめて閲覧・印刷できます。
+          </p>
+        </div>
+      </div>
+      <a href="${CLOUD_DOC_LINKS.officialPrintsFolder}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background: #0284c7; border-color: #0284c7; font-weight: 700; padding: 0.6rem 1.2rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> OneDrive共有フォルダを開く
+      </a>
+    </div>
+  `;
+
+
   // officialPrintLibrary から取得
   const allPrints = [];
   ['1', '2', '3'].forEach(g => {
@@ -6538,7 +6581,7 @@ function renderOfficialBookshelf() {
   }
 
   // 最大12件表示 + 全件表示
-  container.innerHTML = filtered.map(p => {
+  container.innerHTML = folderBannerHtml + filtered.map(p => {
     const enc = encodeURIComponent(p.file);
     return `
       <div class="library-book-card theme-official">
