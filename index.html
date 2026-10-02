@@ -18,7 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   
-  <link rel="stylesheet" href="style.css?v=20261002k">
+  <link rel="stylesheet" href="style.css?v=20261002l">
 </head>
 <body>
 
@@ -566,6 +566,9 @@
           <button type="button" class="btn btn-outline text-info" onclick="jumpToBoardingPrintsFromSlot()" title="この学年・単元の板書＆指導展開例書籍を開く">
             <i class="fa-solid fa-chalkboard-user"></i> 板書・展開例
           </button>
+          <button type="button" class="btn btn-outline text-success" onclick="jumpToWorksheetFromSlot()" title="この時間の単元・板書データをもとに授業プリントを作成">
+            <i class="fa-solid fa-file-lines"></i> 授業プリント作成
+          </button>
           <button type="button" class="btn btn-outline" onclick="closeLessonPlanModal()">キャンセル</button>
           <button type="button" class="btn btn-primary" onclick="saveLessonPlan()">
             <i class="fa-solid fa-check"></i> 学習内容を保存
@@ -786,11 +789,59 @@
             </button>
           </div>
 
+          <!-- 1. 板書データ連動: 単元プリセット選択 -->
+          <div class="panel-section mb-3">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-wand-magic-sparkles text-primary"></i> 単元プリント自動生成</h3>
+            </div>
+            <p class="panel-desc">板書書籍・要点ブックの指導展開に連動したワークシートを一瞬で生成します。</p>
+
+            <div class="ws-grade-selector mb-2">
+              <label><i class="fa-solid fa-graduation-cap"></i> 学年:</label>
+              <div class="grade-pill-group">
+                <button class="grade-pill-btn" id="wsGradeBtn_1" onclick="switchWorksheetGrade('1')">中1</button>
+                <button class="grade-pill-btn active" id="wsGradeBtn_2" onclick="switchWorksheetGrade('2')">中2</button>
+                <button class="grade-pill-btn" id="wsGradeBtn_3" onclick="switchWorksheetGrade('3')">中3</button>
+              </div>
+            </div>
+
+            <div class="form-group mb-2">
+              <label>単元・指導テーマ</label>
+              <select id="sheetGradeUnit" class="form-control" onchange="onGradeUnitChange()">
+                <!-- JSで動的更新 -->
+              </select>
+            </div>
+
+            <button class="btn btn-primary btn-block" onclick="loadSampleSheet()" style="padding: 0.55rem; font-weight: 700; box-shadow: var(--shadow-sm);">
+              <i class="fa-solid fa-bolt text-warning"></i> この単元でプリント生成
+            </button>
+          </div>
+
+          <!-- 2. 板書・要点教材リファレンス -->
+          <div class="panel-section mb-3 ws-reference-card">
+            <div class="panel-header">
+              <h3><i class="fa-solid fa-book-bookmark text-info"></i> 教材リファレンス</h3>
+            </div>
+            <p class="panel-desc">作成中の単元の板書計画や公式解説を今すぐプレビューできます。</p>
+            <div class="ws-ref-buttons">
+              <button class="btn btn-sm btn-outline btn-block text-primary" id="btnWsViewBoard" onclick="openPresetBoardPdf()" style="margin-bottom: 0.35rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+                <i class="fa-solid fa-chalkboard-user"></i> 板書・指導展開例 (明治図書)
+              </button>
+              <button class="btn btn-sm btn-outline btn-block" id="btnWsViewPoint" onclick="openPresetPointPdf()" style="margin-bottom: 0.35rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+                <i class="fa-solid fa-book-open"></i> 要点ブック (学研)
+              </button>
+              <button class="btn btn-sm btn-outline btn-block" id="btnWsViewOfficial" onclick="openPresetOfficialPdf()" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+                <i class="fa-solid fa-file-pdf"></i> 単元別 公式学習プリント
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. レゴ式ブロック追加パレット -->
           <div class="panel-header">
-            <h3><i class="fa-solid fa-cubes"></i> ブロック追加</h3>
+            <h3><i class="fa-solid fa-cubes"></i> パーツ追加</h3>
             <span class="badge">レゴ方式</span>
           </div>
-          <p class="panel-desc">授業の流れに合わせてパーツを追加・並び替えできます。</p>
+          <p class="panel-desc">追加したいパーツをクリックして挿入できます。</p>
           
           <div class="block-palette">
             <button class="palette-item" onclick="addBlock('objective')">
@@ -807,11 +858,25 @@
                 <span>つまずき確認・小問</span>
               </div>
             </button>
+            <button class="palette-item highlight-palette-item" onclick="addBlock('board-task')">
+              <i class="fa-solid fa-chalkboard-user text-primary"></i>
+              <div>
+                <strong>板書・主発問 (課題枠)</strong>
+                <span>思考スペース・解法メモ</span>
+              </div>
+            </button>
+            <button class="palette-item highlight-palette-item" onclick="addBlock('point-box')">
+              <i class="fa-solid fa-bookmark text-warning"></i>
+              <div>
+                <strong>要点まとめ (公式枠)</strong>
+                <span>重要定理・穴埋め整理</span>
+              </div>
+            </button>
             <button class="palette-item" onclick="addBlock('question')">
               <i class="fa-solid fa-pen-to-square"></i>
               <div>
-                <strong>問い・課題</strong>
-                <span>計算・思考・解答スペース</span>
+                <strong>問い・計算問題</strong>
+                <span>演習・解答スペース</span>
               </div>
             </button>
             <button class="palette-item" onclick="addBlock('graph-block')">
@@ -844,32 +909,10 @@
             </button>
           </div>
 
-          <div class="panel-section mt-4">
-            <div class="panel-header">
-              <h3><i class="fa-solid fa-sliders"></i> プリント設定</h3>
-            </div>
-            <div class="form-group">
-              <label>対象学年・単元</label>
-              <select id="sheetGradeUnit" class="form-control" onchange="onGradeUnitChange()">
-                <option value="中2: 一次関数 (変化の割合・グラフ)">中2: 一次関数 (変化の割合・グラフ)</option>
-                <option value="中2: 平行線と角 (錯角・同位角)">中2: 平行線と角 (錯角・同位角)</option>
-                <option value="中3: 平方根の計算">中3: 平方根の計算</option>
-                <option value="中3: 円周角の定理">中3: 円周角の定理</option>
-                <option value="中1: 一次方程式の解き方">中1: 一次方程式の解き方</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>プリント番号 / 通し番号</label>
-              <input type="text" id="sheetNumber" class="form-control" value="No. 14">
-            </div>
-          </div>
-
+          <!-- 4. 印刷・出力操作 -->
           <div class="action-buttons-group mt-4">
             <button class="btn btn-primary btn-block" onclick="printWorksheetPaper()">
               <i class="fa-solid fa-print"></i> 印刷 / PDF保存 (A4)
-            </button>
-            <button class="btn btn-outline btn-block" onclick="loadSampleSheet()">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> 授業例テンプレート読込
             </button>
             <button class="btn btn-ghost btn-block text-danger" onclick="clearWorksheet()">
               <i class="fa-solid fa-trash-can"></i> 全ブロック初期化
@@ -885,6 +928,9 @@
               <span>A4 縦レイアウト (自動レイアウト調整中)</span>
             </div>
             <div class="paper-actions">
+              <button class="btn btn-sm btn-outline text-primary" onclick="applyWorksheetToTimetable()" title="このプリントのめあて・単元名を時間割の週案に反映">
+                <i class="fa-solid fa-calendar-plus"></i> 時間割の予定にセット
+              </button>
               <button class="btn btn-sm btn-ghost" onclick="toggleAnswerMode()" id="answerModeBtn">
                 <i class="fa-solid fa-eye"></i> 解答表示切替
               </button>
@@ -1369,6 +1415,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20261002k"></script>
+  <script src="app.js?v=20261002l"></script>
 </body>
 </html>

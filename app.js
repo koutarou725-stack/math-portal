@@ -1,3 +1,18 @@
+
+// クラス名から学年（1, 2, 3）を正確に抽出する共通ヘルパー
+function extractGradeFromClassName(cls) {
+  if (!cls) return '2';
+  const trimmed = String(cls).trim();
+  const m = trimmed.match(/^([1-3])/);
+  if (m) return m[1];
+  const m2 = trimmed.match(/([1-3])年/);
+  if (m2) return m2[1];
+  if (trimmed.includes('3')) return '3';
+  if (trimmed.includes('2')) return '2';
+  if (trimmed.includes('1')) return '1';
+  return '2';
+}
+
 /**
  * 中学数学科 教員ポータル & 授業工房
  * メインスクリプト (app.js)
@@ -1445,6 +1460,20 @@ function addBlock(type, customData = null) {
       answer: customData?.answer || '∠x = 80°',
       svgHtml: customData?.svgHtml || generateParallelChevronSvg(45, 35, 200, 150)
     };
+  } else if (type === 'board-task') {
+    block.data = {
+      qNum: customData?.qNum || '【本時の課題】',
+      text: customData?.text || '式 $(a+b+2)(a+b-5)$ を展開するにはどうすればよいだろうか？共通な部分を見つけて工夫しよう。',
+      guide: customData?.guide || '着眼点: 共通な部分に着目して、1つのまとまり（$M$など）とおいてみよう。',
+      thinkingSpaceHeight: customData?.thinkingSpaceHeight || 85,
+      answer: customData?.answer || '$a+b=M$ とおくと、$(M+2)(M-5) = M^2 - 3M - 10$。'
+    };
+  } else if (type === 'point-box') {
+    block.data = {
+      badge: customData?.badge || '要点公式',
+      title: customData?.title || '重要ポイント・公式まとめ',
+      content: customData?.content || '公式や定義のまとめを入力します。'
+    };
   } else if (type === 'summary') {
     block.data = {
       title: customData?.title || '本時のまとめ',
@@ -1588,6 +1617,41 @@ function renderWorksheet() {
           </div>
         </div>
       `;
+    } else if (block.type === 'board-task') {
+      blockContentHtml = `
+        <div class="board-task-box">
+          <div class="board-task-header">
+            <span class="board-task-badge"><i class="fa-solid fa-chalkboard-user"></i> ${block.data.qNum}</span>
+            <div class="board-task-text" contenteditable="true" onblur="updateBlockData(${index}, 'text', this.innerHTML)">
+              ${block.data.text}
+            </div>
+          </div>
+          ${block.data.guide ? `
+            <div class="board-task-guide" contenteditable="true" onblur="updateBlockData(${index}, 'guide', this.innerHTML)">
+              <i class="fa-solid fa-compass text-primary"></i> ${block.data.guide}
+            </div>
+          ` : ''}
+          <div class="board-task-canvas" style="min-height: ${block.data.thinkingSpaceHeight || 85}px;">
+            <div class="canvas-grid-label">【自分の考え・途中式・説明】</div>
+            <div class="answer-space answer-text-inline">
+              <span class="answer-label">【板書まとめ・模範解】</span>
+              <span class="answer-text">${block.data.answer}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (block.type === 'point-box') {
+      blockContentHtml = `
+        <div class="point-summary-box">
+          <div class="point-summary-header">
+            <span class="point-badge"><i class="fa-solid fa-bookmark"></i> ${block.data.badge || '要点公式'}</span>
+            <strong contenteditable="true" onblur="updateBlockData(${index}, 'title', this.innerText)">${block.data.title}</strong>
+          </div>
+          <div class="point-summary-body" contenteditable="true" onblur="updateBlockData(${index}, 'content', this.innerHTML)">
+            ${block.data.content}
+          </div>
+        </div>
+      `;
     } else if (block.type === 'summary') {
       blockContentHtml = `
         <div class="summary-box">
@@ -1635,42 +1699,652 @@ function updateBlockData(index, field, value) {
   }
 }
 
-function loadSampleSheet() {
+
+// ==========================================
+// 授業プリント・単元プリセットデータ（板書書籍・要点ブック連動）
+// ==========================================
+const lessonUnitPresets = {
+  // --- 中3 ---
+  'g3_poly_expand': {
+    grade: '3',
+    unitName: '多項式の展開・因数分解',
+    lessonTitle: '工夫して式を展開しよう（置き換えの利用）',
+    badge: '中3数学 / 明治図書板書 3年上',
+    boardPdf: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+    pointPdf: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+    officialPdf: '',
+    blocks: [
+      {
+        type: 'objective',
+        data: { text: '共通な部分に着目して式の一部を別の文字とおきかえ、乗法公式を使って工夫して展開できる。' }
+      },
+      {
+        type: 'review',
+        data: {
+          title: '前時のふりかえり・乗法公式',
+          content: '公式: $(x+a)(x+b) = x^2 + (a+b)x + ab$　例: $(x+3)(x+5) = x^2 + 8x + 15$'
+        }
+      },
+      {
+        type: 'board-task',
+        data: {
+          qNum: '【本時の課題】',
+          text: '式 $(a+b+2)(a+b-5)$ を展開するにはどうすればよいだろうか？共通な部分を見つけて工夫しよう。',
+          guide: '着眼点: $a+b$ がどちらのカッコにもあるね。1つのまとまり（$M$など）とおいてみよう。',
+          thinkingSpaceHeight: 90,
+          answer: '$a+b=M$ とおくと、$(M+2)(M-5) = M^2 - 3M - 10$。元に戻して $(a+b)^2 - 3(a+b) - 10 = a^2 + 2ab + b^2 - 3a - 3b - 10$'
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '板書まとめ',
+          title: '置き換えによる展開のポイント',
+          content: '式の中に同じまとまりがあるときは、それを <strong>1つの文字 $M$</strong> とおくことで、知っている乗法公式にあてはめて簡単に展開できる！'
+        }
+      },
+      {
+        type: 'question',
+        data: {
+          qNum: '確かめ問題',
+          text: '置き換えの工夫を使って、次の式を展開しなさい。<br>$(x+y+3)(x+y-3)$',
+          answer: '$x+y=M$ とおくと $(M+3)(M-3) = M^2 - 9 = (x+y)^2 - 9 = x^2 + 2xy + y^2 - 9$',
+          spaceHeight: 50
+        }
+      },
+      {
+        type: 'reflection',
+        data: { title: '本時の自己評価 & 振り返り' }
+      }
+    ]
+  },
+  'g3_sqrt_calc': {
+    grade: '3',
+    unitName: '平方根の性質と乗除',
+    lessonTitle: '根号をふくむ式の乗法と除法',
+    badge: '中3数学 / 明治図書板書 3年上',
+    boardPdf: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+    pointPdf: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+    officialPdf: '',
+    blocks: [
+      {
+        type: 'objective',
+        data: { text: '$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$ の性質を理解し、根号を含む式の乗法・除法を正確に計算できる。' }
+      },
+      {
+        type: 'review',
+        data: {
+          title: '平方根の定義のふりかえり',
+          content: '面積が $2$ の正方形の1辺の長さは $\\sqrt{2}$、面積が $3$ の正方形の1辺の長さは $\\sqrt{3}$ である。'
+        }
+      },
+      {
+        type: 'board-task',
+        data: {
+          qNum: '【本時の課題】',
+          text: '$\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}$ になる理由を、正方形や長方形の面積をもとに説明しよう。',
+          guide: 'ヒント: 2乗して $6$ になる正の数は何だろう？ $(\\sqrt{2} \\times \\sqrt{3})^2$ を計算してみよう。',
+          thinkingSpaceHeight: 90,
+          answer: '理由: $(\\sqrt{2}\\times\\sqrt{3})^2 = (\\sqrt{2})^2 \\times (\\sqrt{3})^2 = 2 \\times 3 = 6$。2乗して6になる正の数だから $\\sqrt{6}$ である。'
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '要点公式',
+          title: '根号をふくむ式の計算公式（$a>0, b>0$）',
+          content: '① <strong>$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$</strong>　（根号の中身同士をかける）<br>② <strong>$\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$</strong>　（根号の中身同士をわる）'
+        }
+      },
+      {
+        type: 'question',
+        data: {
+          qNum: '確かめ問題',
+          text: '次の計算をしなさい。<br>(1) $\\sqrt{3} \\times \\sqrt{5}$　　(2) $\\sqrt{24} \\div \\sqrt{2}$',
+          answer: '(1) $\\sqrt{15}$　　(2) $\\sqrt{12} = 2\\sqrt{3}$',
+          spaceHeight: 50
+        }
+      },
+      {
+        type: 'reflection',
+        data: { title: '本時の自己評価 & 振り返り' }
+      }
+    ]
+  },
+  'g3_quad_factor': {
+    grade: '3',
+    unitName: '2次方程式の解き方',
+    lessonTitle: '因数分解を利用した2次方程式の解法',
+    badge: '中3数学 / 明治図書板書 3年上',
+    boardPdf: '書籍「板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学」/261002 板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学 ３年上.pdf',
+    pointPdf: '書籍「数学をひとつひとつわかりやすく。」/260610 中3数学をひとつひとつわかりやすく。.pdf',
+    officialPdf: '',
+    blocks: [
+      {
+        type: 'objective',
+        data: { text: '$AB=0$ ならば $A=0$ または $B=0$ の性質を利用して、2次方程式を因数分解によって解くことができる。' }
+      },
+      {
+        type: 'review',
+        data: {
+          title: '前時のふりかえり・因数分解',
+          content: '因数分解公式: $x^2 - 5x + 6 = (x - 2)(x - 3)$'
+        }
+      },
+      {
+        type: 'board-task',
+        data: {
+          qNum: '【本時の課題】',
+          text: '2次方程式 $x^2 - 5x + 6 = 0$ の解を求めるには、左辺をどのように変形すればよいだろうか？',
+          guide: 'ヒント: 2つの式をかけて $0$ になるとき、それぞれの式はどうなっているかな？',
+          thinkingSpaceHeight: 90,
+          answer: '左辺を因数分解すると $(x-2)(x-3)=0$。かけて0になるから $x-2=0$ または $x-3=0$。よって解は $x=2, 3$。'
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '板書まとめ',
+          title: '因数分解による解法のまとめ',
+          content: '2次方程式の左辺を $(x-\\alpha)(x-\\beta)=0$ の形に因数分解できれば、解は <strong>$x = \\alpha, \\beta$</strong> とすぐに求められる！'
+        }
+      },
+      {
+        type: 'question',
+        data: {
+          qNum: '確かめ問題',
+          text: '次の方程式を解きなさい。<br>(1) $(x-4)(x+1) = 0$　　(2) $x^2 - 7x + 12 = 0$',
+          answer: '(1) $x = 4, -1$　　(2) $(x-3)(x-4)=0$ より $x = 3, 4$',
+          spaceHeight: 50
+        }
+      },
+      {
+        type: 'reflection',
+        data: { title: '本時の自己評価 & 振り返り' }
+      }
+    ]
+  },
+  // --- 中2 ---
+  'g2_linear_graph': {
+    grade: '2',
+    unitName: '一次関数とグラフ',
+    lessonTitle: '一次関数のグラフと傾き・切片',
+    badge: '中2数学 / 学習プリント 3-1 & 要点ブック',
+    boardPdf: '',
+    pointPdf: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+    officialPdf: '数学学習プリント/02_2年生/数学_3-1一次関数とグラフ.pdf',
+    blocks: [
+      {
+        type: 'objective',
+        data: { text: '一次関数の式 $y = ax + b$ からグラフの傾きと切片を読み取り、正確に直線グラフをかくことができる。' }
+      },
+      {
+        type: 'review',
+        data: {
+          title: '前時のふりかえり・比例',
+          content: '比例 $y = 2x$ のグラフは原点 $(0, 0)$ を通り、右に1進むと上に2進む直線である。'
+        }
+      },
+      {
+        type: 'graph-block',
+        data: {
+          qNum: '【本時の課題】',
+          text: '右の図は $y = 2x + 1$ のグラフである。<br>① 切片（$y$軸との交点）の座標を答えなさい。<br>② グラフの傾き（$x$が1増えるときの$y$の増加量）を求めなさい。',
+          answer: '① $(0, 1)$　② 傾き $= 2$',
+          svgHtml: '' // load時に生成
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '要点まとめ',
+          title: '一次関数 $y = ax + b$ のグラフの性質',
+          content: '・ <strong>$a$（傾き）</strong>: グラフの傾き具合。$x$ が1増えるときの $y$ の増加量。<br>・ <strong>$b$（切片）</strong>: グラフと $y$ 軸との交点 $(0, b)$。'
+        }
+      },
+      {
+        type: 'question',
+        data: {
+          qNum: '確かめ問題',
+          text: '一次関数 $y = -3x + 4$ について、次の問いに答えなさい。<br>(1) この直線の傾きと切片を答えなさい。<br>(2) $x=2$ のときの $y$ の値を求めなさい。',
+          answer: '(1) 傾き: $-3$, 切片: $4$　(2) $y = -3(2) + 4 = -2$',
+          spaceHeight: 50
+        }
+      },
+      {
+        type: 'reflection',
+        data: { title: '本時の自己評価 & 振り返り' }
+      }
+    ]
+  },
+  'g2_sim_eq': {
+    grade: '2',
+    unitName: '連立方程式の解き方',
+    lessonTitle: '連立方程式の解法（加減法）',
+    badge: '中2数学 / 学習プリント 2-1 & 要点ブック',
+    boardPdf: '',
+    pointPdf: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+    officialPdf: '数学学習プリント/02_2年生/数学_2-1連立方程式.pdf',
+    blocks: [
+      {
+        type: 'objective',
+        data: { text: '係数をそろえて2つの式をたしたりひいたりし、文字を1つ消去して連立方程式を解くことができる。' }
+      },
+      {
+        type: 'review',
+        data: {
+          title: '前時のふりかえり・1次方程式',
+          content: '方程式 $3x = 12$ の解は $x = 4$。文字が1つなら解くことができる！'
+        }
+      },
+      {
+        type: 'board-task',
+        data: {
+          qNum: '【本時の課題】',
+          text: '連立方程式 $\\begin{cases} 2x + y = 11 \\\\ 2x - y = 5 \\end{cases}$ を解くには、どうすれば文字を1つにできるだろうか？',
+          guide: 'ヒント: 2つの式の左辺同士、右辺同士をたしたりひいたりしてみよう。',
+          thinkingSpaceHeight: 90,
+          answer: '2つの式をたすと $4x = 16 \\rightarrow x = 4$。代入して $y = 3$。解は $(x, y) = (4, 3)$。'
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '加減法のポイント',
+          title: '連立方程式の解き方の手順',
+          content: '① どちらかの文字の係数の絶対値をそろえる。<br>② 2つの式を <strong>たしたりひいたりして、文字を1つ消去</strong> する！<br>③ 出た解を代入してもう1つの文字を求める。'
+        }
+      },
+      {
+        type: 'question',
+        data: {
+          qNum: '確かめ問題',
+          text: '次の連立方程式を加減法で解きなさい。<br>$\\begin{cases} x + y = 7 \\\\ x - y = 3 \\end{cases}$',
+          answer: 'たして $2x = 10 \\rightarrow x = 5$。代入して $y = 2$。答: $x=5, y=2$',
+          spaceHeight: 50
+        }
+      },
+      {
+        type: 'reflection',
+        data: { title: '本時の自己評価 & 振り返り' }
+      }
+    ]
+  },
+  'g2_parallel_angle': {
+    grade: '2',
+    unitName: '平行線と角・合同',
+    lessonTitle: '平行線と角（同位角と錯角）',
+    badge: '中2数学 / 学習プリント 4-1 & 要点ブック',
+    boardPdf: '',
+    pointPdf: '書籍「数学をひとつひとつわかりやすく。」/260610 中2数学をひとつひとつわかりやすく。.pdf',
+    officialPdf: '数学学習プリント/02_2年生/数学_4-1平行と合同.pdf',
+    blocks: [
+      {
+        type: 'objective',
+        data: { text: '平行線における同位角・錯角の性質を理解し、補助線を引いて未知の角の大きさを求めることができる。' }
+      },
+      {
+        type: 'review',
+        data: {
+          title: '前時のふりかえり・対頂角',
+          content: '向かい合う角（対頂角）は常に等しい。また、同位角・錯角の位置関係を確認しよう。'
+        }
+      },
+      {
+        type: 'geometry-block',
+        data: {
+          qNum: '【本時の課題】',
+          text: '右の図で、直線 $l$ と $m$ が平行であるとき、折れ線の角 $\\angle x$ の大きさを求めなさい。（補助線を引いて考えよう）',
+          answer: '$\\angle x = 45^\\circ + 35^\\circ = 80^\\circ$',
+          svgHtml: '' // load時に生成
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '定理まとめ',
+          title: '平行線と角の重要性質',
+          content: '2直線が平行ならば、<strong>同位角は等しい</strong>。また <strong>錯角は等しい</strong>。<br>折れ線の角は、<strong>「尖った頂点を通る平行な補助線」</strong> を引いて2つに分けて考える！'
+        }
+      },
+      {
+        type: 'question',
+        data: {
+          qNum: '確かめ問題',
+          text: '$l // m$ のとき、同位角が $65^\\circ$ である角の錯角の大きさを求めなさい。',
+          answer: '$65^\\circ$（平行線なので錯角も等しい）',
+          spaceHeight: 45
+        }
+      },
+      {
+        type: 'reflection',
+        data: { title: '本時の自己評価 & 振り返り' }
+      }
+    ]
+  },
+  // --- 中1 ---
+  'g1_pos_neg': {
+    grade: '1',
+    unitName: '正の数・負の数の計算',
+    lessonTitle: '正負の数の加法と減法',
+    badge: '中1数学 / 学習プリント 1-2 & 要点ブック',
+    boardPdf: '',
+    pointPdf: '書籍「数学をひとつひとつわかりやすく。」/260610 中1数学をひとつひとつわかりやすく。.pdf',
+    officialPdf: '数学学習プリント/01_1年生/数学_1-2正の数・負の数の計算.pdf',
+    blocks: [
+      {
+        type: 'objective',
+        data: { text: '正負の数のたし算とひき算の規則を理解し、符号に注意して正確に計算できる。' }
+      },
+      {
+        type: 'review',
+        data: {
+          title: '前時のふりかえり・絶対値',
+          content: '$+5$ の絶対値は $5$、$-5$ の絶対値も $5$（原点からの距離）。'
+        }
+      },
+      {
+        type: 'board-task',
+        data: {
+          qNum: '【本時の課題】',
+          text: '$(-3) - (-5)$ はなぜ足し算にかえて計算できるのだろうか？数直線やカードの増減をもとに説明しよう。',
+          guide: 'ヒント: 「$-5$ 点のカードを引く（取り除く）」と、点数は増えるかな？減るかな？',
+          thinkingSpaceHeight: 90,
+          answer: '負の数を引くことは、その分だけ元に戻る（プラスされる）こと。数直線で左に進むことの逆だから右に進む。$(-3) + (+5) = +2$'
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '計算のルール',
+          title: '正負の数の減法のまとめ',
+          content: '正負の数のひき算は、<strong>ひく数の符号を変えて、たし算になおす</strong>！<br>例: $a - (-b) = a + (+b)$　/　$a - (+b) = a + (-b)$'
+        }
+      },
+      {
+        type: 'question',
+        data: {
+          qNum: '確かめ問題',
+          text: '次の計算をしなさい。<br>(1) $(+3) + (-8)$　　(2) $(-4) - (-9)$　　(3) $2 - 7$',
+          answer: '(1) $-5$　　(2) $(-4)+(+9)=+5$　　(3) $-5$',
+          spaceHeight: 50
+        }
+      },
+      {
+        type: 'reflection',
+        data: { title: '本時の自己評価 & 振り返り' }
+      }
+    ]
+  },
+  'g1_equation': {
+    grade: '1',
+    unitName: '一次方程式の解き方',
+    lessonTitle: '等式の性質と方程式の解法（移項）',
+    badge: '中1数学 / 学習プリント 3-1 & 要点ブック',
+    boardPdf: '',
+    pointPdf: '書籍「数学をひとつひとつわかりやすく。」/260610 中1数学をひとつひとつわかりやすく。.pdf',
+    officialPdf: '数学学習プリント/01_1年生/数学_3-1方程式.pdf',
+    blocks: [
+      {
+        type: 'objective',
+        data: { text: '等式の性質をもとに「移項」の仕組みを理解し、$x=a$ の形にして方程式を解くことができる。' }
+      },
+      {
+        type: 'review',
+        data: {
+          title: '前時のふりかえり・天びんの関係',
+          content: '等式の両辺に同じ数をたしても、同じ数をひいても、等式は成り立つ。'
+        }
+      },
+      {
+        type: 'board-task',
+        data: {
+          qNum: '【本時の課題】',
+          text: '方程式 $3x - 5 = 7$ を解くとき、両辺に $+5$ をするとどのような式になるだろうか？「項の移動」に着目しよう。',
+          guide: 'ヒント: $3x - 5 + 5 = 7 + 5$ とすると、左辺の $-5$ はどうなる？',
+          thinkingSpaceHeight: 90,
+          answer: '$3x = 7 + 5$ となり、左辺にあった $-5$ が符号を変えて $+5$ として右辺に移ったように見える。これが「移項」である。'
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '移項のルール',
+          title: '方程式を解く基本ステップ',
+          content: '① <strong>移項</strong>: $x$ の項を左辺へ、数の項を右辺へ符号を変えて移す。<br>② <strong>整理</strong>: $ax = b$ の形にまとめる。<br>③ <strong>割る</strong>: 両辺を $x$ の係数 $a$ で割り、$x = \\frac{b}{a}$ を求める。'
+        }
+      },
+      {
+        type: 'question',
+        data: {
+          qNum: '確かめ問題',
+          text: '次の方程式を解きなさい。<br>(1) $4x - 3 = 9$　　(2) $5x + 2 = 2x + 11$',
+          answer: '(1) $4x = 12 \\rightarrow x = 3$　　(2) $3x = 9 \\rightarrow x = 3$',
+          spaceHeight: 50
+        }
+      },
+      {
+        type: 'reflection',
+        data: { title: '本時の自己評価 & 振り返り' }
+      }
+    ]
+  }
+};
+
+let currentWorksheetPresetKey = 'g2_linear_graph';
+let currentWorksheetGrade = '2';
+
+// 単元プリセットから授業プリントを一括生成
+function loadLessonPreset(presetKey, classInfo = null) {
+  if (!presetKey || !lessonUnitPresets[presetKey]) {
+    presetKey = 'g2_linear_graph';
+  }
+  currentPresetKey = presetKey;
+  currentWorksheetPresetKey = presetKey;
+  const preset = lessonUnitPresets[presetKey];
+  currentWorksheetGrade = preset.grade;
+
   state.blocks = [];
-  addBlock('objective', {
-    text: '一次関数の式 y = ax + b からグラフをかき、傾きと切片の関係を説明できる。'
+
+  // タイトルとバッジの更新
+  const titleEl = document.getElementById('paperTitle');
+  if (titleEl) titleEl.textContent = preset.lessonTitle;
+
+  const badgeEl = document.getElementById('paperGradeBadge');
+  if (badgeEl) badgeEl.textContent = '第' + preset.grade + '学年 数学科 授業プリント';
+
+  const footerCode = document.getElementById('footerLessonCode');
+  if (footerCode) footerCode.textContent = 'M' + preset.grade + '-' + presetKey;
+
+  // クラス情報の反映（時間割からジャンプしてきた場合など）
+  if (classInfo) {
+    const classCell = document.querySelector('.info-cell.class-cell');
+    if (classCell) {
+      classCell.innerHTML = classInfo + '組';
+    }
+  }
+
+  // ブロックの追加
+  preset.blocks.forEach(b => {
+    let blockData = { ...b.data };
+    if (b.type === 'graph-block' && !blockData.svgHtml) {
+      blockData.svgHtml = generateLinearSvg(2, 1, true, true, 200, 200);
+    } else if (b.type === 'geometry-block' && !blockData.svgHtml) {
+      blockData.svgHtml = generateParallelChevronSvg(45, 35, 200, 150);
+    }
+    addBlock(b.type, blockData);
   });
-  addBlock('review', {
-    title: '前時のふりかえり',
-    content: '比例 y = 2x のグラフは原点(0, 0)を通り、右に1進むと上に2進む直線である。'
+
+  // UIのセレクトボックスの同期
+  updatePresetDropdown();
+  updatePresetReferenceButtons();
+
+  showToast('<i class="fa-solid fa-wand-magic-sparkles text-primary"></i> 【' + preset.unitName + '】の板書授業プリントを展開しました');
+}
+
+// 授業例テンプレート読込（旧loadSampleSheetの進化版）
+function loadSampleSheet() {
+  loadLessonPreset(currentWorksheetPresetKey || 'g2_linear_graph');
+}
+
+// サイドバーの学年切り替え
+function switchWorksheetGrade(grade) {
+  currentWorksheetGrade = String(grade);
+  ['1', '2', '3'].forEach(g => {
+    const btn = document.getElementById('wsGradeBtn_' + g);
+    if (btn) btn.classList.toggle('active', currentWorksheetGrade === g);
   });
-  addBlock('graph-block', {
-    qNum: '問 1',
-    text: '右の図は y = 2x + 1 のグラフである。<br>① 切片(y軸との交点)の座標を答えなさい。<br>② グラフの傾き(xが1増えるときのyの増加量)を求めなさい。',
-    answer: '① (0, 1) , ② 傾き = 2',
-    svgHtml: generateLinearSvg(2, 1, true, true, 200, 200)
-  });
-  addBlock('geometry-block', {
-    qNum: '問 2',
-    text: '右の図で、直線 l と m が平行であるとき、折れ線の角 ∠x の大きさを求めなさい。（補助線を引いて考えよう）',
-    answer: '∠x = 45° + 35° = 80°',
-    svgHtml: generateParallelChevronSvg(45, 35, 200, 150)
-  });
-  addBlock('summary', {
-    title: '本時のまとめ',
-    content: '一次関数 y = ax + b のグラフは、<strong>切片(0, b)</strong> を通り、<strong>傾き a</strong> の直線になる！'
-  });
-  addBlock('reflection');
+  updatePresetDropdown();
+}
+
+// 単元セレクトボックスの動的更新
+function updatePresetDropdown() {
+  const select = document.getElementById('sheetGradeUnit');
+  if (!select) return;
+
+  const filteredKeys = Object.keys(lessonUnitPresets).filter(k => lessonUnitPresets[k].grade === currentWorksheetGrade);
   
-  document.getElementById('memoClass1').value = '問1の切片は全員スムーズだったが、問2の補助線をどこに引くかで戸惑う生徒がいた。机間巡視で「尖った頂点を通る平行線」をヒントに出すと一気に解決した。';
-  document.getElementById('memoTiming').value = 'めあて+復習8分、問1で12分、問2で15分、まとめ・振り返り10分でほぼ時間通り。';
-  document.getElementById('memoNext').value = '問2の前に、基本の同位角・錯角の合言葉（Zの形）を全員で手でなぞる導入を挟むとさらに良い。';
+  select.innerHTML = filteredKeys.map(k => {
+    const p = lessonUnitPresets[k];
+    const isSelected = k === currentWorksheetPresetKey ? 'selected' : '';
+    return '<option value="' + k + '" ' + isSelected + '>【中' + p.grade + '】' + p.unitName + ' - ' + p.lessonTitle + '</option>';
+  }).join('');
+
+  if (!filteredKeys.includes(currentWorksheetPresetKey) && filteredKeys.length > 0) {
+    currentWorksheetPresetKey = filteredKeys[0];
+    select.value = currentWorksheetPresetKey;
+  }
+
+  updatePresetReferenceButtons();
 }
 
 function onGradeUnitChange() {
-  const val = document.getElementById('sheetGradeUnit').value;
-  document.getElementById('paperTitle').textContent = val;
+  const select = document.getElementById('sheetGradeUnit');
+  if (select && select.value) {
+    currentWorksheetPresetKey = select.value;
+    updatePresetReferenceButtons();
+  }
 }
+
+// 選択中の単元の板書PDFや要点PDFボタンの更新・開く
+function updatePresetReferenceButtons() {
+  const preset = lessonUnitPresets[currentWorksheetPresetKey];
+  const btnBoard = document.getElementById('btnWsViewBoard');
+  const btnPoint = document.getElementById('btnWsViewPoint');
+  const btnOfficial = document.getElementById('btnWsViewOfficial');
+
+  if (btnBoard) {
+    btnBoard.style.display = (preset && preset.boardPdf) ? 'inline-flex' : 'none';
+  }
+  if (btnPoint) {
+    btnPoint.style.display = (preset && preset.pointPdf) ? 'inline-flex' : 'none';
+  }
+  if (btnOfficial) {
+    btnOfficial.style.display = (preset && preset.officialPdf) ? 'inline-flex' : 'none';
+  }
+}
+
+function openPresetBoardPdf() {
+  const preset = lessonUnitPresets[currentWorksheetPresetKey];
+  if (preset && preset.boardPdf) {
+    openPdfPreviewModal(encodeURIComponent(preset.boardPdf), '【中' + preset.grade + ' 板書＆展開例】' + preset.unitName);
+  } else {
+    showToast('この単元の板書書籍PDFは準備中です');
+  }
+}
+
+function openPresetPointPdf() {
+  const preset = lessonUnitPresets[currentWorksheetPresetKey];
+  if (preset && preset.pointPdf) {
+    openPdfPreviewModal(encodeURIComponent(preset.pointPdf), '【中' + preset.grade + ' 要点ブック】' + preset.unitName);
+  }
+}
+
+function openPresetOfficialPdf() {
+  const preset = lessonUnitPresets[currentWorksheetPresetKey];
+  if (preset && preset.officialPdf) {
+    openPdfPreviewModal(encodeURIComponent(preset.officialPdf), '【中' + preset.grade + ' 公式学習プリント】' + preset.unitName);
+  }
+}
+
+// ==========================================
+// 時間割 ➔ 授業プリント工房 への双方向連携
+// ==========================================
+function jumpToWorksheetFromSlot() {
+  let className = state.editingLessonPlan ? (state.editingLessonPlan.className || '') : '';
+  let grade = extractGradeFromClassName(className);
+  const input = document.getElementById('lessonPlanInput');
+  const planKeyword = (input ? input.value : '').trim();
+
+  // 単元別主要キーワードマップ（教育課程の教科書・板書・プリントに完全準拠）
+  const mathUnitKeywords = [
+    { key: 'g3_poly_expand', grade: '3', words: ['展開', '因数分解', '多項式', '乗法公式', '式の計算', '乗法', '置き換え'] },
+    { key: 'g3_sqrt_calc', grade: '3', words: ['平方根', '根号', 'ルート', '√', '有理数', '無理数', '積と商'] },
+    { key: 'g3_quad_factor', grade: '3', words: ['2次方程式', '二次方程式', '方程式の解', '解の公式', '因数分解で解く'] },
+    { key: 'g2_linear_graph', grade: '2', words: ['一次関数', '1次関数', '関数', 'グラフ', '傾き', '切片', '変化の割合', '直線の式'] },
+    { key: 'g2_sim_eq', grade: '2', words: ['連立', '連立方程式', '加減法', '代入法', '二元一次方程式'] },
+    { key: 'g2_parallel_angle', grade: '2', words: ['平行', '角', '同位角', '錯角', '対頂角', '合同', '証明', '三角形', '四角形'] },
+    { key: 'g1_pos_neg', grade: '1', words: ['正の数', '負の数', '正負', '加法', '減法', '絶対値', '符号', '数直線'] },
+    { key: 'g1_equation', grade: '1', words: ['方程式', '1次方程式', '一次方程式', '移項', '等式の性質'] }
+  ];
+
+  let targetPresetKey = null;
+  const gradeKeys = Object.keys(lessonUnitPresets).filter(k => lessonUnitPresets[k].grade === grade);
+
+  if (planKeyword) {
+    // 該当学年のキーワードから優先マッチング
+    for (const item of mathUnitKeywords.filter(m => m.grade === grade)) {
+      if (item.words.some(w => planKeyword.includes(w))) {
+        targetPresetKey = item.key;
+        break;
+      }
+    }
+    // 学年が明示されない場合の全学年フォールバック
+    if (!targetPresetKey) {
+      for (const item of mathUnitKeywords) {
+        if (item.words.some(w => planKeyword.includes(w))) {
+          targetPresetKey = item.key;
+          grade = item.grade;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!targetPresetKey && gradeKeys.length > 0) {
+    targetPresetKey = gradeKeys[0];
+  }
+
+  closeLessonPlanModal();
+  switchTab('worksheet');
+  switchWorksheetGrade(grade);
+  loadLessonPreset(targetPresetKey, className);
+}
+
+// 授業プリント工房 ➔ 時間割の授業予定（週案）へ反映
+function applyWorksheetToTimetable() {
+  const preset = lessonUnitPresets[currentWorksheetPresetKey];
+  const title = document.getElementById('paperTitle')?.textContent || (preset ? preset.lessonTitle : '数学 授業プリント');
+  const objBlock = state.blocks.find(b => b.type === 'objective');
+  const objText = objBlock?.data?.text || '';
+
+  const summaryText = title + (objText ? ' (' + objText.slice(0, 24) + '...)' : '');
+
+  // 直近で編集していたスロットがあれば反映、なければ案内トースト
+  if (state.editingLessonPlan && state.editingLessonPlan.key) {
+    const [tKey, day, p] = state.editingLessonPlan.key.split('_');
+    const term = state.terms[tKey];
+    if (term && term.weeklyPlans && term.weeklyPlans[day]) {
+      term.weeklyPlans[day][p] = summaryText;
+      renderCurrentTimetable();
+      showToast('<i class="fa-solid fa-calendar-check text-success"></i> 時間割の授業予定に「' + title + '」を登録しました！');
+      return;
+    }
+  }
+
+  showToast('<i class="fa-solid fa-circle-info text-primary"></i> 時間割を開き、反映したい授業マスをクリックして「学習内容を保存」してください');
+}
+
 
 // ==========================================
 // PDCAメモの保存
@@ -4621,13 +5295,8 @@ function openPdfInNewTab(encodedPath) {
 
 // 時間割スロットから該当学年の公式プリントライブラリへジャンプ
 function jumpToOfficialPrintsFromSlot() {
-  let grade = '1';
-  if (state.editingLessonPlan && state.editingLessonPlan.className) {
-    const cls = state.editingLessonPlan.className;
-    if (cls.includes('2') || cls.startsWith('2-')) grade = '2';
-    else if (cls.includes('3') || cls.startsWith('3-')) grade = '3';
-    else if (cls.includes('1') || cls.startsWith('1-')) grade = '1';
-  }
+  let className = state.editingLessonPlan ? (state.editingLessonPlan.className || '') : '';
+  let grade = extractGradeFromClassName(className);
   const input = document.getElementById('lessonPlanInput');
   const planKeyword = input ? input.value : '';
 
@@ -4653,13 +5322,8 @@ function jumpToOfficialPrintsFromSlot() {
 
 // 時間割スロットから板書・展開例ライブラリへジャンプ
 function jumpToBoardingPrintsFromSlot() {
-  let grade = '3';
-  if (state.editingLessonPlan && state.editingLessonPlan.className) {
-    const cls = state.editingLessonPlan.className;
-    if (cls.includes('1') || cls.startsWith('1-')) grade = '1';
-    else if (cls.includes('2') || cls.startsWith('2-')) grade = '2';
-    else if (cls.includes('3') || cls.startsWith('3-')) grade = '3';
-  }
+  let className = state.editingLessonPlan ? (state.editingLessonPlan.className || '') : '';
+  let grade = extractGradeFromClassName(className);
   const input = document.getElementById('lessonPlanInput');
   const planKeyword = input ? input.value : '';
 

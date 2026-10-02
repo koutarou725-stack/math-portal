@@ -4348,3 +4348,160 @@ math.math-expr mfrac {
   border-bottom-left-radius: var(--radius-lg);
   border-bottom-right-radius: var(--radius-lg);
 }
+
+
+/* ========================================================
+   授業プリント工房: 板書連動・新ブロック スタイル
+   ======================================================== */
+.ws-grade-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.ws-reference-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.9rem;
+}
+
+.ws-ref-buttons .btn {
+  font-size: 0.76rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+}
+
+.palette-item.highlight-palette-item {
+  border-left: 3px solid var(--primary);
+  background: #f0f7ff;
+}
+.palette-item.highlight-palette-item:hover {
+  background: #e0f0fe;
+}
+
+/* 板書・主発問 (課題枠) ブロック */
+.board-task-box {
+  border: 2px solid #0284c7;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.4rem;
+  position: relative;
+}
+
+.board-task-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.board-task-badge {
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.board-task-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.board-task-guide {
+  font-size: 0.8rem;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1px dashed #bae6fd;
+  border-radius: 4px;
+  padding: 0.35rem 0.65rem;
+  margin-bottom: 0.5rem;
+}
+
+.board-task-canvas {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #fafafa;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 16px 16px;
+  padding: 0.5rem 0.75rem;
+  position: relative;
+}
+
+.canvas-grid-label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* 要点まとめ・穴埋め公式ブロック */
+.point-summary-box {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 1.5px solid #fcd34d;
+  border-left: 5px solid #f59e0b;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.point-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  color: #92400e;
+}
+
+.point-badge {
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.point-summary-body {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #78350f;
+}
+
+/* 印刷時の最適化 */
+@media print {
+  .board-task-box {
+    border-color: #334155 !important;
+    background: #ffffff !important;
+    page-break-inside: avoid;
+  }
+  .board-task-badge {
+    background: #334155 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+  }
+  .board-task-canvas {
+    background-color: #ffffff !important;
+    background-image: radial-gradient(#cbd5e1 1px, transparent 1px) !important;
+    -webkit-print-color-adjust: exact;
+  }
+  .point-summary-box {
+    background: #ffffff !important;
+    border-color: #334155 !important;
+    page-break-inside: avoid;
+  }
+  .point-badge {
+    background: #334155 !important;
+    color: #ffffff !important;
+  }
+}
