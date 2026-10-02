@@ -18,7 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   
-  <link rel="stylesheet" href="style.css?v=20261002e">
+  <link rel="stylesheet" href="style.css?v=20261002f">
 </head>
 <body>
 
@@ -1017,9 +1017,6 @@
             <div class="test-box-header">
               <h4><i class="fa-solid fa-file-lines"></i> 生徒用 練習プリント (プレビュー)</h4>
               <div class="test-header-actions">
-                <button class="btn btn-sm btn-outline" onclick="openA4PrintPreviewModal('student')" title="画面上で正確なA4印刷プレビューを確認">
-                  <i class="fa-solid fa-magnifying-glass"></i> 正確な印刷プレビュー
-                </button>
                 <button class="btn btn-sm btn-primary" onclick="printStudentTestPaper()" title="生徒用プリントのみをA4印刷">
                   <i class="fa-solid fa-print"></i> 生徒用を印刷
                 </button>
@@ -1034,9 +1031,6 @@
             <div class="test-box-header">
               <h4><i class="fa-solid fa-square-check text-success"></i> 先生用 模範解答</h4>
               <div class="test-header-actions">
-                <button class="btn btn-sm btn-outline" onclick="openA4PrintPreviewModal('answer')" title="画面上で正確なA4印刷プレビューを確認">
-                  <i class="fa-solid fa-magnifying-glass"></i> 正確な印刷プレビュー
-                </button>
                 <button class="btn btn-sm btn-outline text-danger" onclick="printAnswerTestPaper()" title="模範解答のみをA4印刷">
                   <i class="fa-solid fa-print"></i> 解答を印刷
                 </button>
@@ -1242,37 +1236,6 @@
     </div>
   </div>
 
-  <!-- A4正確印刷プレビューモーダル（画面上で印刷時のA4用紙全体を100%忠実に確認可能） -->
-  <div id="testPrintPreviewModal" class="modal-overlay hidden no-print" onclick="handlePreviewOverlayClick(event)">
-    <div class="print-preview-dialog">
-      <div class="print-preview-modal-bar">
-        <div class="preview-mode-switch">
-          <button class="preview-tab active" id="btnPreviewStudent" onclick="switchA4Preview('student')">
-            <i class="fa-solid fa-file-lines"></i> 生徒用プリント
-          </button>
-          <button class="preview-tab" id="btnPreviewAnswer" onclick="switchA4Preview('answer')">
-            <i class="fa-solid fa-square-check text-success"></i> 先生用模範解答
-          </button>
-        </div>
-        <div class="preview-modal-tools">
-          <span class="preview-info-tag"><i class="fa-solid fa-print"></i> A4縦 (210×297mm) 印刷プレビュー</span>
-          <button class="btn btn-sm btn-primary" onclick="printFromA4PreviewModal()">
-            <i class="fa-solid fa-print"></i> 印刷する
-          </button>
-          <button class="btn btn-sm btn-outline" onclick="closeA4PrintPreviewModal()">
-            <i class="fa-solid fa-xmark"></i> 閉じる
-          </button>
-        </div>
-      </div>
-      <div class="print-preview-viewport">
-        <!-- 画面内に美しく収まるA4比率シート -->
-        <div class="a4-preview-sheet" id="a4PreviewSheetContent">
-          <!-- ここに選択した用紙のHTMLがクローンされ、印刷時と全く同一のスタイルでレンダリングされる -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="app.js?v=20261002e"></script>
+  <script src="app.js?v=20261002f"></script>
 </body>
 </html>
