@@ -18,7 +18,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   
-  <link rel="stylesheet" href="style.css?v=20261002m">
+  <link rel="stylesheet" href="style.css?v=20261002_v6">
 </head>
 <body>
 
@@ -50,6 +50,9 @@
         </button>
         <button class="nav-tab" data-tab="progress-log">
           <i class="fa-solid fa-book-bookmark"></i> 授業改善メモ
+        </button>
+        <button class="nav-tab" data-tab="library">
+          <i class="fa-solid fa-book-open-reader"></i> 教材資料室
         </button>
       </nav>
     </div>
@@ -206,6 +209,22 @@
                 <span class="card-badge">ナレッジ蓄積</span>
               </div>
               <h3 class="card-title">授業改善メモ & 進度</h3>
+            </div>
+            <div class="card-arrow">
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <!-- タイル: 教材資料室 (デジタルライブラリ) -->
+          <div class="portal-card" onclick="switchTab('library')" role="button" tabindex="0">
+            <div class="card-icon-wrap" style="background: rgba(14, 165, 233, 0.15); color: #0284c7;">
+              <i class="fa-solid fa-book-open-reader"></i>
+            </div>
+            <div class="card-info">
+              <div class="card-badge-wrap">
+                <span class="card-badge" style="background: rgba(14, 165, 233, 0.1); color: #0284c7; border: 1px solid rgba(14, 165, 233, 0.2);">OneDrive直結</span>
+              </div>
+              <h3 class="card-title">教材・書籍資料室</h3>
             </div>
             <div class="card-arrow">
               <i class="fa-solid fa-arrow-right"></i>
@@ -834,11 +853,11 @@
             </div>
             <p class="panel-desc">編集したプリントを名前をつけて保存し、来年や他クラスでいつでも再利用できます。</p>
             <div class="my-ws-btn-row">
-              <button class="btn btn-outline text-success" onclick="saveWorksheetToStorage()" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
+              <button class="btn btn-success-solid" onclick="saveWorksheetToStorage()" style="width: 100%; justify-content: center; padding: 0.55rem; font-weight: 700;">
                 <i class="fa-solid fa-floppy-disk"></i> このプリントを保存
               </button>
-              <button class="btn btn-outline" onclick="openSavedWorksheetsModal()" style="flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;">
-                <i class="fa-solid fa-folder-open"></i> 保存一覧を開く
+              <button class="btn btn-outline" onclick="openSavedWorksheetsModal()" style="width: 100%; justify-content: center; padding: 0.5rem;">
+                <i class="fa-solid fa-folder-open"></i> 保存済みマイプリント一覧
               </button>
             </div>
           </div>
@@ -1049,52 +1068,60 @@
             <h3><i class="fa-solid fa-bolt text-warning"></i> 出題設定</h3>
             <p class="subtitle">学年と単元を選択するだけで、問題用紙と解答がワンクリックでランダム生成されます。</p>
             
-            <div class="test-config-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) 160px;">
-              <div class="form-group">
-                <label>対象学年</label>
-                <select id="testGrade" class="form-control" onchange="onTestGradeChange()">
-                  <option value="1">中1</option>
-                  <option value="2" selected>中2</option>
-                  <option value="3">中3</option>
-                </select>
+            <div class="test-config-two-tier">
+              <!-- 段1: 出題範囲の指定 -->
+              <div class="test-config-row tier-unit-row">
+                <div class="form-group flex-grade">
+                  <label><i class="fa-solid fa-graduation-cap"></i> 学年</label>
+                  <select id="testGrade" class="form-control" onchange="onTestGradeChange()">
+                    <option value="1">中1</option>
+                    <option value="2">中2</option>
+                    <option value="3" selected>中3</option>
+                  </select>
+                </div>
+                <div class="form-group flex-major">
+                  <label><i class="fa-solid fa-book-bookmark"></i> 出題大単元（領域）</label>
+                  <select id="testMajorUnit" class="form-control" onchange="onTestMajorUnitChange()">
+                    <!-- JSで動的更新 -->
+                  </select>
+                </div>
+                <div class="form-group flex-sub">
+                  <label><i class="fa-solid fa-list-check"></i> 小単元</label>
+                  <select id="testSubUnit" class="form-control" onchange="generateQuickTest()">
+                    <!-- JSで動的更新 -->
+                  </select>
+                </div>
               </div>
-              <div class="form-group">
-                <label>出題大単元（領域）</label>
-                <select id="testMajorUnit" class="form-control" onchange="onTestMajorUnitChange()">
-                  <!-- JSで動的更新 -->
-                </select>
-              </div>
-              <div class="form-group">
-                <label>小単元</label>
-                <select id="testSubUnit" class="form-control" onchange="generateQuickTest()">
-                  <!-- JSで動的更新 -->
-                </select>
-              </div>
-              <div class="form-group">
-                <label><i class="fa-solid fa-sliders text-primary"></i> 出題タイプ（問い方）</label>
-                <select id="testQuestionType" class="form-control" onchange="generateQuickTest()">
-                  <option value="all" selected>総合（計算＋工夫・良問ミックス）</option>
-                  <option value="fill_blank">【基礎・穴埋め】公式・手順の空欄補充</option>
-                  <option value="standard_calc">【基本計算】反復・計算スピード</option>
-                  <option value="trick_mistake">【つまずき克服】符号注意・置き換えの工夫</option>
-                  <option value="word_applied">【文章題・利用】思考・図形応用</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>問題数</label>
-                <select id="testCount" class="form-control" onchange="generateQuickTest()">
-                  <option value="4">4問 (じっくり型)</option>
-                  <option value="6" selected>6問 (標準・5分テスト)</option>
-                  <option value="8">8問 (計算スピード練習)</option>
-                  <option value="10">10問 (小テスト本番)</option>
-                </select>
-              </div>
-              <div class="form-group align-self-end">
-                <button class="btn btn-primary btn-block" onclick="generateQuickTest()">
-                  <i class="fa-solid fa-wand-magic-sparkles"></i> 別の数値を再生成
-                </button>
+
+              <!-- 段2: 出題形式・問い方 & 再生成ボタン -->
+              <div class="test-config-row tier-action-row">
+                <div class="form-group flex-qtype">
+                  <label><i class="fa-solid fa-sliders text-primary"></i> 出題タイプ（多彩な問い方・思考力対応）</label>
+                  <select id="testQuestionType" class="form-control" onchange="generateQuickTest()">
+                    <option value="all" selected>総合（計算＋工夫・表現パターンをランダム網羅）</option>
+                    <option value="fill_blank">【基礎・穴埋め】公式・手順・定義の空欄補充（ひとつひとつわかりやすく風）</option>
+                    <option value="standard_calc">【基本計算】反復・計算スピード向上</option>
+                    <option value="trick_mistake">【つまずき克服】符号注意・置き換えの工夫・典型ミス対策</option>
+                    <option value="word_applied">【文章題・利用】思考・図形応用・数の性質の証明</option>
+                  </select>
+                </div>
+                <div class="form-group flex-count">
+                  <label><i class="fa-solid fa-hashtag"></i> 問題数</label>
+                  <select id="testCount" class="form-control" onchange="generateQuickTest()">
+                    <option value="4">4問 (じっくり思考型)</option>
+                    <option value="6" selected>6問 (標準・5分テスト)</option>
+                    <option value="8">8問 (計算スピード練習)</option>
+                    <option value="10">10問 (小テスト本番)</option>
+                  </select>
+                </div>
+                <div class="form-group flex-btn align-self-end">
+                  <button class="btn btn-primary btn-block btn-regenerate" onclick="generateQuickTest()">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> 別の数値を再生成
+                  </button>
+                </div>
               </div>
             </div>
+          </div>
           </div>
 
           <div class="test-preview-dual">
@@ -1473,6 +1500,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=20261002m"></script>
+  <script src="app.js?v=20261002_v6"></script>
 </body>
 </html>

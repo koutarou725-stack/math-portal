@@ -1,3 +1,22 @@
+// ========================================================
+// 教材・書籍 OneDrive クラウド共有リンク設定（オンライン完全対応）
+// 先生のOneDrive共有URLにより、Webブラウザ上からどこでも直接PDFを参照可能
+// ========================================================
+const CLOUD_DOC_LINKS = {
+  // 学研『中1〜中3 数学をひとつひとつわかりやすく。』
+  pointBooks: {
+    '1': 'https://1drv.ms/b/c/7afb9670452d4dba/IQC4gcHZTgFoRoBOL7FbI00uAYAo4hpgqWuZtjHhb4r7J_0?e=Ak1hV9',
+    '2': 'https://1drv.ms/b/c/7afb9670452d4dba/IQCGShIQnCM6Ro_fEPW9OmVhAUe0_xiCbUTJC7fY-2_AnUI?e=XJU1aJ',
+    '3': 'https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx'
+  },
+  // 明治図書『板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学』
+  boardBooks: {
+    '3': 'https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY'
+  },
+  // 数学学習プリント (全学年・全単元 OneDrive共有フォルダ)
+  officialPrintsFolder: 'https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F'
+};
+
 
 // クラス名から学年（1, 2, 3）を正確に抽出する共通ヘルパー
 function extractGradeFromClassName(cls) {
@@ -2749,9 +2768,9 @@ const testCurriculum = {
       name: 'C 関数: 一次関数',
       subUnits: [
         { id: 'g2_lfunc_all', name: '【一次関数】全般から出題' },
-        { id: 'g2_lfunc_rate', name: '変化の割合と変域' },
+        { id: 'g2_lfunc_rate', name: '変化の割合と変域・増加量' },
         { id: 'g2_lfunc_graph', name: '傾き・切片とグラフ' },
-        { id: 'g2_lfunc_find_eq', name: '直線の式の求め方 (2点・傾きと1点)' },
+        { id: 'g2_lfunc_find_eq', name: '直線の式の決定 (傾き・変化の割合・増減・平行線・2点)' },
         { id: 'g2_lfunc_intersect', name: '2直線の交点と連立方程式' }
       ]
     },
@@ -3428,25 +3447,81 @@ const problemGenerators = {
   },
 
   g2_lfunc_rate: () => {
+    const subType = pickRandom([0, 1, 2, 3]);
     const a = randNonZero(-5, 5);
     const b = randInt(-8, 8);
-    const x1 = randInt(-3, 1);
-    const x2 = x1 + randInt(2, 4);
-    const deltaY = a * (x2 - x1);
     const aTerm = formatTerm(a, 'x', true);
     const bStr = b !== 0 ? (b > 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`) : '';
     const aDisp = a < 0 ? `－${Math.abs(a)}` : `${a}`;
-    const dyDisp = deltaY < 0 ? `－${Math.abs(deltaY)}` : `${deltaY}`;
-    return {
-      q: `一次関数 <span class="problem-body-math">y ＝ ${aTerm} ${bStr}</span> について、次の問いに答えなさい。<br>(1) この関数の変化の割合を答えなさい。<br>(2) x の値が ${x1} から ${x2} まで増加するときの y の増加量を求めなさい。`,
-      ans: `(1) ${aDisp} ,  (2) ${dyDisp}`,
-      steps: [
-        `(1) 一次関数 y ＝ ax ＋ b の変化の割合は常に傾き a に等しい: ＝ ${aDisp}`,
-        `(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${aDisp} × (${x2} － (${x1})) ＝ ${aDisp} × ${x2 - x1} ＝ ${dyDisp}`,
-        `答: (1) ${aDisp} ,  (2) ${dyDisp}`
-      ],
-      exp: `(1) 一次関数の変化の割合は傾き a に等しいので ${aDisp}。<br>(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${aDisp} × (${x2 - x1}) ＝ ${dyDisp}`
-    };
+
+    if (subType === 0) {
+      // 変化の割合と増加量の標準型
+      const x1 = randInt(-3, 1);
+      const x2 = x1 + randInt(2, 4);
+      const deltaY = a * (x2 - x1);
+      const dyDisp = deltaY < 0 ? `－${Math.abs(deltaY)}` : `${deltaY}`;
+      return {
+        q: `一次関数 <span class="problem-body-math">y ＝ ${aTerm} ${bStr}</span> について、次の問いに答えなさい。<br>(1) この関数の変化の割合を答えなさい。<br>(2) x の値が ${x1} から ${x2} まで増加するときの y の増加量を求めなさい。`,
+        ans: `(1) ${aDisp} ,  (2) ${dyDisp}`,
+        steps: [
+          `(1) 一次関数 y ＝ ax ＋ b の変化の割合は常に傾き a に等しい: ＝ ${aDisp}`,
+          `(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${aDisp} × (${x2} － (${x1})) ＝ ${aDisp} × ${x2 - x1} ＝ ${dyDisp}`,
+          `答: (1) ${aDisp} ,  (2) ${dyDisp}`
+        ],
+        exp: `(1) 一次関数の変化の割合は傾き a に等しいので ${aDisp}。<br>(2) y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${aDisp} × (${x2 - x1}) ＝ ${dyDisp}`
+      };
+    } else if (subType === 1) {
+      // 変化の割合の公式からの逆算
+      const dx = pickRandom([2, 3, 4, 5]);
+      const dy = a * dx;
+      const dyDisp = dy < 0 ? `－${Math.abs(dy)}` : `${dy}`;
+      return {
+        q: `ある一次関数で、変化の割合が ${aDisp} であるとき、x の増加量が ${dx} のときの y の増加量を求めなさい。`,
+        ans: `${dyDisp}`,
+        steps: [
+          `変化の割合の公式: (変化の割合) ＝ (y の増加量) ÷ (x の増加量)`,
+          `(y の増加量) ＝ (変化の割合) × (x の増加量) ＝ ${aDisp} × ${dx} ＝ ${dyDisp}`,
+          `答: ${dyDisp}`
+        ],
+        exp: `y の増加量 ＝ (変化の割合) × (xの増加量) ＝ ${aDisp} × ${dx} ＝ ${dyDisp}`
+      };
+    } else if (subType === 2) {
+      // 変域の決定（傾きの正負による反転）
+      const xMin = randInt(-4, 0);
+      const xMax = xMin + randInt(2, 5);
+      const yAtMin = a * xMin + b;
+      const yAtMax = a * xMax + b;
+      const yMin = Math.min(yAtMin, yAtMax);
+      const yMax = Math.max(yAtMin, yAtMax);
+      return {
+        q: `一次関数 <span class="problem-body-math">y ＝ ${aTerm} ${bStr}</span> において、x の変域が <span class="problem-body-math">${xMin} ≦ x ≦ ${xMax}</span> のときの y の変域を求めなさい。`,
+        ans: `${yMin} ≦ y ≦ ${yMax}`,
+        steps: [
+          `x ＝ ${xMin} のとき: y ＝ ${a}×(${xMin}) ${bStr} ＝ ${yAtMin}`,
+          `x ＝ ${xMax} のとき: y ＝ ${a}×(${xMax}) ${bStr} ＝ ${yAtMax}`,
+          a < 0 ? `傾きが負 (${aDisp}) のため、x が増加すると y は減少する（大小関係が逆転）` : `傾きが正 (${aDisp}) のため、x が増加すると y も増加する`,
+          `答: ${yMin} ≦ y ≦ ${yMax}`
+        ],
+        exp: `x ＝ ${xMin} のとき y ＝ ${yAtMin}、x ＝ ${xMax} のとき y ＝ ${yAtMax}。よって ${yMin} ≦ y ≦ ${yMax}`
+      };
+    } else {
+      // 2組の増減からの変化の割合計算
+      const x1 = randInt(-2, 2);
+      const x2 = x1 + pickRandom([2, 3, 4]);
+      const y1 = a * x1 + b;
+      const y2 = a * x2 + b;
+      return {
+        q: `一次関数において、x の値が ${x1} から ${x2} まで増加するとき、y の値が ${y1} から ${y2} まで増加します。この関数の変化の割合を求めなさい。`,
+        ans: `${aDisp}`,
+        steps: [
+          `x の増加量 ＝ ${x2} － (${x1}) ＝ ${x2 - x1}`,
+          `y の増加量 ＝ ${y2} － (${y1}) ＝ ${y2 - y1}`,
+          `変化の割合 ＝ (y の増加量) ÷ (x の増加量) ＝ (${y2 - y1}) ÷ (${x2 - x1}) ＝ ${aDisp}`,
+          `答: ${aDisp}`
+        ],
+        exp: `変化の割合 ＝ (y の増加量) ÷ (x の増加量) ＝ (${y2 - y1}) ÷ (${x2 - x1}) ＝ ${aDisp}`
+      };
+    }
   },
 
   g2_lfunc_graph: () => {
@@ -3468,26 +3543,155 @@ const problemGenerators = {
   },
 
   g2_lfunc_find_eq: () => {
-    const a = randNonZero(-3, 3);
-    const x1 = randInt(1, 4);
-    const b = randInt(-5, 5);
-    const y1 = a * x1 + b;
+    // 8種類の多様な問い方パターン（教科書・入試・問題集頻出）
+    // 0: 傾きと1点を通る
+    // 1: 変化の割合と1点を通る
+    // 2: xが1増えたときのyの増減と1点を通る
+    // 3: 平行な直線と1点を通る
+    // 4: xの増加量とyの増加量、および1点を通る
+    // 5: 切片と1点を通る
+    // 6: y軸との交点と1点を通る
+    // 7: 2点を通る直線
+    const pattern = pickRandom([0, 1, 2, 3, 4, 5, 6, 7]);
+    const a = randNonZero(-4, 4);
+    const b = randInt(-6, 6);
     const aTerm = formatTerm(a, 'x', true);
     const bStr = b !== 0 ? (b > 0 ? `＋ ${b}` : `－ ${Math.abs(b)}`) : '';
     const aDisp = a < 0 ? `－${Math.abs(a)}` : `${a}`;
-    return {
-      q: `傾きが ${aDisp} で、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
-      ans: `y ＝ ${aTerm} ${bStr}`.trim(),
-      steps: [
-        `求める直線の式を y ＝ ${aTerm} ＋ b とおく`,
-        `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b → ${y1} ＝ ${a * x1} ＋ b`,
-        `切片 b を解く: b ＝ ${b}`,
-        `答: y ＝ ${aTerm} ${bStr}`.trim()
-      ],
-      exp: `求める式を y ＝ ${aTerm} ＋ b とおき、x＝${x1}, y＝${y1} を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b より b ＝ ${b}`
-    };
-  },
+    const ansEq = `y ＝ ${aTerm} ${bStr}`.trim();
 
+    if (pattern === 0) {
+      // パターン0: 傾きと1点
+      const x1 = randInt(-3, 4);
+      const y1 = a * x1 + b;
+      return {
+        q: `傾きが ${aDisp} で、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
+        ans: ansEq,
+        steps: [
+          `傾きが ${aDisp} なので、求める直線の式を y ＝ ${aTerm} ＋ b とおく`,
+          `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b → ${y1} ＝ ${a * x1} ＋ b`,
+          `切片 b を解く: b ＝ ${b}`,
+          `答: ${ansEq}`
+        ],
+        exp: `y ＝ ${aTerm} ＋ b とおき、x＝${x1}, y＝${y1} を代入して b＝${b} を求める。`
+      };
+    } else if (pattern === 1) {
+      // パターン1: 変化の割合と1点
+      const x1 = randInt(-3, 4);
+      const y1 = a * x1 + b;
+      return {
+        q: `変化の割合が ${aDisp} で、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
+        ans: ansEq,
+        steps: [
+          `一次関数の変化の割合は傾き a に等しいので、傾きは ${aDisp}`,
+          `求める直線の式を y ＝ ${aTerm} ＋ b とおく`,
+          `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b → b ＝ ${b}`,
+          `答: ${ansEq}`
+        ],
+        exp: `一次関数において「変化の割合＝傾き」です。y ＝ ${aTerm} ＋ b とおき、点(${x1}, ${y1})を代入して解きます。`
+      };
+    } else if (pattern === 2) {
+      // パターン2: xが1増えたときのyの増減と1点
+      const x1 = randInt(-3, 4);
+      const y1 = a * x1 + b;
+      const changeText = a > 0 ? `y の値が ${a} 増加し` : `y の値が ${Math.abs(a)} 減少し`;
+      return {
+        q: `x の値が 1 増加するとき ${changeText}、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
+        ans: ansEq,
+        steps: [
+          `「x が 1 増加するときの y の増加量」は傾き（変化の割合）を表すため、傾き a ＝ ${aDisp}`,
+          `求める直線の式を y ＝ ${aTerm} ＋ b とおく`,
+          `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b → b ＝ ${b}`,
+          `答: ${ansEq}`
+        ],
+        exp: `「x が 1 増加するときの y の増加量」は傾き a ＝ ${aDisp} を意味します。y ＝ ${aTerm} ＋ b に代入して切片 b ＝ ${b} を求めます。`
+      };
+    } else if (pattern === 3) {
+      // パターン3: 平行な直線と1点
+      const x1 = randInt(-3, 4);
+      const y1 = a * x1 + b;
+      let bOther = randInt(-7, 7);
+      if (bOther === b) bOther = b + 3;
+      const bOtherStr = bOther >= 0 ? `＋ ${bOther}` : `－ ${Math.abs(bOther)}`;
+      return {
+        q: `直線 <span class="problem-body-math">y ＝ ${aTerm} ${bOtherStr}</span> に平行で、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
+        ans: ansEq,
+        steps: [
+          `平行な2直線は「傾きが等しい」ので、求める直線の傾きは ${aDisp}`,
+          `求める直線の式を y ＝ ${aTerm} ＋ b とおく`,
+          `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b → b ＝ ${b}`,
+          `答: ${ansEq}`
+        ],
+        exp: `平行な直線どうしは傾きが同じなので、求める直線の傾きは ${aDisp} です。点(${x1}, ${y1})を代入して切片 b ＝ ${b} を求めます。`
+      };
+    } else if (pattern === 4) {
+      // パターン4: xの増加量とyの増加量
+      const dx = pickRandom([2, 3]);
+      const dy = a * dx;
+      const x1 = randInt(-3, 3);
+      const y1 = a * x1 + b;
+      const dyText = dy > 0 ? `y の値が ${dy} 増加し` : `y の値が ${Math.abs(dy)} 減少し`;
+      return {
+        q: `x の値が ${dx} 増加するとき ${dyText}、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
+        ans: ansEq,
+        steps: [
+          `変化の割合（傾き）＝ (y の増加量) ÷ (x の増加量) ＝ (${dy}) ÷ (${dx}) ＝ ${aDisp}`,
+          `求める直線の式を y ＝ ${aTerm} ＋ b とおく`,
+          `点 (${x1}, ${y1}) を代入: ${y1} ＝ ${aDisp}×(${x1}) ＋ b → b ＝ ${b}`,
+          `答: ${ansEq}`
+        ],
+        exp: `変化の割合（傾き）＝ ${dy} ÷ ${dx} ＝ ${aDisp}。y ＝ ${aTerm} ＋ b に点(${x1}, ${y1})を代入して b ＝ ${b} を求めます。`
+      };
+    } else if (pattern === 5) {
+      // パターン5: 切片と1点
+      const x1 = pickRandom([-3, -2, -1, 1, 2, 3]);
+      const y1 = a * x1 + b;
+      const bDisp = b < 0 ? `－${Math.abs(b)}` : `${b}`;
+      return {
+        q: `切片が ${bDisp} で、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
+        ans: ansEq,
+        steps: [
+          `切片が ${bDisp} なので、求める式を y ＝ ax ${bStr} とおく`,
+          `点 (${x1}, ${y1}) を代入: ${y1} ＝ a×(${x1}) ${bStr}`,
+          `傾き a について解く: ${x1}a ＝ ${y1 - b} → a ＝ ${aDisp}`,
+          `答: ${ansEq}`
+        ],
+        exp: `切片が ${bDisp} なので y ＝ ax ${bStr} とおき、点(${x1}, ${y1})を代入して a ＝ ${aDisp} を求めます。`
+      };
+    } else if (pattern === 6) {
+      // パターン6: y軸との交点と1点
+      const x1 = pickRandom([-3, -2, -1, 1, 2, 3]);
+      const y1 = a * x1 + b;
+      return {
+        q: `y 軸と点 (0, ${b}) で交わり、点 (${x1}, ${y1}) を通る直線の式を求めなさい。`,
+        ans: ansEq,
+        steps: [
+          `y 軸上の点 (0, ${b}) を通ることから、切片 b ＝ ${b}`,
+          `求める式を y ＝ ax ${bStr} とおく`,
+          `点 (${x1}, ${y1}) を代入: ${y1} ＝ a×(${x1}) ${bStr} → a ＝ ${aDisp}`,
+          `答: ${ansEq}`
+        ],
+        exp: `y 軸との交点 (0, ${b}) は切片が ${b} であることを表します。点(${x1}, ${y1})を代入して a ＝ ${aDisp} を求めます。`
+      };
+    } else {
+      // パターン7: 2点を通る直線
+      const x1 = randInt(-3, 1);
+      const x2 = x1 + randInt(2, 4);
+      const y1 = a * x1 + b;
+      const y2 = a * x2 + b;
+      return {
+        q: `2点 (${x1}, ${y1})、(${x2}, ${y2}) を通る直線の式を求めなさい。`,
+        ans: ansEq,
+        steps: [
+          `傾き a ＝ (y₂ － y₁) ÷ (x₂ － x₁) ＝ (${y2} － (${y1})) ÷ (${x2} － (${x1})) ＝ ${y2 - y1} ÷ ${x2 - x1} ＝ ${aDisp}`,
+          `求める式を y ＝ ${aTerm} ＋ b とおく`,
+          `点 (${x1}, ${y1}) を代入して切片 b を求める: ${y1} ＝ ${aDisp}×(${x1}) ＋ b → b ＝ ${b}`,
+          `答: ${ansEq}`
+        ],
+        exp: `2点から傾き a ＝ (${y2}－(${y1})) ÷ (${x2}－(${x1})) ＝ ${aDisp} を求め、y ＝ ${aTerm} ＋ b に代入して b ＝ ${b} を求めます。`
+      };
+    }
+  },
   g2_lfunc_intersect: () => {
     const x = randInt(1, 4);
     const y = randInt(1, 5);
@@ -5510,250 +5714,2671 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // ========================================================
 
-// ========================================================
-// 教材・書籍 OneDrive クラウド共有リンク設定（オンライン完全対応）
-// 先生のOneDrive共有URLにより、Webブラウザ上からどこでも直接PDFを参照可能
-// ========================================================
-const CLOUD_DOC_LINKS = {
-  // 学研『中1〜中3 数学をひとつひとつわかりやすく。』
-  pointBooks: {
-    '1': 'https://1drv.ms/b/c/7afb9670452d4dba/IQC4gcHZTgFoRoBOL7FbI00uAYAo4hpgqWuZtjHhb4r7J_0?e=Ak1hV9',
-    '2': 'https://1drv.ms/b/c/7afb9670452d4dba/IQCGShIQnCM6Ro_fEPW9OmVhAUe0_xiCbUTJC7fY-2_AnUI?e=XJU1aJ',
-    '3': 'https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx'
-  },
-  // 明治図書『板書＆展開例でよくわかる 数学的活動でつくる365日の全授業 中学校数学』
-  boardBooks: {
-    '3': 'https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY'
-  },
-  // 数学学習プリント (全学年・全単元 OneDrive共有フォルダ)
-  officialPrintsFolder: 'https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F'
-};
 
 // 中学数学科 板書＆展開例 授業データベース（B4横見開きプリント完全対応）
 // 明治図書『板書＆展開例でよくわかる 365日の全授業』シリーズ準拠
 // ========================================================
 const boardLessonDatabase = {
-  '3': {
-    gradeLabel: '第3学年',
-    units: [
+  "1": {
+    "gradeLabel": "第1学年",
+    "units": [
       {
-        id: 'u_3_1',
-        unitName: '第1章 多項式・展開と因数分解',
-        totalHours: 11,
-        bookRef: CLOUD_DOC_LINKS.boardBooks['3'],
-        pointRef: CLOUD_DOC_LINKS.pointBooks['3'],
-        lessons: [
+        "id": "u_1_3",
+        "unitName": "第3章 一次方程式",
+        "totalHours": 8,
+        "bookRef": "",
+        "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQC4gcHZTgFoRoBOL7FbI00uAYAo4hpgqWuZtjHhb4r7J_0?e=Ak1hV9",
+        "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+        "lessons": [
           {
-            hour: 1,
-            title: '多項式と単項式の乗法・除法',
-            leftBlocks: [
-              { type: 'objective', data: { text: '分配法則を利用して、多項式と単項式の乗法・除法を計算できる。' } },
-              { type: 'review', data: { title: '1・2年の復習', content: '分配法則: $a(b+c) = ab + ac$' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '長方形の面積をもとに、多項式 $2x(x + 3y)$ の展開方法を考えよう。', guide: 'たてが $2x$、横が $x+3y$ の長方形を2つに分けてみよう。', thinkingSpaceHeight: 90, answer: '$2x(x) + 2x(3y) = 2x^2 + 6xy$' } },
-              { type: 'point-box', data: { badge: '板書まとめ', title: '多項式と単項式の計算', content: '多項式に単項式をかけるときは、カッコの中の <strong>すべての項に単項式をかける</strong>（分配法則）。' } }
+            "hour": 1,
+            "title": "方程式とその解の意味",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "方程式と解の意味を理解し、代入によって等式を成り立たせる数を確かめることができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "文字式の計算",
+                  "content": "$3x + 2$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "1個 $x$ 円のりんご3個と100円のかごを買ったら代金が 700円だった。方程式に表そう。",
+                  "guide": "代金の合計を表す式をつくって、700 とイコール（＝）で結ぼう。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$3x + 100 = 700$。$x = 200$ を代入すると等式が成り立つね。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "方程式と解",
+                  "content": "文字に当てはめる値によって成り立ったり成り立たなかったりする等式を <strong>方程式</strong>、等式を成り立たせる文字の値をその <strong>解</strong> という。"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '次の計算をしなさい。<br>(1) $3a(2a - b)$<br>(2) $(4x^2 - 6xy) \\div 2x$', answer: '(1) $6a^2 - 3ab$<br>(2) $2x - 3y$', spaceHeight: 65 } },
-              { type: 'question', data: { qNum: '問 2 (発展)', text: '次の式を展開して整理しなさい。<br>$x(x + 2) + 2x(x - 3)$', answer: '$x^2 + 2x + 2x^2 - 6x = 3x^2 - 4x$', spaceHeight: 60 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次のうち、方程式 $2x - 3 = 7$ の解はどれですか。<br>2, $\\quad$ 4, $\\quad$ 5",
+                  "answer": "$x = 5$ （$2 \\times 5 - 3 = 7$ となり等式が成り立つ）",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "ある数 $x$ の 4倍から 5をひいた数は 15である。方程式をつくりなさい。",
+                  "answer": "$4x - 5 = 15$",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           },
           {
-            hour: 2,
-            title: '多項式どうしの乗法 (a+b)(c+d)',
-            leftBlocks: [
-              { type: 'objective', data: { text: '多項式どうしの積 $(a+b)(c+d)$ を、面積図や文字の置き換えを用いて展開できる。' } },
-              { type: 'review', data: { title: '前時のふりかえり', content: '$M(c+d) = Mc + Md$' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: 'たて $a+b$、横 $c+d$ の長方形の面積は、どのように表せるだろうか？', guide: '4つの小さな長方形の面積の和として表してみよう。', thinkingSpaceHeight: 90, answer: '$(a+b)(c+d) = ac + ad + bc + bd$' } },
-              { type: 'point-box', data: { badge: '板書まとめ', title: '多項式の展開の基本', content: '$(a+b)(c+d) = ac + ad + bc + bd$<br>一方のカッコの各項に、他方の各項をもれなくかけて同類項をまとめる！' } }
+            "hour": 2,
+            "title": "等式の性質（天びんのつり合い）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "等式の4つの性質（両辺に同じ数を足す・引く・かける・割る）を理解する。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "天びんのイメージ",
+                  "content": "つり合っている天びんの両皿に同じ重さを足してもつり合いは保たれる"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "天びんのつり合いをもとに、$x + 5 = 12$ から $x =$ の形を導くにはどうすればよいか？",
+                  "guide": "両方の皿から 5 を取りのぞけば、$x$ だけが残るね！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$x + 5 - 5 = 12 - 5 \\implies x = 7$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "等式の4つの性質",
+                  "content": "$A = B$ ならば<br>① $A + C = B + C$（両辺に同じ数を加えても成り立つ）<br>② $A - C = B - C$（両辺から同じ数を引いても成り立つ）<br>③ $AC = BC$（両辺に同じ数をかけても成り立つ）<br>④ $\\frac{A}{C} = \\frac{B}{C}$（両辺を同じ数で割っても成り立つ）"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '次の式を展開しなさい。<br>(1) $(x + 2)(y + 3)$<br>(2) $(2x - 1)(x + 4)$', answer: '(1) $xy + 3x + 2y + 6$<br>(2) $2x^2 + 7x - 4$', spaceHeight: 65 } },
-              { type: 'question', data: { qNum: '問 2', text: '$(a - 3)(b - 2)$ を展開しなさい。符号に注意！', answer: '$ab - 2a - 3b + 6$', spaceHeight: 50 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "等式の性質を使って解きなさい。<br>(1) $x - 6 = 2$<br>(2) $5x = 35$<br>(3) $\\frac{x}{3} = 4$",
+                  "answer": "(1) 両辺に 6 を加えて $x = 8$<br>(2) 両辺を 5 で割って $x = 7$<br>(3) 両辺に 3 をかけて $x = 12$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           },
           {
-            hour: 3,
-            title: '乗法公式① (x+a)(x+b)',
-            leftBlocks: [
-              { type: 'objective', data: { text: '公式 $(x+a)(x+b) = x^2 + (a+b)x + ab$ を理解し、素早く展開できる。' } },
-              { type: 'review', data: { title: '前時の確認', content: '$(x+2)(x+3) = x^2 + 3x + 2x + 6 = x^2 + 5x + 6$' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '$(x+a)(x+b)$ を展開したとき、$x$ の係数と数の項にはどのようなきまりがあるだろうか？', guide: '$5 = 2+3$、$6 = 2 \\times 3$。たし算とかけ算の関係に注目！', thinkingSpaceHeight: 85, answer: '$x$ の係数は「和 $a+b$」、最後の項は「積 $ab$」になる。' } },
-              { type: 'point-box', data: { badge: '重要公式①', title: '乗法公式 1 (和と積の公式)', content: '<strong>$(x + a)(x + b) = x^2 + (a + b)x + ab$</strong><br>真ん中は「たして」、最後は「かけて」！' } }
+            "hour": 3,
+            "title": "等式の性質を使った方程式の解き方",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "等式の性質を組み合わせて、一次方程式をシステマティックに解くことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "前時の確認",
+                  "content": "加減と乗除の性質の順序: 先に足し引きを整理する！"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "方程式 $3x + 2 = 14$ は、どの順番で等式の性質を使えば解けるだろうか？",
+                  "guide": "① まず両辺から 2 を引く ➔ ② そのあと両辺を 3 で割る！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$3x = 14 - 2 \\implies 3x = 12 \\implies x = 4$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "解き方のステップ",
+                  "content": "① まず $x$ を含まない数（定数項）を反対側に移す。<br>② $x$ の係数で両辺を割る！"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1 (基本演習)', text: '公式を使って次の式を展開しなさい。<br>(1) $(x + 3)(x + 4)$<br>(2) $(x - 5)(x + 2)$<br>(3) $(x - 3)(x - 7)$', answer: '(1) $x^2 + 7x + 12$<br>(2) $x^2 - 3x - 10$<br>(3) $x^2 - 10x + 21$', spaceHeight: 80 } },
-              { type: 'question', data: { qNum: '問 2 (符号注意)', text: '$(a + 6)(a - 4)$ を計算しなさい。', answer: '$a^2 + 2a - 24$', spaceHeight: 45 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の一次方程式を解きなさい。<br>(1) $2x + 5 = 11$<br>(2) $4x - 7 = 9$<br>(3) $-3x + 8 = -4$",
+                  "answer": "(1) $2x = 6 \\implies x = 3$<br>(2) $4x = 16 \\implies x = 4$<br>(3) $-3x = -12 \\implies x = 4$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           },
           {
-            hour: 4,
-            title: '乗法公式②③ 平方の公式・和と差の積',
-            leftBlocks: [
-              { type: 'objective', data: { text: '平方の公式 $(a \\pm b)^2$ および和と差の積 $(a+b)(a-b)$ を理解し活用できる。' } },
-              { type: 'review', data: { title: '前時のふりかえり', content: '$(x+3)(x+3) = x^2 + 6x + 9$　/　$(x+3)(x-3) = x^2 - 9$' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '正方形の面積をもとに、$(a+b)^2$ の展開公式を導こう。真ん中の項はどうなる？', guide: 'たて $a+b$、横 $a+b$ の正方形は、4つのパーツに分かれるね。', thinkingSpaceHeight: 85, answer: '$(a+b)^2 = a^2 + 2ab + b^2$。長方形が2つあるので $2ab$ になる。' } },
-              { type: 'point-box', data: { badge: '重要公式②③', title: '平方の公式 & 和と差の積', content: '② <strong>$(a + b)^2 = a^2 + 2ab + b^2$</strong><br>③ <strong>$(a - b)^2 = a^2 - 2ab + b^2$</strong><br>④ <strong>$(a + b)(a - b) = a^2 - b^2$</strong>' } }
+            "hour": 4,
+            "title": "移項を使った一次方程式の解き方",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "「移項（いこう）」の仕組みを理解し、符号を変えて反対側の辺に移すことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "等式の性質",
+                  "content": "$x + 5 = 8 \\iff x = 8 - 5$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$5x - 4 = 2x + 5$ のように両辺に $x$ があるとき、どう変形すれば解けるか？",
+                  "guide": "文字の項を左辺に、数の項を右辺に集めよう！符号が変わるよ。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$5x - 2x = 5 + 4 \\implies 3x = 9 \\implies x = 3$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "移項のルール",
+                  "content": "一方の辺にある項を、<strong>符号を変えて</strong>他方の辺に移すことを <strong>移項</strong> という。<br>左辺に文字の項、右辺に数の項を集めて $ax = b$ の形にする！"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '公式を使って展開しなさい。<br>(1) $(x + 5)^2$<br>(2) $(x - 4)^2$<br>(3) $(x + 7)(x - 7)$', answer: '(1) $x^2 + 10x + 25$<br>(2) $x^2 - 8x + 16$<br>(3) $x^2 - 49$', spaceHeight: 80 } },
-              { type: 'question', data: { qNum: '問 2 (ミス防止)', text: '$(2x + 3)^2$ を展開しなさい。先頭の項は $(2x)^2$ だよ！', answer: '$4x^2 + 12x + 9$', spaceHeight: 50 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "移項を使って次の一次方程式を解きなさい。<br>(1) $7x - 5 = 4x + 7$<br>(2) $3x + 8 = 5x - 2$",
+                  "answer": "(1) $7x - 4x = 7 + 5 \\implies 3x = 12 \\implies x = 4$<br>(2) $3x - 5x = -2 - 8 \\implies -2x = -10 \\implies x = 5$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (注意)",
+                  "text": "移項するときの符号のミスに注意して解きなさい。<br>$2x - 9 = -3x + 1$",
+                  "answer": "$2x + 3x = 1 + 9 \\implies 5x = 10 \\implies x = 2$",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           },
           {
-            hour: 5,
-            title: '式の展開の工夫（置き換えの利用）',
-            leftBlocks: [
-              { type: 'objective', data: { text: '共通な部分に着目して文字におきかえ、乗法公式を使って工夫して展開できる。' } },
-              { type: 'review', data: { title: '前時の公式確認', content: '$(M+2)(M-5) = M^2 - 3M - 10$' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '式 $(a+b+2)(a+b-5)$ を展開するにはどうすればよいだろうか？共通な部分を見つけて工夫しよう。', guide: '着眼点: $a+b$ がどちらのカッコにもあるね。1つのまとまり $M$ とおいてみよう。', thinkingSpaceHeight: 90, answer: '$a+b=M$ とおくと、$(M+2)(M-5) = M^2 - 3M - 10$。元に戻して $(a+b)^2 - 3(a+b) - 10 = a^2 + 2ab + b^2 - 3a - 3b - 10$' } },
-              { type: 'point-box', data: { badge: '板書まとめ', title: '置き換えによる工夫のポイント', content: '式の中に同じまとまりがあるときは、それを <strong>1つの文字 $M$</strong> とおくことで、知っている乗法公式にあてはめて簡単に展開できる！' } }
+            "hour": 5,
+            "title": "かっこを含む一次方程式",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "分配法則を使ってカッコをはずし、同類項を整理して一次方程式を解くことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "分配法則",
+                  "content": "$3(x - 2) = 3x - 6, \\quad -(2x - 1) = -2x + 1$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "方程式 $4(x - 3) = 2x + 6$ を解く手順を考えよう。",
+                  "guide": "まず分配法則でカッコをはずしてから移項しよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$4x - 12 = 2x + 6 \\implies 4x - 2x = 6 + 12 \\implies 2x = 18 \\implies x = 9$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "かっこ付き方程式の手順",
+                  "content": "① 分配法則でカッコをはずす（符号に特に注意！）。<br>② 文字の項を左辺、数の項を右辺に移項する。<br>③ $ax = b$ の形にして両辺を $a$ で割る。"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1 (確かめ)', text: '置き換えを利用して展開しなさい。<br>$(x + y + 3)(x + y - 3)$', answer: '$x+y=M$ とおくと $(M+3)(M-3) = M^2 - 9 = (x+y)^2 - 9 = x^2 + 2xy + y^2 - 9$', spaceHeight: 65 } },
-              { type: 'question', data: { qNum: '問 2 (発展に挑戦)', text: '$(a - b + 2)^2$ を展開しなさい。', answer: '$a-b=M$ とおくと $(M+2)^2 = M^2 + 4M + 4 = a^2 - 2ab + b^2 + 4a - 4b + 4$', spaceHeight: 65 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の一次方程式を解きなさい。<br>(1) $3(x + 2) = 15$<br>(2) $5(x - 1) = 2(x + 5)$<br>(3) $2x - (x - 3) = 7$",
+                  "answer": "(1) $3x + 6 = 15 \\implies 3x = 9 \\implies x = 3$<br>(2) $5x - 5 = 2x + 10 \\implies 3x = 15 \\implies x = 5$<br>(3) $2x - x + 3 = 7 \\implies x = 4$",
+                  "spaceHeight": 85
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           },
           {
-            hour: 6,
-            title: '因数分解の導入・共通因数のくくり出し',
-            leftBlocks: [
-              { type: 'objective', data: { text: '因数分解の意味を理解し、各項に共通な因数をくくり出して式を因数分解できる。' } },
-              { type: 'review', data: { title: '展開と因数分解', content: '展開: $ma + mb \\leftarrow m(a+b)$　この逆の変形を考えよう！' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '$ax + ay$ をかけ算の形（積の形）になおすにはどうすればよいだろうか？', guide: '共通に含まれている文字 $a$ に着目しよう。', thinkingSpaceHeight: 85, answer: '$a(x + y)$ と積の形にできる。この $a$ や $x+y$ を因数といい、因数の積になおすことを「因数分解する」という。' } },
-              { type: 'point-box', data: { badge: '重要定義', title: '因数分解と共通因数', content: '・ <strong>因数分解</strong>: 多項式をいくつかの因数の積の形に表すこと。<br>・ <strong>共通因数のくくり出し</strong>: すべての項に共通な文字や数をカッコの外に出す。<br>$ma + mb = m(a + b)$' } }
+            "hour": 6,
+            "title": "小数や分数を含む一次方程式",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "両辺に10や100をかけたり、分母の公倍数をかけて係数を整数にして解くことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "等式の性質",
+                  "content": "両辺に同じ数をかけても等式は成り立つ！"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "方程式 $\\frac{x - 1}{2} = \\frac{x + 2}{3}$ を簡単に解くにはどうすればよいか？",
+                  "guide": "分母の 2 と 3 の最小公倍数である 6 を両辺にまるごとかけてみよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$3(x - 1) = 2(x + 2) \\implies 3x - 3 = 2x + 4 \\implies x = 7$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "分数・小数の処理",
+                  "content": "・小数は両辺を 10倍、100倍して整数にする。<br>・分数は <strong>分母の最小公倍数を両辺にかける</strong>！<br>分子が多項式のときはカッコをつけてからかけること！"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '次の式を因数分解しなさい。<br>(1) $ax - ay$<br>(2) $3x^2 + 6x$<br>(3) $2ab - 4bc + 6b$', answer: '(1) $a(x - y)$<br>(2) $3x(x + 2)$<br>(3) $2b(a - 2c + 3)$', spaceHeight: 80 } },
-              { type: 'question', data: { qNum: '問 2 (注意点)', text: '$4x^2 - 2x$ を $2(2x^2 - x)$ とした。どこが不十分？正しく直しなさい。', answer: '文字 $x$ も共通因数なので外に出す。正解: $2x(2x - 1)$', spaceHeight: 50 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'u_3_2',
-        unitName: '第2章 平方根',
-        totalHours: 7,
-        bookRef: CLOUD_DOC_LINKS.boardBooks['3'],
-        pointRef: CLOUD_DOC_LINKS.pointBooks['3'],
-        lessons: [
-          {
-            hour: 1,
-            title: '平方根の意味と根号の表し方',
-            leftBlocks: [
-              { type: 'objective', data: { text: '平方根の意味を理解し、根号 $\\sqrt{}$ を用いて正しく表すことができる。' } },
-              { type: 'review', data: { title: '2乗の計算', content: '$3^2 = 9$、$(-3)^2 = 9$。2乗して9になる数は $3$ と $-3$。' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '面積が $5$ の正方形の1辺の長さは、どのような数になるだろうか？', guide: '2乗して5になる正の数。小数で表せるかな？表せないときは新しい記号 $\\sqrt{}$ を使おう！', thinkingSpaceHeight: 90, answer: '1辺の長さを $\\sqrt{5}$ と表す。2乗して $a$ になる数を $a$ の平方根といい、$\\pm\\sqrt{a}$ と表す。' } },
-              { type: 'point-box', data: { badge: '板書まとめ', title: '平方根と根号', content: '・ $a > 0$ のとき、$a$ の平方根は正と負の2つある（絶対値が等しい）。<br>・ 記号 $\\sqrt{}$ を <strong>根号（ルート）</strong> という。<br>・ 正の平方根を $\\sqrt{a}$、負の平方根を $-\\sqrt{a}$ と表す。' } }
-            ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '次の数の平方根を答えなさい。<br>(1) $25$<br>(2) $0.49$<br>(3) $7$', answer: '(1) $\\pm 5$<br>(2) $\\pm 0.7$<br>(3) $\\pm \\sqrt{7}$', spaceHeight: 65 } },
-              { type: 'question', data: { qNum: '問 2', text: '次の値を求めなさい。<br>(1) $\\sqrt{36}$　(2) $-\\sqrt{64}$　(3) $(\\sqrt{11})^2$', answer: '(1) $6$　(2) $-8$　(3) $11$', spaceHeight: 65 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の一次方程式を解きなさい。<br>(1) $0.3x - 0.5 = 0.1x + 0.7$<br>(2) $\\frac{2}{3}x - 1 = \\frac{1}{2}x$",
+                  "answer": "(1) 両辺10倍: $3x - 5 = x + 7 \\implies 2x = 12 \\implies x = 6$<br>(2) 両辺6倍: $4x - 6 = 3x \\implies x = 6$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$\\frac{x + 1}{4} = \\frac{2x - 3}{5}$ を解きなさい。",
+                  "answer": "両辺20倍: $5(x + 1) = 4(2x - 3) \\implies 5x + 5 = 8x - 12 \\implies -3x = -17 \\implies x = \\frac{17}{3}$",
+                  "spaceHeight": 65
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           },
           {
-            hour: 3,
-            title: '根号をふくむ式の乗法と除法',
-            leftBlocks: [
-              { type: 'objective', data: { text: '$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$ の性質を理解し、根号を含む式の計算ができる。' } },
-              { type: 'review', data: { title: '平方根の定義', content: '面積2の正方形の1辺は $\\sqrt{2}$、面積3の正方形の1辺は $\\sqrt{3}$' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '$\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}$ になる理由を、面積や2乗の計算をもとに説明しよう。', guide: '2乗して6になる正の数は何だろう？ $(\\sqrt{2} \\times \\sqrt{3})^2$ を計算してみよう。', thinkingSpaceHeight: 90, answer: '$(\\sqrt{2}\\times\\sqrt{3})^2 = 2 \\times 3 = 6$。2乗して6になる正の数だから $\\sqrt{6}$ である。' } },
-              { type: 'point-box', data: { badge: '計算公式', title: '根号の乗法・除法（$a>0, b>0$）', content: '① <strong>$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$</strong><br>② <strong>$\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$</strong>' } }
+            "hour": 7,
+            "title": "一次方程式の利用①（代金・個数・過不足）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "文章題の数量関係を捉えて方程式をつくり、解が適切か確かめることができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "代金の公式",
+                  "content": "単価 $\\times$ 個数 ＝ 合計金額"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "1個 120円のりんごと1個 80円のオレンジを合わせて 10個買い、代金が 1040円だった。りんごの個数は？",
+                  "guide": "りんごを $x$ 個とおくと、オレンジは $(10 - x)$ 個だね。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$120x + 80(10 - x) = 1040 \\implies 120x + 800 - 80x = 1040 \\implies 40x = 240 \\implies x = 6$ 個。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "文章題の解き方4ステップ",
+                  "content": "① 求めたい数量を文字 $x$ で表す。<br>② 数量の等しい関係を見つけて方程式をつくる。<br>③ 方程式を解く。<br>④ 解が問題の条件（正の整数など）に適しているか確かめる。"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '次の計算をしなさい。<br>(1) $\\sqrt{3} \\times \\sqrt{5}$<br>(2) $\\sqrt{2} \\times \\sqrt{7}$<br>(3) $\\sqrt{18} \\div \\sqrt{2}$', answer: '(1) $\\sqrt{15}$<br>(2) $\\sqrt{14}$<br>(3) $\\sqrt{9} = 3$', spaceHeight: 75 } },
-              { type: 'question', data: { qNum: '問 2', text: '$\\sqrt{12} = \\sqrt{4 \\times 3}$ を $a\\sqrt{b}$ の形にしなさい。', answer: '$\\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}$', spaceHeight: 50 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "生徒に折り紙を配る。1人に 4枚ずつ配ると 9枚余り、5枚ずつ配ると 6枚たりない。生徒の人数を求めなさい。",
+                  "answer": "生徒を $x$ 人とおくと、折り紙の枚数は $4x + 9 = 5x - 6 \\implies -x = -15 \\implies x = 15$ 人。",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
-          }
-        ]
-      },
-      {
-        id: 'u_3_3',
-        unitName: '第3章 2次方程式',
-        totalHours: 6,
-        bookRef: CLOUD_DOC_LINKS.boardBooks['3'],
-        pointRef: CLOUD_DOC_LINKS.pointBooks['3'],
-        lessons: [
+          },
           {
-            hour: 4,
-            title: '因数分解を利用した解き方',
-            leftBlocks: [
-              { type: 'objective', data: { text: '$AB=0$ ならば $A=0$ または $B=0$ の性質を利用して、2次方程式を因数分解して解くことができる。' } },
-              { type: 'review', data: { title: '前時のふりかえり', content: '$x^2 - 5x + 6 = (x - 2)(x - 3)$' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '2次方程式 $x^2 - 5x + 6 = 0$ の解を見つけるには、左辺をどう変形すればよいか？', guide: '2つの数をかけて0になるとき、どちらかは必ず0だね！', thinkingSpaceHeight: 90, answer: '$(x-2)(x-3)=0$ より $x-2=0$ または $x-3=0$。よって $x=2, 3$。' } },
-              { type: 'point-box', data: { badge: '解法のポイント', title: '因数分解による2次方程式の解き方', content: '① 方程式を $ax^2 + bx + c = 0$ の形に整理する。<br>② 左辺を因数分解して $(x - \\alpha)(x - \\beta) = 0$ にする。<br>③ 解は <strong>$x = \\alpha, \\beta$</strong> ！' } }
+            "hour": 8,
+            "title": "一次方程式の利用②（速さ・道のり・割合）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "速さ・時間・道のりの関係や割合を文字式で表し、一次方程式を立てて解決できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "み・は・じ",
+                  "content": "時間 ＝ 道のり $\\div$ 速さ"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "家から駅まで分速 60m で歩くと、分速 180m で自転車で行くより 20分多くかかった。家から駅までの道のりは？",
+                  "guide": "道のりを $x\\text{m}$ とおいて、「かかった時間の差が 20分」という方程式をつくろう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$\\frac{x}{60} - \\frac{x}{180} = 20 \\implies 3x - x = 3600 \\implies 2x = 3600 \\implies x = 1800\\text{m}$。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "速さの問題のポイント",
+                  "content": "・時間を表す式（$\\frac{\\text{道のり}}{\\text{速さ}}$）を作って等式にする。<br>・単位（分速と分、時速と時間、mとkm）がそろっているか必ずチェック！"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '次の方程式を解きなさい。<br>(1) $(x - 3)(x + 5) = 0$<br>(2) $x^2 - 7x + 10 = 0$<br>(3) $x^2 + 6x = 0$', answer: '(1) $x = 3, -5$<br>(2) $(x-2)(x-5)=0 \\rightarrow x=2, 5$<br>(3) $x(x+6)=0 \\rightarrow x=0, -6$', spaceHeight: 85 } },
-              { type: 'question', data: { qNum: '問 2 (重解)', text: '$x^2 - 8x + 16 = 0$ を解きなさい。解は何個？', answer: '$(x-4)^2 = 0$ より $x = 4$（解は1個。重解）', spaceHeight: 50 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "A地点から B地点まで往復した。行きは時速 4km で歩き、帰りは時速 12km で走ったら、往復で 4時間かかった。AB間の道のりを求めなさい。",
+                  "answer": "道のりを $x\\text{km}$ とおくと $\\frac{x}{4} + \\frac{x}{12} = 4 \\implies 3x + x = 48 \\implies 4x = 48 \\implies x = 12\\text{km}$。",
+                  "spaceHeight": 85
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "章の総まとめ",
+                  "text": "一次方程式の解き方と利用のステップを振り返り、学習のまとめをノートに記述しよう。",
+                  "answer": "移項・カッコ・分数・文章題の立式を完全にマスター！",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           }
         ]
       }
     ]
   },
-  '2': {
-    gradeLabel: '第2学年',
-    units: [
+  "2": {
+    "gradeLabel": "第2学年",
+    "units": [
       {
-        id: 'u_2_3',
-        unitName: '第3章 一次関数',
-        totalHours: 10,
-        bookRef: '',
-        pointRef: CLOUD_DOC_LINKS.pointBooks['2'],
-        officialRef: '数学学習プリント/02_2年生/数学_3-1一次関数とグラフ.pdf',
-        lessons: [
+        "id": "u_2_3",
+        "unitName": "第3章 一次関数",
+        "totalHours": 10,
+        "bookRef": "",
+        "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCGShIQnCM6Ro_fEPW9OmVhAUe0_xiCbUTJC7fY-2_AnUI?e=XJU1aJ",
+        "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+        "lessons": [
           {
-            hour: 2,
-            title: '一次関数のグラフと傾き・切片',
-            leftBlocks: [
-              { type: 'objective', data: { text: '一次関数の式 $y = ax + b$ から傾きと切片を読み取り、グラフの特徴を理解する。' } },
-              { type: 'review', data: { title: '比例のグラフ', content: '比例 $y = 2x$ は原点 $(0, 0)$ を通る直線。' } },
-              { type: 'graph-block', data: { qNum: '【本時の課題】', text: '右の図は $y = 2x + 1$ のグラフである。<br>① 切片の座標を答えなさい。<br>② 傾き（$x$が1増えるときの$y$の増加量）を答えなさい。', answer: '① $(0, 1)$　② 傾き $= 2$', svgHtml: '' } },
-              { type: 'point-box', data: { badge: '板書まとめ', title: '一次関数のグラフ', content: '・ <strong>$a$（傾き）</strong>: 変化の割合。右に1進むと上下にどれだけ進むか。<br>・ <strong>$b$（切片）</strong>: $y$軸との交点 $(0, b)$。' } }
+            "hour": 1,
+            "title": "一次関数の意味 (y=ax+b)",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "$y$ が $x$ の一次式 $y = ax + b$ で表される関数を一次関数と理解できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "1年の復習",
+                  "content": "比例: $y = ax$, $\\quad$ 反比例: $y = \\frac{a}{x}$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "長さ $15\\text{cm}$ のろうそくに火をつけると、1分間に $0.5\\text{cm}$ ずつ短くなる。$x$ 分後の長さを $y\\text{cm}$ として式に表そう。",
+                  "guide": "$x$ 分間に短くなる長さは $0.5x\\text{cm}$ だね。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$y = 15 - 0.5x$ （または $y = -0.5x + 15$）"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "一次関数の定義",
+                  "content": "<strong>$y = ax + b$</strong>（$a, b$ は定数、$a \\neq 0$）の形で表されるとき、$y$ は $x$ の <strong>一次関数</strong> であるという。<br>$b = 0$ のとき比例 $y = ax$ となる（比例は一次関数の特別な場合）。"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '次の直線の傾きと切片を答えなさい。<br>(1) $y = 3x - 5$<br>(2) $y = -2x + 4$', answer: '(1) 傾き: $3$, 切片: $-5$<br>(2) 傾き: $-2$, 切片: $4$', spaceHeight: 65 } },
-              { type: 'question', data: { qNum: '問 2', text: '傾きが $-1$ で、切片が $3$ の直線の式を求めなさい。', answer: '$y = -x + 3$', spaceHeight: 50 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次のうち、$y$ が $x$ の一次関数であるものをすべて選びなさい。<br>(1) $y = 3x - 5$<br>(2) $y = \\frac{6}{x}$<br>(3) $y = 4x$",
+                  "answer": "(1) と (3)。(2)は反比例なので一次関数ではない。",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "底面の半径が $x\\text{cm}$ の円の面積 $y\\text{cm}^2$ は一次関数ですか。理由も答えなさい。",
+                  "answer": "一次関数ではない。式が $y = \\pi x^2$ となり $x$ の2次式になるため。",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 2,
+            "title": "一次関数の変化の割合",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "変化の割合の意味を理解し、一次関数では変化の割合が一定で $a$ に等しいことを捉える。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "表の読み取り",
+                  "content": "$x$ が 1 増えるごとに $y$ は一定の数ずつ増える"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "一次関数 $y = 2x + 1$ で、$x$ の値が 1 から 4 まで増加するとき、変化の割合を調べよう。",
+                  "guide": "変化の割合 ＝ $\\frac{y \\text{の増加量}}{x \\text{の増加量}}$ を計算してみよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$x$ の増加量: $4 - 1 = 3$, $y$ の増加量: $9 - 3 = 6$。変化の割合: $\\frac{6}{3} = 2$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "変化の割合",
+                  "content": "<strong>変化の割合 ＝ $\\frac{y \\text{の増加量}}{x \\text{の増加量}}$ ＝ $a$（一定！）</strong><br>一次関数 $y = ax + b$ では、どの区間をとっても変化の割合は常に $a$ になる。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "一次関数 $y = -3x + 4$ について答えなさい。<br>(1) 変化の割合を答えなさい。<br>(2) $x$ の値が 1 から 5 まで増加するときの $x$ の増加量と $y$ の増加量を求めなさい。",
+                  "answer": "(1) $-3$<br>(2) $x$ の増加量: $5-1=4$, $y$ の増加量: $-3 \\times 4 = -12$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "一次関数 $y = 5x - 2$ で、$x$ が 3 増加するとき $y$ はどれだけ増加するか。",
+                  "answer": "$5 \\times 3 = 15$ 増加する。",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 3,
+            "title": "一次関数のグラフと傾き・切片",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "一次関数のグラフが直線になること、および傾き $a$ と切片 $b$ の幾何学的意味を理解する。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "比例のグラフ",
+                  "content": "$y = ax$ は原点を通る直線"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$y = 2x + 3$ のグラフは、$y = 2x$ のグラフと比べてどのような位置関係にあるだろうか？",
+                  "guide": "同じ $x$ の値に対する $y$ の値を比べると、すべて 3 だけ上にずれているね！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$y = 2x$ のグラフを $y$ 軸の正の方向に 3 だけ平行移動した直線。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "グラフの傾きと切片",
+                  "content": "一次関数 $y = ax + b$ のグラフは、<strong>傾き $a$、切片 $b$ の直線</strong>。<br>・切片 $b$: $y$ 軸と交わる点の $y$ 座標 $(0, b)$<br>・傾き $a$: 右に 1 進んだときの上下の変化量"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の直線の傾きと切片を答えなさい。<br>(1) $y = 4x - 5$<br>(2) $y = -\\frac{2}{3}x + 1$",
+                  "answer": "(1) 傾き: 4, 切片: $-5$<br>(2) 傾き: $-\\frac{2}{3}$, 切片: 1",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "直線 $y = -2x + 4$ が $x$ 軸、$y$ 軸と交わる点の座標をそれぞれ求めなさい。",
+                  "answer": "$y$ 軸との交点: $(0, 4)$, $\\quad x$ 軸との交点 ($y=0$): $(2, 0)$",
+                  "spaceHeight": 65
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 4,
+            "title": "一次関数のグラフのかき方",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "切片と傾きを利用して、方眼紙上にすばやく正確に直線のグラフをかくことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "傾きの読み方",
+                  "content": "傾きが $\\frac{3}{2}$ ➔ 右へ 2、上へ 3 進む"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "直線 $y = -\\frac{3}{4}x + 2$ のグラフを、最も手際よくかくにはどうすればよいだろうか？",
+                  "guide": "① まず切片 $(0, 2)$ に点をとる！ ② 傾き $-\\frac{3}{4}$ だから、右へ 4、下へ 3 進んだ点を見つける！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "点 $(0, 2)$ と点 $(4, -1)$ を直線で結ぶ。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "グラフのかき方手順",
+                  "content": "① $y$ 軸上に切片 $(0, b)$ をとる。<br>② その点から傾き（分母だけ右、分子だけ上/下）に従って2つ目の点をとる。<br>③ 2点を通る直線をまっすぐ引く！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "graph-block",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "直線 $y = \\frac{2}{3}x - 1$ のグラフをかきなさい。",
+                  "answer": "切片 $(0, -1)$ から右へ 3、上へ 2 進んだ点 $(3, 1)$ を通る直線。",
+                  "svgHtml": ""
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 5,
+            "title": "直線の式の求め方①（傾きと1点、変化の割合と1点）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "傾き（変化の割合）と通る1点の座標から、一次関数の式を求めることができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "基本形",
+                  "content": "直線の式: $y = ax + b$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "傾きが $-2$ で、点 $(3, 1)$ を通る直線の式を求めよう。",
+                  "guide": "傾きが $-2$ だから $y = -2x + b$ とおけるね。通る点の座標 $(3, 1)$ を代入しよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$1 = -2 \\times 3 + b \\implies 1 = -6 + b \\implies b = 7$。答: $y = -2x + 7$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "傾きと1点からの決定",
+                  "content": "① 傾き $a$ をあてはめて $y = ax + b$ とおく。<br>② 点 $(x_1, y_1)$ を代入して方程式を解き、切片 $b$ を求める！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の直線の式を求めなさい。<br>(1) 傾きが 3 で、点 $(2, 5)$ を通る直線<br>(2) 変化の割合が $-4$ で、点 $(1, -2)$ を通る直線",
+                  "answer": "(1) $y = 3x - 1$<br>(2) $y = -4x + 2$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (表現パターン)",
+                  "text": "$x$ が 1 増加するとき $y$ は 2 増加し、点 $(3, 8)$ を通る直線の式を求めなさい。",
+                  "answer": "傾きが 2 なので $y = 2x + b$。代入して $8 = 6 + b \\implies b = 2$。答: $y = 2x + 2$",
+                  "spaceHeight": 65
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 6,
+            "title": "直線の式の求め方②（2点を通る直線、平行な直線）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "通る2点の座標から傾きを計算して式を求め、平行な直線の条件を活用できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "傾きの公式",
+                  "content": "傾き $a = \\frac{y_2 - y_1}{x_2 - x_1}$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "2点 $(1, 3)$ と $(3, 7)$ を通る直線の式を求めよう。",
+                  "guide": "方法A: 2点から傾きを計算する。 方法B: 2点の座標を代入して連立方程式で解く！",
+                  "thinkingSpaceHeight": 90,
+                  "answer": "傾き: $\\frac{7 - 3}{3 - 1} = \\frac{4}{2} = 2$。$y = 2x + b$ に $(1, 3)$ を代入して $b = 1$。答: $y = 2x + 1$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "2点を通る直線",
+                  "content": "・2直線が平行 ➔ <strong>傾き $a$ が等しい</strong>！<br>・2点を通る直線は「傾きを求めてから代入」または「連立方程式」で確実に求まる。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "2点 $(-2, -5)$、$(2, 3)$ を通る直線の式を求めなさい。",
+                  "answer": "傾き: $\\frac{3 - (-5)}{2 - (-2)} = \\frac{8}{4} = 2$。$y = 2x + b$ に代入して $b = -1$。答: $y = 2x - 1$",
+                  "spaceHeight": 75
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (平行条件)",
+                  "text": "直線 $y = -3x + 1$ に平行で、点 $(2, -4)$ を通る直線の式を求めなさい。",
+                  "answer": "平行なので傾きは $-3$。$y = -3x + b$ に代入して $-4 = -6 + b \\implies b = 2$。答: $y = -3x + 2$",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 7,
+            "title": "二元一次方程式 ax+by=c のグラフ",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "二元一次方程式 $ax+by=c$ を $y = mx+n$ の形に変形し、そのグラフが直線であることを理解する。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "等式の変形",
+                  "content": "$2x + y = 6 \\implies y = -2x + 6$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "方程式 $2x - 3y = 6$ の解を座標とする点の集まりは、どんな図形になるだろうか？",
+                  "guide": "$y$ について解いて、一次関数の形に直してみよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$-3y = -2x + 6 \\implies y = \\frac{2}{3}x - 2$。傾き $\\frac{2}{3}$、切片 $-2$ の直線になる！"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "方程式のグラフ",
+                  "content": "二元一次方程式 $ax + by = c$ のグラフは直線になる！<br>・$y =$ の形に変形して傾きと切片を読み取る。<br>・$x = k$ は $y$ 軸に平行な直線、$y = k$ は $x$ 軸に平行な直線。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の方程式を $y$ について解き、傾きと切片を答えなさい。<br>(1) $3x + y = 5$<br>(2) $4x - 2y = 8$",
+                  "answer": "(1) $y = -3x + 5$ (傾き: $-3$, 切片: 5)<br>(2) $-2y = -4x + 8 \\implies y = 2x - 4$ (傾き: 2, 切片: $-4$)",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "方程式 $x = 3$ および $y = -2$ のグラフの特徴を答えなさい。",
+                  "answer": "$x = 3$: 点 $(3, 0)$ を通り $y$ 軸に平行な直線。 $y = -2$: 点 $(0, -2)$ を通り $x$ 軸に平行な直線。",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 8,
+            "title": "連立方程式の解と2直線の交点",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "2直線の交点の座標が、その2式を連立方程式としたときの解と一致することを捉える。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "連立方程式",
+                  "content": "2つの式を同時に成り立たせる文字の値の組"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "2つの直線 $y = x + 1$ と $y = -x + 5$ の交点の座標は、グラフをかかずにどう計算できるだろうか？",
+                  "guide": "交点は両方の直線上にあるから、2つの式を連立方程式として解けばいいね！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$x + 1 = -x + 5 \\implies 2x = 4 \\implies x = 2$。$y = 3$。交点の座標は $(2, 3)$。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "グラフの交点と連立方程式",
+                  "content": "<strong>2直線の交点の座標 ＝ 連立方程式の解 $(x, y)$</strong><br>代入法や加減法で解くことで、グラフ用紙の目盛りに頼らず正確な交点が得られる！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の2直線の交点の座標を求めなさい。<br>$y = 2x - 1$, $\\quad y = -x + 5$",
+                  "answer": "$2x - 1 = -x + 5 \\implies 3x = 6 \\implies x = 2$。$y = 3$。答: $(2, 3)$",
+                  "spaceHeight": 75
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "2直線 $x + y = 4$ と $2x - y = 5$ の交点を求めなさい。",
+                  "answer": "足し算して $3x = 9 \\implies x = 3$。$y = 1$。答: $(3, 1)$",
+                  "spaceHeight": 65
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 9,
+            "title": "一次関数の利用①（具体的な事象の数量関係）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "水槽の給水や通話料金など身の回りの事象を一次関数としてモデル化し、問題を解決できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "モデル化の手順",
+                  "content": "初期値 ＝ 切片 $b$, $\\quad$ 単位あたりの変化量 ＝ 傾き $a$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "水が $10\\text{L}$ 入っている水槽に、毎分 $3\\text{L}$ の割合で水を入れる。$x$ 分後の水量を $y\\text{L}$ として、$y$ を $x$ の式で表し、$28\\text{L}$ になる時間を求めよう。",
+                  "guide": "切片は $10$、変化の割合は $3$ だね。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$y = 3x + 10$。$y = 28$ を代入: $28 = 3x + 10 \\implies 3x = 18 \\implies x = 6$ 分後。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "文章題の立式",
+                  "content": "「初めの量」が切片 $b$、「1あたり増える（減る）量」が傾き $a$ になる！<br>$x$ や $y$ の変域にも気を配ろう。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "標高が $100\\text{m}$ 上がるごとに気温は $0.6^\\circ\\text{C}$ 下がる。地上の気温が $20^\\circ\\text{C}$ のとき、標高 $x\\text{m}$ の気温を $y^\\circ\\text{C}$ として式に表し、標高 $1500\\text{m}$ の気温を求めなさい。",
+                  "answer": "$y = 20 - 0.006x$。$x=1500$ を代入して $y = 20 - 9 = 11^\\circ\\text{C}$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "容量 $50\\text{L}$ の水槽が満水になるのは何分後ですか。（課題の水槽）",
+                  "answer": "$50 = 3x + 10 \\implies 3x = 40 \\implies x = \\frac{40}{3}$ 分後 (13分20秒後)",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 10,
+            "title": "一次関数の利用②（動点と面積の変化、ダイヤグラム）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "図形上を動く点（動点）による三角形の面積の変化を、変域ごとに場合分けして式とグラフで表せる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "三角形の面積",
+                  "content": "$S = \\frac{1}{2} \\times \\text{底辺} \\times \\text{高さ}$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "長方形 ABCD（AB=4cm, BC=6cm）の辺上を、点 P が毎秒 1cm で A から B を通って C まで動く。$x$ 秒後の $\\triangle\\text{APD}$ の面積 $y$ を式に表そう。",
+                  "guide": "P が辺 AB 上にあるとき（$0 \\le x \\le 4$）と、辺 BC 上にあるとき（$4 \\le x \\le 10$）で場合分けしよう！",
+                  "thinkingSpaceHeight": 90,
+                  "answer": "・$0 \\le x \\le 4$: 底辺 $AD=6$, 高さ $AP=x$ より $y = \\frac{1}{2} \\times 6 \\times x = 3x$\n・$4 \\le x \\le 10$: 底辺 $AD=6$, 高さは常に $AB=4$ 一定より $y = \\frac{1}{2} \\times 6 \\times 4 = 12$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "動点問題の解法",
+                  "content": "点 P がどの辺上にあるかで <strong>変域を区切る</strong>！<br>変域ごとに底辺と高さを $x$ で表して式を作り、折れ線のグラフで変化を可視化しよう。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "課題の動点問題について、$\\triangle\\text{APD}$ の面積が $9\\text{cm}^2$ になるのは何秒後か求めなさい。",
+                  "answer": "$0 \\le x \\le 4$ のとき $3x = 9 \\implies x = 3$ 秒後。",
+                  "spaceHeight": 75
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "章の総まとめ",
+                  "text": "一次関数の「表」「式」「グラフ」の相互のつながりを振り返ってまとめよう。",
+                  "answer": "傾き・切片・変化の割合・交点がすべて連動していることを確認！",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           }
         ]
       }
     ]
   },
-  '1': {
-    gradeLabel: '第1学年',
-    units: [
+  "3": {
+    "gradeLabel": "第3学年",
+    "units": [
       {
-        id: 'u_1_3',
-        unitName: '第3章 一次方程式',
-        totalHours: 8,
-        bookRef: '',
-        pointRef: CLOUD_DOC_LINKS.pointBooks['1'],
-        officialRef: '数学学習プリント/01_1年生/数学_3-1方程式.pdf',
-        lessons: [
+        "id": "u_3_1",
+        "unitName": "第1章 多項式・展開と因数分解",
+        "totalHours": 11,
+        "bookRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY",
+        "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx",
+        "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+        "lessons": [
           {
-            hour: 3,
-            title: '移項を利用した方程式の解き方',
-            leftBlocks: [
-              { type: 'objective', data: { text: '等式の性質をもとに「移項」の仕組みを理解し、方程式をスムーズに解くことができる。' } },
-              { type: 'review', data: { title: '等式の性質', content: '両辺に同じ数をたしてもひいても等式は成り立つ。' } },
-              { type: 'board-task', data: { qNum: '【本時の課題】', text: '$3x - 5 = 7$ を解くとき、両辺に $+5$ すると項はどう動いたように見える？', guide: '左辺の $-5$ が消えて、右辺に $+5$ が現れるね！', thinkingSpaceHeight: 85, answer: '符号を変えて他方の辺へ移すことができる。これを「移項」という。' } },
-              { type: 'point-box', data: { badge: '移項のルール', title: '方程式を解く手順', content: '① <strong>移項</strong>: $x$の項を左辺へ、数の項を右辺へ符号を変えて移す。<br>② <strong>整理</strong>: $ax = b$ の形にまとめる。<br>③ <strong>割る</strong>: $x = \\frac{b}{a}$ を求める。' } }
+            "hour": 1,
+            "title": "多項式と単項式の乗法・除法",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "分配法則を利用して、多項式と単項式の乗法・除法を正確に計算できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "1・2年の復習",
+                  "content": "分配法則: $a(b+c) = ab + ac$, $\\quad (a+b) \\div c = \\frac{a}{c} + \\frac{b}{c}$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "たて $2x$、横 $x + 3y$ の長方形の面積はどのように表せるだろうか？",
+                  "guide": "2つの小さな長方形の面積の和として計算してみよう。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$2x(x + 3y) = 2x^2 + 6xy$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "多項式と単項式の計算",
+                  "content": "カッコの中の <strong>すべての項に単項式をかける（または割る）</strong>。<br>符号のミス（特にマイナスで割るとき）に注意する！"
+                }
+              }
             ],
-            rightBlocks: [
-              { type: 'question', data: { qNum: '問 1', text: '移項を利用して次の方程式を解きなさい。<br>(1) $4x - 3 = 9$<br>(2) $5x + 2 = 2x + 11$', answer: '(1) $4x = 12 \\rightarrow x = 3$<br>(2) $3x = 9 \\rightarrow x = 3$', spaceHeight: 70 } },
-              { type: 'question', data: { qNum: '問 2', text: '方程式 $7x - 4 = 3x + 12$ を解きなさい。', answer: '$4x = 16 \\rightarrow x = 4$', spaceHeight: 50 } },
-              { type: 'reflection', data: { title: '本時の自己評価 & 振り返り' } }
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の計算をしなさい。<br>(1) $3a(2a - b)$<br>(2) $(4x^2 - 6xy) \\div 2x$",
+                  "answer": "(1) $6a^2 - 3ab$<br>(2) $2x - 3y$",
+                  "spaceHeight": 65
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (発展)",
+                  "text": "次の式を展開して整理しなさい。<br>$x(x + 2) + 2x(x - 3)$",
+                  "answer": "$x^2 + 2x + 2x^2 - 6x = 3x^2 - 4x$",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 2,
+            "title": "多項式どうしの乗法 (a+b)(c+d)",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "多項式どうしの積 $(a+b)(c+d)$ を、面積図や文字の置き換えを用いて展開できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "前時のふりかえり",
+                  "content": "$M(c+d) = Mc + Md$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "たて $a+b$、横 $c+d$ の長方形の面積は、どのように表せるだろうか？",
+                  "guide": "4つの小さな長方形の面積の和として表してみよう。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$(a+b)(c+d) = ac + ad + bc + bd$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "多項式の展開の基本",
+                  "content": "$(a+b)(c+d) = ac + ad + bc + bd$<br>一方のカッコの各項に、他方の各項をもれなくかけて同類項をまとめる！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の式を展開しなさい。<br>(1) $(x + 2)(y + 3)$<br>(2) $(2x - 1)(x + 4)$",
+                  "answer": "(1) $xy + 3x + 2y + 6$<br>(2) $2x^2 + 8x - x - 4 = 2x^2 + 7x - 4$",
+                  "spaceHeight": 65
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$(a - 3)(b - 2)$ を展開しなさい。符号に注意！",
+                  "answer": "$ab - 2a - 3b + 6$",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 3,
+            "title": "乗法公式① (x+a)(x+b) の展開",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "乗法公式 $(x+a)(x+b) = x^2 + (a+b)x + ab$ を理解し、素早く計算できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "展開の基本",
+                  "content": "$(x+2)(x+3) = x^2 + 3x + 2x + 6 = x^2 + 5x + 6$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$(x+a)(x+b)$ を展開したとき、$x$ の係数と定数項にはどんな決まりがあるだろうか？",
+                  "guide": "$x$ の係数は $a$ と $b$ の「和」、定数項は「積」になっているね！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$(x+a)(x+b) = x^2 + (a+b)x + ab$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "乗法公式 1",
+                  "title": "(x+a)(x+b) の公式",
+                  "content": "<strong>$(x+a)(x+b) = x^2 + (\\text{和})x + (\\text{積})$</strong><br>符号を含めて和と積を暗算で計算しよう！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "公式を利用して、次の式を展開しなさい。<br>(1) $(x + 3)(x + 4)$<br>(2) $(x - 5)(x + 2)$<br>(3) $(a - 6)(a - 3)$",
+                  "answer": "(1) $x^2 + 7x + 12$<br>(2) $x^2 - 3x - 10$<br>(3) $a^2 - 9a + 18$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (注意)",
+                  "text": "$(x - 7)(x + 7)$ を公式①を使って展開してみよう。",
+                  "answer": "$x^2 + 0x - 49 = x^2 - 49$",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 4,
+            "title": "乗法公式② (a+b)², (a-b)² 平方の公式",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "平方の乗法公式を展開の意味から導き、正しく活用できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "公式の確認",
+                  "content": "$(a+b)^2 = (a+b)(a+b)$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "1辺が $a+b$ の正方形の面積を、4つの部分に分けて考えてみよう。",
+                  "guide": "面積は $a^2$ が1個、$b^2$ が1個、$ab$ が2個あるね！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$(a+b)^2 = a^2 + 2ab + b^2$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "乗法公式 2",
+                  "title": "平方の公式",
+                  "content": "<strong>$(a+b)^2 = a^2 + 2ab + b^2$</strong><br><strong>$(a-b)^2 = a^2 - 2ab + b^2$</strong><br>真ん中の項は「2倍の積」！符号に注意！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の式を展開しなさい。<br>(1) $(x + 5)^2$<br>(2) $(x - 4)^2$<br>(3) $(2a + 3)^2$",
+                  "answer": "(1) $x^2 + 10x + 25$<br>(2) $x^2 - 8x + 16$<br>(3) $4a^2 + 12a + 9$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (つまずき注意)",
+                  "text": "次の計算の間違いを直しなさい。<br>誤: $(x - 6)^2 = x^2 - 36$",
+                  "answer": "正: $x^2 - 12x + 36$ (真ん中の項 $-2ab$ が抜けており、最後は正)",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 5,
+            "title": "乗法公式③ (a+b)(a-b) & 式の展開の工夫（置き換え）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "和と差の積の公式を活用し、共通部分を文字でおく工夫して展開できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "前時の公式確認",
+                  "content": "$(M+2)(M-5) = M^2 - 3M - 10$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "式 $(a+b+2)(a+b-5)$ を展開するにはどうすればよいだろうか？共通な部分を見つけて工夫しよう。",
+                  "guide": "着眼点: $a+b$ がどちらのカッコにもあるね。1つのまとまり $M$ とおいてみよう。",
+                  "thinkingSpaceHeight": 90,
+                  "answer": "$(M+2)(M-5) = M^2 - 3M - 10 = (a+b)^2 - 3(a+b) - 10 = a^2 + 2ab + b^2 - 3a - 3b - 10$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "置き換えによる工夫のポイント",
+                  "content": "式の中に同じまとまりがあるときは、それを <strong>1つの文字 $M$</strong> とおくことで、乗法公式にあてはめて簡単に展開できる！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1 (確かめ)",
+                  "text": "置き換えを利用して展開しなさい。<br>$(x + y + 3)(x + y - 3)$",
+                  "answer": "$x+y=M$ とおくと $(M+3)(M-3) = M^2 - 9 = (x+y)^2 - 9 = x^2 + 2xy + y^2 - 9$",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (発展に挑戦)",
+                  "text": "$(a - b + 2)^2$ を展開しなさい。",
+                  "answer": "$a-b=M$ とおくと $(M+2)^2 = M^2 + 4M + 4 = a^2 - 2ab + b^2 + 4a - 4b + 4$",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 6,
+            "title": "因数分解の意味と共通因数のくくり出し",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "因数分解が「展開の逆」であることを理解し、共通因数をくくり出すことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "分配法則",
+                  "content": "$m(a+b) = ma + mb$ 展開 ⇄ 因数分解"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "多項式 $ax + ay$ を、いくつかの式の積の形に変形するにはどうすればよいだろうか？",
+                  "guide": "各項に共通してかけられている因数（共通因数）に着目しよう。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$ax + ay = a(x + y)$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "共通因数のくくり出し",
+                  "content": "多項式の各項に共通な因数があるときは、カッコの外にくくり出す！<br><strong>最大の共通因数</strong>を確実にくくり出すことがポイント。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の式を因数分解しなさい。<br>(1) $mx + my$<br>(2) $2ab - 4b^2$<br>(3) $6x^2y + 9xy^2$",
+                  "answer": "(1) $m(x + y)$<br>(2) $2b(a - 2b)$<br>(3) $3xy(2x + 3y)$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (注意)",
+                  "text": "$3x^2 - 6x$ を因数分解しなさい。<br>※ $3(x^2 - 2x)$ では不十分！",
+                  "answer": "$3x(x - 2)$",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 7,
+            "title": "乗法公式による因数分解① x²+(a+b)x+ab",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "和と積の組み合わせを見つけて、$x^2+(a+b)x+ab = (x+a)(x+b)$ の因数分解ができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "乗法公式の復習",
+                  "content": "$(x+a)(x+b) = x^2 + (a+b)x + ab$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$x^2 + 5x + 6$ を積の形にするには、$a, b$ をどのように見つければよいだろうか？",
+                  "guide": "かけて 6、たして 5 になる 2つの数を探そう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "積が 6: (1, 6), (2, 3) ➔ 和が 5 になるのは 2 と 3！ 答: $(x+2)(x+3)$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "因数分解の手順",
+                  "content": "① まず定数項の <strong>積</strong> になる2数のペアを考える。<br>② その中から、真ん中の <strong>和</strong> になるペアを選ぶ！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の式を因数分解しなさい。<br>(1) $x^2 + 7x + 10$<br>(2) $x^2 - 5x + 6$<br>(3) $x^2 - x - 12$",
+                  "answer": "(1) $(x + 2)(x + 5)$<br>(2) $(x - 2)(x - 3)$<br>(3) $(x - 4)(x + 3)$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$x^2 - 8x - 20$ を因数分解しなさい。",
+                  "answer": "$(x - 10)(x + 2)$",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 8,
+            "title": "乗法公式による因数分解② 平方の公式・平方の差",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "平方の公式や平方の差の公式を利用して、すばやく正確に因数分解できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "公式の確認",
+                  "content": "$(a+b)^2 = a^2+2ab+b^2, \\quad (a+b)(a-b) = a^2-b^2$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "多項式 $x^2 - 16$ や $x^2 + 6x + 9$ の形の特徴を見抜いて因数分解しよう。",
+                  "guide": "両端が「2乗」になっていることに着目しよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$x^2 - 16 = (x+4)(x-4)$, $\\quad x^2 + 6x + 9 = (x+3)^2$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "平方の因数分解公式",
+                  "content": "<strong>$a^2 + 2ab + b^2 = (a+b)^2$</strong><br><strong>$a^2 - 2ab + b^2 = (a-b)^2$</strong><br><strong>$a^2 - b^2 = (a+b)(a-b)$</strong>"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の式を因数分解しなさい。<br>(1) $x^2 + 12x + 36$<br>(2) $x^2 - 10x + 25$<br>(3) $x^2 - 49$",
+                  "answer": "(1) $(x + 6)^2$<br>(2) $(x - 5)^2$<br>(3) $(x + 7)(x - 7)$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (発展)",
+                  "text": "$4x^2 - 25y^2$ を因数分解しなさい。",
+                  "answer": "$(2x + 5y)(2x - 5y)$",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 9,
+            "title": "因数分解の工夫（くくり出し＋公式、置き換え）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "共通因数をくくり出してから公式を使ったり、置き換えを利用して因数分解できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "手順の原則",
+                  "content": "因数分解の第1ステップ: まず「共通因数」がないか調べる！"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$2x^2 + 8x + 6$ や $(x-1)^2 - 4$ はどのように因数分解できるだろうか？",
+                  "guide": "① まず共通因数 2 をくくり出す！ ② カッコの中を公式で因数分解！",
+                  "thinkingSpaceHeight": 90,
+                  "answer": "$2(x^2 + 4x + 3) = 2(x+1)(x+3)$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "発展因数分解の鉄則",
+                  "content": "① まず <strong>共通因数をくくり出す</strong>。<br>② 残ったカッコの中を <strong>乗法公式で因数分解</strong> する。<br>③ 共通なカタマリは $M$ とおく！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の式を因数分解しなさい。<br>(1) $3x^2 - 12$<br>(2) $2x^2 - 12x + 18$",
+                  "answer": "(1) $3(x^2 - 4) = 3(x + 2)(x - 2)$<br>(2) $2(x^2 - 6x + 9) = 2(x - 3)^2$",
+                  "spaceHeight": 75
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (置き換え)",
+                  "text": "$(x + y)^2 - 4(x + y) + 3$ を因数分解しなさい。",
+                  "answer": "$x+y=M$ とおくと $M^2 - 4M + 3 = (M - 1)(M - 3) = (x + y - 1)(x + y - 3)$",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 10,
+            "title": "式の計算の利用①（数の性質の証明、計算の工夫）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "文字式を利用して連続する整数の性質を証明し、乗法公式で大きな数を工夫して計算できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "整数の表し方",
+                  "content": "偶数: $2n$, $\\quad$ 奇数: $2n+1$, $\\quad$ 連続する2整数: $n, n+1$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "「連続する2つの奇数の積に1を加えた数は、偶数の2乗になる。」ことを証明しよう。",
+                  "guide": "奇数を $2n-1, 2n+1$ とおいて、計算式を作ってみよう。",
+                  "thinkingSpaceHeight": 90,
+                  "answer": "$(2n-1)(2n+1) + 1 = 4n^2 - 1 + 1 = 4n^2 = (2n)^2$。$2n$ は偶数なので偶数の2乗となる。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "証明の流れ",
+                  "content": "① 文字を使って数量を表す。<br>② 問題の通りに式を作って計算・変形する。<br>③ 結論の形（(偶数)² など）に合わせてまとめる！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1 (計算の工夫)",
+                  "text": "公式を利用して、次の計算をしなさい。<br>(1) $102^2$<br>(2) $53^2 - 47^2$",
+                  "answer": "(1) $(100 + 2)^2 = 10000 + 400 + 4 = 10404$<br>(2) $(53 + 47)(53 - 47) = 100 \\times 6 = 600$",
+                  "spaceHeight": 75
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "連続する2つの偶数の積に1を加えると奇数の2乗になることを証明しなさい。",
+                  "answer": "$2n(2n+2)+1 = 4n^2+4n+1 = (2n+1)^2$ より奇数の2乗となる。",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 11,
+            "title": "式の計算の利用②（図形の性質の証明、道幅と面積 S=aℓ）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "図形の面積や道のりの関係を文字式で表し、$S = a\\ell$ が成り立つことを証明できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "円の公式",
+                  "content": "円の面積: $S = \\pi r^2$, $\\quad$ 円周の長さ: $\\ell = 2\\pi r$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "半径 $r$ の円形の池のまわりに幅 $a$ の道がある。道の面積を $S$、道の真ん中を通る円周を $\\ell$ とするとき、$S = a\\ell$ となることを証明しよう。",
+                  "guide": "① $S = \\text{(外側の円)} - \\text{(内側の円)}$ を計算。 ② $\\ell$ を求めて $a\\ell$ を計算し比べる！",
+                  "thinkingSpaceHeight": 90,
+                  "answer": "$S = \\pi(r+a)^2 - \\pi r^2 = 2\\pi ar + \\pi a^2 = a(2\\pi r + \\pi a)$。真ん中の円の半径は $r + \\frac{a}{2}$ だから $\\ell = 2\\pi(r + \\frac{a}{2}) = 2\\pi r + \\pi a$。よって $S = a\\ell$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "図形の性質の証明",
+                  "content": "左辺 $S$ と右辺 $a\\ell$ をそれぞれ文字式で表し、<strong>計算結果が一致すること</strong>を示すことで証明完了！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "1辺が $p$ の正方形の花だんのまわりに幅 $a$ の道がある。道の面積 $S$ は $S = a\\ell$ となることを確かめなさい。",
+                  "answer": "$S = (p+2a)^2 - p^2 = 4ap + 4a^2$。道の真ん中の周長 $\\ell = 4(p+a) = 4p+4a$。よって $a\\ell = a(4p+4a) = S$",
+                  "spaceHeight": 85
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "章のまとめ",
+                  "text": "第1章で学んだ展開・因数分解の公式をノートに総整理しよう。",
+                  "answer": "4大公式と因数分解の手順を確実にマスター！",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "u_3_2",
+        "unitName": "第2章 平方根",
+        "totalHours": 7,
+        "bookRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY",
+        "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx",
+        "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+        "lessons": [
+          {
+            "hour": 1,
+            "title": "平方根の意味と根号（√）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "2乗すると $a$ になる数を平方根といい、根号 $\\sqrt{\\phantom{a}}$ を使って表すことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "2乗の計算",
+                  "content": "$3^2 = 9, \\quad (-3)^2 = 9$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "面積が $5\\text{cm}^2$ の正方形の1辺の長さはどのように表せばよいだろうか？",
+                  "guide": "2乗して 5 になる数は整数や分数では表せないね。記号 $\\sqrt{\\phantom{a}}$（ルート）を使おう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "1辺の長さは $\\sqrt{5}\\text{cm}$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "平方根と根号",
+                  "content": "2乗して $a$ になる数を <strong>$a$ の平方根</strong>という。<br>正の数の平方根は正と負の2つあり、$\\pm\\sqrt{a}$ と表す。例: 9の平方根は $\\pm 3$"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の数の平方根を答えなさい。<br>(1) 25<br>(2) 0.16<br>(3) $\\frac{4}{9}$<br>(4) 7",
+                  "answer": "(1) $\\pm 5$<br>(2) $\\pm 0.4$<br>(3) $\\pm \\frac{2}{3}$<br>(4) $\\pm \\sqrt{7}$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (注意)",
+                  "text": "$\\sqrt{16}$ と「16の平方根」の違いを説明しなさい。",
+                  "answer": "$\\sqrt{16} = 4$ (正の方のみ)。「16の平方根」は $\\pm 4$ (2乗して16になる数すべて)。",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 2,
+            "title": "有理数と無理数・平方根の大小",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "数を有理数と無理数に分類し、平方根の大小関係を不等号を使って表すことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "数の分類",
+                  "content": "分数 $\\frac{b}{a}$ で表せる数 ＝ 有理数"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$\\sqrt{7}$ と 3 はどちらが大きいだろうか？不等号で比べよう。",
+                  "guide": "両方を2乗して根号の中の数で比べてみよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$(\\sqrt{7})^2 = 7$, $3^2 = 9$。$7 < 9$ より $\\sqrt{7} < 3$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "有理数・無理数と大小",
+                  "content": "分数で表せない数（$\\sqrt{2}, \\pi$ など）を <strong>無理数</strong>という。<br>$a < b$ ならば $\\sqrt{a} < \\sqrt{b}$（2乗して比べる）"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の各組の数の大小を不等号で表しなさい。<br>(1) $\\sqrt{15}, \\quad 4$<br>(2) $-\\sqrt{5}, \\quad -\\sqrt{6}$",
+                  "answer": "(1) $4 = \\sqrt{16}$ より $\\sqrt{15} < 4$<br>(2) 負の数なので $-\\sqrt{5} > -\\sqrt{6}$",
+                  "spaceHeight": 70
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "次のうち無理数をすべて選びなさい。<br>$-\\frac{1}{3}, \\quad \\sqrt{9}, \\quad \\sqrt{10}, \\quad \\pi, \\quad 0.25$",
+                  "answer": "$\\sqrt{10}, \\quad \\pi$ (※ $\\sqrt{9}=3$ は有理数)",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 3,
+            "title": "平方根の乗法と除法・根号の変形 (a√b)",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "$\\sqrt{a}\\sqrt{b} = \\sqrt{ab}$ を理解し、根号の中をできるだけ簡単な数に変形（$a\\sqrt{b}$）できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "根号の性質",
+                  "content": "$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}, \\quad \\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$\\sqrt{12}$ や $\\sqrt{72}$ を、もっと簡単な根号の形に表すにはどうすればよいだろうか？",
+                  "guide": "素因数分解して、2乗のペアをルートの外に出そう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$\\sqrt{12} = \\sqrt{4 \\times 3} = \\sqrt{2^2 \\times 3} = 2\\sqrt{3}$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "根号の変形 $a\\sqrt{b}$",
+                  "content": "根号の中に2乗の因数があれば、根号の外に出す！<br>$\\sqrt{a^2 b} = a\\sqrt{b}$。素因数分解を活用しよう。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "根号の中をできるだけ簡単な整数にしなさい。<br>(1) $\\sqrt{18}$<br>(2) $\\sqrt{48}$<br>(3) $\\sqrt{72}$",
+                  "answer": "(1) $3\\sqrt{2}$<br>(2) $4\\sqrt{3}$<br>(3) $6\\sqrt{2}$",
+                  "spaceHeight": 75
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "次の計算をしなさい。<br>(1) $\\sqrt{6} \\times \\sqrt{10}$<br>(2) $\\sqrt{54} \\div \\sqrt{3}$",
+                  "answer": "(1) $\\sqrt{60} = 2\\sqrt{15}$<br>(2) $\\sqrt{18} = 3\\sqrt{2}$",
+                  "spaceHeight": 65
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 4,
+            "title": "分母の有理化",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "分母に根号を含まない形に変形する「分母の有理化」の仕組みを理解し計算できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "分数の性質",
+                  "content": "分母と分子に同じ数をかけても分数の大きさは変わらない"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "数 $\\frac{1}{\\sqrt{2}}$ の分母から根号をなくすには、どうすればよいだろうか？",
+                  "guide": "分母と分子の両方に $\\sqrt{2}$ をかけてみよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$\\frac{1}{\\sqrt{2}} = \\frac{1 \\times \\sqrt{2}}{\\sqrt{2} \\times \\sqrt{2}} = \\frac{\\sqrt{2}}{2}$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "分母の有理化",
+                  "content": "分母にある根号と同じ数を、<strong>分母と分子の両方にかける</strong>！<br>$\\frac{a}{\\sqrt{b}} = \\frac{a\\sqrt{b}}{b}$。約分ができる場合は最後まで約分する！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "分母を有理化しなさい。<br>(1) $\\frac{3}{\\sqrt{5}}$<br>(2) $\\frac{6}{\\sqrt{3}}$<br>(3) $\\frac{\\sqrt{3}}{\\sqrt{8}}$",
+                  "answer": "(1) $\\frac{3\\sqrt{5}}{5}$<br>(2) $\\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}$ (約分！)<br>(3) $\\frac{\\sqrt{3}}{2\\sqrt{2}} = \\frac{\\sqrt{6}}{4}$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$\\frac{12}{\\sqrt{6}}$ を有理化して簡単にしなさい。",
+                  "answer": "$\\frac{12\\sqrt{6}}{6} = 2\\sqrt{6}$",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 5,
+            "title": "平方根の加法と減法（同類項の整理）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "根号の中が同じ数を同類項のようにまとめて加法・減法の計算ができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "文字式の加法",
+                  "content": "$2x + 3x = 5x$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "式 $2\\sqrt{3} + 4\\sqrt{3}$ や $\\sqrt{12} + \\sqrt{27}$ はどのように計算できるだろうか？",
+                  "guide": "$\\sqrt{3}$ を文字 $x$ のようにみなそう！ $\\sqrt{12}$ や $\\sqrt{27}$ はまず $a\\sqrt{b}$ に直す！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$2\\sqrt{3} + 4\\sqrt{3} = 6\\sqrt{3}$, $\\quad \\sqrt{12} + \\sqrt{27} = 2\\sqrt{3} + 3\\sqrt{3} = 5\\sqrt{3}$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "加減計算の鉄則",
+                  "content": "① まず根号の中をできるだけ簡単にする（$a\\sqrt{b}$ に直す）。<br>② <strong>根号の中が同じものどうし</strong>を分配法則でまとめる！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の計算をしなさい。<br>(1) $5\\sqrt{2} - 2\\sqrt{2}$<br>(2) $\\sqrt{20} + \\sqrt{45}$<br>(3) $\\sqrt{48} - \\sqrt{27} + \\sqrt{12}$",
+                  "answer": "(1) $3\\sqrt{2}$<br>(2) $2\\sqrt{5} + 3\\sqrt{5} = 5\\sqrt{5}$<br>(3) $4\\sqrt{3} - 3\\sqrt{3} + 2\\sqrt{3} = 3\\sqrt{3}$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (注意)",
+                  "text": "$\\sqrt{2} + \\sqrt{3} = \\sqrt{5}$ は正しいですか？理由も答えなさい。",
+                  "answer": "誤り。根号の中が異なるためこれ以上足すことはできない。",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 6,
+            "title": "乗法公式を利用した平方根の計算",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "分配法則や乗法公式を活用して、根号を含む複雑な四則計算ができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "乗法公式",
+                  "content": "$(a+b)(a-b) = a^2 - b^2, \\quad (a+b)^2 = a^2+2ab+b^2$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$(\\sqrt{5} + \\sqrt{2})(\\sqrt{5} - \\sqrt{2})$ や $(\\sqrt{3} + 2)^2$ を展開して計算しよう。",
+                  "guide": "乗法公式の文字の部分に根号の数をあてはめてみよう！ $(\\sqrt{5})^2 = 5$ だね。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$(\\sqrt{5})^2 - (\\sqrt{2})^2 = 5 - 2 = 3$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "公式利用のポイント",
+                  "content": "根号の2乗は根号がはずれる！ $(\\sqrt{a})^2 = a$<br>公式を使って展開してから、整数どうし・根号どうしをまとめる。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の計算をしなさい。<br>(1) $(\\sqrt{7} + 2)(\\sqrt{7} - 2)$<br>(2) $(\\sqrt{5} + 1)^2$<br>(3) $(\\sqrt{6} - \\sqrt{2})^2$",
+                  "answer": "(1) $(\\sqrt{7})^2 - 2^2 = 7 - 4 = 3$<br>(2) $5 + 2\\sqrt{5} + 1 = 6 + 2\\sqrt{5}$<br>(3) $6 - 2\\sqrt{12} + 2 = 8 - 4\\sqrt{3}$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$\\sqrt{2}(\\sqrt{6} + \\sqrt{10})$ を計算しなさい。",
+                  "answer": "$\\sqrt{12} + \\sqrt{20} = 2\\sqrt{3} + 2\\sqrt{5}$",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 7,
+            "title": "平方根の利用（近似値、黄金比、図形への利用）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "平方根の近似値を利用して現実の問題を解決し、正方形や図形の辺の長さを求められる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "近似値の確認",
+                  "content": "$\\sqrt{2} \\approx 1.414, \\quad \\sqrt{3} \\approx 1.732, \\quad \\sqrt{5} \\approx 2.236$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "$\\sqrt{2} = 1.414$ とするとき、$\\sqrt{200}$ と $\\sqrt{0.02}$ の近似値を求めよう。",
+                  "guide": "$\\sqrt{200} = \\sqrt{100 \\times 2} = 10\\sqrt{2}$ に着目しよう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$\\sqrt{200} = 10 \\times 1.414 = 14.14$, $\\quad \\sqrt{0.02} = \\frac{\\sqrt{2}}{10} = 0.1414$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "近似値の求め方",
+                  "content": "根号の中を $100$ や $10000$（$10^2, 100^2$）の積・商に変形して、ルートの外に $10$ や $\\frac{1}{10}$ を出して計算する！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "$\\sqrt{3} = 1.732$ とするとき、次の値を求めなさい。<br>(1) $\\sqrt{300}$<br>(2) $\\sqrt{27}$<br>(3) $\\frac{3}{\\sqrt{3}}$",
+                  "answer": "(1) $10\\sqrt{3} = 17.32$<br>(2) $3\\sqrt{3} = 3 \\times 1.732 = 5.196$<br>(3) $\\sqrt{3} = 1.732$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "章末問題",
+                  "text": "面積が $30\\text{m}^2$ の正方形の敷地がある。1辺の長さはおよそ何mか。",
+                  "answer": "$\\sqrt{30}\\text{m}$。$5^2=25, 6^2=36$ より約 $5.5\\text{m}$",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "u_3_3",
+        "unitName": "第3章 2次方程式",
+        "totalHours": 6,
+        "bookRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY",
+        "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx",
+        "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+        "lessons": [
+          {
+            "hour": 1,
+            "title": "2次方程式の意味とその解",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "未知数の2乗を含む2次方程式の意味を理解し、方程式を成り立たせる解を見つけられる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "1次方程式",
+                  "content": "$2x + 3 = 7 \\implies x = 2$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "正方形の1辺を $2\\text{cm}$ 長くしたら、面積が $36\\text{cm}^2$ になった。もとの1辺の長さ $x$ は？",
+                  "guide": "方程式 $(x+2)^2 = 36$ を作って、$x$ に当てはまる数を探してみよう。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$x+2 = 6 \\implies x = 4\\text{cm}$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "2次方程式と解",
+                  "content": "整理して $ax^2 + bx + c = 0$ の形になる方程式を <strong>2次方程式</strong>という。<br>一般に解は2つある！（正負や異なる解）"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の数のうち、2次方程式 $x^2 - 3x - 4 = 0$ の解であるものをすべて選びなさい。<br>$-2, \\quad -1, \\quad 1, \\quad 4$",
+                  "answer": "$x = -1$ と $x = 4$ を代入すると等式が成り立つため解である。",
+                  "spaceHeight": 75
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$x^2 = 16$ の解をすべて答えなさい。",
+                  "answer": "$x = \\pm 4$",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 2,
+            "title": "平方根の考え方による解き方 (x+m)²=n",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "平方根の考え方を利用して、$x^2 = k$ や $(x+m)^2 = n$ の2次方程式を解くことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "平方根",
+                  "content": "$X^2 = 9 \\implies X = \\pm 3$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "2次方程式 $(x - 3)^2 = 5$ はどのように解けばよいだろうか？",
+                  "guide": "$x - 3$ をひとまとまり $X$ とみて平方根をとろう！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$x - 3 = \\pm \\sqrt{5} \\implies x = 3 \\pm \\sqrt{5}$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "平方根による解法",
+                  "content": "$(x+m)^2 = n$ の形を作れば、<br>$x+m = \\pm\\sqrt{n} \\implies x = -m \\pm \\sqrt{n}$ で一発で解ける！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の2次方程式を解きなさい。<br>(1) $x^2 - 7 = 0$<br>(2) $2x^2 = 18$<br>(3) $(x + 2)^2 = 9$",
+                  "answer": "(1) $x = \\pm \\sqrt{7}$<br>(2) $x^2 = 9 \\implies x = \\pm 3$<br>(3) $x + 2 = \\pm 3 \\implies x = 1, -5$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$(x - 4)^2 = 7$ を解きなさい。",
+                  "answer": "$x = 4 \\pm \\sqrt{7}$",
+                  "spaceHeight": 50
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 3,
+            "title": "因数分解による解き方 (AB=0)",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "「$AB=0$ ならば $A=0$ または $B=0$」の性質を理解し、因数分解で解くことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "因数分解",
+                  "content": "$x^2 - 5x + 6 = (x-2)(x-3)$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "方程式 $(x - 2)(x - 3) = 0$ を成り立たせる $x$ の値は何だろうか？",
+                  "guide": "2つの式をかけて 0 になるのだから、どちらかが 0 になればいいね！",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$x - 2 = 0$ または $x - 3 = 0$。よって $x = 2, 3$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "因数分解による解法",
+                  "content": "① 右辺を必ず 0 にする（$ax^2+bx+c=0$）。<br>② 左辺を因数分解して $(x-p)(x-q)=0$ とする。<br>③ 答: $x = p, q$（重解のときは1つ）"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "次の2次方程式を解きなさい。<br>(1) $(x - 5)(x + 1) = 0$<br>(2) $x^2 - 7x + 12 = 0$<br>(3) $x^2 + 6x + 9 = 0$",
+                  "answer": "(1) $x = 5, -1$<br>(2) $(x-3)(x-4)=0 \\implies x = 3, 4$<br>(3) $(x+3)^2=0 \\implies x = -3$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2 (注意)",
+                  "text": "$x^2 - 6x = 0$ を解きなさい。両辺を $x$ で割ってはダメ！",
+                  "answer": "$x(x - 6) = 0 \\implies x = 0, 6$",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 4,
+            "title": "2次方程式の解の公式の導出と計算",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "2次方程式の解の公式を理解し、因数分解できない方程式を確実に解くことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "平方完成",
+                  "content": "$x^2 + 2mx = (x+m)^2 - m^2$"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "因数分解できない $x^2 + 3x - 1 = 0$ を解くにはどうすればよいだろうか？",
+                  "guide": "平方完成の考え方を使って一般の $ax^2+bx+c=0$ から公式を導こう！",
+                  "thinkingSpaceHeight": 90,
+                  "answer": "$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "解の公式",
+                  "title": "2次方程式の解の公式",
+                  "content": "<strong>$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$</strong><br>どんな2次方程式でも必ず解ける万能の公式！$a, b, c$ を正しく代入しよう。"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "解の公式を使って解きなさい。<br>(1) $x^2 + 3x - 1 = 0$<br>(2) $2x^2 + 5x + 1 = 0$",
+                  "answer": "(1) $x = \\frac{-3 \\pm \\sqrt{9 - 4(1)(-1)}}{2} = \\frac{-3 \\pm \\sqrt{13}}{2}$<br>(2) $x = \\frac{-5 \\pm \\sqrt{25 - 8}}{4} = \\frac{-5 \\pm \\sqrt{17}}{4}$",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$3x^2 - 7x + 2 = 0$ を解きなさい。",
+                  "answer": "$x = \\frac{7 \\pm \\sqrt{49 - 24}}{6} = \\frac{7 \\pm 5}{6} \\implies x = 2, \\frac{1}{3}$",
+                  "spaceHeight": 60
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 5,
+            "title": "2次方程式の解き方のまとめ・適した解法の選択",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "因数分解・平方根・解の公式の中から、最も適した解法を選んですばやく解くことができる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "3つの解法",
+                  "content": "① 平方根の利用 $\\quad$ ② 因数分解 $\\quad$ ③ 解の公式"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "いろいろな2次方程式を見て、どの解法が最も簡単か判断基準を整理しよう。",
+                  "guide": "まず因数分解できるかチェック！できなければ解の公式を使おう。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "判断順序: ① $x^2=k$ ➔ 平方根、② 因数分解できる ➔ 因数分解、③ それ以外 ➔ 解の公式"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "解法選びのチャート",
+                  "content": "まず左辺を因数分解できるか試す！<br>因数分解できれば最も速い。できそうにないときは迷わず解の公式！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "適した方法で次の2次方程式を解きなさい。<br>(1) $x^2 - 9x = 0$<br>(2) $x^2 - 4x - 5 = 0$<br>(3) $x^2 - 4x + 1 = 0$",
+                  "answer": "(1) $x(x-9)=0 \\implies x = 0, 9$ (因数分解)<br>(2) $(x-5)(x+1)=0 \\implies x = 5, -1$ (因数分解)<br>(3) $x = \\frac{4 \\pm \\sqrt{16-4}}{2} = 2 \\pm \\sqrt{3}$ (解の公式)",
+                  "spaceHeight": 85
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 2",
+                  "text": "$(x - 2)^2 - 16 = 0$ を簡単に解きなさい。",
+                  "answer": "$(x-2)^2 = 16 \\implies x-2 = \\pm 4 \\implies x = 6, -2$",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
+            ]
+          },
+          {
+            "hour": 6,
+            "title": "2次方程式の利用（数・図形・動点の問題）",
+            "leftBlocks": [
+              {
+                "type": "objective",
+                "data": {
+                  "text": "具体的な事象から数量関係を2次方程式に表し、解が問題に適しているかを吟味できる。"
+                }
+              },
+              {
+                "type": "review",
+                "data": {
+                  "title": "文章題の手順",
+                  "content": "① 求めるものを $x$ とおく $\\implies$ ② 方程式をつくる $\\implies$ ③ 解を吟味する"
+                }
+              },
+              {
+                "type": "board-task",
+                "data": {
+                  "qNum": "【本時の課題】",
+                  "text": "大小2つの自然数がある。差が 3 で積が 28 であるとき、この2つの数を求めよう。",
+                  "guide": "小さい方を $x$ とおくと、大きい方は $x+3$ だね。$x(x+3) = 28$ を解こう。",
+                  "thinkingSpaceHeight": 85,
+                  "answer": "$x^2+3x-28=0 \\implies (x+7)(x-4)=0 \\implies x=-7, 4$。自然数なので $x=4$。2数は 4 と 7。"
+                }
+              },
+              {
+                "type": "point-box",
+                "data": {
+                  "badge": "板書まとめ",
+                  "title": "解の吟味（ぎんみ）の重要性",
+                  "content": "2次方程式の2つの解のうち、長さや個数は <strong>正の数</strong> でなければならない。<br>問題文の条件（自然数、正の数など）に合っているか必ず確かめる！"
+                }
+              }
+            ],
+            "rightBlocks": [
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "問 1",
+                  "text": "横がたてより $4\\text{cm}$ 長い長方形の紙がある。面積が $45\\text{cm}^2$ であるとき、たての長さを求めなさい。",
+                  "answer": "たてを $x\\text{cm}$ とおくと $x(x+4) = 45 \\implies x^2+4x-45=0 \\implies (x+9)(x-5)=0$。$x > 0$ よりたては $5\\text{cm}$。",
+                  "spaceHeight": 80
+                }
+              },
+              {
+                "type": "question",
+                "data": {
+                  "qNum": "章の総まとめ",
+                  "text": "2次方程式の文章題で解を吟味する理由をまとめなさい。",
+                  "answer": "数学の計算上は負の解も出るが、現実の長さや個数に負の数はないから。",
+                  "spaceHeight": 55
+                }
+              },
+              {
+                "type": "reflection",
+                "data": {
+                  "title": "本時の自己評価 & 振り返り"
+                }
+              }
             ]
           }
         ]
@@ -5762,7 +8387,6 @@ const boardLessonDatabase = {
   }
 };
 
-// 状態管理: 選択中の学年・単元・時数
 let currentB4Grade = '3';
 let currentB4UnitId = 'u_3_1';
 let currentB4Hour = 5; // デフォルト: 3年多項式 5時間目 (工夫して展開)
