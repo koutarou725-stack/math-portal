@@ -24,7 +24,7 @@
   <!-- 各機能モジュールスタイル -->
   <link rel="stylesheet" href="css/features/home.css">
   <link rel="stylesheet" href="css/features/timetable.css">
-  <link rel="stylesheet" href="css/features/class-print.css?v=20261003_3">
+  <link rel="stylesheet" href="css/features/class-print.css?v=20261003_4">
   <link rel="stylesheet" href="css/features/practice-print.css">
   <link rel="stylesheet" href="css/features/graph-generator.css">
   <link rel="stylesheet" href="css/features/settings.css">
@@ -871,8 +871,8 @@
                   <i class="fa-regular fa-file-lines"></i> 初期状態
                 </div>
               </div>
-              <button type="button" class="btn btn-primary-solid btn-block" onclick="saveCurrentAsLessonTemplate()" style="padding: 0.6rem 0.5rem; font-weight: 700; font-size: 0.88rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: #0284c7; color: #fff; border-radius: 6px;" title="編集した内容をこの時間のテンプレートとして保存します（次回以降もこの状態で開きます）">
-                <i class="fa-solid fa-cloud-arrow-up"></i> この編集をテンプレートに保存
+              <button type="button" class="btn btn-primary-solid btn-block" onclick="saveCurrentAsLessonTemplate()" style="padding: 0.55rem 0.35rem; font-weight: 700; font-size: 0.82rem; width: 100%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 0.35rem; background: #0284c7; color: #fff; border-radius: 6px; white-space: normal; line-height: 1.2;" title="編集した内容をこの時間のテンプレートとして保存します（次回以降もこの状態で開きます）">
+                <i class="fa-solid fa-cloud-arrow-up"></i> この編集を保存
               </button>
               <div style="display: flex; gap: 0.35rem; margin-top: 0.4rem;">
                 <button type="button" class="btn btn-ghost btn-sm text-secondary js-template-reset" onclick="resetLessonTemplateToDefault()" style="flex: 1; font-size: 0.73rem; padding: 0.25rem 0.4rem;" title="編集保存したテンプレートを破棄し、初期状態の板書データに戻します">
@@ -927,68 +927,41 @@
           <p class="panel-desc">クリックして用紙にブロックを追加します。</p>
           
           <div class="block-palette">
-            <button class="palette-item" onclick="addBlockToSide('objective', 'left')">
+            <button class="palette-item" onclick="addBlockToSide('objective', 'left')" title="本時のめあて (左面)">
               <i class="fa-solid fa-bullseye"></i>
-              <div>
-                <strong>本時のめあて</strong>
-                <span>学習目標の囲み枠 (左面)</span>
-              </div>
+              <div><strong>めあて</strong></div>
             </button>
-            <button class="palette-item" onclick="addBlockToSide('review', 'left')">
+            <button class="palette-item" onclick="addBlockToSide('review', 'left')" title="導入・前時の復習 (左面)">
               <i class="fa-solid fa-clock-rotate-left"></i>
-              <div>
-                <strong>導入・前時の復習</strong>
-                <span>つまずき確認・小問 (左面)</span>
-              </div>
+              <div><strong>復習</strong></div>
             </button>
-            <button class="palette-item highlight-palette-item" onclick="addBlockToSide('board-task', 'left')">
-              <i class="fa-solid fa-chalkboard-user text-primary"></i>
-              <div>
-                <strong>板書・主発問 (課題枠)</strong>
-                <span>思考スペース・解法メモ (左面)</span>
-              </div>
+            <button class="palette-item" onclick="addBlockToSide('board-task', 'left')" title="板書・主発問 課題枠 (左面)">
+              <i class="fa-solid fa-chalkboard-user"></i>
+              <div><strong>課題枠</strong></div>
             </button>
-            <button class="palette-item highlight-palette-item" onclick="addBlockToSide('point-box', 'left')">
+            <button class="palette-item" onclick="addBlockToSide('point-box', 'left')" title="要点まとめ 公式枠">
               <i class="fa-solid fa-bookmark text-warning"></i>
-              <div>
-                <strong>要点まとめ (公式枠)</strong>
-                <span>重要定理・公式整理</span>
-              </div>
+              <div><strong>要点・公式</strong></div>
             </button>
-            <button class="palette-item" onclick="addBlockToSide('question', 'right')">
+            <button class="palette-item" onclick="addBlockToSide('question', 'right')" title="問い・練習問題 (右面)">
               <i class="fa-solid fa-pen-to-square"></i>
-              <div>
-                <strong>問い・練習問題</strong>
-                <span>適用演習・解答スペース (右面)</span>
-              </div>
+              <div><strong>練習問題</strong></div>
             </button>
-            <button class="palette-item" onclick="addBlockToSide('graph-block', 'right')">
+            <button class="palette-item" onclick="addBlockToSide('graph-block', 'right')" title="関数・グラフ枠">
               <i class="fa-solid fa-chart-line"></i>
-              <div>
-                <strong>関数・グラフ枠</strong>
-                <span>方眼紙・座標平面付き</span>
-              </div>
+              <div><strong>グラフ枠</strong></div>
             </button>
-            <button class="palette-item" onclick="addBlockToSide('geometry-block', 'right')">
+            <button class="palette-item" onclick="addBlockToSide('geometry-block', 'right')" title="図形問題枠">
               <i class="fa-solid fa-draw-polygon"></i>
-              <div>
-                <strong>図形問題枠</strong>
-                <span>図形スペース・角度など</span>
-              </div>
+              <div><strong>図形枠</strong></div>
             </button>
-            <button class="palette-item" onclick="addBlockToSide('summary', 'left')">
+            <button class="palette-item" onclick="addBlockToSide('summary', 'left')" title="まとめ (左面)">
               <i class="fa-solid fa-lightbulb"></i>
-              <div>
-                <strong>まとめ</strong>
-                <span>本時の公式・重要ポイント</span>
-              </div>
+              <div><strong>まとめ</strong></div>
             </button>
-            <button class="palette-item" onclick="addBlockToSide('reflection', 'right')">
-              <i class="fa-solid fa-star"></i>
-              <div>
-                <strong>振り返り・自己評価</strong>
-                <span>3段階評価と記述欄 (右面)</span>
-              </div>
+            <button class="palette-item" onclick="addBlockToSide('reflection', 'right')" title="振り返り・自己評価 (右面)">
+              <i class="fa-solid fa-star text-warning"></i>
+              <div><strong>振り返り</strong></div>
             </button>
           </div>
 
@@ -1019,6 +992,9 @@
                   <button type="button" class="zoom-btn" id="zoomBtn_85" onclick="setWorksheetZoom(0.85)">85%</button>
                   <button type="button" class="zoom-btn" id="zoomBtn_75" onclick="setWorksheetZoom(0.75)">75%</button>
                 </div>
+                <button type="button" class="btn btn-sm btn-primary-solid" onclick="printWorksheetPaper()" style="background: #0284c7; color: #fff; font-weight: 700; padding: 0.35rem 0.8rem; border-radius: 6px; box-shadow: 0 1px 3px rgba(2,132,199,0.3); display: flex; align-items: center; gap: 0.35rem;" title="印刷またはPDFとして保存（B4横見開き）">
+                  <i class="fa-solid fa-print"></i> 印刷 / PDFプレビュー
+                </button>
               </div>
               <div class="paper-actions">
                 <button type="button" class="btn btn-sm btn-outline" id="b4UndoBtn" onclick="undoB4()" title="操作を元に戻す (Ctrl+Z)" disabled>
@@ -1057,10 +1033,11 @@
                 <h2 class="sheet-title b4-sheet-title" contenteditable="true" id="paperTitle">式の展開の工夫（置き換えの利用）</h2>
               </div>
               <div class="sheet-meta-area">
-                <div class="sheet-no" contenteditable="true" id="paperNoDisplay">No. 14</div>
+                <div class="sheet-no" contenteditable="true" id="paperNoDisplay">No. 1</div>
                 <div class="sheet-student-info">
-                  <div class="info-cell class-cell">3年 <span class="blank-line" contenteditable="true">　</span>組</div>
-                  <div class="info-cell num-cell">番　氏名: <span class="blank-line-name" contenteditable="true">　　　　　　　　</span></div>
+                  <span class="info-part"><span id="paperStudentGrade">3</span>年 <span class="blank-line class-blank" contenteditable="true">　</span>組</span>
+                  <span class="info-part"><span class="blank-line num-blank" contenteditable="true">　　</span>番</span>
+                  <span class="info-part">氏名: <span class="blank-line name-blank" contenteditable="true">　　　　　　　　</span></span>
                 </div>
               </div>
             </div>
@@ -1555,11 +1532,11 @@
   <script src="js/core/cloud-sync.js"></script>
   <!-- 各機能モジュール -->
   <script src="js/features/timetable.js"></script>
-  <script src="js/features/class-print.js?v=20261003_3"></script>
+  <script src="js/features/class-print.js?v=20261003_4"></script>
   <script src="js/features/practice-print.js"></script>
   <script src="js/features/settings.js"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
-  <script src="js/core/init.js?v=20261003_3"></script>
+  <script src="js/core/init.js?v=20261003_4"></script>
 </body>
 </html>

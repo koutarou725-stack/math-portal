@@ -48,50 +48,60 @@
   line-height: 1.4;
 }
 
-/* ブロックパレット */
+/* ブロックパレット (2列シンプルグリッド) */
 .block-palette {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.45rem;
 }
 
 .palette-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 0.8rem;
-  background: #f8fafc;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  text-align: left;
+  justify-content: center;
+  text-align: center;
+  padding: 0.55rem 0.3rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
+  min-height: 56px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
 
 .palette-item:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  transform: translateX(2px);
+  background: #f0f9ff;
+  border-color: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(2, 132, 199, 0.12);
 }
 
 .palette-item i {
-  font-size: 1.1rem;
-  width: 24px;
-  color: var(--primary);
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+  color: #0284c7;
   text-align: center;
+}
+
+.palette-item div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .palette-item strong {
   display: block;
-  font-size: 0.85rem;
-  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
 }
 
 .palette-item span {
-  display: block;
-  font-size: 0.72rem;
-  color: var(--text-muted);
+  display: none; /* 2列でシンプルにするためサブテキストは非表示 */
 }
 
 /* 中央: A4用紙コンテナ */
@@ -191,29 +201,39 @@
 
 .sheet-student-info {
   display: flex;
-  border: 1px solid #000;
-  font-size: 0.85rem;
+  align-items: flex-end;
+  gap: 12px;
+  border: none !important;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #111;
+  margin-right: 14px; /* Noの右端より左側にオフセット */
 }
 
-.info-cell {
-  padding: 3px 8px;
-}
-
-.class-cell {
-  border-right: 1px solid #000;
+.info-part {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
 }
 
 .blank-line {
   display: inline-block;
-  min-width: 25px;
-  border-bottom: 1px solid #000;
+  border-bottom: 1.5px solid #000;
   text-align: center;
+  font-size: 1.05rem;
+  line-height: 1.2;
 }
 
-.blank-line-name {
-  display: inline-block;
-  min-width: 130px;
-  border-bottom: 1px solid #000;
+.blank-line.class-blank {
+  min-width: 32px;
+}
+
+.blank-line.num-blank {
+  min-width: 44px;
+}
+
+.blank-line.name-blank {
+  min-width: 175px;
 }
 
 /* ブロックリスト */
@@ -1972,4 +1992,79 @@ body.show-answers .answer-text.answer-block {
 
 .sheet-unit-badge .katex {
   font-size: 0.82rem;
+}
+
+
+/* 見通し・ヒント枠（コンパスマーク）の消せる化・追加機能 */
+.board-task-guide {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: #334155;
+  transition: all 0.15s ease;
+}
+
+.board-task-guide i.fa-compass {
+  color: #0284c7;
+  margin-top: 3px;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.board-task-guide [contenteditable="true"] {
+  flex: 1;
+  outline: none;
+}
+
+.btn-guide-remove {
+  opacity: 0.3;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+  font-size: 0.8rem;
+}
+
+.board-task-guide:hover .btn-guide-remove {
+  opacity: 1;
+}
+
+.btn-guide-remove:hover {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+.board-task-no-guide {
+  margin-bottom: 6px;
+}
+
+.btn-guide-add {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-guide-add:hover {
+  background: #f0f9ff;
+  border-color: #0284c7;
+  color: #0284c7;
 }

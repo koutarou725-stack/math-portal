@@ -4183,9 +4183,14 @@ function loadBoardLessonPreset(grade, unitId, hour, isInitialLoad = false) {
   const footerCode = document.getElementById('footerLessonCode');
   if (footerCode) footerCode.textContent = 'M' + currentB4Grade + '-' + currentB4UnitId.replace(/^u_\d+_/, 'U') + '-L' + lesson.hour;
 
-  const classCell = document.querySelector('.sheet-student-info .class-cell');
-  if (classCell && classCell.firstChild && classCell.firstChild.nodeType === 3) {
-    classCell.firstChild.textContent = currentB4Grade + '年 ';
+  const studentGrade = document.getElementById('paperStudentGrade');
+  if (studentGrade) {
+    studentGrade.textContent = currentB4Grade;
+  } else {
+    const classCell = document.querySelector('.sheet-student-info .class-cell');
+    if (classCell && classCell.firstChild && classCell.firstChild.nodeType === 3) {
+      classCell.firstChild.textContent = currentB4Grade + '年 ';
+    }
   }
 
   state.blocksLeft = sanitizeFormulas(JSON.parse(JSON.stringify(source.leftBlocks || []))).map(b => {
@@ -4285,7 +4290,14 @@ function renderBlockColumn(blocks, colSide) {
             <div class="board-task-text" ${editB4('text', '課題・問題文を入力')}>${fmtB4(d.text)}</div>
           </div>
           ${d.guide ? `
-          <div class="board-task-guide"><i class="fa-solid fa-compass"></i><div ${editB4('guide', '見通し・ヒント')}>${fmtB4(d.guide)}</div></div>` : ''}
+          <div class="board-task-guide">
+            <i class="fa-solid fa-compass" title="見通し・ヒント"></i>
+            <div ${editB4('guide', '見通し・ヒントを入力')}>${fmtB4(d.guide)}</div>
+            <button type="button" class="btn-guide-remove no-print" onclick="removeBoardTaskGuide('${colSide}', ${index})" title="見通し・ヒント枠を削除"><i class="fa-solid fa-xmark"></i></button>
+          </div>` : `
+          <div class="board-task-no-guide no-print">
+            <button type="button" class="btn-guide-add" onclick="addBoardTaskGuide('${colSide}', ${index})"><i class="fa-solid fa-plus"></i> 見通しヒント枠を追加</button>
+          </div>`}
           <div class="board-task-canvas" style="min-height: ${d.thinkingSpaceHeight || 85}px;">
             <div class="canvas-grid-label">自分の考え・途中式</div>
             <div class="answer-text answer-block"><span class="answer-tag">解答例</span><div ${editB4('answer', '解答例を入力')}>${fmtB4(d.answer)}</div></div>
@@ -4319,7 +4331,7 @@ function renderBlockColumn(blocks, colSide) {
           <div class="summary-content" ${editB4('content', 'まとめを入力')}>${fmtB4(d.content)}</div>
         </div>`;
     } else if (block.type === 'reflection') {
-      // ユーザー要望: タイトルの右側から始まるのではなく、下の行から理解度を配置
+      // ユーザー要望: タイトルの右側から始まるのではなく、下の行から配置 & 全要素を編集・消去可能に
       html = `
         <div class="reflection-box">
           <div class="reflection-title-row">
@@ -4327,15 +4339,13 @@ function renderBlockColumn(blocks, colSide) {
             <strong ${editB4('title', '見出し', 'text')}>${escapeHtmlB4(d.title || '本時の自己評価 & 振り返り')}</strong>
           </div>
           <div class="reflection-scale-row">
-            <span class="scale-label">理解度:</span>
-            <div class="scale-options">
-              <span>[ A: よくわかった ]</span>
-              <span>[ B: だいたい ]</span>
-              <span>[ C: もう少し ]</span>
+            <span class="scale-label" ${editB4('scaleLabel', '項目名', 'text')}>${escapeHtmlB4(d.scaleLabel || '理解度:')}</span>
+            <div class="scale-options" ${editB4('scaleOptions', '評価基準を入力', 'html')}>
+              ${d.scaleOptions ? fmtB4(d.scaleOptions) : '<span>[ A: よくわかった ]</span> <span>[ B: だいたい ]</span> <span>[ C: もう少し ]</span>'}
             </div>
           </div>
           <div class="reflection-comment-line" ${d.customHeight ? `style="min-height: ${d.customHeight}px;"` : ''}>
-            <span class="comment-label">今日の授業で学んだこと・疑問点:</span>
+            <span class="comment-label" ${editB4('commentLabel', '記述欄の案内を入力', 'text')}>${escapeHtmlB4(d.commentLabel || '今日の授業で学んだこと・疑問点:')}</span>
           </div>
         </div>`;
     }
@@ -4911,5 +4921,31 @@ if (typeof window !== 'undefined') {
     migrateStoredLessonTemplates();
   } catch (e) {
     console.warn(e);
+  }
+}
+
+
+// ---- 見通し・ヒント枠の削除 / 追加操作 ----
+function removeBoardTaskGuide(colSide, index) {
+  pushB4History();
+  const arr = colSide === 'left' ? state.blocksLeft : state.blocksRight;
+  if (arr && arr[index] && arr[index].data) {
+    arr[index].data.guide = '';
+    syncB4Blocks();
+    setB4Dirty(true);
+    renderWorksheetB4();
+    showToast('<i class="fa-solid fa-trash-can text-danger"></i> 見通しヒント欄を削除しました');
+  }
+}
+
+function addBoardTaskGuide(colSide, index) {
+  pushB4History();
+  const arr = colSide === 'left' ? state.blocksLeft : state.blocksRight;
+  if (arr && arr[index] && arr[index].data) {
+    arr[index].data.guide = '教科書の例題を参考にしながら考えてみよう。';
+    syncB4Blocks();
+    setB4Dirty(true);
+    renderWorksheetB4();
+    showToast('<i class="fa-solid fa-plus text-primary"></i> 見通しヒント欄を追加しました');
   }
 }
