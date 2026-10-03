@@ -1827,3 +1827,118 @@ body.show-answers .answer-text.answer-block {
     background: transparent !important;
   }
 }
+
+
+/* ========================================================
+   数式インライン編集ポップオーバー & 数式タイトル表示スタイル
+   ======================================================== */
+
+.math-popover-editor {
+  position: absolute;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.25), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+  padding: 0.65rem 0.8rem;
+  z-index: 1000;
+  width: 290px;
+  display: none;
+  font-family: inherit;
+}
+
+.math-popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 0.4rem;
+}
+
+.math-popover-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+.math-popover-close:hover {
+  color: #ef4444;
+}
+
+.math-tex-input {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1.5px solid #0284c7;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-family: monospace;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 0.4rem;
+}
+
+.math-popover-preview {
+  min-height: 28px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+.math-popover-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+/* 数式（.katex）ホバー時 */
+.worksheet-workspace .katex {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 0 1px;
+  transition: background 0.12s ease;
+}
+.worksheet-workspace .katex:hover {
+  background: rgba(2, 132, 199, 0.12);
+  outline: 1px dashed #0284c7;
+}
+
+/* 振り返りブロックの改行崩れ防止 */
+.reflection-scales {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 6px !important;
+  font-size: 0.85rem !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.reflection-scales strong {
+  white-space: nowrap !important;
+  font-weight: 700 !important;
+}
+
+.scale-options {
+  white-space: nowrap !important;
+}
+
+/* タイトルと単元バッジ内のKaTeX調整 */
+.b4-sheet-title .katex {
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.sheet-unit-badge .katex {
+  font-size: 0.82rem;
+}

@@ -1402,7 +1402,7 @@ boardLessonDatabase = {
     "units": [
       {
         "id": "u_2_3",
-        "unitName": "第3章 一次関数",
+        "unitName": "第3章 一次関数 $y=ax+b$",
         "totalHours": 10,
         "bookRef": "",
         "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCGShIQnCM6Ro_fEPW9OmVhAUe0_xiCbUTJC7fY-2_AnUI?e=XJU1aJ",
@@ -1779,7 +1779,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 7,
-            "title": "二元一次方程式 ax+by=c のグラフ",
+            "title": "二元一次方程式 $ax+by=c$ のグラフ",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -2545,7 +2545,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 11,
-            "title": "x²+(a+b)x+ab の形の式を因数分解しよう",
+            "title": "$x^2+(a+b)x+ab$ の形の式を因数分解しよう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -3025,7 +3025,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 4,
-            "title": "√2 や √3 の近似値を求めよう",
+            "title": "$\\sqrt{2}$ や $\\sqrt{3}$ の近似値を求めよう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -3166,7 +3166,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 7,
-            "title": "√のついた数の乗除の計算の仕方を考えよう",
+            "title": "$\\sqrt{\\quad}$ のついた数の乗除の計算の仕方を考えよう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -3213,7 +3213,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 8,
-            "title": "√のついた数の乗除の計算をしよう",
+            "title": "$\\sqrt{\\quad}$ のついた数の乗除の計算をしよう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -3260,7 +3260,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 9,
-            "title": "√の中の数を外に出そう",
+            "title": "$\\sqrt{\\quad}$ の中の数を外に出そう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -3307,7 +3307,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 10,
-            "title": "√のついた数の大きさをくらべよう",
+            "title": "$\\sqrt{\\quad}$ のついた数の大きさをくらべよう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -3354,7 +3354,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 11,
-            "title": "√のついた数の近似値を求めよう",
+            "title": "$\\sqrt{\\quad}$ のついた数の近似値を求めよう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -3401,7 +3401,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 12,
-            "title": "√のついた数の加減の計算をしよう",
+            "title": "$\\sqrt{\\quad}$ のついた数の加減の計算をしよう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -3495,7 +3495,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 14,
-            "title": "√のついた数を見つけよう",
+            "title": "$\\sqrt{\\quad}$ のついた数を見つけよう",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4071,7 +4071,7 @@ boardLessonDatabase = {
       },
       {
         "id": "u_3_4",
-        "unitName": "第4章 関数y=ax²",
+        "unitName": "第4章 関数 $y=ax^2$",
         "totalHours": 13,
         "bookRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY",
         "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx",
@@ -4079,7 +4079,7 @@ boardLessonDatabase = {
         "lessons": [
           {
             "hour": 1,
-            "title": "関数 y=ax² の表と式",
+            "title": "関数 $y=ax^2$ の表と式",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4126,7 +4126,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 2,
-            "title": "y が x の2乗に比例する関数",
+            "title": "$y$ が $x$ の2乗に比例する関数",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4173,7 +4173,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 3,
-            "title": "関数 y=ax² のグラフ",
+            "title": "関数 $y=ax^2$ のグラフ",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4220,7 +4220,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 4,
-            "title": "関数 y=ax²（a>0）のグラフ",
+            "title": "関数 $y=ax^2$（$a>0$）のグラフ",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4267,7 +4267,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 5,
-            "title": "関数 y=ax²（a<0）のグラフ",
+            "title": "関数 $y=ax^2$（$a<0$）のグラフ",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4408,7 +4408,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 8,
-            "title": "関数 y=ax² の値の増減",
+            "title": "関数 $y=ax^2$ の値の増減",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4455,7 +4455,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 9,
-            "title": "関数 y=ax² の変域",
+            "title": "関数 $y=ax^2$ の変域",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4502,7 +4502,7 @@ boardLessonDatabase = {
           },
           {
             "hour": 10,
-            "title": "関数 y=ax² の変化の割合",
+            "title": "関数 $y=ax^2$ の変化の割合",
             "leftBlocks": [
               {
                 "type": "objective",
@@ -4787,12 +4787,10 @@ function getLessonInfo(grade, unitId, hour) {
 }
 
 // ============================================================
-// 授業プリント（B4見開き）: テンプレート管理・描画・編集UX
+// ============================================================
+// 授業プリント（B4見開き）: テンプレート管理・描画・編集UX v2
 // ============================================================
 
-// ---- ユーザー編集テンプレート（localStorage）----
-// 板書データの自動生成テンプレートを編集して「テンプレートとして保存」すると、
-// 次回以降その時間を選んだときに編集版が読み込まれる。
 const LESSON_TEMPLATE_KEY = 'math_portal_lesson_templates';
 
 function getLessonTemplates() {
@@ -4818,9 +4816,10 @@ function stripBlockIds(blocks) {
 function saveCurrentAsLessonTemplate() {
   flushActiveEditableB4();
   const titleEl = document.getElementById('paperTitle');
+  const rawTitle = titleEl ? (titleEl.getAttribute('data-raw') || titleEl.textContent || '').trim() : '';
   const all = getLessonTemplates();
   all[lessonTemplateKey(currentB4Grade, currentB4UnitId, currentB4Hour)] = {
-    title: (titleEl?.textContent || '').trim(),
+    title: rawTitle,
     leftBlocks: stripBlockIds(state.blocksLeft),
     rightBlocks: stripBlockIds(state.blocksRight),
     savedAt: new Date().toLocaleString('ja-JP')
@@ -4848,7 +4847,6 @@ function resetLessonTemplateToDefault() {
   showToast('<i class="fa-solid fa-rotate-left"></i> 初期テンプレートに戻しました');
 }
 
-// ---- 未保存状態 ----
 function setB4Dirty(flag) {
   state.b4Dirty = !!flag;
   updateTemplateStatusUI();
@@ -4867,9 +4865,10 @@ function updateTemplateStatusUI() {
     chip.classList.toggle('is-dirty', !!state.b4Dirty);
     let html;
     if (state.b4Dirty) {
-      html = '<i class="fa-solid fa-circle-exclamation"></i> 未保存の変更があります';
+      html = '<i class="fa-solid fa-circle-exclamation"></i> 未保存の変更あり';
     } else if (custom) {
-      html = '<i class="fa-solid fa-star"></i> 編集済みテンプレート（' + custom.savedAt + '）';
+      const datePart = custom.savedAt ? custom.savedAt.split(' ')[0] : '';
+      html = '<i class="fa-solid fa-star"></i> 編集保存済' + (datePart ? ' (' + datePart + ')' : '');
     } else {
       html = '<i class="fa-regular fa-file-lines"></i> 初期テンプレート';
     }
@@ -4912,12 +4911,28 @@ function syncB4Blocks() {
   state.blocks = [...(state.blocksLeft || []), ...(state.blocksRight || [])];
 }
 
-// ---- 読み込み ----
 function escapeHtmlB4(str) {
   return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-// 学年・単元・時数を選んだ時のテンプレート自動流し込み（編集済みテンプレートがあれば優先）
+// ドロップダウンoption用の簡易TeXプレーンテキスト化
+function stripTeXForOption(str) {
+  return String(str || '')
+    .replace(/\$y=ax\^2\$/g, 'y=ax²')
+    .replace(/\$ax\+by=c\$/g, 'ax+by=c')
+    .replace(/\$y=ax\+b\$/g, 'y=ax+b')
+    .replace(/\$x\^2\+\(a\+b\)x\+ab\$/g, 'x²+(a+b)x+ab')
+    .replace(/\$\\sqrt\{2\}\$/g, '√2')
+    .replace(/\$\\sqrt\{3\}\$/g, '√3')
+    .replace(/\$\\sqrt\{\\quad\}\$/g, '√')
+    .replace(/\$a>0\$/g, 'a>0')
+    .replace(/\$a<0\$/g, 'a<0')
+    .replace(/\$y\$/g, 'y')
+    .replace(/\$x\$/g, 'x')
+    .replace(/\$([^\$]+)\$/g, '$1');
+}
+
+// 学年・単元・時数を選んだ時のテンプレート自動流し込み
 function loadBoardLessonPreset(grade, unitId, hour, isInitialLoad = false) {
   currentB4Grade = String(grade);
   currentB4UnitId = unitId;
@@ -4933,14 +4948,21 @@ function loadBoardLessonPreset(grade, unitId, hour, isInitialLoad = false) {
   const custom = getCustomLessonTemplate(currentB4Grade, currentB4UnitId, currentB4Hour);
   const source = custom || lesson;
 
+  const rawTitle = (custom && custom.title) || lesson.title;
   const titleEl = document.getElementById('paperTitle');
-  if (titleEl) titleEl.textContent = (custom && custom.title) || lesson.title;
+  if (titleEl) {
+    titleEl.setAttribute('data-raw', rawTitle);
+    titleEl.innerHTML = rawTitle;
+  }
 
   const gradeBadge = document.getElementById('paperGradeBadge');
   if (gradeBadge) gradeBadge.textContent = '第' + currentB4Grade + '学年 数学科 授業プリント';
 
   const unitBadge = document.getElementById('paperUnitBadge');
-  if (unitBadge) unitBadge.textContent = unit.unitName;
+  if (unitBadge) {
+    unitBadge.setAttribute('data-raw', unit.unitName);
+    unitBadge.innerHTML = unit.unitName;
+  }
 
   const hourBadge = document.getElementById('paperHourBadge');
   if (hourBadge) hourBadge.textContent = '第 ' + lesson.hour + ' 時 / 全 ' + unit.totalHours + ' 時';
@@ -4981,7 +5003,7 @@ function loadBoardLessonPreset(grade, unitId, hour, isInitialLoad = false) {
   updateTemplateStatusUI();
 
   if (!isInitialLoad) {
-    showToast('<i class="fa-solid fa-wand-magic-sparkles text-primary"></i> 第' + lesson.hour + '時「' + escapeHtmlB4(titleEl ? titleEl.textContent : lesson.title) + '」を開きました' + (custom ? '（編集済み）' : ''));
+    showToast('<i class="fa-solid fa-wand-magic-sparkles text-primary"></i> 第' + lesson.hour + '時を開きました' + (custom ? '（編集済み）' : ''));
   }
 }
 
@@ -4998,16 +5020,29 @@ function renderWorksheetB4() {
   if (sheet && typeof applyKaTeXIfAvailable === 'function') {
     applyKaTeXIfAvailable(sheet);
   }
+
+  const titleEl = document.getElementById('paperTitle');
+  if (titleEl && typeof applyKaTeXIfAvailable === 'function') {
+    const raw = titleEl.getAttribute('data-raw') || titleEl.textContent;
+    titleEl.innerHTML = raw;
+    applyKaTeXIfAvailable(titleEl);
+  }
+
+  const unitBadge = document.getElementById('paperUnitBadge');
+  if (unitBadge && typeof applyKaTeXIfAvailable === 'function') {
+    const raw = unitBadge.getAttribute('data-raw') || unitBadge.textContent;
+    unitBadge.innerHTML = raw;
+    applyKaTeXIfAvailable(unitBadge);
+  }
+
   ensureSortableB4();
   initB4EditingHandlers();
 }
 
-// 改行コード(\n)を <br> に変換して表示
 function fmtB4(str) {
   return String(str ?? '').replace(/\r?\n/g, '<br>');
 }
 
-// 編集可能フィールド共通属性（入力は initB4EditingHandlers で一括処理）
 function editB4(field, placeholder, mode = 'html') {
   return 'contenteditable="true" spellcheck="false" data-field="' + field + '" data-mode="' + mode + '" data-placeholder="' + placeholder + '"';
 }
@@ -5103,7 +5138,21 @@ function renderBlockColumn(blocks, colSide) {
   }).join('');
 }
 
-// ---- 編集イベント（イベント委譲で一括処理）----
+// ---- KaTeX数式を含むHTMLからTeXコードを復元して保存する関数 ----
+function extractHtmlWithTeX(element) {
+  if (!element) return '';
+  const clone = element.cloneNode(true);
+  const katexEls = clone.querySelectorAll('.katex');
+  katexEls.forEach(k => {
+    const ann = k.querySelector('annotation[encoding="application/x-tex"]') || k.querySelector('annotation');
+    const tex = ann ? ann.textContent.trim() : (k.getAttribute('data-tex') || '');
+    const textNode = document.createTextNode(tex ? `$${tex}$` : '');
+    k.replaceWith(textNode);
+  });
+  return clone.innerHTML.replace(/(<br\s*\/?>\s*)+$/i, '').trim();
+}
+
+// ---- 編集イベント ----
 let b4EditingInitialized = false;
 let b4EditSnapshotTaken = false;
 
@@ -5124,7 +5173,7 @@ function getEditTarget(el) {
 
 function readEditableValue(t) {
   if (t.mode === 'text') return t.editable.innerText.replace(/\n+$/, '').trim();
-  return t.editable.innerHTML.replace(/(<br\s*\/?>\s*)+$/i, '').trim();
+  return extractHtmlWithTeX(t.editable);
 }
 
 function initB4EditingHandlers() {
@@ -5133,21 +5182,18 @@ function initB4EditingHandlers() {
   if (!sheet) return;
   b4EditingInitialized = true;
 
-  // フォーカス時: KaTeX描画済みの数式を「$...$」の元テキストに戻して編集しやすくする
+  // フォーカス時: 以前の数式コード化（innerHTML = fmtB4）は完全撤廃！
+  // KaTeXの美しい描画のまま、テキストをクリックして快適に編集できる。
   sheet.addEventListener('focusin', (e) => {
     const t = getEditTarget(e.target);
     if (!t) return;
     b4EditSnapshotTaken = false;
-    const blocks = t.col === 'left' ? state.blocksLeft : state.blocksRight;
-    const raw = blocks?.[t.index]?.data?.[t.field];
-    if (t.editable.querySelector('.katex') && raw != null) {
-      t.editable.innerHTML = t.mode === 'text' ? escapeHtmlB4(raw) : fmtB4(raw);
-    }
     t.editable.classList.add('is-editing');
   });
 
   sheet.addEventListener('input', (e) => {
     if (e.target && e.target.id === 'paperTitle') {
+      e.target.setAttribute('data-raw', e.target.innerText.trim());
       setB4Dirty(true);
       return;
     }
@@ -5160,8 +5206,16 @@ function initB4EditingHandlers() {
     updateColBlockData(t.col, t.index, t.field, readEditableValue(t));
   });
 
-  // フォーカスが外れたら数式を再描画
+  // フォーカスが外れたら数式を再レンダリング
   sheet.addEventListener('focusout', (e) => {
+    if (e.target && e.target.id === 'paperTitle') {
+      const raw = e.target.getAttribute('data-raw') || e.target.innerText.trim();
+      e.target.innerHTML = raw;
+      if (typeof applyKaTeXIfAvailable === 'function') {
+        applyKaTeXIfAvailable(e.target);
+      }
+      return;
+    }
     const t = getEditTarget(e.target);
     if (!t) return;
     t.editable.classList.remove('is-editing');
@@ -5169,11 +5223,11 @@ function initB4EditingHandlers() {
       updateColBlockData(t.col, t.index, t.field, readEditableValue(t));
     }
     if (typeof applyKaTeXIfAvailable === 'function') {
-      setTimeout(() => applyKaTeXIfAvailable(t.editable), 0);
+      setTimeout(() => applyKaTeXIfAvailable(t.editable), 10);
     }
   });
 
-  // 貼り付けは書式を除去してプレーンテキスト化（改行は維持）
+  // 貼り付けは書式を除去してプレーンテキスト化
   sheet.addEventListener('paste', (e) => {
     const t = getEditTarget(e.target);
     if (!t) return;
@@ -5191,7 +5245,26 @@ function initB4EditingHandlers() {
     }
   });
 
-  // キーボードショートカット: Ctrl+S = テンプレート保存 / Ctrl+Z（編集中以外）= 元に戻す
+  // タイトル（#paperTitle）のクリック編集制御
+  const paperTitleEl = document.getElementById('paperTitle');
+  if (paperTitleEl) {
+    paperTitleEl.addEventListener('focus', () => {
+      const raw = paperTitleEl.getAttribute('data-raw');
+      if (raw) paperTitleEl.textContent = raw;
+    });
+  }
+
+  // 数式（.katex）クリックで数式編集ポップオーバーを起動
+  sheet.addEventListener('dblclick', (e) => {
+    const katexEl = e.target.closest('.katex');
+    if (katexEl) {
+      e.preventDefault();
+      e.stopPropagation();
+      openMathEditorPopover(katexEl);
+    }
+  });
+
+  // キーボードショートカット: Ctrl+S = テンプレート保存 / Ctrl+Z = 元に戻す
   document.addEventListener('keydown', (e) => {
     const tab = document.getElementById('tab-worksheet');
     if (!tab || !tab.classList.contains('active')) return;
@@ -5213,7 +5286,106 @@ function initB4EditingHandlers() {
   });
 }
 
-// 編集中フィールドの値を確実に state に反映
+// ---- 数式編集ポップオーバー機能 ----
+let mathEditorEl = null;
+let currentEditingKatex = null;
+
+function openMathEditorPopover(katexEl) {
+  if (!katexEl) return;
+  currentEditingKatex = katexEl;
+  const ann = katexEl.querySelector('annotation[encoding="application/x-tex"]') || katexEl.querySelector('annotation');
+  const currentTex = ann ? ann.textContent.trim() : (katexEl.getAttribute('data-tex') || '');
+
+  if (!mathEditorEl) {
+    mathEditorEl = document.createElement('div');
+    mathEditorEl.className = 'math-popover-editor no-print';
+    mathEditorEl.innerHTML = `
+      <div class="math-popover-header">
+        <span><i class="fa-solid fa-square-root-variable text-primary"></i> 数式を編集（LaTeX）</span>
+        <button type="button" class="math-popover-close" onclick="closeMathEditorPopover()">&times;</button>
+      </div>
+      <div class="math-popover-body">
+        <input type="text" class="math-tex-input" id="mathPopoverInput" placeholder="TeXコード (例: 3a+2b)" />
+        <div class="math-popover-preview" id="mathPopoverPreview"></div>
+      </div>
+      <div class="math-popover-footer">
+        <button type="button" class="btn btn-xs btn-outline" onclick="closeMathEditorPopover()">キャンセル</button>
+        <button type="button" class="btn btn-xs btn-primary-solid" onclick="applyMathEditorPopover()">決定 (Enter)</button>
+      </div>
+    `;
+    document.body.appendChild(mathEditorEl);
+
+    const input = mathEditorEl.querySelector('#mathPopoverInput');
+    input.addEventListener('input', () => {
+      const prev = mathEditorEl.querySelector('#mathPopoverPreview');
+      if (prev && typeof katex !== 'undefined') {
+        try {
+          katex.render(input.value || ' ', prev, { throwOnError: false });
+        } catch (e) {
+          prev.textContent = input.value;
+        }
+      }
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyMathEditorPopover();
+      } else if (e.key === 'Escape') {
+        closeMathEditorPopover();
+      }
+    });
+  }
+
+  const rect = katexEl.getBoundingClientRect();
+  const input = mathEditorEl.querySelector('#mathPopoverInput');
+  input.value = currentTex;
+  mathEditorEl.style.display = 'block';
+
+  let top = rect.top + window.scrollY - mathEditorEl.offsetHeight - 8;
+  if (top < window.scrollY + 10) top = rect.bottom + window.scrollY + 8;
+  let left = rect.left + window.scrollX + (rect.width / 2) - 140;
+  left = Math.max(10, Math.min(window.innerWidth - 300, left));
+
+  mathEditorEl.style.top = top + 'px';
+  mathEditorEl.style.left = left + 'px';
+
+  const prev = mathEditorEl.querySelector('#mathPopoverPreview');
+  if (prev && typeof katex !== 'undefined') {
+    try { katex.render(currentTex || ' ', prev, { throwOnError: false }); } catch (e) {}
+  }
+  setTimeout(() => input.focus(), 50);
+}
+
+function closeMathEditorPopover() {
+  if (mathEditorEl) mathEditorEl.style.display = 'none';
+  currentEditingKatex = null;
+}
+
+function applyMathEditorPopover() {
+  if (!mathEditorEl || !currentEditingKatex) return;
+  const input = mathEditorEl.querySelector('#mathPopoverInput');
+  const newTex = (input?.value || '').trim();
+  const editable = currentEditingKatex.closest('[contenteditable="true"]');
+  const t = getEditTarget(editable);
+
+  if (newTex) {
+    const textNode = document.createTextNode(`$${newTex}$`);
+    currentEditingKatex.replaceWith(textNode);
+  } else {
+    currentEditingKatex.remove();
+  }
+
+  closeMathEditorPopover();
+
+  if (editable && t) {
+    pushB4History();
+    updateColBlockData(t.col, t.index, t.field, extractHtmlWithTeX(editable));
+    if (typeof applyKaTeXIfAvailable === 'function') {
+      applyKaTeXIfAvailable(editable);
+    }
+  }
+}
+
 function flushActiveEditableB4() {
   const t = getEditTarget(document.activeElement);
   if (t) updateColBlockData(t.col, t.index, t.field, readEditableValue(t));
@@ -5328,7 +5500,7 @@ function updateB4UnitDropdown() {
   if (!gData || !gData.units) return;
 
   unitSelect.innerHTML = gData.units.map(u =>
-    '<option value="' + u.id + '">' + escapeHtmlB4(u.unitName) + '（全' + u.totalHours + '時）</option>'
+    '<option value="' + u.id + '">' + escapeHtmlB4(stripTeXForOption(u.unitName)) + '（全' + u.totalHours + '時）</option>'
   ).join('');
 
   currentB4UnitId = gData.units[0].id;
@@ -5338,7 +5510,7 @@ function updateB4UnitDropdown() {
 function hourOptionLabel(lesson) {
   const custom = getCustomLessonTemplate(currentB4Grade, currentB4UnitId, lesson.hour);
   const title = (custom && custom.title) || lesson.title;
-  return (custom ? '★ ' : '') + '第' + lesson.hour + '時　' + title;
+  return (custom ? '★ ' : '') + '第' + lesson.hour + '時　' + stripTeXForOption(title);
 }
 
 function updateB4HourDropdown(keepHour = false) {
@@ -5388,7 +5560,6 @@ function onB4HourChange() {
   applyB4LessonSelection();
 }
 
-// 前の時間 / 次の時間
 function stepB4Hour(delta) {
   const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
   if (!unit) return;
@@ -5409,7 +5580,6 @@ function updateHourStepButtons() {
   document.querySelectorAll('.js-hour-next').forEach(b => { b.disabled = idx < 0 || idx >= unit.lessons.length - 1; });
 }
 
-// 「初期状態から再展開」ボタン
 function reloadB4Lesson() {
   if (!confirmDiscardB4()) return;
   state.b4Dirty = false;
@@ -5420,7 +5590,6 @@ function applyB4LessonSelection(isInitialLoad = false) {
   loadBoardLessonPreset(currentB4Grade, currentB4UnitId, currentB4Hour, isInitialLoad);
 }
 
-// 教材リファレンスリンクの更新
 function updateReferenceLinksUI(unit) {
   const btnBoard = document.getElementById('btnWsViewBoard');
   const btnPoint = document.getElementById('btnWsViewPoint');
@@ -5434,7 +5603,7 @@ function updateReferenceLinksUI(unit) {
 function openCurrentB4BoardPdf() {
   const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
   if (unit && unit.bookRef) {
-    openPdfPreviewModal(encodeURIComponent(unit.bookRef), '【中' + currentB4Grade + ' 板書＆展開例】' + unit.unitName);
+    openPdfPreviewModal(encodeURIComponent(unit.bookRef), '【中' + currentB4Grade + ' 板書＆展開例】' + stripTeXForOption(unit.unitName));
   } else {
     showToast('この単元の板書書籍PDFは準備中です');
   }
@@ -5443,18 +5612,17 @@ function openCurrentB4BoardPdf() {
 function openCurrentB4PointPdf() {
   const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
   if (unit && unit.pointRef) {
-    openPdfPreviewModal(encodeURIComponent(unit.pointRef), '【中' + currentB4Grade + ' 要点ブック】' + unit.unitName);
+    openPdfPreviewModal(encodeURIComponent(unit.pointRef), '【中' + currentB4Grade + ' 要点ブック】' + stripTeXForOption(unit.unitName));
   }
 }
 
 function openCurrentB4OfficialPdf() {
   const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
   if (unit && unit.officialRef) {
-    openPdfPreviewModal(encodeURIComponent(unit.officialRef), '【中' + currentB4Grade + ' 公式学習プリント】' + unit.unitName);
+    openPdfPreviewModal(encodeURIComponent(unit.officialRef), '【中' + currentB4Grade + ' 公式学習プリント】' + stripTeXForOption(unit.unitName));
   }
 }
 
-// UIのセレクターの状態を最新に同期
 function updateB4SelectorUI() {
   ['1', '2', '3'].forEach(g => {
     const btn = document.getElementById('b4GradeBtn_' + g);
@@ -5469,7 +5637,6 @@ function updateB4SelectorUI() {
   updateB4HourDropdown(true);
 }
 
-// ---- ドラッグ＆ドロップ（左右の面をまたいで移動可能）----
 let sortableLeftB4 = null;
 let sortableRightB4 = null;
 
@@ -5484,7 +5651,7 @@ function ensureSortableB4() {
     animation: 180,
     handle: '.drag-handle',
     draggable: '.sheet-block',
-    filter: '.empty-col-drop',
+    filter: '.empty-col-drop, .math-popover-editor',
     ghostClass: 'sortable-ghost',
     chosenClass: 'sortable-chosen',
     dragClass: 'sortable-drag',
@@ -5513,7 +5680,6 @@ function ensureSortableB4() {
   if (!sortableRightB4) sortableRightB4 = new Sortable(rightCol, options);
 }
 
-// 互換用
 function initSortableB4() {
   ensureSortableB4();
 }

@@ -847,13 +847,13 @@
 
             <!-- Step 3: ◯時間目を選択 -->
             <div class="form-group mb-2">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-                <label class="step-label" style="margin-bottom: 0;"><span class="step-badge">3</span> 授業時間（◯時間目）:</label>
-                <div class="hour-stepper-btns" style="display: flex; gap: 0.25rem;">
-                  <button type="button" class="btn btn-xs btn-outline js-hour-prev" onclick="stepB4Hour(-1)" title="前の授業時間へ">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.25rem;">
+                <label class="step-label" style="margin-bottom: 0; white-space: nowrap;"><span class="step-badge">3</span> 授業時間:</label>
+                <div class="hour-stepper-btns" style="display: inline-flex; gap: 0.25rem;">
+                  <button type="button" class="btn btn-xs btn-outline js-hour-prev" onclick="stepB4Hour(-1)" title="前の授業時間へ" style="padding: 0.15rem 0.45rem; font-size: 0.74rem;">
                     <i class="fa-solid fa-chevron-left"></i> 前時
                   </button>
-                  <button type="button" class="btn btn-xs btn-outline js-hour-next" onclick="stepB4Hour(1)" title="次の授業時間へ">
+                  <button type="button" class="btn btn-xs btn-outline js-hour-next" onclick="stepB4Hour(1)" title="次の授業時間へ" style="padding: 0.15rem 0.45rem; font-size: 0.74rem;">
                     次時 <i class="fa-solid fa-chevron-right"></i>
                   </button>
                 </div>
@@ -865,9 +865,11 @@
 
             <!-- テンプレート状態表示 & 保存ボタン -->
             <div class="b4-template-action-box mt-3" style="background: #ffffff; border: 1.5px solid #0284c7; border-radius: 8px; padding: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
-                <span style="font-size: 0.76rem; font-weight: 700; color: #475569;">現在のテンプレート状態:</span>
-                <span class="js-template-status template-status-badge"><i class="fa-regular fa-file-lines"></i> 初期テンプレート</span>
+              <div style="margin-bottom: 0.5rem;">
+                <div style="font-size: 0.74rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem;">現在のテンプレート状態:</div>
+                <div class="js-template-status template-status-badge" style="width: 100%; justify-content: center; box-sizing: border-box; text-align: center; padding: 0.3rem 0.45rem; font-size: 0.74rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  <i class="fa-regular fa-file-lines"></i> 初期テンプレート
+                </div>
               </div>
               <button type="button" class="btn btn-primary-solid btn-block" onclick="saveCurrentAsLessonTemplate()" style="padding: 0.6rem 0.5rem; font-weight: 700; font-size: 0.88rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: #0284c7; color: #fff; border-radius: 6px;" title="編集した内容をこの時間のテンプレートとして保存します（次回以降もこの状態で開きます）">
                 <i class="fa-solid fa-cloud-arrow-up"></i> この編集をテンプレートに保存
