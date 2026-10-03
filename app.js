@@ -4911,34 +4911,36 @@ const problemGenerators = {
 // ========================================================
 const subUnitGeneratorMap = {
   // --- 中1 ---
-  'g1_all_mix': ['g1_pos_neg_add_sub', 'g1_pos_neg_mul_div', 'g1_pos_neg_four_ops', 'g1_letters_expression', 'g1_letters_value', 'g1_eq_linear', 'g1_eq_word', 'g1_prop_direct', 'g1_prop_inverse', 'g1_data_frequency_table', 'g1_data_relative_freq'],
-  'g1_pos_neg_all': ['g1_pos_neg_add_sub', 'g1_pos_neg_mul_div', 'g1_pos_neg_four_ops'],
+  'g1_all_mix': ['g1_pos_neg_add_sub', 'g1_pos_neg_mul_div', 'g1_pos_neg_mixed', 'g1_letters_value', 'g1_letters_calc', 'g1_letters_expand', 'g1_eq_basic', 'g1_eq_parentheses', 'g1_eq_word', 'g1_prop_formula', 'g1_inv_formula', 'g1_func_coords', 'g1_plane_sector', 'g1_plane_angles', 'g1_solid_volume', 'g1_solid_surface', 'g1_data_rep', 'g1_data_rel_freq', 'g1_data_frequency_table'],
+  'g1_pos_neg_all': ['g1_pos_neg_add_sub', 'g1_pos_neg_mul_div', 'g1_pos_neg_mixed'],
   'g1_pos_neg_add_sub': ['g1_pos_neg_add_sub'],
   'g1_pos_neg_mul_div': ['g1_pos_neg_mul_div'],
-  'g1_pos_neg_four_ops': ['g1_pos_neg_four_ops'],
-  'g1_letters_all': ['g1_letters_expression', 'g1_letters_value'],
-  'g1_letters_expression': ['g1_letters_expression'],
+  'g1_pos_neg_mixed': ['g1_pos_neg_mixed'],
+  'g1_letters_all': ['g1_letters_value', 'g1_letters_calc', 'g1_letters_expand'],
   'g1_letters_value': ['g1_letters_value'],
-  'g1_eq_all': ['g1_eq_linear', 'g1_eq_word'],
-  'g1_eq_linear': ['g1_eq_linear'],
+  'g1_letters_calc': ['g1_letters_calc'],
+  'g1_letters_expand': ['g1_letters_expand'],
+  'g1_eq_all': ['g1_eq_basic', 'g1_eq_parentheses', 'g1_eq_word'],
+  'g1_eq_basic': ['g1_eq_basic'],
+  'g1_eq_parentheses': ['g1_eq_parentheses'],
   'g1_eq_word': ['g1_eq_word'],
-  'g1_prop_all': ['g1_prop_direct', 'g1_prop_inverse'],
-  'g1_prop_direct': ['g1_prop_direct'],
-  'g1_prop_inverse': ['g1_prop_inverse'],
-  'g1_plane_all': ['g1_plane_sector_area', 'g1_plane_symmetry'],
-  'g1_plane_sector_area': ['g1_plane_sector_area'],
-  'g1_plane_symmetry': ['g1_plane_symmetry'],
-  'g1_solid_all': ['g1_solid_cylinder_volume', 'g1_solid_cone_volume', 'g1_solid_sphere_surface_vol'],
-  'g1_solid_cylinder_volume': ['g1_solid_cylinder_volume'],
-  'g1_solid_cone_volume': ['g1_solid_cone_volume'],
-  'g1_solid_sphere_surface_vol': ['g1_solid_sphere_surface_vol'],
-  'g1_data_all': ['g1_data_mean_median_mode', 'g1_data_relative_freq', 'g1_data_frequency_table'],
-  'g1_data_mean_median_mode': ['g1_data_mean_median_mode'],
-  'g1_data_relative_freq': ['g1_data_relative_freq'],
-  'g1_data_frequency_table': ['g1_data_frequency_table'],
+  'g1_func_all': ['g1_prop_formula', 'g1_inv_formula', 'g1_func_coords'],
+  'g1_prop_all': ['g1_prop_formula', 'g1_inv_formula', 'g1_func_coords'],
+  'g1_prop_formula': ['g1_prop_formula'],
+  'g1_inv_formula': ['g1_inv_formula'],
+  'g1_func_coords': ['g1_func_coords'],
+  'g1_plane_all': ['g1_plane_sector', 'g1_plane_angles'],
+  'g1_plane_sector': ['g1_plane_sector'],
+  'g1_plane_angles': ['g1_plane_angles'],
+  'g1_solid_all': ['g1_solid_volume', 'g1_solid_surface'],
+  'g1_solid_volume': ['g1_solid_volume'],
+  'g1_solid_surface': ['g1_solid_surface'],
+  'g1_data_all': ['g1_data_rep', 'g1_data_rel_freq', 'g1_data_frequency_table'],
+  'g1_data_rep': ['g1_data_rep'],
+  'g1_data_rel_freq': ['g1_data_rel_freq', 'g1_data_frequency_table'],
 
   // --- 中2 ---
-  'g2_all_mix': ['g2_poly_add_sub', 'g2_poly_mul_div', 'g2_poly_transform', 'g2_simul_add_sub', 'g2_simul_subst', 'g2_simul_complex', 'g2_simul_word', 'g2_lfunc_rate', 'g2_lfunc_graph', 'g2_lfunc_find_eq', 'g2_lfunc_graph_read', 'g2_lfunc_intersect', 'g2_geom_parallel_angles', 'g2_geom_parallel_chevron', 'g2_geom_polygon_angles', 'g2_geom_triangle_prop', 'g2_quad_parallelogram', 'g2_quad_special', 'g2_prob_dice_coin', 'g2_prob_balls', 'g2_data_boxplot', 'g2_data_boxplot_svg'],
+  'g2_all_mix': ['g2_poly_add_sub', 'g2_poly_mul_div', 'g2_poly_transform', 'g2_simul_add_sub', 'g2_simul_subst', 'g2_simul_complex', 'g2_simul_word', 'g2_lfunc_rate', 'g2_lfunc_graph', 'g2_lfunc_find_eq', 'g2_lfunc_graph_read', 'g2_lfunc_intersect', 'g2_geom_parallel_angles', 'g2_geom_parallel_chevron', 'g2_geom_polygon_angles', 'g2_geom_triangle_prop', 'g2_geom_triangle_fig', 'g2_quad_parallelogram', 'g2_quad_special', 'g2_prob_dice_coin', 'g2_prob_balls', 'g2_data_boxplot', 'g2_data_boxplot_svg'],
   'g2_poly_all': ['g2_poly_add_sub', 'g2_poly_mul_div', 'g2_poly_transform'],
   'g2_poly_add_sub': ['g2_poly_add_sub'],
   'g2_poly_mul_div': ['g2_poly_mul_div'],
@@ -4948,13 +4950,11 @@ const subUnitGeneratorMap = {
   'g2_simul_subst': ['g2_simul_subst'],
   'g2_simul_complex': ['g2_simul_complex'],
   'g2_simul_word': ['g2_simul_word'],
-  // ★ 一次関数は一次関数のみを厳密指定！図形は絶対に混入しない！
   'g2_lfunc_all': ['g2_lfunc_rate', 'g2_lfunc_graph', 'g2_lfunc_find_eq', 'g2_lfunc_graph_read', 'g2_lfunc_intersect'],
   'g2_lfunc_rate': ['g2_lfunc_rate'],
   'g2_lfunc_graph': ['g2_lfunc_graph', 'g2_lfunc_graph_read'],
   'g2_lfunc_find_eq': ['g2_lfunc_find_eq'],
   'g2_lfunc_intersect': ['g2_lfunc_intersect'],
-  // ★ 図形
   'g2_geom_all': ['g2_geom_parallel_angles', 'g2_geom_parallel_chevron', 'g2_geom_polygon_angles', 'g2_geom_triangle_prop', 'g2_geom_triangle_fig'],
   'g2_geom_parallel_angles': ['g2_geom_parallel_angles', 'g2_geom_parallel_chevron'],
   'g2_geom_polygon_angles': ['g2_geom_polygon_angles'],
@@ -4962,41 +4962,48 @@ const subUnitGeneratorMap = {
   'g2_quad_all': ['g2_quad_parallelogram', 'g2_quad_special'],
   'g2_quad_parallelogram': ['g2_quad_parallelogram'],
   'g2_quad_special': ['g2_quad_special'],
-  // ★ データの活用・確率
   'g2_prob_all': ['g2_prob_dice_coin', 'g2_prob_balls', 'g2_data_boxplot', 'g2_data_boxplot_svg'],
   'g2_prob_dice_coin': ['g2_prob_dice_coin'],
   'g2_prob_balls': ['g2_prob_balls'],
   'g2_data_boxplot': ['g2_data_boxplot', 'g2_data_boxplot_svg'],
 
   // --- 中3 ---
-  'g3_all_mix': ['g3_poly_expand_formula', 'g3_poly_common_factor', 'g3_poly_factor_formula', 'g3_poly_value_calc', 'g3_sqrt_meaning', 'g3_sqrt_simplify', 'g3_sqrt_mul_div', 'g3_sqrt_add_sub', 'g3_qeq_factor_method', 'g3_qeq_formula_method', 'g3_qeq_word', 'g3_qfunc_graph', 'g3_qfunc_domain', 'g3_qfunc_rate_change', 'g3_sim_ratio', 'g3_sim_triangle_fig', 'g3_sim_area_volume', 'g3_circle_angle', 'g3_circle_angle_fig', 'g3_pyth_calc', 'g3_pyth_triangle_fig', 'g3_pyth_special_ratios', 'g3_sample_estimation'],
+  'g3_all_mix': ['g3_poly_expand_formula', 'g3_poly_common_factor', 'g3_poly_factor_formula', 'g3_poly_value_calc', 'g3_sqrt_basic', 'g3_sqrt_rationalize', 'g3_sqrt_mul_div', 'g3_sqrt_add_sub', 'g3_qeq_sqrt_method', 'g3_qeq_factor_method', 'g3_qeq_formula_method', 'g3_qeq_word', 'g3_qfunc_formula', 'g3_qfunc_domain', 'g3_qfunc_rate', 'g3_sim_ratio', 'g3_sim_triangle_fig', 'g3_sim_area_volume', 'g3_circle_angle', 'g3_circle_angle_fig', 'g3_pyth_calc', 'g3_pyth_triangle_fig', 'g3_pyth_special_ratios', 'g3_sample_estimation'],
   'g3_poly_all': ['g3_poly_expand_formula', 'g3_poly_common_factor', 'g3_poly_factor_formula', 'g3_poly_value_calc'],
   'g3_poly_expand_formula': ['g3_poly_expand_formula'],
   'g3_poly_common_factor': ['g3_poly_common_factor'],
   'g3_poly_factor_formula': ['g3_poly_factor_formula'],
   'g3_poly_value_calc': ['g3_poly_value_calc'],
-  'g3_sqrt_all': ['g3_sqrt_meaning', 'g3_sqrt_simplify', 'g3_sqrt_mul_div', 'g3_sqrt_add_sub'],
-  'g3_sqrt_meaning': ['g3_sqrt_meaning'],
-  'g3_sqrt_simplify': ['g3_sqrt_simplify'],
+  // ★ 平方根: 厳密に中3平方根ジェネレーターのみを指定！正負の数は絶対混ざらない！
+  'g3_sqrt_all': ['g3_sqrt_basic', 'g3_sqrt_rationalize', 'g3_sqrt_mul_div', 'g3_sqrt_add_sub'],
+  'g3_sqrt_basic': ['g3_sqrt_basic'],
+  'g3_sqrt_rationalize': ['g3_sqrt_rationalize'],
   'g3_sqrt_mul_div': ['g3_sqrt_mul_div'],
   'g3_sqrt_add_sub': ['g3_sqrt_add_sub'],
-  'g3_qeq_all': ['g3_qeq_factor_method', 'g3_qeq_formula_method', 'g3_qeq_word'],
+  'g3_qeq_all': ['g3_qeq_sqrt_method', 'g3_qeq_factor_method', 'g3_qeq_formula_method', 'g3_qeq_word'],
+  'g3_qeq_sqrt_method': ['g3_qeq_sqrt_method'],
   'g3_qeq_factor_method': ['g3_qeq_factor_method'],
   'g3_qeq_formula_method': ['g3_qeq_formula_method'],
   'g3_qeq_word': ['g3_qeq_word'],
-  'g3_qfunc_all': ['g3_qfunc_graph', 'g3_qfunc_domain', 'g3_qfunc_rate_change'],
-  'g3_qfunc_graph': ['g3_qfunc_graph'],
+  'g3_qfunc_all': ['g3_qfunc_formula', 'g3_qfunc_domain', 'g3_qfunc_rate'],
+  'g3_qfunc_formula': ['g3_qfunc_formula'],
   'g3_qfunc_domain': ['g3_qfunc_domain'],
-  'g3_qfunc_rate_change': ['g3_qfunc_rate_change'],
-  // ★ 相似は相似のみを厳密指定！図形SVGも含む！
+  'g3_qfunc_rate': ['g3_qfunc_rate'],
+  // ★ 相似
   'g3_sim_all': ['g3_sim_ratio', 'g3_sim_triangle_fig', 'g3_sim_area_volume'],
   'g3_sim_ratio': ['g3_sim_ratio', 'g3_sim_triangle_fig'],
+  'g3_sim_midpoint': ['g3_sim_ratio', 'g3_sim_triangle_fig'],
   'g3_sim_area_volume': ['g3_sim_area_volume'],
+  // ★ 円
   'g3_circle_all': ['g3_circle_angle', 'g3_circle_angle_fig'],
   'g3_circle_angle': ['g3_circle_angle', 'g3_circle_angle_fig'],
+  'g3_circle_tangent': ['g3_circle_angle', 'g3_circle_angle_fig'],
+  // ★ 三平方
   'g3_pyth_all': ['g3_pyth_calc', 'g3_pyth_triangle_fig', 'g3_pyth_special_ratios'],
   'g3_pyth_calc': ['g3_pyth_calc', 'g3_pyth_triangle_fig'],
   'g3_pyth_special_ratios': ['g3_pyth_special_ratios'],
+  'g3_pyth_plane_space': ['g3_pyth_calc', 'g3_pyth_triangle_fig', 'g3_pyth_special_ratios'],
+  // ★ 標本調査
   'g3_sample_all': ['g3_sample_estimation'],
   'g3_sample_estimation': ['g3_sample_estimation']
 };
@@ -5281,8 +5288,11 @@ function generateQuickTest() {
 
   for (let i = 0; questions.length < count && phase1Attempts < phase1Max; i++, phase1Attempts++) {
     const key = shuffledKeys[i % shuffledKeys.length];
-    const genFn = problemGenerators[key] || problemGenerators['g1_pos_neg_add_sub'];
-    const item = genFn();
+    // 学年安全フォールバック: 対象学年以外の問題は絶対に混入させない
+    const safeFallbackKey = availableGenKeys.find(k => problemGenerators[k]) || Object.keys(problemGenerators).find(k => k.startsWith(`g${grade}_`));
+    const genFn = problemGenerators[key] || problemGenerators[safeFallbackKey];
+    const item = genFn ? genFn() : null;
+    if (!item) continue;
 
     // 難易度フィルタリング
     if (reqDifficulty !== 'all') {

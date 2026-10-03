@@ -3544,7 +3544,7 @@ math.math-expr mfrac {
   }
 
   /* ==============================
-     2. 生徒用練習プリント印刷モード (A4 1枚直接印刷)
+     2. 生徒用練習プリント印刷モード (A4 1枚・用紙全体を目一杯均等活用)
      body[data-print-target="test-student"]
      ============================== */
   body[data-print-target="test-student"] .main-content,
@@ -3559,10 +3559,10 @@ math.math-expr mfrac {
     background: transparent !important;
     box-shadow: none !important;
     width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
+    height: 275mm !important;
+    min-height: 275mm !important;
+    max-height: 275mm !important;
+    overflow: hidden !important;
   }
 
   /* 生徒用以外の2枚目previewBoxを隠す */
@@ -3573,13 +3573,13 @@ math.math-expr mfrac {
   body[data-print-target="test-student"] #testStudentPaper {
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
+    justify-content: space-between !important;
     width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
+    height: 275mm !important; /* A4用紙印刷領域を100%フル活用！上に詰めず全体に均等配置 */
+    min-height: 275mm !important;
+    max-height: 275mm !important;
     box-sizing: border-box !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
@@ -3592,86 +3592,103 @@ math.math-expr mfrac {
 
   /* 生徒用ヘッダー（スリム化で用紙を最大活用） */
   body[data-print-target="test-student"] .test-paper-header {
+    flex-shrink: 0 !important;
     padding-top: 0.5mm !important;
-    padding-bottom: 1.5mm !important;
+    padding-bottom: 2mm !important;
     margin-bottom: 2mm !important;
     border-bottom: 1.5pt solid #1e293b !important;
   }
 
   body[data-print-target="test-student"] .test-header-line1 {
-    font-size: 8pt !important;
+    font-size: 8.5pt !important;
     margin-bottom: 1px !important;
     line-height: 1.15 !important;
   }
 
   body[data-print-target="test-student"] .test-title-line2 {
-    font-size: 10pt !important;
+    font-size: 11pt !important;
     line-height: 1.2 !important;
   }
 
   body[data-print-target="test-student"] .test-student-info {
-    font-size: 8pt !important;
+    font-size: 8.5pt !important;
   }
 
-  /* 生徒用グリッド */
+  /* 生徒用グリッド: 用紙の残り高さを100%使い切る */
   body[data-print-target="test-student"] #testStudentPaper .test-problem-grid {
-    flex: none !important;
+    flex: 1 1 auto !important;
     height: auto !important;
     margin-top: 0 !important;
     gap: 0 !important;
+    box-sizing: border-box !important;
   }
 
   body[data-print-target="test-student"] #testStudentPaper .test-problem-grid.cols-1 {
     display: flex !important;
     flex-direction: column !important;
+    justify-content: space-between !important;
+    height: 100% !important;
   }
 
   body[data-print-target="test-student"] #testStudentPaper .test-problem-grid.cols-2 {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
+    grid-auto-rows: 1fr !important;
     column-gap: 5mm !important;
+    height: 100% !important;
   }
 
-  /* 生徒用問題アイテム: パディング極小化で図形問題でもA4 1枚に確実に収める */
+  /* 各問題アイテム: flex: 1 1 0 で全問が用紙の高さを等分！上に詰まらず用紙全体に均等配置 */
   body[data-print-target="test-student"] #testStudentPaper .test-problem-item {
+    flex: 1 1 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
     height: auto !important;
-    min-height: auto !important;
+    min-height: 0 !important;
     border-bottom: 0.5pt solid #cbd5e1 !important;
-    padding: 1.5mm 2.5mm !important;
+    padding: 2mm 3mm !important;
     box-sizing: border-box !important;
     break-inside: avoid !important;
     page-break-inside: avoid !important;
   }
 
+  /* 最終行または偶数番号の境界線調整 */
+  body[data-print-target="test-student"] #testStudentPaper .test-problem-grid.cols-1 .test-problem-item:last-child {
+    border-bottom: none !important;
+  }
+  body[data-print-target="test-student"] #testStudentPaper .test-problem-grid.cols-2 .test-problem-item:nth-last-child(-n+2) {
+    border-bottom: none !important;
+  }
+
   body[data-print-target="test-student"] .problem-header {
-    font-size: 8.5pt !important;
-    line-height: 1.3 !important;
-    gap: 3px !important;
-    margin-bottom: 1px !important;
+    font-size: 8.8pt !important;
+    line-height: 1.35 !important;
+    gap: 4px !important;
+    margin-bottom: 1.5px !important;
   }
 
   body[data-print-target="test-student"] .problem-num {
-    font-size: 8.5pt !important;
+    font-size: 8.8pt !important;
     font-weight: 700 !important;
   }
 
   body[data-print-target="test-student"] .problem-text {
-    line-height: 1.3 !important;
+    line-height: 1.35 !important;
   }
 
-  /* 生徒用計算スペース: 図形問題でも十分な書き込みスペースを保ちつつコンパクト化 */
+  /* 生徒用計算スペース: 自動伸長(flex: 1 1 auto)で用紙の余白を等分に広げ、生徒が書き込みやすくする！ */
   body[data-print-target="test-student"] .problem-workspace {
-    min-height: 12px !important;
-    max-height: 28px !important;
-    flex: none !important;
+    flex: 1 1 auto !important;
+    min-height: 15px !important;
     margin-top: 1px !important;
   }
 
-  /* 答欄 */
+  /* 答欄: 各問の枠の一番下にピシッと配置 */
   body[data-print-target="test-student"] .problem-answer-line {
-    margin-top: 1mm !important;
+    margin-top: auto !important;
     font-size: 8.5pt !important;
-    line-height: 1.15 !important;
+    line-height: 1.2 !important;
   }
 
   body[data-print-target="test-student"] .problem-answer-fill {
