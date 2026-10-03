@@ -1,28 +1,30 @@
 // ==========================================
-// // 初期化
+// 初期化
 
 document.addEventListener('DOMContentLoaded', () => {
-  setupTabs();
-  setupTimer();
-  updateCurrentDate();
+  try { setupTabs(); } catch (e) { console.warn('setupTabs:', e); }
+  try { setupTimer(); } catch (e) { console.warn('setupTimer:', e); }
+  try { updateCurrentDate(); } catch (e) { console.warn('updateCurrentDate:', e); }
   
-  initBellSettingsUI();
-  previewBellSchedule();
+  // 授業プリント工房（B4見開き）の初期化（最優先）
+  try { selectB4Grade('3', true); } catch (e) { console.error('selectB4Grade error:', e); }
 
-  renderTermSelector();
-  renderRealTimetableGrid();
-  renderBaseTimetableGrid();
-  renderTodayScheduleMini();
+  try { initBellSettingsUI(); } catch (e) { console.warn('initBellSettingsUI:', e); }
+  try { previewBellSchedule(); } catch (e) { console.warn('previewBellSchedule:', e); }
 
-  initCloudSync();
+  try { renderTermSelector(); } catch (e) { console.warn('renderTermSelector:', e); }
+  try { if (typeof renderRealTimetableGrid === 'function') renderRealTimetableGrid(); } catch (e) { console.warn('renderRealTimetableGrid:', e); }
+  try { if (typeof renderBaseTimetableGrid === 'function') renderBaseTimetableGrid(); } catch (e) { console.warn('renderBaseTimetableGrid:', e); }
+  try { if (typeof renderTodayScheduleMini === 'function') renderTodayScheduleMini(); } catch (e) { console.warn('renderTodayScheduleMini:', e); }
 
-  selectB4Grade('3', true);
-  renderDigitalLibrary();
-  loadSampleSheet(true);
-  renderLinearGraph();
-  renderGeometryFig();
-  onTestGradeChange();
-  renderMemosList();
+  try { initCloudSync(); } catch (e) { console.warn('initCloudSync:', e); }
+
+  try { renderDigitalLibrary(); } catch (e) { console.warn('renderDigitalLibrary:', e); }
+  try { loadSampleSheet(true); } catch (e) { console.warn('loadSampleSheet:', e); }
+  try { renderLinearGraph(); } catch (e) { console.warn('renderLinearGraph:', e); }
+  try { renderGeometryFig(); } catch (e) { console.warn('renderGeometryFig:', e); }
+  try { onTestGradeChange(); } catch (e) { console.warn('onTestGradeChange:', e); }
+  try { renderMemosList(); } catch (e) { console.warn('renderMemosList:', e); }
 });
 
 // 日付表示
@@ -52,6 +54,15 @@ function switchTab(tabId) {
   document.querySelectorAll('.tab-pane').forEach(p => {
     p.classList.toggle('active', p.id === `tab-${tabId}`);
   });
+
+  // 授業プリントタブに切り替えた際、もし単元セレクトが未設定なら即時初期化
+  if (tabId === 'worksheet') {
+    const unitSelect = document.getElementById('b4UnitSelect');
+    if (!unitSelect || !unitSelect.options || unitSelect.options.length === 0) {
+      selectB4Grade(currentB4Grade || '3', true);
+    }
+  }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

@@ -1,3 +1,7 @@
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 function showToast(msg) {
   let toast = document.getElementById('appToast');
   if (!toast) {
