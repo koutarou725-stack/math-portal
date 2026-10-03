@@ -1,59 +1,7 @@
 // ==========================================
-// // 1. 学校の時程（ベル時刻）
-const defaultBellSettings = {
-  startTime: '08:45',
-  duration: 50,
-  breakDuration: 10,
-  lunchDuration: 50,
-  customSchedule: null
-};
-
-// 空のベース時間割生成関数
-function createEmptyBaseTimetable() {
-  const tt = {};
-  for (let p = 1; p <= 6; p++) {
-    tt[p] = {
-      mon: { class: '', subject: '', type: 'free' },
-      tue: { class: '', subject: '', type: 'free' },
-      wed: { class: '', subject: '', type: 'free' },
-      thu: { class: '', subject: '', type: 'free' },
-      fri: { class: '', subject: '', type: 'free' }
-    };
-  }
-  return tt;
-}
-
-// 2. 期別ベース時間割（マスター）
-const defaultTermsList = [
-  { id: '2027_second', label: '2027年度 後期基本時間割' },
-  { id: '2027_first', label: '2027年度 前期基本時間割' },
-  { id: '2026_second', label: '2026年度 後期基本時間割' },
-  { id: '2026_first', label: '2026年度 前期基本時間割' },
-  { id: '2025_second', label: '2025年度 後期基本時間割' },
-  { id: '2025_first', label: '2025年度 前期基本時間割' }
-];
-
-const defaultBaseTimetables = {
-  '2026_first': createEmptyBaseTimetable(),
-  '2026_second': createEmptyBaseTimetable()
-};
-
-// 3. 特時・日課振替（初期は空っぽ）
-const defaultOverrides = {};
-
-// ローカルストレージ読み込み関数
-function loadStorage(key, fallback) {
-  try {
-    const saved = localStorage.getItem(key);
-    if (saved) return JSON.parse(saved);
-  } catch (e) {
-    console.error(`Failed to load ${key}:`, e);
-  }
-  return JSON.parse(JSON.stringify(fallback));
-}
-
+// 時間割マネージャー (3層構造システム)
 // ==========================================
-// // 3層時間割: サブビュー切り替え
+// 3層時間割: サブビュー切り替え
 
 function switchTimetableMode(mode) {
   state.timetableMode = mode;

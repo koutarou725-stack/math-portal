@@ -1,4 +1,18 @@
-// ==========================================
+function showToast(msg) {
+  let toast = document.getElementById('appToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'appToast';
+    toast.className = 'app-toast';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2800);
+}// ==========================================
 // // 練習プリント・印刷: 別ウィンドウで確実にA4印刷
 
 function openPrintWindow(contentHtml, title) {
