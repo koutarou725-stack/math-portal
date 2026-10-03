@@ -36,7 +36,34 @@ function updateCurrentDate() {
 }
 
 // タブ切り替え
-functiboardLessonDatabase = {
+function setupTabs() {
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      switchTab(tab.getAttribute('data-tab'));
+    });
+  });
+}
+
+function switchTab(tabId) {
+  state.activeTab = tabId;
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.toggle('active', t.getAttribute('data-tab') === tabId);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => {
+    p.classList.toggle('active', p.id === `tab-${tabId}`);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function scrollToLauncher() {
+  const el = document.getElementById('homeLauncherSection');
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ==========================================
+// 板書データベース
+// ==========================================
+const boardLessonDatabase = {
   "1": {
     "gradeLabel": "第1学年",
     "units": [
