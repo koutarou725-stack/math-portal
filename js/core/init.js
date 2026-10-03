@@ -2069,7 +2069,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　ここでは，項の概念が重要になります。数"
+                                                "content": "ここでは，項の概念が重要になります。数"
                                           }
                                     }
                               ],
@@ -2077,8 +2077,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "上の（3）と（4）の式（板書参照）を 計算するにはどうすればよいだろう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2116,7 +2116,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　生徒に任せて計算方法を考えさせるのは，"
+                                                "content": "生徒に任せて計算方法を考えさせるのは，"
                                           }
                                     }
                               ],
@@ -2124,8 +2124,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "下の（1）と（2）の式（板書参照）を 展開しよう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2163,7 +2163,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　前時と同じように発展的に考えて困難度を"
+                                                "content": "前時と同じように発展的に考えて困難度を"
                                           }
                                     }
                               ],
@@ -2199,7 +2199,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題　次の（1）と（2）の式（板書参照）を展 開して，公式をつくろう。",
+                                                "text": "課題　他にも公式をつくって，式の展開をス ピードアップできないか？",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2210,7 +2210,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　ただ，公式を覚えさせるのではなく，公式"
+                                                "content": "ただ，公式を覚えさせるのではなく，公式"
                                           }
                                     }
                               ],
@@ -2218,8 +2218,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題",
+                                                "text": "次の（1）と（2）の式（板書参照）を展 開して，公式をつくろう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2246,7 +2246,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　先生はどうやって素早く展開の計算 をしたのだろう。",
+                                                "text": "課題　他にも式の展開をスピードアップでき る公式はないだろうか。",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2257,7 +2257,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　生徒に不思議さを感じさせるための演出で"
+                                                "content": "生徒に不思議さを感じさせるための演出で"
                                           }
                                     }
                               ],
@@ -2265,8 +2265,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "先生はどうやって素早く展開の計算 をしたのだろう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2304,7 +2304,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　どの計算の仕方が優れているか，どの計算"
+                                                "content": "どの計算の仕方が優れているか，どの計算"
                                           }
                                     }
                               ],
@@ -2340,7 +2340,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "課題　AB がa㎝で，AD がb㎝の長方形 ABCD がある。辺BC 上に点P，辺CD 上",
+                                                "text": "課題と図を提示します。生徒には課題と長方形 ABCD を複数印刷したワークシートを配付し",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2351,7 +2351,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　まず，教師が比較的取り組みやすい問いを"
+                                                "content": "まず，教師が比較的取り組みやすい問いを"
                                           }
                                     }
                               ],
@@ -2359,8 +2359,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "課題",
+                                                "text": "AB がa㎝で，AD がb㎝の長方形 ABCD がある。辺BC 上に点P，辺CD 上",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2387,7 +2387,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　次の多項式（板書参照）を因数分解 しよう。",
+                                                "text": "課題　多項式を因数分解する方法を考えよう。",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2398,7 +2398,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　「くくる」という言葉を知らない生徒がい"
+                                                "content": "「くくる」という言葉を知らない生徒がい"
                                           }
                                     }
                               ],
@@ -2406,8 +2406,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "課題です。これまでの式の展開を逆向きに見 て，これからは因数分解について考えること",
+                                                "text": "課題です。これまでの式の展開を逆向きに見 て，これからは因数分解について考えること",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2445,7 +2445,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　公式の指導では，それを覚えさせることだ"
+                                                "content": "公式の指導では，それを覚えさせることだ"
                                           }
                                     }
                               ],
@@ -2453,8 +2453,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "差の平方の公式を逆向きに見ても， 因数分解ができるだろうか。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2481,7 +2481,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題２　次の式（板書参照）を因数分解しよう。 授業の概要",
+                                                "text": "問題１を提示します。 問題１　和と差の積の公式を逆向きに見ても，",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2492,7 +2492,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　前時と同じように，式を言語化して，生徒"
+                                                "content": "前時と同じように，式を言語化して，生徒"
                                           }
                                     }
                               ],
@@ -2500,8 +2500,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "和と差の積の公式を逆向きに見ても， 因数分解ができるだろうか。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2539,7 +2539,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　「これまでの公式では因数分解できない式"
+                                                "content": "「これまでの公式では因数分解できない式"
                                           }
                                     }
                               ],
@@ -2547,8 +2547,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２を提示します。 問題２",
+                                                "text": "次の式（板書参照）を因数分解しよう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2586,7 +2586,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　「因数分解できた式の一部を変えると，因"
+                                                "content": "「因数分解できた式の一部を変えると，因"
                                           }
                                     }
                               ],
@@ -2594,8 +2594,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "次の式（板書参照）を因数分解しよう。 ・生徒に口頭で説明させて教師が板書し（バラン",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2669,7 +2669,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　次の式（板書参照）を素早く計算で きるしくみを考えよう。",
+                                                "text": "課題　先生はなぜ素早く計算できるのだろう。",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2680,7 +2680,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　ここまでの教師の演出が，生徒の「先生は"
+                                                "content": "ここまでの教師の演出が，生徒の「先生は"
                                           }
                                     }
                               ],
@@ -2688,8 +2688,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "次の式（板書参照）を素早く計算で きるしくみを考えよう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2716,7 +2716,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　連続した２つの偶数の積に１をたす と，２つの偶数の間にある奇数の２乗になる",
+                                                "text": "課題　連続した２つの偶数の積に１をたすと， どんな数になるだろう。",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2727,7 +2727,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　久し振りの文字式の証明で，どうすればい"
+                                                "content": "久し振りの文字式の証明で，どうすればい"
                                           }
                                     }
                               ],
@@ -2735,8 +2735,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "連続した２つの偶数の積に１をたす と，２つの偶数の間にある奇数の２乗になる",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2763,7 +2763,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題を解決するための見通しを立てます。 ・a とb を使って，四角形P とQ の面積を表し，",
+                                                "text": "問題１　２辺の長さがa㎝とb㎝の長方形の ベンチを，下の四角形ABCD とEFGH のよ",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2782,8 +2782,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題を解決するための見通しを立てます。 ・a とb を使って，四角形P とQ の面積を表し，",
+                                                "text": "問題を解決するための見通しを立てます。 ・a とb を使って，四角形P とQ の面積を表し，",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2821,7 +2821,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　まず，なぜこのような公式を考えるのか，"
+                                                "content": "まず，なぜこのような公式を考えるのか，"
                                           }
                                     }
                               ],
@@ -2829,8 +2829,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "課題",
+                                                "text": "円をほかの図形に変えても，道の面積 を求める公式は成り立つだろうか。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2867,7 +2867,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題　次の（1）～（3）（板書参照）の正方形 の面積と１辺の長さを求めよう。",
+                                                "text": "課題　１㎝の方眼紙を使って，いろいろな大 きさの正方形をつくろう。",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2878,7 +2878,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　（2）と（3）の四角形が正方形であることの"
+                                                "content": "（2）と（3）の四角形が正方形であることの"
                                           }
                                     }
                               ],
@@ -2886,8 +2886,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題",
+                                                "text": "次の（1）～（3）（板書参照）の正方形 の面積と１辺の長さを求めよう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -2925,7 +2925,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　平方根の意味を理解していれば簡単な問題"
+                                                "content": "平方根の意味を理解していれば簡単な問題"
                                           }
                                     }
                               ],
@@ -2933,8 +2933,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "次の数（板書参照）の平方根を求めよう。 ⑤解決（各自で問題の解決に取り組ませる）",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3055,7 +3055,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　2 や3 も，分数で表すことがで きるだろうか。",
+                                                "text": "問題を提示します。 問題１　2 や3 も，分数で表すことがで",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -3066,7 +3066,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　この問題を生徒に解決させることは困難で"
+                                                "content": "この問題を生徒に解決させることは困難で"
                                           }
                                     }
                               ],
@@ -3074,8 +3074,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "2 や3 も，分数で表すことがで きるだろうか。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3113,7 +3113,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　ここで指導する内容はトピック的で，生徒"
+                                                "content": "ここで指導する内容はトピック的で，生徒"
                                           }
                                     }
                               ],
@@ -3121,8 +3121,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２を提示し，生徒には問題２と長方形を印 刷したワークシートを配付します。",
+                                                "text": "問題２を提示し，生徒には問題２と長方形を印 刷したワークシートを配付します。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3149,7 +3149,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　どんな数でも，a× b＝a×b が 成り立つことを説明しよう。",
+                                                "text": "課題　a× bはどのように計算すればよい だろう。",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -3160,7 +3160,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　問題１を生徒に委ねて解決させることはな"
+                                                "content": "問題１を生徒に委ねて解決させることはな"
                                           }
                                     }
                               ],
@@ -3168,8 +3168,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "どんな数でも，a× b＝a×b が 成り立つことを説明しよう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3207,7 +3207,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　（3）と（4）の計算は，次の指導につなげる"
+                                                "content": "（3）と（4）の計算は，次の指導につなげる"
                                           }
                                     }
                               ],
@@ -3254,7 +3254,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　教師が次々問題を与えるだけではなく，発"
+                                                "content": "教師が次々問題を与えるだけではなく，発"
                                           }
                                     }
                               ],
@@ -3262,8 +3262,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "次の計算（板書参照）をしよう。 ⑤解決（各自で計算に取り組ませる）",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3290,7 +3290,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　1 2 ，13 ，16 の中で一番大きい数は ",
+                                                "text": "問題１を提示します。 問題１　1",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -3301,7 +3301,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　この比較は，生徒が16 について考える"
+                                                "content": "この比較は，生徒が16 について考える"
                                           }
                                     }
                               ],
@@ -3309,8 +3309,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "1 2 ，13 ，16 の中で一番大きい数は ",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3356,8 +3356,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "課題",
+                                                "text": "次ののついた数（板書参照）の近似 値を求めよう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3442,7 +3442,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　ここからは，各自で解決に取り組ませても"
+                                                "content": "ここからは，各自で解決に取り組ませても"
                                           }
                                     }
                               ],
@@ -3450,8 +3450,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２を提示します。 問題２",
+                                                "text": "次の計算（板書参照）をしよう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3478,7 +3478,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　Ａ４判の長方形は，隣り合う２辺の 比が，１：2 になるようにつくられている",
+                                                "text": "課題　Ａ４判の長方形ABCD の２辺の長さ の比を求めよう。",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -3489,7 +3489,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　学校生活でも利用する機会の多いＡ４判の"
+                                                "content": "学校生活でも利用する機会の多いＡ４判の"
                                           }
                                     }
                               ],
@@ -3497,8 +3497,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "Ａ４判の長方形は，隣り合う２辺の 比が，１：2 になるようにつくられている",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3546,7 +3546,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　連立方程式を一次方程式から発展的に考え"
+                                                "content": "連立方程式を一次方程式から発展的に考え"
                                           }
                                     }
                               ],
@@ -3554,8 +3554,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題",
+                                                "text": "上の二次方程式（板書参照）を解いて みよう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3582,7 +3582,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題の解決に取り組む際に役立つ足がかりに なります（有効性）。",
+                                                "text": "課題を提示します。 課題　二次方程式を，一次方程式や連立方程",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -3593,7 +3593,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　教師が式変形の仕方を一方的に示すのでは"
+                                                "content": "教師が式変形の仕方を一方的に示すのでは"
                                           }
                                     }
                               ],
@@ -3601,8 +3601,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "課題",
+                                                "text": "二次方程式を，一次方程式や連立方程 式のように，式を変形して解くことはできな",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3640,7 +3640,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　ここで行っているのは，式を目的の形に変"
+                                                "content": "ここで行っているのは，式を目的の形に変"
                                           }
                                     }
                               ],
@@ -3687,7 +3687,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　前時に指導した方法で解くといっても，こ"
+                                                "content": "前時に指導した方法で解くといっても，こ"
                                           }
                                     }
                               ],
@@ -3695,8 +3695,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "次の二次方程式（板書参照）を解こう。 ④解決・共有（問題１を参考に式変形させる）",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3734,7 +3734,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　ここで，教師が（1）の二次方程式を平方の"
+                                                "content": "ここで，教師が（1）の二次方程式を平方の"
                                           }
                                     }
                               ],
@@ -3742,8 +3742,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "次の方程式を解こう。 　　　　 x（５x－１）＝－３x＋４",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3781,7 +3781,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　生徒に自力で解決することを求める問題で"
+                                                "content": "生徒に自力で解決することを求める問題で"
                                           }
                                     }
                               ],
@@ -3828,7 +3828,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　条件を変えて新しい問題を生み出し，「ち"
+                                                "content": "条件を変えて新しい問題を生み出し，「ち"
                                           }
                                     }
                               ],
@@ -3911,7 +3911,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題解決に必要な方法知を身に付けられるようにすることを目指します。 目標",
+                                                "text": "問題１　ある公園に新たにプールをつくるこ とになった。長方形の土地に，縦の長さが",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -3922,7 +3922,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　解の吟味は，一次方程式や連立方程式の指"
+                                                "content": "解の吟味は，一次方程式や連立方程式の指"
                                           }
                                     }
                               ],
@@ -3930,8 +3930,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題を解決することを伝えます（有効性）。 ・まず，「1数量の関係を見つける」と板書し，",
+                                                "text": "問題を解決することを伝えます（有効性）。 ・まず，「1数量の関係を見つける」と板書し，",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -3969,7 +3969,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　「何を文字で表すか」から生徒に自由に考"
+                                                "content": "「何を文字で表すか」から生徒に自由に考"
                                           }
                                     }
                               ],
@@ -3977,8 +3977,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "連続した３つの整数の中で，大きい 方の２数の積が３数の和に等しくなるような",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4005,7 +4005,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　右の図のように， １辺の長さが20㎝の正方",
+                                                "text": "問題１を印刷したワークシートを生徒に配付し ます。",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -4016,7 +4016,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　どこから生徒に任せて解決に取り組ませる"
+                                                "content": "どこから生徒に任せて解決に取り組ませる"
                                           }
                                     }
                               ],
@@ -4024,8 +4024,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "右の図のように， １辺の長さが20㎝の正方",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4073,7 +4073,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　生徒にとって久しぶりの関数の学習です。"
+                                                "content": "生徒にとって久しぶりの関数の学習です。"
                                           }
                                     }
                               ],
@@ -4081,8 +4081,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "左の図（板書参照）の長方形ABCD の面積もBC の長さに比例するだろうか。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4120,7 +4120,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　既習の比例と比較しながら考えることは，"
+                                                "content": "既習の比例と比較しながら考えることは，"
                                           }
                                     }
                               ],
@@ -4128,8 +4128,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題でグラフをかく際の作業と対比するためで す。",
+                                                "text": "問題でグラフをかく際の作業と対比するためで す。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4167,7 +4167,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　第２学年までの指導で，表の対応するx"
+                                                "content": "第２学年までの指導で，表の対応するx"
                                           }
                                     }
                               ],
@@ -4175,8 +4175,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "関数y＝ax ２のグラフの特徴をまと",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4203,7 +4203,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題２を生徒に自力で解決させることを目指 します。",
+                                                "text": "問題１　左の表（板書参照）と，右の関数y ＝x",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -4214,7 +4214,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　問題１を生徒に任せて解決させることはな"
+                                                "content": "問題１を生徒に任せて解決させることはな"
                                           }
                                     }
                               ],
@@ -4222,8 +4222,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２を生徒に自力で解決させることを目指 します。",
+                                                "text": "問題２を生徒に自力で解決させることを目指 します。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4261,7 +4261,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　前時の授業で問題を解決する際に用いた，"
+                                                "content": "前時の授業で問題を解決する際に用いた，"
                                           }
                                     }
                               ],
@@ -4269,8 +4269,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "関数y＝２x ２と関数y＝1",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4391,7 +4391,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　次のア〜エの関数うち，下の（1）， （2）に当てはまるのはどれだろう。",
+                                                "text": "問題１を提示します。 問題１　次のア〜エの関数うち，下の（1），",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -4402,7 +4402,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　これまでは，x とy の値の対応の状況に着"
+                                                "content": "これまでは，x とy の値の対応の状況に着"
                                           }
                                     }
                               ],
@@ -4410,8 +4410,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題１",
+                                                "text": "次のア〜エの関数うち，下の（1）， （2）に当てはまるのはどれだろう。",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4438,7 +4438,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題　関数y＝1 2 x２について，x の変域が",
+                                                "text": "問題　関数y＝1 2 x２について，x の変域が\u0001",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -4449,7 +4449,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　変域は既習事項であり，これまでは２年生"
+                                                "content": "変域は既習事項であり，これまでは２年生"
                                           }
                                     }
                               ],
@@ -4457,8 +4457,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題に取り組ませます。その際，x の変域を複 数設定して，x＝０を含む場合と含まない場合",
+                                                "text": "問題に取り組ませます。その際，x の変域を複 数設定して，x＝０を含む場合と含まない場合",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4496,7 +4496,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　生徒に任せて解決させるのは難しいでしょ"
+                                                "content": "生徒に任せて解決させるのは難しいでしょ"
                                           }
                                     }
                               ],
@@ -4543,7 +4543,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　ここでは，y がx"
+                                                "content": "ここでは，y がx"
                                           }
                                     }
                               ],
@@ -4551,8 +4551,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "課題",
+                                                "text": "ボールが斜面を転がる速さを求めるこ とはできるだろうか？",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4637,7 +4637,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "　これまでとはまったく異なった特徴をもつ"
+                                                "content": "これまでとはまったく異なった特徴をもつ"
                                           }
                                     }
                               ],
@@ -4645,8 +4645,8 @@ boardLessonDatabase = {
                                     {
                                           "type": "question",
                                           "data": {
-                                                "qNum": "問 1",
-                                                "text": "本時の内容に関連する練習問題を解きなさい。",
+                                                "qNum": "問題２",
+                                                "text": "Ｂ運送の料金が下の表（板書参照） の通りであるとき，Ａ，Ｂどちらを利用すれ",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
@@ -4781,6 +4781,9 @@ function loadBoardLessonPreset(grade, unitId, hour, isInitialLoad = false) {
 
   const hourBadge = document.getElementById('paperHourBadge');
   if (hourBadge) hourBadge.textContent = '【第 ' + lesson.hour + ' 時 / 全 ' + unit.totalHours + ' 時】';
+
+  const noBadge = document.getElementById('paperNoDisplay');
+  if (noBadge) noBadge.textContent = 'No. ' + lesson.hour;
 
   // 左面・右面のブロックを初期化＆複製流し込み
   state.blocksLeft = JSON.parse(JSON.stringify(lesson.leftBlocks)).map(b => {
