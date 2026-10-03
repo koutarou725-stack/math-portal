@@ -2069,7 +2069,7 @@ boardLessonDatabase = {
                                           "data": {
                                                 "badge": "板書まとめ",
                                                 "title": "本時のまとめ",
-                                                "content": "ここでは，項の概念が重要になります。数"
+                                                "content": "多項式と単項式の乗法・除法は、数と同じように考えて計算できる。"
                                           }
                                     }
                               ],
@@ -5141,4 +5141,54 @@ function updateB4SelectorUI() {
 
   const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
   updateReferenceLinksUI(unit);
+}
+
+let sortableLeftB4 = null;
+let sortableRightB4 = null;
+
+function initSortableB4() {
+  if (typeof Sortable === 'undefined') return;
+
+  const leftCol = document.getElementById('blocksLeftCol');
+  const rightCol = document.getElementById('blocksRightCol');
+
+  if (sortableLeftB4) sortableLeftB4.destroy();
+  if (sortableRightB4) sortableRightB4.destroy();
+
+  const options = {
+    group: 'b4-blocks',
+    animation: 150,
+    handle: '.drag-handle',
+    ghostClass: 'sortable-ghost',
+    onEnd: function (evt) {
+      // プレースホルダー等をスキップするためDOMベースのインデックスはズレる場合があるので
+      // evt.oldIndex / newIndex をそのまま使う場合はempty-col-drop等に注意
+      const fromCol = evt.from.id === 'blocksLeftCol' ? 'left' : 'right';
+      const toCol = evt.to.id === 'blocksLeftCol' ? 'left' : 'right';
+      
+      let movedBlock;
+      if (fromCol === 'left') {
+        movedBlock = state.blocksLeft.splice(evt.oldIndex, 1)[0];
+      } else {
+        movedBlock = state.blocksRight.splice(evt.oldIndex, 1)[0];
+      }
+      
+      if (toCol === 'left') {
+        state.blocksLeft.splice(evt.newIndex, 0, movedBlock);
+      } else {
+        state.blocksRight.splice(evt.newIndex, 0, movedBlock);
+      }
+      
+      // Update overall state
+      state.blocks = [...state.blocksLeft, ...state.blocksRight];
+      
+      // Re-render
+      setTimeout(() => {
+        renderWorksheetB4();
+      }, 10);
+    }
+  };
+
+  if (leftCol && state.blocksLeft.length > 0) sortableLeftB4 = new Sortable(leftCol, options);
+  if (rightCol && state.blocksRight.length > 0) sortableRightB4 = new Sortable(rightCol, options);
 }
