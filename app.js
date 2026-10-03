@@ -5514,9 +5514,21 @@ function openPrintWindow(contentHtml, title) {
   printWin.document.close();
 }
 
+// 印刷用紙の向き・サイズをブラウザに明示設定するヘルパー
+function setPrintPageOrientation(sizeOrientation) {
+  let styleEl = document.getElementById('printPageOrientationStyle');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'printPageOrientationStyle';
+    document.head.appendChild(styleEl);
+  }
+  styleEl.textContent = `@page { size: ${sizeOrientation} !important; margin: 8mm 10mm !important; }`;
+}
+
 function printStudentTestPaper() {
   const el = document.getElementById('testStudentPaper');
   if (!el || !el.innerHTML.trim()) { showToast('先に問題を生成してください'); return; }
+  setPrintPageOrientation('A4 portrait');
   document.body.setAttribute('data-print-target', 'test-student');
   setTimeout(() => {
     window.print();
@@ -5526,6 +5538,7 @@ function printStudentTestPaper() {
 function printAnswerTestPaper() {
   const el = document.getElementById('testAnswerPaper');
   if (!el || !el.innerHTML.trim()) { showToast('先に問題を生成してください'); return; }
+  setPrintPageOrientation('A4 portrait');
   document.body.setAttribute('data-print-target', 'test-answer');
   setTimeout(() => {
     window.print();
@@ -5533,6 +5546,7 @@ function printAnswerTestPaper() {
 }
 
 function printWorksheetPaper() {
+  setPrintPageOrientation('B4 landscape');
   document.body.setAttribute('data-print-target', 'worksheet');
   setTimeout(() => {
     window.print();
