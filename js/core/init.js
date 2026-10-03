@@ -2058,7 +2058,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　上の（1）と（2）の式（板書参照）を 計算するにはどうすればよいだろう。",
+                                                "text": "問題１　次の（1）と（2）の式を計算するにはどうすればよいだろう。<br><br>(1) $(-3a + b) \times 4a$<br>(2) $-3a \times (4a - 5b)$",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
