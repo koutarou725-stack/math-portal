@@ -2058,7 +2058,7 @@ boardLessonDatabase = {
                                           "type": "board-task",
                                           "data": {
                                                 "qNum": "【本時の課題】",
-                                                "text": "問題１　次の（1）と（2）の式を計算するにはどうすればよいだろう。<br><br>(1) $(-3a + b) \times 4a$<br>(2) $-3a \times (4a - 5b)$",
+                                                "text": "問題１　次の（1）と（2）の式を計算するにはどうすればよいだろう。<br><br>(1) $\\displaystyle (-3a + b) \\times 4a$<br>(2) $\\displaystyle -3a \\times (4a - 5b)$",
                                                 "guide": "教科書の例題を参考にしながら考えてみよう。",
                                                 "thinkingSpaceHeight": 85,
                                                 "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2078,7 +2078,7 @@ boardLessonDatabase = {
                                           "type": "question",
                                           "data": {
                                                 "qNum": "問題２",
-                                                "text": "次の（3）と（4）の式を計算するにはどうすればよいだろう。<br><br>(3) $(6x^2 - 4x) \\div 2x$<br>(4) $(6x^2 - 4x) \\div \\frac{2}{3}x$",
+                                                "text": "次の（3）と（4）の式を計算するにはどうすればよいだろう。<br><br>(3) $\\displaystyle (6x^2 - 4x) \\div 2x$<br>(4) $\\displaystyle (6x^2 - 4x) \\div \\frac{2}{3}x$",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
