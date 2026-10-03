@@ -824,6 +824,7 @@ math.math-expr mfrac {
 
 .board-task-header {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   gap: 0.5rem;
   margin-bottom: 0.4rem;
