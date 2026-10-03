@@ -1571,3 +1571,259 @@ body.is-resizing-block .sheet-block.active-resizing .resize-handle-pill {
   border: 1px solid #ffffff;
   border-radius: 4px;
 }
+
+/* ========================================================
+   授業プリント UX/UI 強化スタイル (ドラッグ＆ドロップ・テンプレート管理・見栄え向上)
+   ======================================================== */
+
+/* ブロックの基本スタイル拡張 & ドラッグハンドル */
+.sheet-block {
+  position: relative;
+  border-radius: 6px;
+  padding: 6px 8px 6px 24px !important;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sheet-block:hover {
+  background: rgba(2, 132, 199, 0.03);
+  box-shadow: 0 0 0 1px rgba(2, 132, 199, 0.25);
+}
+
+.sheet-block.just-added {
+  animation: justAddedPulse 1.2s ease-out;
+}
+
+@keyframes justAddedPulse {
+  0% { background: rgba(2, 132, 199, 0.2); box-shadow: 0 0 0 2px #0284c7; }
+  100% { background: transparent; box-shadow: none; }
+}
+
+/* 左端のドラッググリップ（直感的な移動用） */
+.block-drag-grip {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  cursor: grab;
+  opacity: 0;
+  border-radius: 4px;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  font-size: 0.85rem;
+  z-index: 5;
+}
+
+.sheet-block:hover .block-drag-grip {
+  opacity: 0.8;
+}
+
+.block-drag-grip:hover {
+  opacity: 1 !important;
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.1);
+}
+
+.block-drag-grip:active {
+  cursor: grabbing;
+}
+
+/* SortableJS ドラッグ時のスタイル */
+.sortable-ghost {
+  opacity: 0.35 !important;
+  background: #e0f2fe !important;
+  border: 2px dashed #0284c7 !important;
+  border-radius: 6px !important;
+}
+
+.sortable-chosen {
+  background: #ffffff !important;
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.25), 0 8px 10px -6px rgba(15, 23, 42, 0.1) !important;
+  transform: scale(1.01);
+  z-index: 100;
+}
+
+body.is-dragging-block * {
+  user-select: none !important;
+}
+
+/* ホバーコントロールバー拡張 */
+.sheet-block .block-hover-controls {
+  position: absolute;
+  top: -14px;
+  right: 8px;
+  display: none;
+  background: #0f172a;
+  border-radius: 6px;
+  padding: 3px 6px;
+  gap: 3px;
+  z-index: 20;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.sheet-block:hover .block-hover-controls {
+  display: flex;
+}
+
+.sheet-block .block-ctrl-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+  border: none;
+  padding: 3px 6px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+}
+
+.sheet-block .block-ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.sheet-block .block-ctrl-btn.drag-handle {
+  cursor: grab;
+}
+.sheet-block .block-ctrl-btn.drag-handle:active {
+  cursor: grabbing;
+}
+
+.sheet-block .block-ctrl-btn.danger:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* 編集可能フィールドのフォーカス演出 */
+[contenteditable="true"] {
+  outline: none;
+  border-radius: 3px;
+  transition: background 0.12s ease, box-shadow 0.12s ease;
+}
+
+[contenteditable="true"]:hover {
+  background: rgba(2, 132, 199, 0.04);
+}
+
+[contenteditable="true"]:focus,
+[contenteditable="true"].is-editing {
+  background: #ffffff !important;
+  box-shadow: 0 0 0 2px #0284c7 !important;
+  padding: 1px 3px;
+}
+
+/* テンプレート状態表示バッジ・チップ */
+.template-status-badge,
+.template-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.template-status-badge.is-custom,
+.template-status-chip.is-custom {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+}
+
+.template-status-badge.is-dirty,
+.template-status-chip.is-dirty {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+  animation: pulseDirty 2s infinite ease-in-out;
+}
+
+@keyframes pulseDirty {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(0.98); }
+}
+
+/* トースト内の元に戻すボタン */
+.toast-undo-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin-left: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.toast-undo-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* 解答例の表示スタイル（解答表示切替モード時） */
+.answer-text.answer-block {
+  display: none;
+  background: #fef2f2;
+  border: 1px dashed #fca5a5;
+  border-radius: 4px;
+  padding: 0.4rem 0.65rem;
+  margin-top: 0.4rem;
+  color: #dc2626;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+body.show-answers .answer-text.answer-block {
+  display: block;
+}
+
+.answer-tag {
+  display: inline-block;
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  margin-bottom: 0.25rem;
+}
+
+/* 復習ブロックの改行と見栄え */
+.review-body {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #1e293b;
+  margin-top: 0.25rem;
+}
+
+/* 印刷時の完璧な制御 */
+@media print {
+  .block-drag-grip,
+  .block-hover-controls,
+  .sheet-resize-handle,
+  .no-print {
+    display: none !important;
+  }
+  .sheet-block {
+    padding: 2px 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  [contenteditable="true"] {
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+}

@@ -831,9 +831,9 @@
             <div class="form-group mb-2">
               <label class="step-label"><span class="step-badge">1</span> 学年を選択:</label>
               <div class="grade-pill-group">
-                <button class="grade-pill-btn" id="b4GradeBtn_1" onclick="selectB4Grade('1')">中1</button>
-                <button class="grade-pill-btn" id="b4GradeBtn_2" onclick="selectB4Grade('2')">中2</button>
-                <button class="grade-pill-btn active" id="b4GradeBtn_3" onclick="selectB4Grade('3')">中3</button>
+                <button type="button" class="grade-pill-btn" id="b4GradeBtn_1" onclick="onB4GradeClick('1')">中1</button>
+                <button type="button" class="grade-pill-btn" id="b4GradeBtn_2" onclick="onB4GradeClick('2')">中2</button>
+                <button type="button" class="grade-pill-btn active" id="b4GradeBtn_3" onclick="onB4GradeClick('3')">中3</button>
               </div>
             </div>
 
@@ -847,29 +847,54 @@
 
             <!-- Step 3: ◯時間目を選択 -->
             <div class="form-group mb-2">
-              <label class="step-label"><span class="step-badge">3</span> 授業時間（◯時間目）を選択:</label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <label class="step-label" style="margin-bottom: 0;"><span class="step-badge">3</span> 授業時間（◯時間目）:</label>
+                <div class="hour-stepper-btns" style="display: flex; gap: 0.25rem;">
+                  <button type="button" class="btn btn-xs btn-outline js-hour-prev" onclick="stepB4Hour(-1)" title="前の授業時間へ">
+                    <i class="fa-solid fa-chevron-left"></i> 前時
+                  </button>
+                  <button type="button" class="btn btn-xs btn-outline js-hour-next" onclick="stepB4Hour(1)" title="次の授業時間へ">
+                    次時 <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
               <select id="b4HourSelect" class="form-control" onchange="onB4HourChange()">
                 <!-- JSで動的生成 -->
               </select>
             </div>
 
-            <button class="btn btn-primary btn-block" onclick="applyB4LessonSelection()" style="padding: 0.6rem; font-weight: 700; box-shadow: var(--shadow-sm); margin-top: 0.5rem;">
-              <i class="fa-solid fa-bolt text-warning"></i> この時間の板書プリントを展開
-            </button>
+            <!-- テンプレート状態表示 & 保存ボタン -->
+            <div class="b4-template-action-box mt-3" style="background: #ffffff; border: 1.5px solid #0284c7; border-radius: 8px; padding: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+                <span style="font-size: 0.76rem; font-weight: 700; color: #475569;">現在のテンプレート状態:</span>
+                <span class="js-template-status template-status-badge"><i class="fa-regular fa-file-lines"></i> 初期テンプレート</span>
+              </div>
+              <button type="button" class="btn btn-primary-solid btn-block" onclick="saveCurrentAsLessonTemplate()" style="padding: 0.6rem 0.5rem; font-weight: 700; font-size: 0.88rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: #0284c7; color: #fff; border-radius: 6px;" title="編集した内容をこの時間のテンプレートとして保存します（次回以降もこの状態で開きます）">
+                <i class="fa-solid fa-cloud-arrow-up"></i> この編集をテンプレートに保存
+              </button>
+              <div style="display: flex; gap: 0.35rem; margin-top: 0.4rem;">
+                <button type="button" class="btn btn-ghost btn-sm text-secondary js-template-reset" onclick="resetLessonTemplateToDefault()" style="flex: 1; font-size: 0.73rem; padding: 0.25rem 0.4rem;" title="編集保存したテンプレートを破棄し、初期状態の板書データに戻します">
+                  <i class="fa-solid fa-rotate-left"></i> 初期に戻す
+                </button>
+                <button type="button" class="btn btn-ghost btn-sm text-secondary" onclick="reloadB4Lesson()" style="flex: 1; font-size: 0.73rem; padding: 0.25rem 0.4rem;" title="現在の編集を破棄して再展開">
+                  <i class="fa-solid fa-arrows-rotate"></i> 再展開
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- 2. マイプリント保存＆呼び出し管理 -->
           <div class="panel-section mb-3 my-worksheet-card">
             <div class="panel-header">
-              <h3><i class="fa-solid fa-folder-bookmark text-success"></i> マイ授業プリント保存</h3>
+              <h3><i class="fa-solid fa-folder-bookmark text-success"></i> マイ授業プリント別名保存</h3>
             </div>
-            <p class="panel-desc">編集したプリントを名前をつけて保存し、来年や他クラスでいつでも再利用できます。</p>
+            <p class="panel-desc">年度やクラスごとに名前を変えて複数パターンをストック保存できます。</p>
             <div class="my-ws-btn-row">
-              <button class="btn btn-success-solid" onclick="saveWorksheetToStorage()" style="width: 100%; justify-content: center; padding: 0.55rem; font-weight: 700;">
-                <i class="fa-solid fa-floppy-disk"></i> このプリントを保存
+              <button class="btn btn-outline-success" onclick="saveWorksheetToStorage()" style="width: 100%; justify-content: center; padding: 0.5rem; font-weight: 600; font-size: 0.82rem;">
+                <i class="fa-solid fa-copy"></i> 別名でマイプリント保存
               </button>
-              <button class="btn btn-outline" onclick="openSavedWorksheetsModal()" style="width: 100%; justify-content: center; padding: 0.5rem;">
-                <i class="fa-solid fa-folder-open"></i> 保存済みマイプリント一覧
+              <button class="btn btn-outline" onclick="openSavedWorksheetsModal()" style="width: 100%; justify-content: center; padding: 0.45rem; font-size: 0.82rem;">
+                <i class="fa-solid fa-folder-open"></i> 保存済み一覧
               </button>
             </div>
           </div>
@@ -980,29 +1005,36 @@
         <div class="paper-container b4-paper-container">
           <div class="b4-paper-scroll-wrapper" id="b4ScrollWrapper">
             <div class="paper-toolbar no-print">
-              <div class="paper-status" style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="paper-status" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                 <span class="status-indicator"></span>
-                <strong><i class="fa-solid fa-newspaper text-primary"></i> B4 横レイアウト（見開き2面）</strong>
+                <strong><i class="fa-solid fa-newspaper text-primary"></i> B4 見開き（左右2面）</strong>
+                <span class="js-template-status template-status-chip"><i class="fa-regular fa-file-lines"></i> 初期</span>
                 
                 <!-- ズーム切り替え -->
                 <div class="zoom-controls-group">
-                  <span class="zoom-label"><i class="fa-solid fa-magnifying-glass"></i> 表示倍率:</span>
+                  <span class="zoom-label"><i class="fa-solid fa-magnifying-glass"></i> 倍率:</span>
                   <button type="button" class="zoom-btn active" id="zoomBtn_100" onclick="setWorksheetZoom(1.0)">100%</button>
                   <button type="button" class="zoom-btn" id="zoomBtn_85" onclick="setWorksheetZoom(0.85)">85%</button>
                   <button type="button" class="zoom-btn" id="zoomBtn_75" onclick="setWorksheetZoom(0.75)">75%</button>
                 </div>
               </div>
               <div class="paper-actions">
-                <button class="btn btn-sm btn-outline text-info" onclick="openCurrentB4BoardPdf()" title="この単元の板書書籍PDFを参照">
+                <button type="button" class="btn btn-sm btn-outline" id="b4UndoBtn" onclick="undoB4()" title="操作を元に戻す (Ctrl+Z)" disabled>
+                  <i class="fa-solid fa-rotate-left"></i> 元に戻す
+                </button>
+                <button type="button" class="btn btn-sm btn-primary-solid" onclick="saveCurrentAsLessonTemplate()" title="この編集内容をテンプレートとして上書き保存 (Ctrl+S)">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> テンプレート保存
+                </button>
+                <button type="button" class="btn btn-sm btn-outline text-info" onclick="openCurrentB4BoardPdf()" title="この単元の板書書籍PDFを参照">
                   <i class="fa-solid fa-book-open"></i> 板書書籍
                 </button>
-                <button class="btn btn-sm btn-outline text-success" onclick="saveWorksheetToStorage()" title="現在の内容をマイプリントに保存">
-                  <i class="fa-solid fa-floppy-disk"></i> マイプリントに保存
+                <button type="button" class="btn btn-sm btn-outline text-success" onclick="saveWorksheetToStorage()" title="別名をつけてマイプリントに保存">
+                  <i class="fa-solid fa-copy"></i> マイプリント保存
                 </button>
-                <button class="btn btn-sm btn-outline text-primary" onclick="applyWorksheetToTimetable()" title="このプリントのめあて・単元名を時間割の週案に反映">
-                  <i class="fa-solid fa-calendar-plus"></i> 時間割の予定にセット
+                <button type="button" class="btn btn-sm btn-outline text-primary" onclick="applyWorksheetToTimetable()" title="このプリントのめあて・単元名を時間割の週案に反映">
+                  <i class="fa-solid fa-calendar-plus"></i> 時間割にセット
                 </button>
-                <button class="btn btn-sm btn-ghost" onclick="toggleAnswerMode()" id="answerModeBtn">
+                <button type="button" class="btn btn-sm btn-ghost" onclick="toggleAnswerMode()" id="answerModeBtn">
                   <i class="fa-solid fa-eye"></i> 解答表示切替
                 </button>
               </div>
