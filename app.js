@@ -1,4 +1,4 @@
-﻿// ========================================================
+// ========================================================
 // 教材・書籍 OneDrive クラウド共有リンク設定（オンライン完全対応）
 // 先生のOneDrive共有URLにより、Webブラウザ上からどこでも直接PDFを参照可能
 // ========================================================
@@ -5517,21 +5517,29 @@ function openPrintWindow(contentHtml, title) {
 function printStudentTestPaper() {
   const el = document.getElementById('testStudentPaper');
   if (!el || !el.innerHTML.trim()) { showToast('先に問題を生成してください'); return; }
-  openPrintWindow(el.outerHTML, '練習プリント（生徒用）');
+  document.body.setAttribute('data-print-target', 'test-student');
+  setTimeout(() => {
+    window.print();
+  }, 50);
 }
 
 function printAnswerTestPaper() {
   const el = document.getElementById('testAnswerPaper');
   if (!el || !el.innerHTML.trim()) { showToast('先に問題を生成してください'); return; }
-  openPrintWindow(el.outerHTML, '模範解答（先生用）');
+  document.body.setAttribute('data-print-target', 'test-answer');
+  setTimeout(() => {
+    window.print();
+  }, 50);
 }
 
 function printWorksheetPaper() {
   document.body.setAttribute('data-print-target', 'worksheet');
-  window.print();
+  setTimeout(() => {
+    window.print();
+  }, 50);
 }
 
-// 授業プリント印刷後に属性を解除
+// 印刷後にターゲット属性を解除
 window.addEventListener('afterprint', () => {
   document.body.removeAttribute('data-print-target');
 });
