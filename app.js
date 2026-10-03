@@ -6638,6 +6638,7 @@ function checkServerEnvironment() {
   if (isGitHubPages) {
     const banner = document.createElement('div');
     banner.id = 'serverEnvironmentBanner';
+    banner.className = 'no-print';
     banner.style.cssText = 'background: linear-gradient(90deg, #1e293b, #0f172a); color: #f8fafc; padding: 0.65rem 1.25rem; font-size: 0.84rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #38bdf8; z-index: 1000; position: relative;';
     banner.innerHTML = `
       <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">

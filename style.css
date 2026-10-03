@@ -3448,6 +3448,9 @@ math.math-expr mfrac {
   }
 
   /* 印刷時に共通して非表示にするUIパーツ */
+  #serverEnvironmentBanner,
+  [id*="serverEnvironment"],
+  .server-environment-banner,
   .no-print,
   .app-header,
   .sidebar-panel,
@@ -3523,7 +3526,7 @@ math.math-expr mfrac {
   }
 
   /* ==============================
-     2. 生徒用練習プリント印刷モード (A4直接印刷)
+     2. 生徒用練習プリント印刷モード (A4 1枚直接印刷)
      body[data-print-target="test-student"]
      ============================== */
   body[data-print-target="test-student"] .main-content,
@@ -3567,6 +3570,113 @@ math.math-expr mfrac {
     break-after: avoid !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+  }
+
+  /* 生徒用ヘッダー（スリム化で用紙を最大活用） */
+  body[data-print-target="test-student"] .test-paper-header {
+    padding-top: 0.5mm !important;
+    padding-bottom: 1.5mm !important;
+    margin-bottom: 2mm !important;
+    border-bottom: 1.5pt solid #1e293b !important;
+  }
+
+  body[data-print-target="test-student"] .test-header-line1 {
+    font-size: 8pt !important;
+    margin-bottom: 1px !important;
+    line-height: 1.15 !important;
+  }
+
+  body[data-print-target="test-student"] .test-title-line2 {
+    font-size: 10pt !important;
+    line-height: 1.2 !important;
+  }
+
+  body[data-print-target="test-student"] .test-student-info {
+    font-size: 8pt !important;
+  }
+
+  /* 生徒用グリッド */
+  body[data-print-target="test-student"] #testStudentPaper .test-problem-grid {
+    flex: none !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    gap: 0 !important;
+  }
+
+  body[data-print-target="test-student"] #testStudentPaper .test-problem-grid.cols-1 {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  body[data-print-target="test-student"] #testStudentPaper .test-problem-grid.cols-2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 5mm !important;
+  }
+
+  /* 生徒用問題アイテム: パディング極小化で図形問題でもA4 1枚に確実に収める */
+  body[data-print-target="test-student"] #testStudentPaper .test-problem-item {
+    height: auto !important;
+    min-height: auto !important;
+    border-bottom: 0.5pt solid #cbd5e1 !important;
+    padding: 1.5mm 2.5mm !important;
+    box-sizing: border-box !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  body[data-print-target="test-student"] .problem-header {
+    font-size: 8.5pt !important;
+    line-height: 1.3 !important;
+    gap: 3px !important;
+    margin-bottom: 1px !important;
+  }
+
+  body[data-print-target="test-student"] .problem-num {
+    font-size: 8.5pt !important;
+    font-weight: 700 !important;
+  }
+
+  body[data-print-target="test-student"] .problem-text {
+    line-height: 1.3 !important;
+  }
+
+  /* 生徒用計算スペース: 図形問題でも十分な書き込みスペースを保ちつつコンパクト化 */
+  body[data-print-target="test-student"] .problem-workspace {
+    min-height: 12px !important;
+    max-height: 28px !important;
+    flex: none !important;
+    margin-top: 1px !important;
+  }
+
+  /* 答欄 */
+  body[data-print-target="test-student"] .problem-answer-line {
+    margin-top: 1mm !important;
+    font-size: 8.5pt !important;
+    line-height: 1.15 !important;
+  }
+
+  body[data-print-target="test-student"] .problem-answer-fill {
+    font-size: 8.5pt !important;
+    border-bottom: 0.8pt solid #1e293b !important;
+  }
+
+  /* 図形・グラフ（SVG）の印刷最適化: 縦をスリム化してA4 1枚に完璧に収める */
+  body[data-print-target="test-student"] .problem-figure-container,
+  body[data-print-target="test-answer"] .problem-figure-container {
+    margin: 1mm auto !important;
+    padding: 0 !important;
+    max-height: 70px !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  body[data-print-target="test-student"] .problem-figure-container svg,
+  body[data-print-target="test-answer"] .problem-figure-container svg {
+    max-height: 65px !important;
+    max-width: 170px !important;
+    width: auto !important;
+    height: auto !important;
   }
 
   /* ==============================
@@ -5243,7 +5353,7 @@ math.math-expr mfrac {
     page-break-inside: avoid;
   }
   .problem-figure-container svg {
-    max-height: 120px;
+    max-height: 65px !important;
   }
   .math-freq-table {
     border-color: #000;
