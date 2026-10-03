@@ -2078,7 +2078,7 @@ boardLessonDatabase = {
                                           "type": "question",
                                           "data": {
                                                 "qNum": "問題２",
-                                                "text": "上の（3）と（4）の式（板書参照）を 計算するにはどうすればよいだろう。",
+                                                "text": "次の（3）と（4）の式を計算するにはどうすればよいだろう。<br><br>(3) $(6x^2 - 4x) \\div 2x$<br>(4) $(6x^2 - 4x) \\div \\frac{2}{3}x$",
                                                 "answer": "各自で解答を確認する。",
                                                 "spaceHeight": 65
                                           }
