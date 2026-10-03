@@ -24,7 +24,7 @@
   <!-- 各機能モジュールスタイル -->
   <link rel="stylesheet" href="css/features/home.css">
   <link rel="stylesheet" href="css/features/timetable.css">
-  <link rel="stylesheet" href="css/features/class-print.css">
+  <link rel="stylesheet" href="css/features/class-print.css?v=20261003_3">
   <link rel="stylesheet" href="css/features/practice-print.css">
   <link rel="stylesheet" href="css/features/graph-generator.css">
   <link rel="stylesheet" href="css/features/settings.css">
@@ -867,8 +867,8 @@
             <div class="b4-template-action-box mt-3" style="background: #ffffff; border: 1.5px solid #0284c7; border-radius: 8px; padding: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
               <div style="margin-bottom: 0.5rem;">
                 <div style="font-size: 0.74rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem;">現在のテンプレート状態:</div>
-                <div class="js-template-status template-status-badge" style="width: 100%; justify-content: center; box-sizing: border-box; text-align: center; padding: 0.3rem 0.45rem; font-size: 0.74rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                  <i class="fa-regular fa-file-lines"></i> 初期テンプレート
+                <div class="js-template-status template-status-badge" style="width: 100%; justify-content: center; box-sizing: border-box; text-align: center; padding: 0.35rem 0.4rem; font-size: 0.75rem; white-space: normal; line-height: 1.25;">
+                  <i class="fa-regular fa-file-lines"></i> 初期状態
                 </div>
               </div>
               <button type="button" class="btn btn-primary-solid btn-block" onclick="saveCurrentAsLessonTemplate()" style="padding: 0.6rem 0.5rem; font-weight: 700; font-size: 0.88rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: #0284c7; color: #fff; border-radius: 6px;" title="編集した内容をこの時間のテンプレートとして保存します（次回以降もこの状態で開きます）">
@@ -1555,11 +1555,11 @@
   <script src="js/core/cloud-sync.js"></script>
   <!-- 各機能モジュール -->
   <script src="js/features/timetable.js"></script>
-  <script src="js/features/class-print.js"></script>
+  <script src="js/features/class-print.js?v=20261003_3"></script>
   <script src="js/features/practice-print.js"></script>
   <script src="js/features/settings.js"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
-  <script src="js/core/init.js"></script>
+  <script src="js/core/init.js?v=20261003_3"></script>
 </body>
 </html>
