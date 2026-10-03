@@ -2038,706 +2038,965 @@ boardLessonDatabase = {
     "units": [
       {
         "id": "u_3_1",
-        "unitName": "第1章 多項式・展開と因数分解",
-        "totalHours": 11,
+        "unitName": "多項式",
+        "totalHours": 17,
         "bookRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY",
         "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx",
         "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
         "lessons": [
-          {
-            "hour": 1,
-            "title": "多項式と単項式の乗法・除法",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "分配法則を利用して、多項式と単項式の乗法・除法を正確に計算できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "1・2年の復習",
-                  "content": "分配法則: $a(b+c) = ab + ac$, $\\quad (a+b) \\div c = \\frac{a}{c} + \\frac{b}{c}$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "たて $2x$、横 $x + 3y$ の長方形の面積はどのように表せるだろうか？",
-                  "guide": "2つの小さな長方形の面積の和として計算してみよう。",
-                  "thinkingSpaceHeight": 85,
-                  "answer": "$2x(x + 3y) = 2x^2 + 6xy$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "多項式と単項式の計算",
-                  "content": "カッコの中の <strong>すべての項に単項式をかける（または割る）</strong>。<br>符号のミス（特にマイナスで割るとき）に注意する！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "次の計算をしなさい。<br>(1) $3a(2a - b)$<br>(2) $(4x^2 - 6xy) \\div 2x$",
-                  "answer": "(1) $6a^2 - 3ab$<br>(2) $2x - 3y$",
-                  "spaceHeight": 65
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2 (発展)",
-                  "text": "次の式を展開して整理しなさい。<br>$x(x + 2) + 2x(x - 3)$",
-                  "answer": "$x^2 + 2x + 2x^2 - 6x = 3x^2 - 4x$",
-                  "spaceHeight": 60
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 2,
-            "title": "多項式どうしの乗法 (a+b)(c+d)",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "多項式どうしの積 $(a+b)(c+d)$ を、面積図や文字の置き換えを用いて展開できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "前時のふりかえり",
-                  "content": "$M(c+d) = Mc + Md$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "たて $a+b$、横 $c+d$ の長方形の面積は、どのように表せるだろうか？",
-                  "guide": "4つの小さな長方形の面積の和として表してみよう。",
-                  "thinkingSpaceHeight": 85,
-                  "answer": "$(a+b)(c+d) = ac + ad + bc + bd$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "多項式の展開の基本",
-                  "content": "$(a+b)(c+d) = ac + ad + bc + bd$<br>一方のカッコの各項に、他方の各項をもれなくかけて同類項をまとめる！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "次の式を展開しなさい。<br>(1) $(x + 2)(y + 3)$<br>(2) $(2x - 1)(x + 4)$",
-                  "answer": "(1) $xy + 3x + 2y + 6$<br>(2) $2x^2 + 8x - x - 4 = 2x^2 + 7x - 4$",
-                  "spaceHeight": 65
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2",
-                  "text": "$(a - 3)(b - 2)$ を展開しなさい。符号に注意！",
-                  "answer": "$ab - 2a - 3b + 6$",
-                  "spaceHeight": 55
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 3,
-            "title": "乗法公式① (x+a)(x+b) の展開",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "乗法公式 $(x+a)(x+b) = x^2 + (a+b)x + ab$ を理解し、素早く計算できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "展開の基本",
-                  "content": "$(x+2)(x+3) = x^2 + 3x + 2x + 6 = x^2 + 5x + 6$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "$(x+a)(x+b)$ を展開したとき、$x$ の係数と定数項にはどんな決まりがあるだろうか？",
-                  "guide": "$x$ の係数は $a$ と $b$ の「和」、定数項は「積」になっているね！",
-                  "thinkingSpaceHeight": 85,
-                  "answer": "$(x+a)(x+b) = x^2 + (a+b)x + ab$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "乗法公式 1",
-                  "title": "(x+a)(x+b) の公式",
-                  "content": "<strong>$(x+a)(x+b) = x^2 + (\\text{和})x + (\\text{積})$</strong><br>符号を含めて和と積を暗算で計算しよう！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "公式を利用して、次の式を展開しなさい。<br>(1) $(x + 3)(x + 4)$<br>(2) $(x - 5)(x + 2)$<br>(3) $(a - 6)(a - 3)$",
-                  "answer": "(1) $x^2 + 7x + 12$<br>(2) $x^2 - 3x - 10$<br>(3) $a^2 - 9a + 18$",
-                  "spaceHeight": 80
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2 (注意)",
-                  "text": "$(x - 7)(x + 7)$ を公式①を使って展開してみよう。",
-                  "answer": "$x^2 + 0x - 49 = x^2 - 49$",
-                  "spaceHeight": 50
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 4,
-            "title": "乗法公式② (a+b)², (a-b)² 平方の公式",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "平方の乗法公式を展開の意味から導き、正しく活用できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "公式の確認",
-                  "content": "$(a+b)^2 = (a+b)(a+b)$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "1辺が $a+b$ の正方形の面積を、4つの部分に分けて考えてみよう。",
-                  "guide": "面積は $a^2$ が1個、$b^2$ が1個、$ab$ が2個あるね！",
-                  "thinkingSpaceHeight": 85,
-                  "answer": "$(a+b)^2 = a^2 + 2ab + b^2$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "乗法公式 2",
-                  "title": "平方の公式",
-                  "content": "<strong>$(a+b)^2 = a^2 + 2ab + b^2$</strong><br><strong>$(a-b)^2 = a^2 - 2ab + b^2$</strong><br>真ん中の項は「2倍の積」！符号に注意！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "次の式を展開しなさい。<br>(1) $(x + 5)^2$<br>(2) $(x - 4)^2$<br>(3) $(2a + 3)^2$",
-                  "answer": "(1) $x^2 + 10x + 25$<br>(2) $x^2 - 8x + 16$<br>(3) $4a^2 + 12a + 9$",
-                  "spaceHeight": 80
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2 (つまずき注意)",
-                  "text": "次の計算の間違いを直しなさい。<br>誤: $(x - 6)^2 = x^2 - 36$",
-                  "answer": "正: $x^2 - 12x + 36$ (真ん中の項 $-2ab$ が抜けており、最後は正)",
-                  "spaceHeight": 60
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 5,
-            "title": "乗法公式③ (a+b)(a-b) & 式の展開の工夫（置き換え）",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "和と差の積の公式を活用し、共通部分を文字でおく工夫して展開できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "前時の公式確認",
-                  "content": "$(M+2)(M-5) = M^2 - 3M - 10$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "式 $(a+b+2)(a+b-5)$ を展開するにはどうすればよいだろうか？共通な部分を見つけて工夫しよう。",
-                  "guide": "着眼点: $a+b$ がどちらのカッコにもあるね。1つのまとまり $M$ とおいてみよう。",
-                  "thinkingSpaceHeight": 90,
-                  "answer": "$(M+2)(M-5) = M^2 - 3M - 10 = (a+b)^2 - 3(a+b) - 10 = a^2 + 2ab + b^2 - 3a - 3b - 10$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "置き換えによる工夫のポイント",
-                  "content": "式の中に同じまとまりがあるときは、それを <strong>1つの文字 $M$</strong> とおくことで、乗法公式にあてはめて簡単に展開できる！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1 (確かめ)",
-                  "text": "置き換えを利用して展開しなさい。<br>$(x + y + 3)(x + y - 3)$",
-                  "answer": "$x+y=M$ とおくと $(M+3)(M-3) = M^2 - 9 = (x+y)^2 - 9 = x^2 + 2xy + y^2 - 9$",
-                  "spaceHeight": 70
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2 (発展に挑戦)",
-                  "text": "$(a - b + 2)^2$ を展開しなさい。",
-                  "answer": "$a-b=M$ とおくと $(M+2)^2 = M^2 + 4M + 4 = a^2 - 2ab + b^2 + 4a - 4b + 4$",
-                  "spaceHeight": 70
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 6,
-            "title": "因数分解の意味と共通因数のくくり出し",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "因数分解が「展開の逆」であることを理解し、共通因数をくくり出すことができる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "分配法則",
-                  "content": "$m(a+b) = ma + mb$ 展開 ⇄ 因数分解"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "多項式 $ax + ay$ を、いくつかの式の積の形に変形するにはどうすればよいだろうか？",
-                  "guide": "各項に共通してかけられている因数（共通因数）に着目しよう。",
-                  "thinkingSpaceHeight": 85,
-                  "answer": "$ax + ay = a(x + y)$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "共通因数のくくり出し",
-                  "content": "多項式の各項に共通な因数があるときは、カッコの外にくくり出す！<br><strong>最大の共通因数</strong>を確実にくくり出すことがポイント。"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "次の式を因数分解しなさい。<br>(1) $mx + my$<br>(2) $2ab - 4b^2$<br>(3) $6x^2y + 9xy^2$",
-                  "answer": "(1) $m(x + y)$<br>(2) $2b(a - 2b)$<br>(3) $3xy(2x + 3y)$",
-                  "spaceHeight": 80
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2 (注意)",
-                  "text": "$3x^2 - 6x$ を因数分解しなさい。<br>※ $3(x^2 - 2x)$ では不十分！",
-                  "answer": "$3x(x - 2)$",
-                  "spaceHeight": 55
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 7,
-            "title": "乗法公式による因数分解① x²+(a+b)x+ab",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "和と積の組み合わせを見つけて、$x^2+(a+b)x+ab = (x+a)(x+b)$ の因数分解ができる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "乗法公式の復習",
-                  "content": "$(x+a)(x+b) = x^2 + (a+b)x + ab$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "$x^2 + 5x + 6$ を積の形にするには、$a, b$ をどのように見つければよいだろうか？",
-                  "guide": "かけて 6、たして 5 になる 2つの数を探そう！",
-                  "thinkingSpaceHeight": 85,
-                  "answer": "積が 6: (1, 6), (2, 3) ➔ 和が 5 になるのは 2 と 3！ 答: $(x+2)(x+3)$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "因数分解の手順",
-                  "content": "① まず定数項の <strong>積</strong> になる2数のペアを考える。<br>② その中から、真ん中の <strong>和</strong> になるペアを選ぶ！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "次の式を因数分解しなさい。<br>(1) $x^2 + 7x + 10$<br>(2) $x^2 - 5x + 6$<br>(3) $x^2 - x - 12$",
-                  "answer": "(1) $(x + 2)(x + 5)$<br>(2) $(x - 2)(x - 3)$<br>(3) $(x - 4)(x + 3)$",
-                  "spaceHeight": 80
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2",
-                  "text": "$x^2 - 8x - 20$ を因数分解しなさい。",
-                  "answer": "$(x - 10)(x + 2)$",
-                  "spaceHeight": 50
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 8,
-            "title": "乗法公式による因数分解② 平方の公式・平方の差",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "平方の公式や平方の差の公式を利用して、すばやく正確に因数分解できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "公式の確認",
-                  "content": "$(a+b)^2 = a^2+2ab+b^2, \\quad (a+b)(a-b) = a^2-b^2$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "多項式 $x^2 - 16$ や $x^2 + 6x + 9$ の形の特徴を見抜いて因数分解しよう。",
-                  "guide": "両端が「2乗」になっていることに着目しよう！",
-                  "thinkingSpaceHeight": 85,
-                  "answer": "$x^2 - 16 = (x+4)(x-4)$, $\\quad x^2 + 6x + 9 = (x+3)^2$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "平方の因数分解公式",
-                  "content": "<strong>$a^2 + 2ab + b^2 = (a+b)^2$</strong><br><strong>$a^2 - 2ab + b^2 = (a-b)^2$</strong><br><strong>$a^2 - b^2 = (a+b)(a-b)$</strong>"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "次の式を因数分解しなさい。<br>(1) $x^2 + 12x + 36$<br>(2) $x^2 - 10x + 25$<br>(3) $x^2 - 49$",
-                  "answer": "(1) $(x + 6)^2$<br>(2) $(x - 5)^2$<br>(3) $(x + 7)(x - 7)$",
-                  "spaceHeight": 80
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2 (発展)",
-                  "text": "$4x^2 - 25y^2$ を因数分解しなさい。",
-                  "answer": "$(2x + 5y)(2x - 5y)$",
-                  "spaceHeight": 55
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 9,
-            "title": "因数分解の工夫（くくり出し＋公式、置き換え）",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "共通因数をくくり出してから公式を使ったり、置き換えを利用して因数分解できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "手順の原則",
-                  "content": "因数分解の第1ステップ: まず「共通因数」がないか調べる！"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "$2x^2 + 8x + 6$ や $(x-1)^2 - 4$ はどのように因数分解できるだろうか？",
-                  "guide": "① まず共通因数 2 をくくり出す！ ② カッコの中を公式で因数分解！",
-                  "thinkingSpaceHeight": 90,
-                  "answer": "$2(x^2 + 4x + 3) = 2(x+1)(x+3)$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "発展因数分解の鉄則",
-                  "content": "① まず <strong>共通因数をくくり出す</strong>。<br>② 残ったカッコの中を <strong>乗法公式で因数分解</strong> する。<br>③ 共通なカタマリは $M$ とおく！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "次の式を因数分解しなさい。<br>(1) $3x^2 - 12$<br>(2) $2x^2 - 12x + 18$",
-                  "answer": "(1) $3(x^2 - 4) = 3(x + 2)(x - 2)$<br>(2) $2(x^2 - 6x + 9) = 2(x - 3)^2$",
-                  "spaceHeight": 75
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2 (置き換え)",
-                  "text": "$(x + y)^2 - 4(x + y) + 3$ を因数分解しなさい。",
-                  "answer": "$x+y=M$ とおくと $M^2 - 4M + 3 = (M - 1)(M - 3) = (x + y - 1)(x + y - 3)$",
-                  "spaceHeight": 70
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 10,
-            "title": "式の計算の利用①（数の性質の証明、計算の工夫）",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "文字式を利用して連続する整数の性質を証明し、乗法公式で大きな数を工夫して計算できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "整数の表し方",
-                  "content": "偶数: $2n$, $\\quad$ 奇数: $2n+1$, $\\quad$ 連続する2整数: $n, n+1$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "「連続する2つの奇数の積に1を加えた数は、偶数の2乗になる。」ことを証明しよう。",
-                  "guide": "奇数を $2n-1, 2n+1$ とおいて、計算式を作ってみよう。",
-                  "thinkingSpaceHeight": 90,
-                  "answer": "$(2n-1)(2n+1) + 1 = 4n^2 - 1 + 1 = 4n^2 = (2n)^2$。$2n$ は偶数なので偶数の2乗となる。"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "証明の流れ",
-                  "content": "① 文字を使って数量を表す。<br>② 問題の通りに式を作って計算・変形する。<br>③ 結論の形（(偶数)² など）に合わせてまとめる！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1 (計算の工夫)",
-                  "text": "公式を利用して、次の計算をしなさい。<br>(1) $102^2$<br>(2) $53^2 - 47^2$",
-                  "answer": "(1) $(100 + 2)^2 = 10000 + 400 + 4 = 10404$<br>(2) $(53 + 47)(53 - 47) = 100 \\times 6 = 600$",
-                  "spaceHeight": 75
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 2",
-                  "text": "連続する2つの偶数の積に1を加えると奇数の2乗になることを証明しなさい。",
-                  "answer": "$2n(2n+2)+1 = 4n^2+4n+1 = (2n+1)^2$ より奇数の2乗となる。",
-                  "spaceHeight": 70
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          },
-          {
-            "hour": 11,
-            "title": "式の計算の利用②（図形の性質の証明、道幅と面積 S=aℓ）",
-            "leftBlocks": [
-              {
-                "type": "objective",
-                "data": {
-                  "text": "図形の面積や道のりの関係を文字式で表し、$S = a\\ell$ が成り立つことを証明できる。"
-                }
-              },
-              {
-                "type": "review",
-                "data": {
-                  "title": "円の公式",
-                  "content": "円の面積: $S = \\pi r^2$, $\\quad$ 円周の長さ: $\\ell = 2\\pi r$"
-                }
-              },
-              {
-                "type": "board-task",
-                "data": {
-                  "qNum": "【本時の課題】",
-                  "text": "半径 $r$ の円形の池のまわりに幅 $a$ の道がある。道の面積を $S$、道の真ん中を通る円周を $\\ell$ とするとき、$S = a\\ell$ となることを証明しよう。",
-                  "guide": "① $S = \\text{(外側の円)} - \\text{(内側の円)}$ を計算。 ② $\\ell$ を求めて $a\\ell$ を計算し比べる！",
-                  "thinkingSpaceHeight": 90,
-                  "answer": "$S = \\pi(r+a)^2 - \\pi r^2 = 2\\pi ar + \\pi a^2 = a(2\\pi r + \\pi a)$。真ん中の円の半径は $r + \\frac{a}{2}$ だから $\\ell = 2\\pi(r + \\frac{a}{2}) = 2\\pi r + \\pi a$。よって $S = a\\ell$"
-                }
-              },
-              {
-                "type": "point-box",
-                "data": {
-                  "badge": "板書まとめ",
-                  "title": "図形の性質の証明",
-                  "content": "左辺 $S$ と右辺 $a\\ell$ をそれぞれ文字式で表し、<strong>計算結果が一致すること</strong>を示すことで証明完了！"
-                }
-              }
-            ],
-            "rightBlocks": [
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "問 1",
-                  "text": "1辺が $p$ の正方形の花だんのまわりに幅 $a$ の道がある。道の面積 $S$ は $S = a\\ell$ となることを確かめなさい。",
-                  "answer": "$S = (p+2a)^2 - p^2 = 4ap + 4a^2$。道の真ん中の周長 $\\ell = 4(p+a) = 4p+4a$。よって $a\\ell = a(4p+4a) = S$",
-                  "spaceHeight": 85
-                }
-              },
-              {
-                "type": "question",
-                "data": {
-                  "qNum": "章のまとめ",
-                  "text": "第1章で学んだ展開・因数分解の公式をノートに総整理しよう。",
-                  "answer": "4大公式と因数分解の手順を確実にマスター！",
-                  "spaceHeight": 50
-                }
-              },
-              {
-                "type": "reflection",
-                "data": {
-                  "title": "本時の自己評価 & 振り返り"
-                }
-              }
-            ]
-          }
-        ]
+                        {
+                                      "hour": 1,
+                                      "title": "多項式と単項式の乗法・除法",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第1時】多項式と単項式の乗法・除法について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "多項式と単項式の乗法・除法の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "多項式と単項式の乗法・除法",
+                                                                                "content": "多項式と単項式の乗法・除法のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 2,
+                                      "title": "(a+b)(c+d)の展開",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第2時】(a+b)(c+d)の展開について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "(a+b)(c+d)の展開の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "(a+b)(c+d)の展開",
+                                                                                "content": "(a+b)(c+d)の展開のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 3,
+                                      "title": "(a+b)(c+d+e)の展開",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第3時】(a+b)(c+d+e)の展開について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "(a+b)(c+d+e)の展開の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "(a+b)(c+d+e)の展開",
+                                                                                "content": "(a+b)(c+d+e)の展開のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 4,
+                                      "title": "平方の公式と和と差の積の公式",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第4時】平方の公式と和と差の積の公式について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "平方の公式と和と差の積の公式の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "平方の公式と和と差の積の公式",
+                                                                                "content": "平方の公式と和と差の積の公式のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 5,
+                                      "title": "(x+a)(x+b)の展開",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第5時】(x+a)(x+b)の展開について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "(x+a)(x+b)の展開の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "(x+a)(x+b)の展開",
+                                                                                "content": "(x+a)(x+b)の展開のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 6,
+                                      "title": "いろいろな式の計算",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第6時】いろいろな式の計算について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "いろいろな式の計算の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "いろいろな式の計算",
+                                                                                "content": "いろいろな式の計算のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 7,
+                                      "title": "展開の公式の活用",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第7時】展開の公式の活用について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "展開の公式の活用の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "展開の公式の活用",
+                                                                                "content": "展開の公式の活用のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 8,
+                                      "title": "共通因数をくくり出すこと",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第8時】共通因数をくくり出すことについて理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "共通因数をくくり出すことの計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "共通因数をくくり出すこと",
+                                                                                "content": "共通因数をくくり出すことのポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 9,
+                                      "title": "平方の公式の利用",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第9時】平方の公式の利用について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "平方の公式の利用の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "平方の公式の利用",
+                                                                                "content": "平方の公式の利用のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 10,
+                                      "title": "和と差の積の公式の利用",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第10時】和と差の積の公式の利用について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "和と差の積の公式の利用の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "和と差の積の公式の利用",
+                                                                                "content": "和と差の積の公式の利用のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 11,
+                                      "title": "x²+(a+b)x+ab の因数分解①",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第11時】x²+(a+b)x+ab の因数分解①について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "x²+(a+b)x+ab の因数分解①の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "x²+(a+b)x+ab の因数分解①",
+                                                                                "content": "x²+(a+b)x+ab の因数分解①のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 12,
+                                      "title": "x²+(a+b)x+ab の因数分解②",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第12時】x²+(a+b)x+ab の因数分解②について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "x²+(a+b)x+ab の因数分解②の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "x²+(a+b)x+ab の因数分解②",
+                                                                                "content": "x²+(a+b)x+ab の因数分解②のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 13,
+                                      "title": "いろいろな因数分解",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第13時】いろいろな因数分解について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "いろいろな因数分解の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "いろいろな因数分解",
+                                                                                "content": "いろいろな因数分解のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 14,
+                                      "title": "数の性質①",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第14時】数の性質①について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "数の性質①の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "数の性質①",
+                                                                                "content": "数の性質①のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 15,
+                                      "title": "数の性質②",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第15時】数の性質②について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "数の性質②の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "数の性質②",
+                                                                                "content": "数の性質②のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 16,
+                                      "title": "図形の性質①",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第16時】図形の性質①について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "図形の性質①の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "図形の性質①",
+                                                                                "content": "図形の性質①のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        },
+                        {
+                                      "hour": 17,
+                                      "title": "図形の性質②",
+                                      "leftBlocks": [
+                                                    {
+                                                                  "type": "objective",
+                                                                  "data": {
+                                                                                "text": "【第17時】図形の性質②について理解し、問題を解くことができる。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "board-task",
+                                                                  "data": {
+                                                                                "qNum": "【本時の課題】",
+                                                                                "text": "図形の性質②の計算方法や考え方を身につけよう。",
+                                                                                "guide": "教科書の例題を参考にしながら考えてみよう。",
+                                                                                "thinkingSpaceHeight": 85,
+                                                                                "answer": "計算の過程をしっかり残すこと。"
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "point-box",
+                                                                  "data": {
+                                                                                "badge": "板書まとめ",
+                                                                                "title": "図形の性質②",
+                                                                                "content": "図形の性質②のポイントを整理しよう。<br>・重要な公式や手順を確認する。<br>・ミスしやすい点に注意する。"
+                                                                  }
+                                                    }
+                                      ],
+                                      "rightBlocks": [
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 1",
+                                                                                "text": "次の問題を解きなさい。",
+                                                                                "answer": "各自で解答を確認する。",
+                                                                                "spaceHeight": 65
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "question",
+                                                                  "data": {
+                                                                                "qNum": "問 2",
+                                                                                "text": "少し応用的な問題に挑戦しよう。",
+                                                                                "answer": "途中の式も書くこと。",
+                                                                                "spaceHeight": 60
+                                                                  }
+                                                    },
+                                                    {
+                                                                  "type": "reflection",
+                                                                  "data": {
+                                                                                "title": "本時の自己評価 & 振り返り"
+                                                                  }
+                                                    }
+                                      ]
+                        }
+          ]
       },
       {
         "id": "u_3_2",
@@ -3584,7 +3843,7 @@ boardLessonDatabase = {
 
 let currentB4Grade = '3';
 let currentB4UnitId = 'u_3_1';
-let currentB4Hour = 5; // デフォルト: 3年多項式 5時間目 (工夫して展開)
+let currentB4Hour = 1; // デフォルト: 3年多項式 5時間目 (工夫して展開)
 
 // マイ授業プリント保存データ（localStorage管理）
 const SAVED_WORKSHEETS_KEY = 'math_portal_saved_worksheets';
