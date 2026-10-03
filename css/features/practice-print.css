@@ -1,0 +1,1005 @@
+/* ========================================================
+   TAB 3: 練習プリント・小テスト
+   ======================================================== */
+.test-gen-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+}
+
+.test-config-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.test-config-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-main);
+}
+
+.test-config-card .subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.test-config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.test-preview-dual {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.test-preview-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+
+.test-box-header {
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.test-box-header h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.test-paper-mock {
+  padding: 1.5rem;
+  min-height: 400px;
+  background: #fff;
+  font-size: 0.95rem;
+}
+
+.test-item-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px dotted #ccc;
+}
+
+.test-item-q {
+  font-weight: 600;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.test-item-ans-line {
+  min-width: 140px;
+  border-bottom: 1px solid #000;
+  text-align: right;
+  padding-right: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+
+/* ========================================================
+   練習プリント・小テスト 自動生成 UIスタイル
+   ======================================================== */
+.test-gen-container {
+  padding: 1.5rem 2rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.test-config-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.test-config-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.test-config-card .subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.test-config-grid {
+  display: grid;
+  grid-template-columns: 140px 1.2fr 1.2fr 160px 160px;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+@media (max-width: 1100px) {
+  .test-config-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .test-config-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.test-preview-dual {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .test-preview-dual {
+    grid-template-columns: 1fr;
+  }
+}
+
+.test-preview-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.test-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.test-box-header h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+/* 印刷用紙モック (本物のA4用紙のプロポーション・美しさを忠実に画面表示) */
+.test-paper-mock {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 16px 20px 14px 20px;
+  height: 820px;
+  min-height: 820px;
+  max-height: 820px;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto !important; /* 生徒用も模範解答も中身が長い場合は枠内でスムーズに縦スクロール可能 */
+  overflow-x: hidden;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+#testAnswerPaper {
+  height: 820px;
+  max-height: 820px;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  justify-content: flex-start;
+}
+
+/* スクロールバーの美しいスタイリング */
+.test-paper-mock::-webkit-scrollbar {
+  width: 7px;
+}
+.test-paper-mock::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+.test-paper-mock::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.test-paper-mock::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.test-paper-header {
+  border-bottom: 1.5px solid #1e293b;
+  padding-top: 4px;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+
+.test-paper-header.answer-header {
+  border-bottom-color: #dc2626;
+}
+
+/* 2段階ヘッダー: 
+   1行目: 学年＋大単元名（横幅100%フル活用で長いタイトルも絶対に切れない）
+   2行目: 小単元名（左・絶対に改行されない） ＋ 生徒情報欄（右・スリム化でスペース確保）
+*/
+.test-header-line1 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.test-header-line1.answer-line1 {
+  color: #7f1d1d;
+}
+
+.test-header-line2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.test-title-line2 {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.test-title-line2.title-compact {
+  font-size: 0.94rem;
+}
+
+.test-title-line2.title-mini {
+  font-size: 0.84rem;
+}
+
+.test-title-line2.answer-line2 {
+  color: #991b1b;
+}
+
+/* 生徒情報欄（2行目の右側） — 氏名記入欄を適正化(120px)し、左側の小単元タイトルが絶対に改行されない広々スペースを創出 */
+.test-student-info {
+  display: flex;
+  align-items: flex-end;
+  flex-shrink: 0;
+  padding-bottom: 2px;
+}
+
+.student-entry-line {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.student-grade-label {
+  font-weight: 700;
+  color: #334155;
+  font-size: 0.88rem;
+}
+
+.student-entry-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.student-entry-item.name-item {
+  margin-left: 4px;
+  gap: 3px;
+}
+
+.student-line {
+  display: inline-block;
+  border-bottom: 1.5px solid #334155;
+  height: 1.4em;
+  vertical-align: bottom;
+}
+
+.student-line.num-line {
+  width: 32px; /* 組・番号の記入スペース（半角分広げて手書きしやすい幅を確保） */
+}
+
+.student-line.name-line {
+  width: 120px; /* 氏名の広大な記入スペース（手書きで十分書ける幅を確保しつつタイトルの改行を完全阻止） */
+}
+
+/* KaTeX 数式スタイル最適化 (教科書品質 & 分数の上下潰れ・文字重なりを完全防止) */
+.katex {
+  font-size: 1.04em !important;
+  text-rendering: auto;
+  line-height: normal !important;
+  white-space: nowrap;
+}
+
+.katex * {
+  line-height: normal !important; /* 親のline-heightによる分数・添字の上下潰れを根絶 */
+}
+
+.katex .vlist-t,
+.katex .vlist-r,
+.katex .vlist {
+  line-height: normal !important;
+}
+
+.problem-body-math .katex {
+  font-size: 1.08em !important;
+}
+
+/* 古いクラスは非表示維持 */
+.test-student-row, .name-fill-line, .test-header-bar, .test-header-left { display: none; }
+.test-student-cell, .name-underline, .teacher-mark { display: none; }
+
+/* 問題グリッド (A4用紙の縦スペースを上手に使うフレックス＋グリッド) */
+.test-problem-grid {
+  display: grid;
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  gap: 0;
+}
+
+/* 4問・5問・6問: 1列レイアウト (横幅を贅沢に使い、問題文の折返しを解消＆下余りを均等配分) */
+.test-problem-grid.cols-1 {
+  grid-template-columns: 1fr;
+}
+
+/* 7問〜10問: 2列レイアウト */
+.test-problem-grid.cols-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.test-problem-item {
+  background: transparent;
+  padding: 8px 10px 10px 10px;
+  position: relative;
+  break-inside: avoid;
+  box-sizing: border-box;
+  border-bottom: 1px solid #e2e8f0; /* 問題間の仕切り線 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* 1列表示のときは左右パディングをゆったり取って可読性を最高に */
+.test-problem-grid.cols-1 .test-problem-item {
+  padding: 10px 14px 12px 14px;
+}
+
+/* 2列時の奇数問（左列）に縦の仕切り線 */
+.test-problem-grid.cols-2 .test-problem-item:nth-child(odd) {
+  border-right: 1px solid #e2e8f0;
+}
+
+.test-problem-item.answer-mode {
+  /* 模範解答モード */
+}
+
+.problem-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.55;
+  color: #1e293b;
+}
+
+.problem-num {
+  display: inline-flex;
+  align-items: baseline;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-right: 2px;
+  padding-top: 1px;
+}
+
+.problem-num.answer-num {
+  color: #dc2626;
+}
+
+.problem-text {
+  flex: 1;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+/* ========================================================
+   生徒用プリント: 問題数ごとのグリッド行均等配分 (A4用紙の下端まで100%均等に使い切る！)
+   ======================================================== */
+#testStudentPaper[data-count="4"] .test-problem-grid {
+  grid-template-rows: repeat(4, 1fr);
+}
+
+#testStudentPaper[data-count="5"] .test-problem-grid {
+  grid-template-rows: repeat(5, 1fr);
+}
+
+#testStudentPaper[data-count="6"] .test-problem-grid {
+  grid-template-rows: repeat(6, 1fr);
+}
+
+#testStudentPaper[data-count="7"] .test-problem-grid,
+#testStudentPaper[data-count="8"] .test-problem-grid {
+  grid-template-rows: repeat(4, 1fr);
+}
+
+#testStudentPaper[data-count="9"] .test-problem-grid,
+#testStudentPaper[data-count="10"] .test-problem-grid {
+  grid-template-rows: repeat(5, 1fr);
+}
+
+/* ========================================================
+   先生用模範解答: 途中式ステップが絶対に重ならない自動伸縮レイアウト (1列/2列ポータルと印刷で完全同期)
+   ======================================================== */
+#testAnswerPaper .test-problem-grid {
+  grid-template-rows: auto !important;
+  height: auto !important;
+  flex: none !important;
+  gap: 0 !important;
+}
+
+#testAnswerPaper .test-problem-grid.cols-1 {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#testAnswerPaper .test-problem-grid.cols-2 {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  column-gap: 12px !important;
+}
+
+#testAnswerPaper .test-problem-item {
+  height: auto !important;
+  min-height: auto !important;
+  justify-content: flex-start !important;
+  padding: 8px 10px 10px 10px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+#testAnswerPaper .test-problem-grid.cols-2 .test-problem-item:nth-child(odd) {
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+.problem-workspace {
+  margin-top: 2px;
+  flex: 1 1 auto;
+  min-height: 10px;
+}
+
+/* MathML 根号 & 分数 スタイル (ブラウザネイティブのベクターレンダリング) */
+math.math-expr {
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+  font-size: 1.05em;
+  line-height: 1;
+  vertical-align: -0.06em;
+}
+
+math.math-expr msqrt {
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+}
+
+math.math-expr mfrac {
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+}
+
+.test-paper-mock[data-count="10"] .test-problem-item {
+  padding: 5px 8px;
+}
+
+/* ========================================================
+   3. 先生用模範解答プリント印刷モード (A4直接印刷)
+     body[data-print-target="test-answer"]
+     ============================== */
+  body[data-print-target="test-answer"] .main-content,
+  body[data-print-target="test-answer"] #tab-practice-test,
+  body[data-print-target="test-answer"] .test-gen-container,
+  body[data-print-target="test-answer"] .test-preview-dual,
+  body[data-print-target="test-answer"] .test-preview-box:last-child {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* 解答用以外の1枚目previewBoxを隠す */
+  body[data-print-target="test-answer"] .test-preview-box:first-child {
+    display: none !important;
+  }
+
+  /* 印刷プレビューおよび印刷結果でのスクロールバー完全消去 */
+  *::-webkit-scrollbar,
+  #testAnswerPaper::-webkit-scrollbar,
+  .test-paper-mock::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  body[data-print-target="test-answer"] #testAnswerPaper {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* 模範解答ヘッダー（スリム化で下部余白を最大化） */
+  body[data-print-target="test-answer"] .test-paper-header {
+    padding-top: 0.5mm !important;
+    padding-bottom: 1.5mm !important;
+    margin-bottom: 1.5mm !important;
+    border-bottom: 1pt solid #dc2626 !important;
+  }
+
+  body[data-print-target="test-answer"] .test-header-line1 {
+    font-size: 8pt !important;
+    margin-bottom: 1px !important;
+    line-height: 1.15 !important;
+  }
+
+  body[data-print-target="test-answer"] .test-title-line2 {
+    font-size: 9.5pt !important;
+    line-height: 1.15 !important;
+  }
+
+  /* 模範解答グリッド（1列／2列両対応・ポータルと完全同期） */
+  body[data-print-target="test-answer"] #testAnswerPaper .test-problem-grid {
+    flex: none !important;
+    height: auto !important;
+    margin-top: 0 !important;
+    gap: 0 !important;
+  }
+
+  body[data-print-target="test-answer"] #testAnswerPaper .test-problem-grid.cols-1 {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  body[data-print-target="test-answer"] #testAnswerPaper .test-problem-grid.cols-2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 5mm !important;
+  }
+
+  /* 各問題アイテム：上下パディングを極小化し、全6問がA4用紙1枚に余裕で収まるよう調整 */
+  body[data-print-target="test-answer"] #testAnswerPaper .test-problem-item {
+    height: auto !important;
+    min-height: auto !important;
+    border-bottom: 0.5pt solid #cbd5e1 !important;
+    padding: 0.6mm 2mm 0.8mm 2mm !important;
+    box-sizing: border-box !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  body[data-print-target="test-answer"] .problem-header {
+    font-size: 7.8pt !important;
+    line-height: 1.25 !important;
+    gap: 3px !important;
+  }
+
+  body[data-print-target="test-answer"] .problem-num {
+    font-size: 8pt !important;
+  }
+
+  body[data-print-target="test-answer"] .problem-text {
+    line-height: 1.25 !important;
+  }
+
+  /* 連立方程式の行間・サイズ最適化 */
+  body[data-print-target="test-answer"] .simul-eq {
+    margin-top: 1px !important;
+    font-size: 8pt !important;
+    gap: 2px !important;
+  }
+
+  body[data-print-target="test-answer"] .simul-brace {
+    font-size: 1.7em !important;
+    line-height: 0.9 !important;
+  }
+
+  body[data-print-target="test-answer"] .simul-lines {
+    gap: 0px !important;
+  }
+
+  body[data-print-target="test-answer"] .simul-line {
+    line-height: 1.2 !important;
+  }
+
+  /* 正答行（下線なし・スマート配置） */
+  body[data-print-target="test-answer"] .problem-answer-line {
+    margin-top: 0.5px !important;
+    margin-bottom: 0.5px !important;
+    font-size: 7.5pt !important;
+    line-height: 1.15 !important;
+  }
+
+  body[data-print-target="test-answer"] .problem-answer-fill {
+    border-bottom: none !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: 8pt !important;
+  }
+
+  /* 解法ステップボックス（行間・マージン極小化） */
+  body[data-print-target="test-answer"] .answer-steps-box {
+    font-size: 6.5pt !important;
+    padding: 1px 3px !important;
+    margin-top: 0.8px !important;
+    border-radius: 2px !important;
+  }
+
+  body[data-print-target="test-answer"] .steps-heading {
+    font-size: 6.5pt !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0.5px !important;
+  }
+
+  body[data-print-target="test-answer"] .step-item {
+    font-size: 6.5pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .test-problem-item {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* 印刷時フォントサイズ (コンパクト最適化) */
+  .test-paper-title {
+    font-size: 10.5pt !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+  }
+
+  .test-student-cell {
+    font-size: 8pt !important;
+  }
+
+  .problem-header {
+    font-size: 8.5pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .problem-body-math {
+    font-size: 9pt !important;
+    white-space: nowrap !important;
+  }
+
+  .problem-answer-line {
+    font-size: 8pt !important;
+    white-space: nowrap !important;
+  }
+
+  .problem-answer-fill {
+    font-size: 9pt !important;
+  }
+
+  .answer-steps-box {
+    font-size: 7pt !important;
+    padding: 2px 4px !important;
+    margin-top: 2px !important;
+  }
+
+  .steps-heading {
+    font-size: 7pt !important;
+  }
+
+  .step-item {
+    font-size: 7pt !important;
+    line-height: 1.25 !important;
+  }
+
+  .test-paper-mock[data-count="10"] .problem-workspace {
+    min-height: 14px !important;
+  }
+}
+
+/* ========================================================
+   授業プリント工房: 板書連動・新ブロック スタイル
+   ======================================================== */
+.ws-grade-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.ws-reference-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.9rem;
+}
+
+.ws-ref-buttons .btn {
+  font-size: 0.76rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+}
+
+.palette-item.highlight-palette-item {
+  border-left: 3px solid var(--primary);
+  background: #f0f7ff;
+}
+.palette-item.highlight-palette-item:hover {
+  background: #e0f0fe;
+}
+
+/* 板書・主発問 (課題枠) ブロック */
+.board-task-box {
+  border: 2px solid #0284c7;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.4rem;
+  position: relative;
+}
+
+.board-task-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.board-task-badge {
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.board-task-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.board-task-guide {
+  font-size: 0.8rem;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1px dashed #bae6fd;
+  border-radius: 4px;
+  padding: 0.35rem 0.65rem;
+  margin-bottom: 0.5rem;
+}
+
+.board-task-canvas {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #fafafa;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 16px 16px;
+  padding: 0.5rem 0.75rem;
+  position: relative;
+}
+
+.canvas-grid-label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* 要点まとめ・穴埋め公式ブロック */
+.point-summary-box {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 1.5px solid #fcd34d;
+  border-left: 5px solid #f59e0b;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.point-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  color: #92400e;
+}
+
+.point-badge {
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.point-summary-body {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #78350f;
+}
+
+/* 印刷時の最適化 */
+@media print {
+  .board-task-box {
+    border-color: #334155 !important;
+    background: #ffffff !important;
+    page-break-inside: avoid;
+  }
+  .board-task-badge {
+    background: #334155 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+  }
+  .board-task-canvas {
+    background-color: #ffffff !important;
+    background-image: radial-gradient(#cbd5e1 1px, transparent 1px) !important;
+    -webkit-print-color-adjust: exact;
+  }
+  .point-summary-box {
+    background: #ffffff !important;
+    border-color: #334155 !important;
+    page-break-inside: avoid;
+  }
+  .point-badge {
+    background: #334155 !important;
+    color: #ffffff !important;
+  }
+}
+
+/* ========================================================
+   練習プリント: 図・表（関数グラフ・幾何・度数分布・箱ひげ図）表示スタイル
+   ======================================================== */
+.problem-figure-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 6px 0 8px 0;
+  text-align: center;
+  width: 100%;
+  clear: both;
+}
+
+.problem-figure-container svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  background: transparent;
+}
+
+/* 度数分布表・データ表スタイル */
+.math-freq-table {
+  border-collapse: collapse;
+  margin: 6px auto;
+  font-size: 0.82rem;
+  text-align: center;
+  background: #ffffff;
+  border: 1.5px solid #1e293b;
+  min-width: 200px;
+}
+
+.math-freq-table th,
+.math-freq-table td {
+  border: 1px solid #64748b;
+  padding: 3px 10px;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+.math-freq-table th {
+  background: #f1f5f9;
+  font-weight: 700;
+}
+
+.math-freq-table tr:last-child {
+  font-weight: 700;
+  background: #f8fafc;
+}
+
+/* 印刷用調整 */
+@media print {
+  .problem-figure-container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .problem-figure-container svg {
+    max-height: 65px !important;
+  }
+  .math-freq-table {
+    border-color: #000;
+  }
+  .math-freq-table th,
+  .math-freq-table td {
+    border-color: #000;
+  }
+}

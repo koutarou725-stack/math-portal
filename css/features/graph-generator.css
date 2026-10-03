@@ -1,0 +1,114 @@
+/* ========================================================
+   TAB 4: 作図・グラフジェネレーター
+   ======================================================== */
+.tools-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem 1.5rem;
+  overflow-y: auto;
+}
+
+.tools-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 1.5rem;
+}
+
+.tool-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tool-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.tool-title h3 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tool-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.control-row {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.control-col {
+  flex: 1;
+  min-width: 200px;
+}
+
+.input-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+.math-preview {
+  font-weight: 700;
+  font-family: 'Outfit', serif;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  margin-top: 0.3rem;
+}
+
+.svg-canvas-wrapper {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+}
+
+.tool-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+}
+
+.calc-answer {
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.calc-answer strong {
+  font-size: 1.2rem;
+  color: var(--danger);
+  font-family: 'Outfit', sans-serif;
+}

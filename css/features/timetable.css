@@ -1,0 +1,989 @@
+/* ========================================================
+   TAB 1: 時間割 (週間スケジュール)
+   ======================================================== */
+.timetable-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem 1.5rem;
+  overflow-y: auto;
+}
+
+.timetable-wrapper {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.timetable-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.timetable-table th {
+  background: #f8fafc;
+  padding: 0.85rem 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+.timetable-table th.time-col {
+  width: 80px;
+  background: #f1f5f9;
+}
+
+.timetable-table th.col-active {
+  background: #eff6ff;
+  color: var(--primary);
+  border-top: 3px solid var(--primary);
+}
+
+.timetable-table td {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  vertical-align: top;
+  height: 90px;
+}
+
+.timetable-table td.col-active {
+  background: rgba(37, 99, 235, 0.02);
+}
+
+.period-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.period-time {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  display: block;
+}
+
+.timetable-cell-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.timetable-cell-content:hover .tt-cell-edit-trigger {
+  opacity: 1;
+}
+
+.tt-cell-edit-trigger {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tt-cell-edit-trigger:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.timetable-cell-content.free-period {
+  background: #ffffff;
+  border: 1px dashed #e2e8f0;
+  color: transparent;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.timetable-cell-content.free-period:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* 単位付き入力欄 */
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.input-with-unit .form-control {
+  max-width: 110px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: right;
+  font-family: 'Outfit', sans-serif;
+}
+
+.unit-text {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.label-with-action {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+  gap: 0.5rem;
+}
+
+.label-with-action label {
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.sub-tip {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-align: right;
+}
+
+/* 学習済み入力チップ (ボタン) */
+.learned-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  min-height: 28px;
+  align-items: center;
+}
+
+.learned-chip-empty {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.learned-chip {
+  background: #f1f5f9;
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.6rem;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s;
+}
+
+.learned-chip:hover {
+  background: var(--primary-light);
+  border-color: #93c5fd;
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.chip-del-btn {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 1px 3px;
+  border-radius: 50%;
+}
+
+.chip-del-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+}
+
+/* 校時スケジュール個別微調整フォーム */
+.bell-timeline-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.bell-time-input {
+  width: 78px;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  font-family: 'Outfit', sans-serif;
+  text-align: center;
+}
+
+.tt-class-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.tt-subject-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  margin-top: 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+/* 教科別直感カラーテーマ */
+/* 数学 (ブルー) */
+.timetable-cell-content.theme-math {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+.timetable-cell-content.theme-math .tt-subject-badge {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+.timetable-cell-content.theme-math .tt-class-name {
+  color: #1e3a8a;
+}
+
+/* 道徳 (エメラルドグリーン) */
+.timetable-cell-content.theme-morality {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+.timetable-cell-content.theme-morality .tt-subject-badge {
+  background: #d1fae5;
+  color: #047857;
+}
+.timetable-cell-content.theme-morality .tt-class-name {
+  color: #064e3b;
+}
+
+/* 学活 (アンバー/オレンジ) */
+.timetable-cell-content.theme-homeroom {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+.timetable-cell-content.theme-homeroom .tt-subject-badge {
+  background: #fef3c7;
+  color: #b45309;
+}
+.timetable-cell-content.theme-homeroom .tt-class-name {
+  color: #78350f;
+}
+
+/* 総合 (バイオレット/パープル) */
+.timetable-cell-content.theme-integrated {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+}
+.timetable-cell-content.theme-integrated .tt-subject-badge {
+  background: #f3e8ff;
+  color: #6d28d9;
+}
+.timetable-cell-content.theme-integrated .tt-class-name {
+  color: #581c87;
+}
+
+/* 会議・校務 (スレート/グレー) */
+.timetable-cell-content.theme-meeting {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+.timetable-cell-content.theme-meeting .tt-subject-badge {
+  background: #e2e8f0;
+  color: #334155;
+}
+.timetable-cell-content.theme-meeting .tt-class-name {
+  color: #0f172a;
+}
+
+/* その他 */
+.timetable-cell-content.theme-other {
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+}
+.timetable-cell-content.theme-other .tt-subject-badge {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+.timetable-cell-content.theme-other .tt-class-name {
+  color: #134e4a;
+}
+
+/* 週案・今週の学習予定表示エリア */
+.tt-lesson-plan {
+  margin-top: 0.35rem;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  padding: 0.25rem 0.35rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  line-height: 1.3;
+}
+
+.tt-lesson-plan:hover {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.lesson-plan-text {
+  color: #1e293b;
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lesson-plan-text.placeholder {
+  color: #94a3b8;
+  font-weight: normal;
+  font-size: 0.68rem;
+}
+
+/* 今週のクラス別授業回数・進度サマリーカード */
+.week-lesson-summary-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.summary-title-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #f1f5f9;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.class-count-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.class-count-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.15s;
+}
+
+.class-count-pill:hover {
+  border-color: #93c5fd;
+  background: #f0f7ff;
+}
+
+.class-count-badge {
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.72rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.tt-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+}
+
+.tt-action-btn {
+  background: #ffffff;
+  border: 1px solid #bfdbfe;
+  color: var(--primary);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.18rem 0.4rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tt-action-btn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* 1週間一括特時振替モーダル (ワイド画面) */
+.override-modal-content.wide-modal {
+  width: 1050px;
+  max-width: 95vw;
+}
+
+.week-override-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.85rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.week-override-columns {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.65rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .week-override-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.week-day-col {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.week-day-col.day-col-active {
+  border-color: #93c5fd;
+  background: #f0f7ff;
+}
+
+.week-day-col-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.4rem;
+  text-align: center;
+}
+
+.week-day-col-header strong {
+  font-size: 0.88rem;
+  color: var(--text-main);
+  display: block;
+}
+
+.week-day-col-header .day-memo-input {
+  width: 100%;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  margin-top: 0.3rem;
+  background: #ffffff;
+}
+
+/* 曜日プリセットボタン */
+.day-preset-quick-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.day-preset-btn {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  cursor: pointer;
+  color: #475569;
+  font-weight: 600;
+  transition: all 0.1s;
+  white-space: nowrap;
+}
+
+.day-preset-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.day-preset-btn.btn-active-preset {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+/* 1〜6限の校時振替行 */
+.day-slot-assign-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.day-slot-assign-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+}
+
+.day-slot-label {
+  width: 28px;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.day-slot-picker-btn {
+  flex: 1;
+  font-size: 0.73rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  background: #ffffff;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.day-slot-picker-btn:hover {
+  border-color: var(--primary);
+}
+
+.day-slot-picker-btn.is-shifted {
+  background: #fff7ed;
+  border-color: #fdba74;
+  color: #c2410c;
+}
+
+.day-slot-picker-btn.is-cut {
+  background: #f1f5f9;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* 週案・学習内容入力モーダルのメタバナー */
+.lesson-plan-meta-banner {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.82rem;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* コマ編集モーダル & 一括モーダル */
+.slot-modal-content {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  width: 520px;
+  max-width: 92vw;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.slot-modal-content.wide-modal {
+  width: 680px;
+  max-width: 94vw;
+}
+
+.batch-modal-content {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  width: 900px;
+  max-width: 95vw;
+  max-height: 90vh;
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.slot-modal-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.slot-modal-header h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.slot-modal-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.slot-modal-footer {
+  padding: 0.85rem 1.25rem;
+  background: #f8fafc;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.slot-type-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.type-pill {
+  cursor: pointer;
+}
+
+.type-pill input {
+  display: none;
+}
+
+.type-pill span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.4rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: #f8fafc;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.type-pill input:checked + span {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.chip {
+  background: #f1f5f9;
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.55rem;
+  border-radius: 14px;
+  font-size: 0.74rem;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chip:hover {
+  background: var(--primary-light);
+  border-color: #93c5fd;
+  color: var(--primary);
+}
+
+.batch-table-container {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  margin-top: 0.8rem;
+}
+
+.batch-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.batch-table th, .batch-table td {
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.82rem;
+}
+
+.batch-table th {
+  background: #f8fafc;
+  font-weight: 700;
+}
+
+.batch-cell-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.batch-input-class, .batch-input-subj {
+  font-size: 0.78rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  width: 100%;
+}
+
+.batch-input-class {
+  font-weight: 700;
+}
+
+/* ========================================================
+   3層構造 時間割システム スタイル
+   ======================================================== */
+.timetable-mode-tabs {
+  display: flex;
+  gap: 0.4rem;
+  background: #e2e8f0;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  margin-left: auto;
+}
+
+.tt-mode-btn {
+  background: transparent;
+  border: none;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.tt-mode-btn:hover {
+  color: var(--text-main);
+}
+
+.tt-mode-btn.active {
+  background: #ffffff;
+  color: var(--primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tt-sub-view {
+  display: none;
+}
+
+.tt-sub-view.active {
+  display: block;
+}
+
+.tt-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.week-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.current-week-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  padding: 0 0.5rem;
+  white-space: nowrap;
+}
+
+.info-banner-tip {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.82rem;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.override-badge {
+  display: inline-block;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #b45309;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  white-space: nowrap;
+}
+
+.slot-code-badge {
+  font-size: 0.68rem;
+  color: #64748b;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 1px 4px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+/* 時程設定カード */
+.bell-settings-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.bell-config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.bell-timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.8rem;
+}
+
+.bell-timeline-item {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bell-period-name {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text-main);
+}
+
+.bell-period-time {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary);
+  font-family: 'Outfit', sans-serif;
+}
+
+/* 特時・振替モーダル */
+.override-modal-content {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  width: 560px;
+  max-width: 92vw;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.override-slots-editor {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem;
+  margin-top: 0.8rem;
+}
+
+.override-slots-editor label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.6rem;
+}
+
+.slots-grid-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.slot-assign-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.82rem;
+}
+
+.slot-assign-row strong {
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.slot-assign-select {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.82rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}

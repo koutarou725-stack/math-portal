@@ -1,0 +1,281 @@
+/* ========================================================
+   中学数学科ポータル & ワークシート工房 スタイルシート
+   ======================================================== */
+
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+  --accent: #10b981;
+  --accent-light: #ecfdf5;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  
+  --bg-app: #f8fafc;
+  --bg-panel: #ffffff;
+  --bg-header: #0f172a;
+  
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #f8fafc;
+  
+  --border-color: #e2e8f0;
+  --border-dark: #334155;
+  
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --paper-shadow: 0 8px 30px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08);
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Noto Sans JP', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================================
+   数式フォント & 表記 (Times New Romanイタリック・上線つき平方根・上下2段分数)
+   ======================================================== */
+.math-var {
+  font-family: 'Times New Roman', Times, 'Cambria Math', 'Noto Serif JP', serif;
+  font-style: italic;
+  padding: 0 1.5px;
+}
+
+.math-sup {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 0.72em;
+  vertical-align: 0.45em;
+  line-height: 0;
+  font-style: normal;
+}
+
+.math-unit {
+  font-family: inherit;
+  font-style: normal;
+}
+
+/* 教科書品質の平方根（√の上線が数字全体の上に伸びる） */
+.math-sqrt {
+  display: inline-flex;
+  align-items: baseline;
+  vertical-align: baseline;
+  white-space: nowrap;
+  margin: 0 1.5px;
+}
+
+.math-sqrt-sym {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.18em;
+  line-height: 1;
+  margin-right: 0.5px;
+  transform: scaleY(1.08);
+}
+
+.math-sqrt-content {
+  border-top: 1.6px solid currentColor; /* 根号の上線が中身の上全体にしっかり伸びる！ */
+  padding: 0 2px 0 1px;
+  display: inline-block;
+  line-height: 1.15;
+  margin-top: -1px;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
+}
+
+/* 教科書品質の縦積み分数（上が分子、下が分母、中央に分数線） */
+.math-frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: -0.55em;
+  text-align: center;
+  font-size: 0.88em;
+  line-height: 1;
+  padding: 0 2px;
+  margin: 0 2px;
+}
+
+.math-frac .math-num {
+  border-bottom: 1.4px solid currentColor; /* 分数線 */
+  padding-bottom: 1.5px;
+  display: block;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
+}
+
+.math-frac .math-den {
+  padding-top: 1.5px;
+  display: block;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
+}
+
+/* 数式クラス（inline送り仮名・数字） */
+.problem-body-math {
+  font-size: 0.94rem;
+  font-weight: 500;
+  color: #0f172a;
+  padding: 1px 0;
+  display: inline-block;
+  white-space: nowrap;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
+  letter-spacing: 0.02em;
+}
+
+/* 連立方程式の整形（左大かっこ（｛）＋横に並んだ式2行） */
+.simul-eq {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 3px;
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.simul-brace {
+  font-size: 2.2em;
+  line-height: 1;
+  font-family: 'Times New Roman', 'Cambria Math', serif;
+  font-weight: 400;
+  color: #0f172a;
+  margin-right: 2px;
+  align-self: center;
+}
+
+.simul-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.simul-line {
+  white-space: nowrap;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+}
+
+.problem-workspace {
+  margin-top: 4px;
+  min-height: 36px;
+  position: relative;
+}
+
+.problem-workspace-label {
+  display: none;
+}
+
+.problem-answer-line {
+  margin-top: 4px;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.problem-answer-line .answer-label {
+  position: static !important;
+  color: #1e293b;
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-right: 2px;
+}
+
+.answer-badge-label {
+  white-space: nowrap;
+  flex-shrink: 0;
+  color: #dc2626;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.problem-answer-fill {
+  display: inline-block;
+  width: 140px;
+  min-width: 110px;
+  border-bottom: 1.5px solid #1e293b;
+  height: 1.3em;
+  vertical-align: bottom;
+  text-align: center;
+  font-size: 0.96rem;
+  color: #dc2626;
+  font-family: 'Times New Roman', Times, 'Cambria Math', serif;
+  white-space: nowrap;
+}
+
+.problem-answer-fill.red-fill {
+  border-bottom: none !important; /* 模範解答に手書き用下線は不要！数式への赤線めり込みを完全解消 */
+  width: auto !important;
+  min-width: auto !important;
+  height: auto !important;
+  font-weight: 700;
+  display: inline-flex !important;
+  align-items: baseline !important;
+  color: #dc2626;
+}
+
+/* 先生用 途中式・解法ステップボックス（A4 1枚収容最適化） */
+.answer-steps-box {
+  margin-top: 3px;
+  margin-left: 10px;
+  padding: 2px 6px;
+  border-left: 2px solid #fca5a5;
+  background: rgba(254, 242, 242, 0.4);
+  border-radius: 2px;
+  font-size: 0.74rem;
+  color: #7f1d1d;
+  line-height: 1.35;
+}
+
+.steps-heading {
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: #b45309;
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.step-item {
+  font-family: 'Times New Roman', Times, 'Cambria Math', "BIZ UDPGothic", sans-serif;
+  color: #451a03;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  word-break: break-all;
+}
+
+.test-paper-footer {
+  margin-top: 8px;
+  padding-top: 4px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
