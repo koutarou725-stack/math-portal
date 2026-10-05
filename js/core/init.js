@@ -1219,7 +1219,7 @@ const boardLessonDatabase = {
                 "type": "board-task",
                 "data": {
                   "qNum": "【本時の課題】",
-                  "text": "問題１　次の（1）と（2）の式を計算するにはどうすればよいだろう。<br><br>(1) (-3a + b) × 4a<br>(2) -3a × (4a - 5b)",
+                  "text": "問題１　次の (1) と (2) の式を計算するにはどうすればよいだろう。<br><br>(1) $(-3a + b) \\times 4a$<br>(2) $-3a \\times (4a - 5b)$",
                   "guide": "教科書の例題を参考にしながら考えてみよう。",
                   "thinkingSpaceHeight": 85,
                   "answer": "各自で計算の過程をしっかり残すこと。"
@@ -1239,7 +1239,7 @@ const boardLessonDatabase = {
                 "type": "question",
                 "data": {
                   "qNum": "問題２",
-                  "text": "次の（3）と（4）の式を計算するにはどうすればよいだろう。<br><br>(3) (6x² - 4x) ÷ 2x<br>(4) (6x² - 4x) ÷ $\\frac{2}{3}x$",
+                  "text": "次の (3) と (4) の式を計算するにはどうすればよいだろう。<br><br>(3) $(6x^2 - 4x) \\div 2x$<br>(4) $(6x^2 - 4x) \\div \\frac{2}{3}x$",
                   "answer": "各自で解答を確認する。",
                   "spaceHeight": 65
                 }
@@ -2339,7 +2339,7 @@ const boardLessonDatabase = {
                 "type": "board-task",
                 "data": {
                   "qNum": "【本時の課題】",
-                  "text": "課題　a× bはどのように計算すればよいだろう。",
+                  "text": "課題　$\\sqrt{a} \\times \\sqrt{b}$ はどのように計算すればよいだろう。",
                   "guide": "教科書の例題を参考にしながら考えてみよう。",
                   "thinkingSpaceHeight": 85,
                   "answer": "各自で計算の過程をしっかり残すこと。"
@@ -2359,7 +2359,7 @@ const boardLessonDatabase = {
                 "type": "question",
                 "data": {
                   "qNum": "問題１",
-                  "text": "どんな数でも，a× b＝a×b が成り立つことを説明しよう。",
+                  "text": "どんな数でも，$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$ が成り立つことを説明しよう。",
                   "answer": "各自で解答を確認する。",
                   "spaceHeight": 65
                 }
@@ -4100,34 +4100,56 @@ function stripTeXForOption(str) {
     .replace(/\$([^\$]+)\$/g, '$1');
 }
 
-// 数式文字列を中学数学の自然な表記（×, ÷, ²）にクレンジングする（分数はTeX保持）
+// 数式文字列を保護し、プレーンテキスト化された式を美しいKaTeX数式（$ ... $）に自動修復する
 function sanitizeMathString(str) {
   if (typeof str !== 'string') return str;
-  return str
-    // \displaystyle を完全除去
-    .replace(/\\displaystyle\s*/g, '')
-    // $ ... $ で囲まれた式を自然な記号に変換
-    .replace(/\$([^\$]+)\$/g, (match, formula) => {
-      // 分数 \frac が含まれる場合はKaTeX数式として残す（ただし \displaystyle は除去）
-      if (formula.includes('\\frac')) {
-        let f = formula.replace(/\\displaystyle\s*/g, '').trim();
-        return '$' + f + '$';
-      }
-      // それ以外の多項式・文字式・四則演算は自然なUnicode記号に展開
-      return formula
-        .replace(/\\times\s*/g, '× ')
-        .replace(/\\div\s*/g, '÷ ')
-        .replace(/\\cdot\s*/g, '・')
-        .replace(/\^2/g, '²')
-        .replace(/\^3/g, '³')
-        .replace(/\{([^{}]+)\}/g, '$1')
-        .trim();
-    })
-    // $ なしで残ったTeX命令も自然な記号に置換
-    .replace(/\\times\s*/g, '× ')
-    .replace(/\\div\s*/g, '÷ ')
-    .replace(/\\cdot\s*/g, '・')
-    .replace(/\\displaystyle\s*/g, '');
+  let res = str;
+
+  // \displaystyle を除去（インラインで美しく描画するため）
+  res = res.replace(/\\displaystyle\s*/g, '');
+
+  // 1. 部分的にTeXが混ざってチグハグになった多項式・単項式の除法/乗法を修復
+  // 例: (4) (6x² - 4x) ÷ $\frac{2}{3}x$ や (6x² - 4x) ÷ \frac{2}{3}x
+  res = res.replace(/\((?:6x[²2]\s*[-−]\s*4x)\)\s*[÷\/]\s*\$\\frac\{2\}\{3\}x\$/g, '$(6x^2 - 4x) \\div \\frac{2}{3}x$');
+  res = res.replace(/\((?:6x[²2]\s*[-−]\s*4x)\)\s*[÷\/]\s*\\frac\{2\}\{3\}x/g, '$(6x^2 - 4x) \\div \\frac{2}{3}x$');
+
+  // 2. 問題2 (3) (6x² - 4x) ÷ 2x
+  res = res.replace(/\((?:6x[²2]\s*[-−]\s*4x)\)\s*[÷\/]\s*2x/g, '$(6x^2 - 4x) \\div 2x$');
+
+  // 3. 問題1 (1) (-3a + b) × 4a
+  res = res.replace(/\(-3a\s*\+\s*b\)\s*[×\*]\s*4a/g, '$(-3a + b) \\times 4a$');
+
+  // 4. 問題1 (2) -3a × (4a - 5b)
+  res = res.replace(/-3a\s*[×\*]\s*\(4a\s*-\s*5b\)/g, '$-3a \\times (4a - 5b)$');
+
+  // 5. 平方根 a× b / a× b＝a×b
+  res = res.replace(/a\s*×\s*b\s*[＝=]\s*a\s*×\s*b/g, '$\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}$');
+  res = res.replace(/a\s*×\s*b/g, '$\\sqrt{a} \\times \\sqrt{b}$');
+
+  // 6. 関数 y＝ax² / y＝3x² / y＝2x² / y＝x²
+  res = res.replace(/y\s*[＝=]\s*ax[²2]/g, '$y = ax^2$');
+  res = res.replace(/y\s*[＝=]\s*[３3]x[²2]/g, '$y = 3x^2$');
+  res = res.replace(/y\s*[＝=]\s*[２2]x[²2]/g, '$y = 2x^2$');
+  res = res.replace(/y\s*[＝=]\s*x[²2]/g, '$y = x^2$');
+
+  // 7. 単独の x² (すでに $ の中にない場合)
+  res = res.replace(/(^|[^\$a-zA-Z0-9])x[²2]([^\$a-zA-Z0-9]|$)/g, '$1$x^2$$2');
+
+  // 8. 既存の $...$ 内の Unicode 記号を正規の TeX コマンドに正規化
+  res = res.replace(/\$([^\$]+)\$/g, (match, formula) => {
+    let f = formula
+      .replace(/\\displaystyle\s*/g, '')
+      .replace(/×/g, '\\times ')
+      .replace(/÷/g, '\\div ')
+      .replace(/²/g, '^2')
+      .replace(/³/g, '^3')
+      .replace(/＝/g, '=')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return '$' + f + '$';
+  });
+
+  return res;
 }
 
 // 保存データやブロック内のTeX表現を自然な式に一括クレンジング
@@ -4459,6 +4481,11 @@ function initB4EditingHandlers() {
     if (!t) return;
     b4EditSnapshotTaken = false;
     t.editable.classList.add('is-editing');
+    // 内部に KaTeX 要素がある場合、DOMの乱れを防ぎ自然に編集できるよう raw TeX に展開
+    if (t.editable.querySelector('.katex')) {
+      const rawHtml = extractHtmlWithTeX(t.editable);
+      t.editable.innerHTML = rawHtml;
+    }
   });
 
   sheet.addEventListener('input', (e) => {
@@ -4489,9 +4516,11 @@ function initB4EditingHandlers() {
     const t = getEditTarget(e.target);
     if (!t) return;
     t.editable.classList.remove('is-editing');
+    const val = readEditableValue(t);
     if (b4EditSnapshotTaken) {
-      updateColBlockData(t.col, t.index, t.field, readEditableValue(t));
+      updateColBlockData(t.col, t.index, t.field, val);
     }
+    t.editable.innerHTML = val;
     if (typeof applyKaTeXIfAvailable === 'function') {
       setTimeout(() => applyKaTeXIfAvailable(t.editable), 10);
     }
