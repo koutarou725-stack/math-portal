@@ -864,14 +864,8 @@ function renderMultiWeekOverride(numberOfWeeks = 6) {
   ];
 
   const holidayPresets = [
-    { label: '授業あり (通常)', val: '' },
-    { label: '🎌 祝日・休日', val: '祝日・休日' },
-    { label: '🍂 秋休み', val: '秋休み' },
-    { label: '☕ 振替休業日', val: '振替休業日' },
-    { label: '🏫 開校・創立記念日', val: '開校・創立記念日' },
-    { label: '🌳 都民/市民の日', val: '都民/市民の日' },
-    { label: '🔒 学校閉庁日', val: '学校閉庁日' },
-    { label: '📝 自宅学習日', val: '自宅学習日' }
+    { label: '授業あり', val: '' },
+    { label: 'お休み', val: 'お休み' }
   ];
 
   let allSectionsHtml = '';
@@ -887,13 +881,13 @@ function renderMultiWeekOverride(numberOfWeeks = 6) {
       const existing = state.dateOverrides[w.dateStr];
       const isToday = w.isToday;
 
-      // 既存のメモが休日リストに含まれているか、またはコマがすべて none か
+      // 既存のメモがお休みか、またはコマがすべて none か
       const existingMemo = existing?.memo || '';
       const isAllCut = existing?.slots && Object.keys(existing.slots).length >= 5 && Object.values(existing.slots).every(v => v === 'none');
-      const matchedHoliday = holidayPresets.find(h => h.val && existingMemo.includes(h.val))?.val || (isAllCut ? '祝日・休日' : '');
-      const isHoliday = !!matchedHoliday;
+      const isHoliday = (existingMemo === 'お休み' || existingMemo.includes('休') || existingMemo.includes('祝') || isAllCut);
+      const matchedHoliday = isHoliday ? 'お休み' : '';
 
-      // お休みセレクトボックス
+      // お休みセレクトボックス（授業あり / お休みのシンプル2択）
       let holidayOpts = holidayPresets.map(h => 
         `<option value="${h.val}" ${h.val === matchedHoliday ? 'selected' : ''}>${h.label}</option>`
       ).join('');
@@ -1055,11 +1049,11 @@ function saveWeekOverrides() {
     const holidayVal = holidaySelect ? holidaySelect.value : '';
     const existingMemo = state.dateOverrides[dateStr]?.memo || '';
     
-    // メモ: 休日が選ばれていればその休日名、それ以外は既存メモ
+    // メモ: 休日が選ばれていれば「お休み」、解除された場合はお休み系メモをクリア
     let finalMemo = existingMemo;
     if (holidayVal) {
-      finalMemo = holidayVal;
-    } else if (existingMemo === '祝日・休日' || existingMemo === '秋休み' || existingMemo === '振替休業日' || existingMemo === '開校・創立記念日' || existingMemo === '都民/市民の日' || existingMemo === '学校閉庁日' || existingMemo === '自宅学習日') {
+      finalMemo = 'お休み';
+    } else if (existingMemo === 'お休み' || existingMemo.includes('休') || existingMemo.includes('祝')) {
       finalMemo = '';
     }
 
@@ -1355,10 +1349,15 @@ function openLessonPlanModal(dateStr, period, className, subjectName) {
 }
 
 function initTwoStepLessonPrintSelect(className, subjectName, existingPrintRef) {
-  let grade = extractGradeFromClassName(className) || '3';
-  if (!boardLessonDatabase[grade]) grade = '3';
+  let grade = existingPrintRef?.grade || extractGradeFromClassName(className) || '2';
+  if (!boardLessonDatabase[grade]) grade = '2';
 
   state.editingLessonPlan.currentGrade = grade;
+
+  const gradeSelect = document.getElementById('lessonPlanGradeSelect');
+  if (gradeSelect) {
+    gradeSelect.value = grade;
+  }
 
   const unitSelect = document.getElementById('lessonPlanUnitSelect');
   if (!unitSelect) return;
@@ -1377,6 +1376,30 @@ function initTwoStepLessonPrintSelect(className, subjectName, existingPrintRef) 
 
   // 時数セレクトの生成とプレビュー更新
   updateLessonPlanHourSelect(grade, targetUnitId, targetHour);
+}
+
+function onLessonPlanGradeSelectChange() {
+  const gradeSelect = document.getElementById('lessonPlanGradeSelect');
+  if (!gradeSelect) return;
+  const grade = gradeSelect.value;
+  state.editingLessonPlan.currentGrade = grade;
+
+  const unitSelect = document.getElementById('lessonPlanUnitSelect');
+  if (!unitSelect) return;
+
+  const gData = boardLessonDatabase[grade];
+  if (!gData || !gData.units || gData.units.length === 0) {
+    unitSelect.innerHTML = '<option value="">（単元がありません）</option>';
+    updateLessonPlanHourSelect(grade, '', null);
+    return;
+  }
+
+  unitSelect.innerHTML = gData.units.map(u => {
+    return `<option value="${u.id}">${escapeHtml(u.unitName)}</option>`;
+  }).join('');
+
+  const targetUnitId = gData.units[0].id;
+  updateLessonPlanHourSelect(grade, targetUnitId, null);
 }
 
 function updateLessonPlanHourSelect(grade, unitId, selectedHour = null) {
@@ -1433,14 +1456,14 @@ function updateLessonPreviewBox(unit, lesson) {
 }
 
 function onLessonPlanUnitSelectChange() {
-  const grade = state.editingLessonPlan?.currentGrade || '3';
+  const grade = document.getElementById('lessonPlanGradeSelect')?.value || state.editingLessonPlan?.currentGrade || '2';
   const unitSelect = document.getElementById('lessonPlanUnitSelect');
   if (!unitSelect) return;
   updateLessonPlanHourSelect(grade, unitSelect.value, null);
 }
 
 function onLessonPlanHourSelectChange() {
-  const grade = state.editingLessonPlan?.currentGrade || '3';
+  const grade = document.getElementById('lessonPlanGradeSelect')?.value || state.editingLessonPlan?.currentGrade || '2';
   const unitSelect = document.getElementById('lessonPlanUnitSelect');
   const hourSelect = document.getElementById('lessonPlanHourSelect');
   if (!unitSelect || !hourSelect) return;

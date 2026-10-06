@@ -79,6 +79,544 @@ const boardLessonDatabase = {
     "gradeLabel": "第1学年",
     "units": [
       {
+            "id": "u_1_1",
+            "unitName": "第1章 正の数・負の数",
+            "totalHours": 8,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "正の数・負の数の意味",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "正の数・負の数を用いて，反対の性質をもつ数量を表すことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "0より小さい数",
+                                          "content": "0より大きい数を<strong>正の数</strong>（+をつける），0より小さい数を<strong>負の数</strong>（-をつける）という。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次の温度を符号をつけて表しなさい。<br>(1) 0℃より5℃高い温度<br>(2) 0℃より3℃低い温度",
+                                          "answer": "(1) $+5$℃<br>(2) $-3$℃",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "数直線と絶対値・数の大小",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "絶対値の意味を理解し，数直線を使って数の大小を比べることができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "絶対値",
+                                          "content": "数直線上で，ある数に対応する点と原点との距離をその数の<strong>絶対値</strong>という。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次の数の絶対値をいいなさい。<br>(1) $+7$<br>(2) $-5$<br>(3) $0$",
+                                          "answer": "(1) 7<br>(2) 5<br>(3) 0",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "正負の数の加法（たし算）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "同符号・異符号の2つの数の加法の計算規則を理解し，計算できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "加法の計算規則",
+                                          "content": "・同符号: 共通の符号をつけて絶対値の和<br>・異符号: 絶対値の大きい方の符号をつけて絶対値の差"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $(+3) + (+5)$<br>(2) $(-4) + (-6)$<br>(3) $(+7) + (-2)$",
+                                          "answer": "(1) $+8$<br>(2) $-10$<br>(3) $+5$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "正負の数の減法（ひき算）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "減法を加法になおして計算することができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "減法の規則",
+                                          "content": "正の数・負の数をひくことは，その数の符号を変えて加えることと同じ。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $(+6) - (+2)$<br>(2) $(+3) - (-5)$<br>(3) $(-4) - (-7)$",
+                                          "answer": "(1) $+4$<br>(2) $+8$<br>(3) $+3$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "加減の混じった計算と項",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "かっこを外して加法の項だけの式に直し，能率よく計算できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "正の項・負の項",
+                                          "content": "式を加法だけの形にしたときの各数を<strong>項</strong>という。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $5 - 8 + 2$<br>(2) $-7 + 4 - 3 + 9$",
+                                          "answer": "(1) $-1$<br>(2) $3$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "正負の数の乗法と累乗",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "乗法の符号の規則および累乗の計算を理解し，計算できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "乗法の符号",
+                                          "content": "同符号の積は $+$，異符号の積は $-$。負の数が奇数個なら積は $-$，偶数個なら積は $+$。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $(-4) \\times (+6)$<br>(2) $(-3) \\times (-5)$<br>(3) $(-2)^3$",
+                                          "answer": "(1) $-24$<br>(2) $+15$<br>(3) $-8$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 7,
+                        "title": "正負の数の除法と四則混合",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "逆数を利用した除法および四則の混じった式の計算順序を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "計算の順序",
+                                          "content": "① 累乗 ➔ ② かっこの中 ➔ ③ 乗除 ➔ ④ 加減 の順に計算する。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $(-18) \\div 3$<br>(2) $8 - 3 \\times (-2)$<br>(3) $4 \\times (-3)^2$",
+                                          "answer": "(1) $-6$<br>(2) $14$<br>(3) $36$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 8,
+                        "title": "正負の数の利用（平均・基準値）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "正負の数を利用して，基準値からの過不足をもとに平均などを求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "基準との差の利用",
+                                          "content": "平均値 ＝ 基準値 ＋（基準との差の平均）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "基準50点に対する5人のテストの差が $+3, -4, +8, 0, -2$ のとき，5人の平均点を求めなさい。",
+                                          "answer": "差の合計 $= +5$。平均差 $= 5 \\div 5 = +1$ 点。<br>よって平均点 $= 50 + 1 = 51$ 点",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_1_2",
+            "unitName": "第2章 文字と式",
+            "totalHours": 6,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "文字を使った式",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "数量の関係を文字を使った式で表すことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "文字の使用",
+                                          "content": "数量を文字で表すことで，一般的な関係や規則性を簡潔に表すことができる。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "1本 $a$ 円の鉛筆4本の代金を文字式で表しなさい。",
+                                          "answer": "$4 \\times a = 4a$ 円",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "文字式の表し方のルール",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "乗号・除号の省き方，数字と文字の並べ方のルールを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "積と商の表し方",
+                                          "content": "・積: $\\times$ を省き，数は文字の前に書く。1は省く。<br>・商: $\\div$ を使わず分数の形で書く。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "記号 $\\times, \\div$ を使わずに表しなさい。<br>(1) $x \\times 5$<br>(2) $a \\times (-1)$<br>(3) $y \\div 4$",
+                                          "answer": "(1) $5x$<br>(2) $-a$<br>(3) $\\frac{y}{4}$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "代入と式の値",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "文字に数を代入して，式の値を求めることができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "代入と式の値",
+                                          "content": "文字に数をあてはめることを<strong>代入</strong>といい，代入して得られた計算結果を<strong>式の値</strong>という。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$x = -3$ のとき，次の式の値を求めなさい。<br>(1) $2x + 5$<br>(2) $x^2$",
+                                          "answer": "(1) $2 \\times (-3) + 5 = -1$<br>(2) $(-3)^2 = 9$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "一次式の加法・減法（同類項をまとめる）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "同じ文字の項をまとめて一次式の計算ができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "同類項の計算",
+                                          "content": "$ax + bx = (a + b)x$ として文字の部分が同じ項をまとめる。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $4x + 3x$<br>(2) $5x - 2 - 3x + 7$",
+                                          "answer": "(1) $7x$<br>(2) $2x + 5$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "一次式と数の乗法・除法",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "分配法則を用いて一次式と数の乗除を計算できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "分配法則",
+                                          "content": "$a(b + c) = ab + ac$, $\\quad (a + b) \\div c = \\frac{a}{c} + \\frac{b}{c}$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $3(2x - 4)$<br>(2) $(12x - 8) \\div 4$",
+                                          "answer": "(1) $6x - 12$<br>(2) $3x - 2$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "関係を表す式（等式と不等式）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "数量の関係を等式や不等式を用いて表すことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "等式と不等式",
+                                          "content": "・等式: ＝ で等しい関係を表す<br>・不等式: ＜, ＞, ≦, ≧ で大小関係を表す"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "「1本 $x$ 円のペン3本と100円の消しゴムの合計代金は 500円未満である」を式で表しなさい。",
+                                          "answer": "$3x + 100 < 500$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+{
         "id": "u_1_3",
         "unitName": "第3章 一次方程式",
         "totalHours": 8,
@@ -555,6 +1093,860 @@ const boardLessonDatabase = {
             ]
           }
         ]
+      },
+{
+            "id": "u_1_4",
+            "unitName": "第4章 比例と反比例",
+            "totalHours": 6,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "関数と比例の意味 (y=ax)",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "関数の意味と比例の関係 $y=ax$ を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "比例の式",
+                                          "content": "$y = ax$（$a$ は比例定数）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$y$ が $x$ に比例し，$x=3$ のとき $y=12$ です。式を求めなさい。",
+                                          "answer": "$12 = a \\times 3 \\implies a = 4$。よって $y = 4x$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "座標とグラフの書き方",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "座標平面上の点の座標を読み取り，点をプロットできる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "座標",
+                                          "content": "横の軸を $x$ 軸，縦の軸を $y$ 軸，交点を原点 $O$ とする。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "点 $A(3, 4)$ と 点 $B(-2, 5)$ を座標平面上に表しなさい。",
+                                          "answer": "$A$: 右に3・上に4, $B$: 左に2・上に5",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "比例のグラフの特徴",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "比例 $y=ax$ のグラフが原点を通る直線であることを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "比例のグラフ",
+                                          "content": "原点 $(0, 0)$ を通る直線。$a>0$ なら右上がり，$a<0$ なら右下がり。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$y = 2x$ のグラフ上の原点以外の点 $(1, \\Box)$ を答えなさい。",
+                                          "answer": "$(1, 2)$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "反比例の意味 (y=a/x)",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "反比例の関係 $y=\\frac{a}{x}$ および $xy=a$ を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "反比例の式",
+                                          "content": "$y = \\frac{a}{x}$ または $xy = a$（積が一定）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$y$ が $x$ に反比例し，$x=4$ のとき $y=6$ です。式を求めなさい。",
+                                          "answer": "$a = 4 \\times 6 = 24$。よって $y = \\frac{24}{x}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "反比例のグラフ（双曲線）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "反比例のグラフが双曲線になることを理解し，グラフをかく。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "双曲線",
+                                          "content": "反比例のグラフは一対のなめらかな曲線（双曲線）になる。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$y = \\frac{12}{x}$ のグラフが通る整数の座標を3つ挙げなさい。",
+                                          "answer": "$(1, 12), (2, 6), (3, 4)$ など",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "比例・反比例の利用",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "日常生活の具体的な問題を比例や反比例の式を用いて解決する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "関数の利用",
+                                          "content": "変数を $x, y$ とおき，式を立てて未知の値を求める。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "水槽に毎分 4L ずつ水を入れるとき，$x$ 分後の水量を $y$ L として式をつくりなさい。",
+                                          "answer": "$y = 4x$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_1_5",
+            "unitName": "第5章 平面図形",
+            "totalHours": 6,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "直線と角・図形の移動",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "線分・半直線・平行・垂直の記号と，平行移動・回転移動・対称移動を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "図形の移動",
+                                          "content": "移動させても図形の形や大きさは変わらない。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "平行移動・回転移動・対称移動の違いを説明しなさい。",
+                                          "answer": "一定方向に動かす，点を中心に回す，直線を折り目にして裏返す",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "基本の作図①（垂直二等分線）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "線分の垂直二等分線の性質を理解し，コンパスと定規で作図できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "垂直二等分線",
+                                          "content": "2点から等しい距離にある点の集まり。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "線分 $AB$ の垂直二等分線を作図する手順をまとめなさい。",
+                                          "answer": "両端 $A, B$ から等しい半径の円弧をかき，交点を結ぶ。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "基本の作図②（角の二等分線）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "角の二等分線の性質を理解し，作図できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "角の二等分線",
+                                          "content": "角の2辺から等しい距離にある点の集まり。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$\\angle AOB$ の二等分線を作図する手順を書きなさい。",
+                                          "answer": "頂点 $O$ から円弧をかいて辺との交点を求め，交点から等しい半径の弧をかく。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "基本の作図③（垂線の作図）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "直線上の点や直線外の点を通る垂線を作図できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "垂線の作図",
+                                          "content": "指定された点を中心に対称な2点を直線上にとり，垂直二等分線を作図する。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "直線 $l$ 外の点 $P$ を通る垂線を作図する手順を書きなさい。",
+                                          "answer": "$P$ を中心とする円を描き，$l$ との2交点から等距離の交点を作って結ぶ。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "円とおうぎ形の弧の長さ・面積",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "円周率 $\\pi$ を用い，おうぎ形の中心角・弧の長さ・面積を求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "おうぎ形の公式",
+                                          "content": "弧の長さ: $l = 2\\pi r \\times \\frac{a}{360}$<br>面積: $S = \\pi r^2 \\times \\frac{a}{360} = \\frac{1}{2}lr$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "半径 6cm，中心角 60°のおうぎ形の弧の長さと面積を求めなさい。",
+                                          "answer": "弧: $2\\pi \\times 6 \\times \\frac{60}{360} = 2\\pi$ cm<br>面積: $\\pi \\times 6^2 \\times \\frac{60}{360} = 6\\pi$ cm$^2$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "平面図形の作図の活用演習",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "基本作図を組み合わせて，条件に合う点や直線を作図する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "作図の利用",
+                                          "content": "どの基本作図（垂直二等分線・角の二等分線・垂線）を使うか見抜く。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "3点 $A, B, C$ から等しい距離にある点 $P$ を見つけるにはどう作図すればよいか？",
+                                          "answer": "線分 $AB$ と線分 $BC$ の垂直二等分線の交点を求める。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_1_6",
+            "unitName": "第6章 空間図形",
+            "totalHours": 6,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "いろいろな立体と空間の位置関係",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "柱体・錐体・回転体と，空間内の直線と平面の位置関係（ねじれの位置など）を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "ねじれの位置",
+                                          "content": "平行でなく，交わらない2直線の位置関係。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "直方体において，辺 $AB$ とねじれの位置にある辺を挙げなさい。",
+                                          "answer": "平行でなく交わらない辺（例: $CG, DH, FG, EH$ など）",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "立体の展開図と投影図",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "角柱・円柱・錐体の展開図や，立面図と平面図（投影図）を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "投影図",
+                                          "content": "正面から見た図（立面図）と真上から見た図（平面図）で立体を表す。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "円錐の展開図の側面はどのような形になるか？",
+                                          "answer": "おうぎ形",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "角柱・円柱の表面積と体積",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "柱体の表面積（底面積×2＋側面積）および体積（底面積×高さ）を求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "柱体の公式",
+                                          "content": "体積: $V = Sh$（$S$: 底面積, $h$: 高さ）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "底面の半径が 3cm，高さが 5cm の円柱の体積を求めなさい。",
+                                          "answer": "$V = \\pi \\times 3^2 \\times 5 = 45\\pi$ cm$^3$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "角錐・円錐の表面積と体積",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "錐体の表面積および体積（$\\frac{1}{3}Sh$）を求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "錐体の公式",
+                                          "content": "体積: $V = \\frac{1}{3}Sh$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "底面の半径が 3cm，高さが 4cm の円錐の体積を求めなさい。",
+                                          "answer": "$V = \\frac{1}{3} \\times \\pi \\times 3^2 \\times 4 = 12\\pi$ cm$^3$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "球の表面積と体積",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "球の表面積公式 $4\\pi r^2$ と体積公式 $\\frac{4}{3}\\pi r^3$ を理解し，計算できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "球の公式",
+                                          "content": "表面積: $S = 4\\pi r^2$<br>体積: $V = \\frac{4}{3}\\pi r^3$ （身の上に心配あるので参上）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "半径 3cm の球の表面積と体積を求めなさい。",
+                                          "answer": "表面積: $4\\pi \\times 3^2 = 36\\pi$ cm$^2$<br>体積: $\\frac{4}{3}\\pi \\times 3^3 = 36\\pi$ cm$^3$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "空間図形の総合演習",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "複合的な立体の表面積や体積を求めることができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "立体の求積のコツ",
+                                          "content": "基本となる柱体・錐体・球に分割するか，引いて求める。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "円柱の上に半球が乗った立体の体積の求め方を整理しなさい。",
+                                          "answer": "円柱の体積 $+$ 半球の体積（球の体積 $\\div 2$）",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_1_7",
+            "unitName": "第7章 データの活用",
+            "totalHours": 4,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "度数分布表とヒストグラム",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "階級・度数の意味を理解し，度数分布表やヒストグラムを作成・整理できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "度数分布表",
+                                          "content": "データをいくつかの区間（階級）に分け，それぞれの区間に属する個数（度数）をまとめた表。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "「10以上15未満」の階級値（階級の中央の値）を求めなさい。",
+                                          "answer": "$(10 + 15) \\div 2 = 12.5$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "相対度数と度数折れ線",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "全体の度数が異なる集団を比較するために相対度数を用いる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "相対度数",
+                                          "content": "相対度数 ＝ $\\frac{\\text{その階級の度数}}{\\text{度数の合計}}$ （合計は 1 になる）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "全体 40人中，ある階級の度数が 8人のとき，その相対度数を求めなさい。",
+                                          "answer": "$8 \\div 40 = 0.2$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "代表値（平均値・中央値・最頻値）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "平均値・中央値（メジアン）・最頻値（モード）の意味と使い分けを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "代表値",
+                                          "content": "・平均値: 合計 $\\div$ 度数<br>・中央値: 順に並べたとき中央の値<br>・最頻値: 最も度数の多い階級値"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "データ $2, 3, 5, 5, 9$ の中央値と最頻値を求めなさい。",
+                                          "answer": "中央値: 5, 最頻値: 5",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "近似値と有効数字",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "測定値の有効数字を理解し，$a \\times 10^n$ の形で表すことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "有効数字",
+                                          "content": "信頼できる数字を有効数字という。有効数字3桁なら整数部1桁の小数 $\\times 10^n$ で表す。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "測定値 1500m（有効数字3桁）を $a \\times 10^n$ の形で表しなさい。",
+                                          "answer": "$1.50 \\times 10^3$ m",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
       }
     ]
   },
@@ -562,6 +1954,618 @@ const boardLessonDatabase = {
     "gradeLabel": "第2学年",
     "units": [
       {
+            "id": "u_2_1",
+            "unitName": "第1章 式の計算",
+            "totalHours": 8,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "単項式と多項式・次数",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "単項式・多項式の意味，および文字の個数による次数を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "単項式と多項式・次数",
+                                          "content": "・単項式: 数や文字の積だけで表された式<br>・多項式: 単項式の和の形で表された式<br>・次数: かけ合わされている文字の個数"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次の式の次数を答えなさい。<br>(1) $3x^2$<br>(2) $5ab^2$<br>(3) $2x^2 - 4x + 1$",
+                                          "answer": "(1) 2次<br>(2) 3次<br>(3) 2次",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "同類項をまとめる計算",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "文字の部分が同じ同類項をまとめ，式を簡単にできる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "同類項",
+                                          "content": "多項式で，文字の部分が全く同じ項を<strong>同類項</strong>という。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $3a + 5b - a + 2b$<br>(2) $4x^2 - 3x - 2x^2 + 5x$",
+                                          "answer": "(1) $2a + 7b$<br>(2) $2x^2 + 2x$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "多項式の加法と減法",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "多項式どうしのたし算・ひき算をかっこをつけて正確に計算できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "多項式の減法",
+                                          "content": "ひく方の式の各項の符号を変えて加える。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $(3x - 2y) + (x + 5y)$<br>(2) $(4a - 3b) - (2a - 5b)$",
+                                          "answer": "(1) $4x + 3y$<br>(2) $2a + 2b$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "単項式の乗法と除法",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "単項式どうしの積・商を，指数の意味に注意して計算できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "乗除の計算",
+                                          "content": "数は数どうし，文字は文字どうしで計算する。除法は分数の形になおす。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次を計算しなさい。<br>(1) $2a \\times 5b$<br>(2) $(-3x)^2$<br>(3) $12a^2b \\div 4a$",
+                                          "answer": "(1) $10ab$<br>(2) $9x^2$<br>(3) $3ab$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "式の値の求め方",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "与えられた式をまず簡単にしてから代入し，効率よく式の値を求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "式の値の工夫",
+                                          "content": "いきなり代入せず，まず同類項を整理して最も簡単な式にしてから代入する！"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$a = 3, b = -2$ のとき，$(5a + 2b) - (3a - 4b)$ の値を求めなさい。",
+                                          "answer": "式を整理すると $2a + 6b$。<br>代入して $2 \\times 3 + 6 \\times (-2) = 6 - 12 = -6$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "文字式の利用（整数の性質の証明）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "偶数・奇数・2桁の自然数などを文字で表し，数の性質を説明・証明できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "整数の文字による表現",
+                                          "content": "整数を $n$ とすると，偶数は $2n$，奇数は $2n+1$，連続する3つの整数は $n, n+1, n+2$ と表せる。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "「2つの奇数の和は必ず偶数になる」ことを文字を使って説明しなさい。",
+                                          "answer": "2つの奇数を $2m+1, 2n+1$ とすると，和は $(2m+1)+(2n+1) = 2(m+n+1)$。$m+n+1$ は整数なので2の倍数（偶数）である。",
+                                          "spaceHeight": 80
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 7,
+                        "title": "等式の変形（文字について解く）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "等式の性質を用いて，等式を指定された文字について解くことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "等式の変形",
+                                          "content": "指定された文字が左辺に1つだけ残るよう，移項や両辺の乗除を行う。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "次の等式を指定された文字について解きなさい。<br>(1) $2x + y = 6 \\quad [y]$<br>(2) $l = 2\\pi r \\quad [r]$",
+                                          "answer": "(1) $y = -2x + 6$<br>(2) $r = \\frac{l}{2\\pi}$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 8,
+                        "title": "式の計算のまとめと演習",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "式の計算全般をマスターし，発展的な文字式の利用問題に取り組む。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "章の要点",
+                                          "content": "計算ミスをなくす符号の管理と，文字を使って数量関係を説明する論理力を身につける。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "2桁の自然数と，その十の位と一の位を入れかえた数の和が11の倍数になる理由を説明しなさい。",
+                                          "answer": "もとの数を $10a+b$，入れかえた数を $10b+a$ とすると，和は $11a+11b = 11(a+b)$ となり11の倍数。",
+                                          "spaceHeight": 80
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_2_2",
+            "unitName": "第2章 連立方程式",
+            "totalHours": 8,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "連立方程式とその解の意味",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "二元一次方程式とその連立方程式，および共通の解の意味を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "連立方程式の解",
+                                          "content": "2つの方程式を同時に成り立たせる文字の値の組を<strong>連立方程式の解</strong>という。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$x + y = 7, \\; 2x + y = 10$ の解を確かめなさい。<br>$(x, y) = (3, 4)$ は解か？",
+                                          "answer": "$3+4=7$, $2(3)+4=10$ となり，両方成り立つので解である。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "加減法による解き方①（同係数）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "係数が一致または符号違いのとき，両辺を足す・引くことで1文字消去して解く。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "加減法",
+                                          "content": "2つの式をたしたりひいたりして，1つの文字を消去（なくす）して解く方法。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "連立方程式 $\\begin{cases} 2x + y = 9 \\\\ 2x - y = 5 \\end{cases}$ を解きなさい。",
+                                          "answer": "2式を足すと $4x = 14$ ... $x = 3.5, y = 2$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "加減法による解き方②（最小公倍数にそろえる）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "両辺に数をかけて係数の絶対値をそろえ，加減法で解くことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "係数をそろえるステップ",
+                                          "content": "消去したい文字の係数の最小公倍数を見つけ，それぞれの式を何倍かする。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "連立方程式 $\\begin{cases} 3x + 2y = 13 \\\\ 2x + 3y = 12 \\end{cases}$ を解きなさい。",
+                                          "answer": "$x = 3, \\; y = 2$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "代入法による解き方",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "一方の方程式を他方に代入して文字を消去し，連立方程式を解く。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "代入法",
+                                          "content": "$y = 2x + 1$ のように片方の文字について解かれているときは代入法が圧倒的に便利！"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "連立方程式 $\\begin{cases} y = 2x - 1 \\\\ 3x + 2y = 12 \\end{cases}$ を解きなさい。",
+                                          "answer": "$3x + 2(2x - 1) = 12 \\implies 7x = 14 \\implies x = 2, \\; y = 3$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "いろいろな連立方程式（かっこ・小数・分数）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "かっこを展開し，小数・分数を整数になおして簡単な形に整理して解く。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "整理の手順",
+                                          "content": "・かっこ: 外して同類項をまとめる<br>・小数: 10倍, 100倍する<br>・分数: 分母の公倍数をかけて分母を払う"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$\\begin{cases} 0.2x + 0.5y = 1.6 \\\\ \\frac{x}{3} - \\frac{y}{2} = -1 \\end{cases}$ を解きなさい。",
+                                          "answer": "$x = 3, \\; y = 2$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "連立方程式の利用①（代金と個数）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "代金と個数の数量関係から2つの方程式をつくり，問題を解決できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "文章題の解き方",
+                                          "content": "① 求めたい2つの数量を $x, y$ とおく。<br>② 2つの等式をつくる。<br>③ 連立方程式を解いて解が問題に適しているか確かめる。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "りんご1個120円，みかん1個80円を合わせて10個買い，代金は1000円だった。それぞれの個数を求めなさい。",
+                                          "answer": "りんご $x$ 個，みかん $y$ 個として $\\begin{cases} x + y = 10 \\\\ 120x + 80y = 1000 \\end{cases}$。<br>りんご 5個，みかん 5個",
+                                          "spaceHeight": 80
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 7,
+                        "title": "連立方程式の利用②（速さ・時間・道のり）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "速さに関する問題において，道のりと時間の関係から立式して解決する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "速さの公式の活用",
+                                          "content": "道のりの合計の式と，時間の合計の式の2本を立てる。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "家から駅まで 1500m の道のりを，はじめ分速 60m で歩き，途中から分速 150m で走ったら 16分かかった。歩いた道のりを求めなさい。",
+                                          "answer": "歩き $x$ 分，走り $y$ 分として $\\begin{cases} x + y = 16 \\\\ 60x + 150y = 1500 \\end{cases}$。<br>歩いた時間 10分，歩いた道のり 600m",
+                                          "spaceHeight": 80
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 8,
+                        "title": "連立方程式の利用③（割合・増減の問題）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "生徒数の増減や食塩水の濃度など，割合を含む複雑な数量関係を連立方程式で解決する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "割合の立式",
+                                          "content": "もとの数量を $x, y$ とおき，増減分または全体の数量で等式をつくる。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "ある中学校の昨年の生徒数は300人。今年は男子が5%増え，女子が3%減って全体で1人増えた。昨年の男子の人数を求めなさい。",
+                                          "answer": "昨年の男子 $x$ 人，女子 $y$ 人として $\\begin{cases} x + y = 300 \\\\ 0.05x - 0.03y = 1 \\end{cases}$。<br>男子 125人",
+                                          "spaceHeight": 80
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+{
         "id": "u_2_3",
         "unitName": "第3章 一次関数 $y=ax+b$",
         "totalHours": 10,
@@ -1191,6 +3195,1008 @@ const boardLessonDatabase = {
             ]
           }
         ]
+      },
+{
+            "id": "u_2_4",
+            "unitName": "第4章 平行と合同",
+            "totalHours": 8,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "対頂角・同位角・錯角の性質",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "2直線の交わる角の性質（対頂角は等しい）と同位角・錯角の位置関係を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "平行線と角",
+                                          "content": "2直線が平行ならば，同位角は等しく，錯角は等しい。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "平行な2直線 $l, m$ に1本の直線が交わるとき，同位角と錯角の性質を答えなさい。",
+                                          "answer": "同位角は等しい。錯角は等しい。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "平行線になるための条件",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "同位角や錯角が等しければ，2直線は平行になることを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "平行になる条件",
+                                          "content": "同位角が等しいか，錯角が等しければ，その2直線は平行である。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "2直線が平行であることを確かめるには，どの角に注目すればよいか？",
+                                          "answer": "同位角または錯角が等しいかを確かめる。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "三角形の内角と外角の性質",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "三角形の内角の和は180°であることと，外角の性質を理解し角の大きさを求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "三角形の角",
+                                          "content": "・内角の和 $= 180^\\circ$<br>・三角形の1つの外角は，それと隣り合わない2つの内角の和に等しい。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "三角形の2つの内角が 50°と 70°のとき，残りの1つの内角と外角を求めなさい。",
+                                          "answer": "内角: $180 - (50 + 70) = 60^\\circ$<br>外角: $50 + 70 = 120^\\circ$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "多角形の内角の和と外角の和",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "$n$ 角形の内角の和 $180^\\circ \\times (n - 2)$ と外角の和（常に360°）を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "多角形の角の公式",
+                                          "content": "・$n$ 角形の内角の和: $180^\\circ \\times (n - 2)$<br>・どんな多角形でも外角の和は常に $360^\\circ$！"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "正八角形の1つの内角の大きさを求めなさい。",
+                                          "answer": "内角の和: $180 \\times (8 - 2) = 1080^\\circ$。<br>1つの内角: $1080 \\div 8 = 135^\\circ$ （または外角 $360 \\div 8 = 45^\\circ$ より $180 - 45 = 135^\\circ$）",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "合同な図形と三角形の合同条件",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "三角形の3つの合同条件を正確に理解し，合同な三角形を見つけることができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "三角形の合同条件",
+                                          "content": "① 3組の辺がそれぞれ等しい<br>② 2組の辺とその間の角がそれぞれ等しい<br>③ 1組の辺とその両端の角がそれぞれ等しい"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "三角形の合同条件を3つすべて書き出しなさい。",
+                                          "answer": "① 3組の辺がそれぞれ等しい<br>② 2組の辺とその間の角がそれぞれ等しい<br>③ 1組の辺とその両端の角がそれぞれ等しい",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "証明の進め方と論理的な書き方",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "仮定と結論を整理し，根拠を明確にしながら合同の証明を書くことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "証明の枠組み",
+                                          "content": "① $\\triangle ABC$ と $\\triangle DEF$ において<br>② 仮定より等しい辺や角を並べる（根拠を示す）<br>③ 合同条件を述べて $\\triangle ABC \\equiv \\triangle DEF$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "証明における「仮定」と「結論」の意味を答えなさい。",
+                                          "answer": "仮定: あらかじめ成り立っている条件（〜ならば）。<br>結論: 導き出したい結論（〜である）。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 7,
+                        "title": "三角形の合同の証明",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "図形の性質（対頂角・共通な辺など）を利用して合同を証明する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "等しい理由の発見",
+                                          "content": "仮定だけでなく，共通な角，共通な辺，対頂角，平行線の錯角などを見つけよう。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "2つの三角形で重なり合っている辺は，証明で何と根拠づければよいか？",
+                                          "answer": "「共通な辺より」と根拠づける。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 8,
+                        "title": "合同を利用した線分や角の証明",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "三角形の合同を証明したあと，対応する辺や角が等しいことを導く。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "合同の先にある結論",
+                                          "content": "合同な図形の対応する辺の長さ・角の大きさはそれぞれ等しい！"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "辺の長さが等しいことを証明する王道の流れをまとめなさい。",
+                                          "answer": "その辺をそれぞれ含む2つの三角形の合同を証明し，対応する辺が等しいことを言う。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_2_5",
+            "unitName": "第5章 三角形と四角形",
+            "totalHours": 8,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "二等辺三角形の定義と性質",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "二等辺三角形の定義（2辺が等しい）と性質（底角が等しい，頂角の二等分線は底辺を垂直に2等分する）を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "二等辺三角形の性質",
+                                          "content": "・2つの底角は等しい。<br>・頂角の二等分線は，底辺を垂直に2等分する。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "頂角が 40°の二等辺三角形の1つの底角の大きさを求めなさい。",
+                                          "answer": "$(180 - 40) \\div 2 = 70^\\circ$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "二等辺三角形になるための条件",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "2つの角が等しい三角形は二等辺三角形であることを証明し，理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "二等辺三角形になる条件",
+                                          "content": "2つの角が等しい三角形は，それらの角に対する2辺が等しい二等辺三角形である。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "三角形の2つの内角が 55°と 70°のとき，これは二等辺三角形といえるか？",
+                                          "answer": "残りの角は $180 - (55 + 70) = 55^\\circ$。2つの角が55°で等しいので二等辺三角形といえる。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "直角三角形の合同条件",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "直角三角形の特別な2つの合同条件を理解し，証明に活用できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "直角三角形の合同条件",
+                                          "content": "① 斜辺と1つの鋭角がそれぞれ等しい<br>② 斜辺と他の1辺がそれぞれ等しい"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "直角三角形の合同条件を2つ答えなさい。",
+                                          "answer": "① 斜辺と1つの鋭角がそれぞれ等しい<br>② 斜辺と他の1辺がそれぞれ等しい",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "平行四辺形の定義と性質",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "平行四辺形の定義（2組の対辺が平行）と3つの性質を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "平行四辺形の性質",
+                                          "content": "① 2組の対辺はそれぞれ等しい<br>② 2組の対角はそれぞれ等しい<br>③ 対角線はそれぞれの中点で交わる"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "平行四辺形の3つの性質を答えなさい。",
+                                          "answer": "① 2組の対辺はそれぞれ等しい<br>② 2組の対角はそれぞれ等しい<br>③ 対角線はそれぞれの中点で交わる",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "平行四辺形になるための条件",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "平行四辺形になる5つの条件を理解し，四角形が平行四辺形であることを証明できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "平行四辺形になる条件",
+                                          "content": "定義＋3つの性質の逆に加え，<br>★ <strong>1組の対辺が平行でその長さが等しい</strong>"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "最も証明でよく使われる「1組の対辺〜」の平行四辺形になる条件を書きなさい。",
+                                          "answer": "1組の対辺が平行でその長さが等しいとき。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "特別な平行四辺形（長方形・ひし形・正方形）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "長方形・ひし形・正方形の定義と，対角線の性質の違いを整理・理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "対角線の性質",
+                                          "content": "・長方形: 対角線の長さが等しい<br>・ひし形: 対角線が垂直に交わる<br>・正方形: 長さが等しく垂直に交わる"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "対角線が垂直に交わる平行四辺形は何というか？",
+                                          "answer": "ひし形",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 7,
+                        "title": "平行線と面積（等積変形）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "底辺が共通で高さが等しい三角形の面積が等しいことを利用し，図形の形を変形する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "等積変形",
+                                          "content": "底辺が同じで頂点が底辺に平行な直線上を動くとき，三角形の面積は変わらない。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "平行な2直線 $l, m$ があり，底辺 $BC$ が直線 $l$ 上にあるとき，$m$ 上の任意の点 $A, A'$ について $\\triangle ABC$ と $\\triangle A'BC$ の面積はどうなるか？",
+                                          "answer": "底辺と高さが共通なので面積は等しい。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 8,
+                        "title": "三角形と四角形のまとめと演習",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "章全体の定義・定理・条件を有機的に結びつけ，発展的な証明問題に挑む。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "証明の極意",
+                                          "content": "図形の包摂関係（一般の四角形 ➔ 台形 ➔ 平行四辺形 ➔ 長方形・ひし形 ➔ 正方形）を頭に入れよう。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "四角形 $ABCD$ の各辺の中点を結んでできる四角形はどんな四角形になるか？",
+                                          "answer": "平行四辺形になる（中点連結定理を利用）",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_2_6",
+            "unitName": "第6章 確率",
+            "totalHours": 6,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "確率の意味と起こりやすさ",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "同様に確からしい事象において，確率の意味と求め方（$\\frac{a}{n}$）を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "確率の公式",
+                                          "content": "確率 $P = \\frac{\\text{その事柄の起こる場合の数}}{\\text{すべての場合の数}}$ （$0 \\le P \\le 1$）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "1個のさいころを投げるとき，偶数の目が出る確率を求めなさい。",
+                                          "answer": "全体は 6通り，偶数は 2, 4, 6 の 3通り。<br>確率 $= \\frac{3}{6} = \\frac{1}{2}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "樹形図を使った場合の数と確率",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "硬貨投げや並び方など，もれなく重複なく数えるために樹形図を活用する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "樹形図の書き方",
+                                          "content": "枝分かれを規則正しく書き出し，すべての場合の数を数え上げる。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "3枚の硬貨を同時に投げるとき，表が2枚，裏が1枚出る確率を求めなさい。",
+                                          "answer": "全体は $2^3 = 8$ 通り。(表,表,裏), (表,裏,表), (裏,表,表) の 3通り。<br>確率 $= \\frac{3}{8}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "表を使った確率（さいころ2個）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "大・小2個のさいころを投げる問題を，6×6の正方形の表を使って解く。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "さいころ2個の全事象",
+                                          "content": "全体の場合の数は $6 \\times 6 = 36$ 通り。マス目を作って該当する箇所に◯をつける！"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "大・小2個のさいころを投げるとき，目の和が 7 になる確率を求めなさい。",
+                                          "answer": "目の和が7になる組: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1) の 6通り。<br>確率 $= \\frac{6}{36} = \\frac{1}{6}$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "カードやくじ引きの確率",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "戻さない取り出し方や，順番による場合の数の違いを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "非復元抽出",
+                                          "content": "同時に2枚引くときや，1枚ずつ続けて引くときは同じカードが2回出ないことに注意！"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "1, 2, 3, 4 の4枚のカードから同時に2枚引くとき，2枚とも奇数である確率を求めなさい。",
+                                          "answer": "全体は $\\frac{4 \\times 3}{2} = 6$ 通り。奇数2枚は (1, 3) の 1通り。<br>確率 $= \\frac{1}{6}$",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "「少なくとも〜」の確率（余事象の考え方）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "「少なくとも1つは〜」の確率を，$1 - (\\text{すべて〜でない確率})$ で能率よく計算する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "余事象の活用",
+                                          "content": "（少なくとも1回は表）＝ 1 －（すべて裏が出る確率）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "硬貨を3枚投げるとき，少なくとも1枚は表が出る確率を求めなさい。",
+                                          "answer": "すべて裏が出る確率は $\\frac{1}{8}$。<br>よって $1 - \\frac{1}{8} = \\frac{7}{8}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "確率のまとめと総合演習",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "条件付きの場合の数や，実験・観察による統計的確率と数学的確率の関係を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "大数の法則",
+                                          "content": "実験回数を極めて多くすると，相対度数は数学的確率の値に近づいていく。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "くじ引きで「先に引く人」と「後から引く人」で当たる確率は変わるか？",
+                                          "answer": "変わらない（どちらも同じ確率になる）",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_2_7",
+            "unitName": "第7章 データの比較",
+            "totalHours": 4,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "四分位数と四分位範囲",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "第1四分位数・第2四分位数（中央値）・第3四分位数と四分位範囲の意味を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "四分位数",
+                                          "content": "データを小さい順に並べ，4等分する位置にある値。<br>四分位範囲 ＝ 第3四分位数（$Q_3$）－ 第1四分位数（$Q_1$）"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "データ $1, 3, 4, 6, 8, 9, 11$ の $Q_1, Q_2, Q_3$ を求めなさい。",
+                                          "answer": "中央値 $Q_2 = 6$。前半 $1, 3, 4$ の中央 $Q_1 = 3$。後半 $8, 9, 11$ の中央 $Q_3 = 9$。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "箱ひげ図の書き方と読み取り",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "最小値・$Q_1$・$Q_2$・$Q_3$・最大値の5つの値をもとに箱ひげ図をかくことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "箱ひげ図",
+                                          "content": "箱の長さが四分位範囲（データの中心50%の散らばり）を表し，ひげの端が最小値・最大値を表す。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "箱ひげ図の「箱」の中に，データ全体の約何％が含まれているか？",
+                                          "answer": "約 50％",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "箱ひげ図を用いた複数のデータの比較",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "2つ以上のクラスやグループの箱ひげ図を並べ，データのばらつきや傾向を比較・考察する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "データの比較の視点",
+                                          "content": "・中央値の位置（全体的な高さ）<br>・箱の長さ（散らばりの度合い）<br>・最大値・最小値の範囲"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "A組とB組で，箱ひげ図の箱の横幅がB組の方が広いとき，何がわかるか？",
+                                          "answer": "中央付近50%のデータの散らばりがB組の方が大きい。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "データの傾向の読み取りとまとめ",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "ヒストグラムと箱ひげ図を対応づけ，多角的にデータを分析して判断を下す。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "データの活用",
+                                          "content": "単一の代表値だけでなく，箱ひげ図や分布の形を合わせて根拠をもって判断する。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "平均値だけでなく四分位範囲や箱ひげ図を見るメリットを答えなさい。",
+                                          "answer": "極端な外れ値の影響を受けにくく，データの散らばり具合を把握できるから。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
       }
     ]
   },
@@ -3850,6 +6856,897 @@ const boardLessonDatabase = {
             ]
           }
         ]
+      },
+{
+            "id": "u_3_5",
+            "unitName": "第5章 図形と相似",
+            "totalHours": 8,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "相似な図形と相似比",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "拡大・縮小の関係にある相似な図形の意味，対応する辺の比（相似比）と角の性質を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "相似な図形の性質",
+                                          "content": "・対応する線分の比（相似比）はすべて等しい。<br>・対応する角の大きさはそれぞれ等しい。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "$\\triangle ABC \\sim \\triangle DEF$ で相似比が $2 : 3$ のとき，$AB = 6\\text{cm}$ に対する $DE$ の長さを求めなさい。",
+                                          "answer": "$6 : DE = 2 : 3 \\implies DE = 9\\text{cm}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "三角形の相似条件",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "三角形の3つの相似条件を理解し，相似な三角形を見つけることができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "三角形の相似条件",
+                                          "content": "① 3組の辺の比がすべて等しい<br>② 2組の辺の比とその間の角がそれぞれ等しい<br>③ 2組の角がそれぞれ等しい"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "三角形の相似条件を3つ答えなさい。",
+                                          "answer": "① 3組の辺の比がすべて等しい<br>② 2組の辺の比とその間の角がそれぞれ等しい<br>③ 2組の角がそれぞれ等しい",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "三角形の相似の証明",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "「2組の角がそれぞれ等しい」を中心に，相似の論理的な証明を書くことができる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "相似証明のポイント",
+                                          "content": "共通な角や平行線の同位角・錯角，対頂角を使って2組の等しい角を見つけよう！"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "相似の証明で最も頻繁に用いられる相似条件はどれか？",
+                                          "answer": "「2組の角がそれぞれ等しい」",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "平行線と線分の比の定理",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "三角形と比の定理，および平行線によって切り取られる線分の比の定理を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "平行線と比",
+                                          "content": "$BC // DE$ ならば $AD : AB = AE : AC = DE : BC$ および $AD : DB = AE : EC$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "平行線と比の定理を用いて未知の線分の長さを求める手順を述べなさい。",
+                                          "answer": "平行線による相似な三角形を見つけ，対応する辺の比の方程式を立てる。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "中点連結定理とその逆",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "三角形の2辺の中点を結ぶ線分が底辺に平行で，長さが底辺の半分になる定理を理解・証明する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "中点連結定理",
+                                          "content": "中点 $M, N$ を結ぶと $MN // BC$ かつ $MN = \\frac{1}{2}BC$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "底辺が 10cm の三角形の2辺の中点を結んだ線分の長さを求めなさい。",
+                                          "answer": "$10 \\times \\frac{1}{2} = 5\\text{cm}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "相似な図形の面積比",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "相似比が $m : n$ のとき，面積比が $m^2 : n^2$ になることを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "面積比の定理",
+                                          "content": "相似比が $m : n$ ならば，面積比は $m^2 : n^2$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "相似比が $2 : 3$ の相似な2つの図形の面積比を求めなさい。",
+                                          "answer": "$2^2 : 3^2 = 4 : 9$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 7,
+                        "title": "相似な立体の表面積比と体積比",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "相似比が $m : n$ のとき，表面積比は $m^2 : n^2$，体積比は $m^3 : n^3$ になることを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "体積比の定理",
+                                          "content": "相似比が $m : n$ ならば，体積比は $m^3 : n^3$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "相似比が $1 : 2$ の立体の体積比を求めなさい。",
+                                          "answer": "$1^3 : 2^3 = 1 : 8$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 8,
+                        "title": "縮図の利用と測定",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "相似の考え方を利用して，直接測れない校舎の高さや川の幅を縮図によって求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "縮図の活用",
+                                          "content": "目の高さ＋縮図から求めた実測値で全体の高さを算出する。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "500分の1の縮図で 4cm の長さは，実際の距離は何mか？",
+                                          "answer": "$4\\text{cm} \\times 500 = 2000\\text{cm} = 20\\text{m}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_3_6",
+            "unitName": "第6章 円の性質",
+            "totalHours": 6,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "円周角の定理（中心角と円周角）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "1つの弧に対する円周角の大きさは，その弧に対する中心角の半分であることを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "円周角の定理",
+                                          "content": "① 1つの弧に対する円周角は中心角の $\\frac{1}{2}$ である。<br>② 同じ弧に対する円周角はすべて等しい。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "中心角が 80°の弧に対する円周角の大きさを求めなさい。",
+                                          "answer": "$80^\\circ \\div 2 = 40^\\circ$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "直径に対する円周角（90°）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "半円の弧（直径）に対する円周角が直角（90°）になる性質を理解し，活用する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "半円の円周角",
+                                          "content": "直径に対する円周角は常に $90^\\circ$！直角三角形が出現する。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "線分 $AB$ が円の直径であるとき，円周上の点 $C$ における $\\angle ACB$ の大きさを答えなさい。",
+                                          "answer": "$90^\\circ$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "円周角の定理の証明",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "二等辺三角形の外角の性質を用いて，円周角の定理を論理的に証明する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "証明の基本",
+                                          "content": "半径でできる二等辺三角形の底角と外角の関係に注目する。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "円の中心を通る直径を補助線として引く理由を述べなさい。",
+                                          "answer": "二等辺三角形を2つ作り，外角の性質を適用するため。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "円周角の定理の逆",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "4点が同一円周上にあるための条件（円周角の定理の逆）を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "4点が円周上にある条件",
+                                          "content": "直線 $AB$ に対して同じ側に点 $P, Q$ があり，$\\angle APB = \\angle AQB$ ならば4点 $A, B, P, Q$ は1つの円周上にある。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "円周角の定理の逆を使う場面はどのようなときか？",
+                                          "answer": "4つの点が1つの円周上にあることを証明するとき。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "円と接線の性質",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "円の接線は接点を通る半径に垂直であること，および接線の長さが等しいことを理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "接線の性質",
+                                          "content": "円の外部の1点から引いた2本の接線の長さは等しい。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "円 $O$ の接線 $l$ と接点 $T$ を通る半径 $OT$ のなす角を答えなさい。",
+                                          "answer": "$90^\\circ$（垂直）",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "円の性質の活用演習",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "円周角・中心角・相似・三平方の定理などを組み合わせた総合問題を解く。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "円の性質の総合力",
+                                          "content": "円を見たら「中心角と円周角」「直径の90°」「相似な三角形」を即座に連想しよう。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "円に内接する四角形の対角の和はどうなるか？",
+                                          "answer": "対角の和は $180^\\circ$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_3_7",
+            "unitName": "第7章 三平方の定理",
+            "totalHours": 6,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "三平方の定理の意味と発見",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "直角三角形の3辺における $a^2 + b^2 = c^2$（三平方の定理）の関係を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "ピタゴラスの定理",
+                                          "content": "直角三角形の斜辺を $c$，他の2辺を $a, b$ とすると，$a^2 + b^2 = c^2$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "直角をはさむ2辺が 3cm, 4cm の直角三角形の斜辺の長さを求めなさい。",
+                                          "answer": "$c^2 = 3^2 + 4^2 = 9 + 16 = 25 \\implies c = 5\\text{cm}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "三平方の定理の証明と逆",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "正方形の面積関係を用いて定理を証明し，3辺の長さから直角三角形か判定できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "三平方の定理の逆",
+                                          "content": "3辺の長さが $a^2 + b^2 = c^2$ を満たす三角形は，$c$ を斜辺とする直角三角形である。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "3辺の長さが 5, 12, 13 の三角形は直角三角形といえるか？",
+                                          "answer": "$5^2 + 12^2 = 25 + 144 = 169 = 13^2$ なので直角三角形といえる。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "特別な直角三角形の3辺の比",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "45°-45°-90° ($1:1:\\sqrt{2}$) と 30°-60°-90° ($1:2:\\sqrt{3}$) の比を理解・活用する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "重要三角比",
+                                          "content": "・直角二等辺三角形: $1 : 1 : \\sqrt{2}$<br>・正三角形の半分: $1 : \\sqrt{3} : 2$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "1辺が 6cm の正三角形の高さを求めなさい。",
+                                          "answer": "$6 \\times \\frac{\\sqrt{3}}{2} = 3\\sqrt{3}\\text{cm}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 4,
+                        "title": "平面図形への利用（対角線・高さ・面積）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "長方形の対角線や二等辺三角形の高さ・面積を三平方の定理を用いて求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "平面図形の応用",
+                                          "content": "直角三角形を見つけて，未知の線分を方程式（三平方）で解く。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "縦 4cm，横 6cm の長方形の対角線の長さを求めなさい。",
+                                          "answer": "$\\sqrt{4^2 + 6^2} = \\sqrt{16 + 36} = \\sqrt{52} = 2\\sqrt{13}\\text{cm}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 5,
+                        "title": "空間図形への利用（直方体の対角線・錐体の体積）",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "直方体の対角線公式 $\\sqrt{a^2 + b^2 + c^2}$ および円錐の高さを三平方で求める。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "空間の対角線",
+                                          "content": "直方体の対角線 $l = \\sqrt{a^2 + b^2 + c^2}$"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "縦 2cm，横 3cm，高さ 6cm の直方体の対角線の長さを求めなさい。",
+                                          "answer": "$\\sqrt{2^2 + 3^2 + 6^2} = \\sqrt{4 + 9 + 36} = \\sqrt{49} = 7\\text{cm}$",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 6,
+                        "title": "三平方の定理の総合問題演習",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "折り返し図形や最短距離（展開図上の直線）など入試頻出の応用問題を解く。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "立体の最短距離",
+                                          "content": "立体の表面を通る最短距離は，展開図をかいて2点を直線で結ぶ！"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "円柱の側面を1周するひもの最短の長さを求めるにはどうするか？",
+                                          "answer": "側面の展開図（長方形）をかいて対角線の長さを三平方で求める。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
+      },
+      {
+            "id": "u_3_8",
+            "unitName": "第8章 標本調査",
+            "totalHours": 3,
+            "bookRef": "",
+            "pointRef": "",
+            "officialRef": "https://1drv.ms/f/c/7afb9670452d4dba/IgArL_GI1AWCQYg6h-hpgVgwAQPwpkTBvGcOttXocqZee9s?e=sZb37F",
+            "lessons": [
+                  {
+                        "hour": 1,
+                        "title": "全数調査と標本調査",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "全数調査と標本調査の違い，母集団と標本の意味を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "標本調査",
+                                          "content": "母集団全体を調べるのが困難なとき，一部を取り出して調べる調査。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "電球の寿命テストは全数調査と標本調査のどちらで行うべきか？理由も答えなさい。",
+                                          "answer": "標本調査。全数調査すると全ての電球を使い切ってしまうから。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 2,
+                        "title": "無作為抽出と標本の性質",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "かたよりのない無作為抽出（ランダム抽出）の重要性を理解する。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "無作為抽出",
+                                          "content": "母集団のどの要素も等しい確率で選ばれるように取り出すこと。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "全校生徒の意識調査をするとき，図書室に来た生徒だけにアンケートをとるのは適切か？",
+                                          "answer": "不適切。読書好きな生徒にかたよるため無作為抽出にならない。",
+                                          "spaceHeight": 60
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  },
+                  {
+                        "hour": 3,
+                        "title": "標本調査による母集団の推定",
+                        "leftBlocks": [
+                              {
+                                    "type": "objective",
+                                    "data": {
+                                          "text": "比の計算を用いて，標本の比率から母集団の数量や不良品数を推定できる。"
+                                    }
+                              },
+                              {
+                                    "type": "point-box",
+                                    "data": {
+                                          "badge": "まとめ",
+                                          "title": "母集団の推定公式",
+                                          "content": "$\\text{標本の比率} \\approx \\text{母集団の比率}$ を利用して比例式を解く。"
+                                    }
+                              }
+                        ],
+                        "rightBlocks": [
+                              {
+                                    "type": "question",
+                                    "data": {
+                                          "qNum": "問 1",
+                                          "text": "袋の中の白玉と黒玉から 50個無作為に抽出したら白玉が 20個あった。袋の中に全部で 1000個あるとき，白玉はおよそ何個と推定されるか？",
+                                          "answer": "$20 : 50 = x : 1000 \\implies 50x = 20000 \\implies x = 400$ 個",
+                                          "spaceHeight": 70
+                                    }
+                              },
+                              {
+                                    "type": "reflection",
+                                    "data": {
+                                          "title": "振り返り"
+                                    }
+                              }
+                        ]
+                  }
+            ]
       }
     ]
   }

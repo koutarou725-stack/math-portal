@@ -577,20 +577,32 @@
               <i class="fa-solid fa-file-circle-check text-primary"></i> 授業プリントをセット
             </div>
 
-            <!-- Step 1: 単元選択 -->
-            <div class="form-group mb-2">
-              <label style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem; display: block;">
-                1. 単元を選択:
-              </label>
-              <select id="lessonPlanUnitSelect" class="form-control" onchange="onLessonPlanUnitSelectChange()">
-                <!-- JSで動的生成 -->
-              </select>
+            <!-- Step 1: 学年・単元選択 -->
+            <div style="display: grid; grid-template-columns: 110px 1fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group mb-0">
+                <label style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem; display: block;">
+                  対象学年:
+                </label>
+                <select id="lessonPlanGradeSelect" class="form-control" onchange="onLessonPlanGradeSelectChange()">
+                  <option value="1">第1学年</option>
+                  <option value="2">第2学年</option>
+                  <option value="3">第3学年</option>
+                </select>
+              </div>
+              <div class="form-group mb-0">
+                <label style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem; display: block;">
+                  単元を選択:
+                </label>
+                <select id="lessonPlanUnitSelect" class="form-control" onchange="onLessonPlanUnitSelectChange()">
+                  <!-- JSで動的生成 -->
+                </select>
+              </div>
             </div>
 
             <!-- Step 2: 授業プリント(第◯時)選択 -->
             <div class="form-group mb-2">
               <label style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem; display: block;">
-                2. 授業プリント（第◯時）を選択:
+                授業プリント（時数・タイトル）を選択:
               </label>
               <select id="lessonPlanHourSelect" class="form-control" onchange="onLessonPlanHourSelectChange()">
                 <!-- 単元選択に連動してJSで動的生成 -->
