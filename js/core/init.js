@@ -4312,7 +4312,44 @@ function renderWorksheetB4() {
 
   ensureSortableB4();
   initB4EditingHandlers();
+  updateB4SheetLimitUI();
+  setTimeout(updateB4SheetLimitUI, 120);
 }
+
+// B4用紙の限界線（820px）および収まり状態の判定・UI更新
+function updateB4SheetLimitUI() {
+  const sheet = document.getElementById('printableSheet');
+  const badge = document.getElementById('b4FitBadge');
+  const limitLine = document.getElementById('b4PageLimitLine');
+  if (!sheet) return;
+
+  const B4_STANDARD_HEIGHT = 820; // 1160px幅に対するB4横の比率高さ
+  const currentHeight = sheet.scrollHeight || sheet.offsetHeight;
+  const diff = currentHeight - B4_STANDARD_HEIGHT;
+
+  if (diff > 12) {
+    sheet.classList.add('is-overflowing');
+    if (badge) {
+      badge.className = 'b4-fit-badge fit-over no-print';
+      badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> B4はみ出し中 (+${diff}px)`;
+      badge.title = `B4横用紙1枚の範囲を約 ${diff}px 超過しています。余白やブロックの高さを縮めてください。`;
+    }
+    if (limitLine) {
+      limitLine.innerHTML = `<span class="b4-limit-badge"><i class="fa-solid fa-scissors"></i> B4用紙 下端ライン (これより下は次ページへはみ出し)</span>`;
+    }
+  } else {
+    sheet.classList.remove('is-overflowing');
+    if (badge) {
+      badge.className = 'b4-fit-badge fit-ok no-print';
+      badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> B4用紙内 (1枚)`;
+      badge.title = 'B4横用紙1枚の範囲に収まっています。';
+    }
+    if (limitLine) {
+      limitLine.innerHTML = `<span class="b4-limit-badge"><i class="fa-solid fa-scissors"></i> B4用紙 下端ライン (257mm)</span>`;
+    }
+  }
+}
+window.updateB4SheetLimitUI = updateB4SheetLimitUI;
 
 function fmtB4(str) {
   return String(str ?? '').replace(/\r?\n/g, '<br>');
@@ -4359,7 +4396,7 @@ function renderBlockColumn(blocks, colSide) {
             <button type="button" class="btn-guide-add" onclick="addBoardTaskGuide('${colSide}', ${index})"><i class="fa-solid fa-plus"></i> 見通しヒント枠を追加</button>
           </div>`}
           <div class="board-task-canvas" style="min-height: ${d.thinkingSpaceHeight || 85}px;">
-            <div class="canvas-grid-label">自分の考え・途中式</div>
+            <div class="canvas-grid-label" ${editB4('canvasLabel', 'ラベルを入力 (消去可能)', 'text')}>${escapeHtmlB4(d.canvasLabel !== undefined ? d.canvasLabel : '自分の考え・途中式')}</div>
             <div class="answer-text answer-block"><span class="answer-tag">解答例</span><div ${editB4('answer', '解答例を入力')}>${fmtB4(d.answer)}</div></div>
           </div>
         </div>`;

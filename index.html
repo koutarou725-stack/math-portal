@@ -24,7 +24,7 @@
   <!-- 各機能モジュールスタイル -->
   <link rel="stylesheet" href="css/features/home.css">
   <link rel="stylesheet" href="css/features/timetable.css">
-  <link rel="stylesheet" href="css/features/class-print.css?v=20261003_4">
+  <link rel="stylesheet" href="css/features/class-print.css?v=20261006_1">
   <link rel="stylesheet" href="css/features/practice-print.css">
   <link rel="stylesheet" href="css/features/graph-generator.css">
   <link rel="stylesheet" href="css/features/settings.css">
@@ -822,10 +822,9 @@
 
           <!-- 1. 板書書籍連動: 学年 ➔ 単元 ➔ ◯時間目の3段階選択 -->
           <div class="panel-section mb-3 b4-stepper-panel">
-            <div class="panel-header">
-              <h3><i class="fa-solid fa-chalkboard-user text-primary"></i> 板書データから自動生成</h3>
+            <div class="panel-header" style="margin-bottom: 0.4rem;">
+              <h3 style="font-size: 0.92rem;"><i class="fa-solid fa-chalkboard-user text-primary"></i> 板書データから自動生成</h3>
             </div>
-            <p class="panel-desc">学年・単元・◯時間目を選ぶと、明治図書『板書＆展開例』そのままのB4横プリントを展開します。</p>
 
             <!-- Step 1: 学年選択 -->
             <div class="form-group mb-2">
@@ -864,21 +863,21 @@
             </div>
 
             <!-- テンプレート状態表示 & 保存ボタン -->
-            <div class="b4-template-action-box mt-3" style="background: #ffffff; border: 1.5px solid #0284c7; border-radius: 8px; padding: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-              <div style="margin-bottom: 0.5rem;">
-                <div style="font-size: 0.74rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem;">現在のテンプレート状態:</div>
-                <div class="js-template-status template-status-badge" style="width: 100%; justify-content: center; box-sizing: border-box; text-align: center; padding: 0.35rem 0.4rem; font-size: 0.75rem; white-space: normal; line-height: 1.25;">
+            <div class="b4-template-action-box mt-2" style="background: #ffffff; border: 1.5px solid #0284c7; border-radius: 8px; padding: 0.65rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+              <div style="margin-bottom: 0.4rem;">
+                <div style="font-size: 0.72rem; font-weight: 700; color: #475569; margin-bottom: 0.2rem;">現在のテンプレート状態:</div>
+                <div class="js-template-status template-status-badge" style="width: 100%; justify-content: center; box-sizing: border-box; text-align: center; padding: 0.3rem 0.4rem; font-size: 0.74rem; white-space: normal; line-height: 1.25;">
                   <i class="fa-regular fa-file-lines"></i> 初期状態
                 </div>
               </div>
-              <button type="button" class="btn btn-primary-solid btn-block" onclick="saveCurrentAsLessonTemplate()" style="padding: 0.55rem 0.35rem; font-weight: 700; font-size: 0.82rem; width: 100%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 0.35rem; background: #0284c7; color: #fff; border-radius: 6px; white-space: normal; line-height: 1.2;" title="編集した内容をこの時間のテンプレートとして保存します（次回以降もこの状態で開きます）">
+              <button type="button" class="btn btn-primary-solid btn-block" onclick="saveCurrentAsLessonTemplate()" style="padding: 0.5rem 0.35rem; font-weight: 700; font-size: 0.82rem; width: 100%; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 0.35rem; background: #0284c7; color: #fff; border-radius: 6px; white-space: normal; line-height: 1.2;" title="編集した内容をこの時間のテンプレートとして保存します（次回以降もこの状態で開きます）">
                 <i class="fa-solid fa-cloud-arrow-up"></i> この編集を保存
               </button>
-              <div style="display: flex; gap: 0.35rem; margin-top: 0.4rem;">
-                <button type="button" class="btn btn-ghost btn-sm text-secondary js-template-reset" onclick="resetLessonTemplateToDefault()" style="flex: 1; font-size: 0.73rem; padding: 0.25rem 0.4rem;" title="編集保存したテンプレートを破棄し、初期状態の板書データに戻します">
+              <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem;">
+                <button type="button" class="btn btn-ghost btn-sm text-secondary js-template-reset" onclick="resetLessonTemplateToDefault()" style="flex: 1; font-size: 0.72rem; padding: 0.2rem 0.35rem;" title="編集保存したテンプレートを破棄し、初期状態の板書データに戻します">
                   <i class="fa-solid fa-rotate-left"></i> 初期に戻す
                 </button>
-                <button type="button" class="btn btn-ghost btn-sm text-secondary" onclick="reloadB4Lesson()" style="flex: 1; font-size: 0.73rem; padding: 0.25rem 0.4rem;" title="現在の編集を破棄して再展開">
+                <button type="button" class="btn btn-ghost btn-sm text-secondary" onclick="reloadB4Lesson()" style="flex: 1; font-size: 0.72rem; padding: 0.2rem 0.35rem;" title="現在の編集を破棄して再展開">
                   <i class="fa-solid fa-arrows-rotate"></i> 再展開
                 </button>
               </div>
@@ -886,17 +885,16 @@
           </div>
 
           <!-- 2. マイプリント保存＆呼び出し管理 -->
-          <div class="panel-section mb-3 my-worksheet-card">
-            <div class="panel-header">
-              <h3><i class="fa-solid fa-folder-bookmark text-success"></i> マイ授業プリント別名保存</h3>
+          <div class="panel-section mb-3 my-worksheet-card" style="padding: 0.7rem 0.8rem;">
+            <div class="panel-header" style="margin-bottom: 0.4rem;">
+              <h3 style="font-size: 0.9rem;"><i class="fa-solid fa-folder-bookmark text-success"></i> マイプリント保存</h3>
             </div>
-            <p class="panel-desc">年度やクラスごとに名前を変えて複数パターンをストック保存できます。</p>
-            <div class="my-ws-btn-row">
-              <button class="btn btn-outline-success" onclick="saveWorksheetToStorage()" style="width: 100%; justify-content: center; padding: 0.5rem; font-weight: 600; font-size: 0.82rem;">
-                <i class="fa-solid fa-copy"></i> 別名でマイプリント保存
+            <div class="my-ws-btn-row" style="display: flex; gap: 0.35rem;">
+              <button class="btn btn-outline-success" onclick="saveWorksheetToStorage()" style="flex: 1.2; justify-content: center; padding: 0.45rem 0.3rem; font-weight: 700; font-size: 0.78rem;">
+                <i class="fa-solid fa-copy"></i> 別名保存
               </button>
-              <button class="btn btn-outline" onclick="openSavedWorksheetsModal()" style="width: 100%; justify-content: center; padding: 0.45rem; font-size: 0.82rem;">
-                <i class="fa-solid fa-folder-open"></i> 保存済み一覧
+              <button class="btn btn-outline" onclick="openSavedWorksheetsModal()" style="flex: 1; justify-content: center; padding: 0.45rem 0.3rem; font-size: 0.78rem;">
+                <i class="fa-solid fa-folder-open"></i> 一覧
               </button>
             </div>
           </div>
@@ -983,6 +981,7 @@
               <div class="paper-status" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
                 <span class="status-indicator"></span>
                 <strong><i class="fa-solid fa-newspaper text-primary"></i> B4 見開き（左右2面）</strong>
+                <span class="b4-fit-badge fit-ok" id="b4FitBadge" title="B4横（縦257mm）の範囲に収まっているかを示します"><i class="fa-solid fa-circle-check"></i> B4用紙内 (1枚)</span>
                 <span class="js-template-status template-status-chip"><i class="fa-regular fa-file-lines"></i> 初期</span>
                 
                 <!-- ズーム切り替え -->
@@ -1063,6 +1062,12 @@
               <span>中学校 数学科 授業ワークシート（B4横見開き版）</span>
               <span id="footerLessonCode">M3-U1-L5</span>
             </div>
+
+            <!-- B4 用紙境界ガイドライン & はみ出し警告（画面表示専用・印刷時非表示） -->
+            <div class="b4-page-limit-line no-print" id="b4PageLimitLine" title="B4横用紙1枚（縦257mm）の下端境界線です">
+              <span class="b4-limit-badge"><i class="fa-solid fa-scissors"></i> B4用紙 下端ライン (257mm)</span>
+            </div>
+            <div class="b4-overflow-warning-strip no-print" id="b4OverflowStrip"></div>
 
           </div>
         </div>
@@ -1532,11 +1537,11 @@
   <script src="js/core/cloud-sync.js"></script>
   <!-- 各機能モジュール -->
   <script src="js/features/timetable.js?v=20261003_6"></script>
-  <script src="js/features/class-print.js?v=20261003_6"></script>
+  <script src="js/features/class-print.js?v=20261006_1"></script>
   <script src="js/features/practice-print.js"></script>
   <script src="js/features/settings.js"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
-  <script src="js/core/init.js?v=20261005_1"></script>
+  <script src="js/core/init.js?v=20261006_1"></script>
 </body>
 </html>

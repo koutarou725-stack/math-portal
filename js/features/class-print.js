@@ -995,6 +995,8 @@ function initBlockResize() {
     const summaryBox = currentBlockEl.querySelector('.summary-box');
     const reviewBox = currentBlockEl.querySelector('.review-box');
     const objectiveBox = currentBlockEl.querySelector('.objective-box');
+    const reflectionComment = currentBlockEl.querySelector('.reflection-comment-line');
+    const reflectionBox = currentBlockEl.querySelector('.reflection-box');
 
     if (boardCanvas) {
       currentTargetEl = boardCanvas;
@@ -1002,6 +1004,12 @@ function initBlockResize() {
     } else if (answerSpace) {
       currentTargetEl = answerSpace;
       currentField = 'spaceHeight';
+    } else if (reflectionComment) {
+      currentTargetEl = reflectionComment;
+      currentField = 'customHeight';
+    } else if (reflectionBox) {
+      currentTargetEl = reflectionBox;
+      currentField = 'customHeight';
     } else if (pointBody) {
       currentTargetEl = pointBody;
       currentField = 'customHeight';
@@ -1068,6 +1076,9 @@ function initBlockResize() {
           if (typeof updateBlockData === 'function') {
             updateBlockData(blockIndex, currentField, finalHeight);
           }
+        }
+        if (typeof updateB4SheetLimitUI === 'function') {
+          setTimeout(updateB4SheetLimitUI, 50);
         }
       }
     };
