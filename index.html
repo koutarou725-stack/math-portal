@@ -482,35 +482,35 @@
       </div>
     </section>
 
-    <!-- 特時・校時振替設定モーダル (1週間一括マネージャー) -->
+    <!-- 特時・校時振替 ＆ 祝日・お休み設定モーダル (複数週・月間一括マネージャー) -->
     <div id="dayOverrideModal" class="modal-overlay hidden">
-      <div class="override-modal-content wide-modal">
+      <div class="override-modal-content wide-modal" style="max-width: 960px; width: 95%;">
         <div class="slot-modal-header">
-          <h3><i class="fa-solid fa-shuffle text-primary"></i> 1週間の特時・校時振替マネージャー</h3>
+          <h3><i class="fa-solid fa-calendar-check text-primary"></i> 特時・校時振替 ＆ 祝日・お休みマネージャー</h3>
           <button class="modal-close-btn" onclick="closeDayOverrideModal()"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="slot-modal-body">
+        <div class="slot-modal-body" style="max-height: 72vh; overflow-y: auto;">
           <div class="week-override-header-bar">
             <div>
               <strong id="overrideWeekRangeText" style="font-size: 1.05rem; color: var(--text-main);"></strong>
-              <div class="sub-tip mt-1">職員会議の週予定表に合わせて、曜日ごとの校時や入れ替えコマを1週間まとめて設定できます</div>
+              <div class="sub-tip mt-1">今週から翌月までの特時・校時振替や、祝日・秋休みなどのお休みを一括設定できます（下へスクロールして全週入力可）</div>
             </div>
             <div class="week-override-quick-actions">
-              <button class="btn btn-sm btn-outline text-danger" onclick="clearCurrentWeekOverrides()" title="今週の振替をすべて解除して通常に戻す">
+              <button class="btn btn-sm btn-outline text-danger" onclick="clearCurrentWeekOverrides()" title="今週の振替・休日をすべて解除して通常に戻す">
                 <i class="fa-solid fa-rotate-left"></i> 今週をすべて通常校時に戻す
               </button>
             </div>
           </div>
 
-          <!-- 月〜金のシンプル校時振替テーブル（Excel形式） -->
+          <!-- 複数週のシンプル校時振替テーブル（Excel形式・祝日お休み対応） -->
           <div class="week-override-table-wrapper" id="weekOverrideColumnsContainer">
-            <!-- JSで動的に月〜金のテーブルを生成 -->
+            <!-- JSで動的に今週〜翌月のテーブルを生成 -->
           </div>
         </div>
         <div class="slot-modal-footer">
           <button type="button" class="btn btn-outline" onclick="closeDayOverrideModal()">閉じる</button>
           <button type="button" class="btn btn-primary" onclick="saveWeekOverrides()">
-            <i class="fa-solid fa-check"></i> 1週間の振替設定を保存
+            <i class="fa-solid fa-check"></i> 特時・お休み設定を一括保存
           </button>
         </div>
       </div>
@@ -559,63 +559,66 @@
       </div>
     </div>
 
-    <!-- 週案・学習内容入力モーダル (実時間割用) -->
+    <!-- 週案・授業プリントセット モーダル (実時間割用) -->
     <div id="lessonPlanModal" class="modal-overlay hidden">
-      <div class="slot-modal-content" style="max-width: 580px;">
+      <div class="slot-modal-content" style="max-width: 520px; width: 92%;">
         <div class="slot-modal-header">
-          <h3><i class="fa-solid fa-book-open text-primary"></i> <span id="lessonPlanTitle">学習内容・授業予定の入力</span></h3>
+          <h3><i class="fa-solid fa-book-open text-primary"></i> <span id="lessonPlanTitle">授業予定・プリントのセット</span></h3>
           <button class="modal-close-btn" onclick="closeLessonPlanModal()"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="slot-modal-body">
+        <div class="slot-modal-body" style="padding: 1.25rem;">
           <div class="lesson-plan-meta-banner" id="lessonPlanMetaBanner">
             <!-- クラス、校時、教科名を表示 -->
           </div>
 
-          <!-- 数学コマ専用: 授業プリントから内容をセット -->
-          <div class="form-group mt-3" id="lessonPlanPrintLinkGroup">
-            <div class="label-with-action">
-              <label><i class="fa-solid fa-file-lines text-primary"></i> 授業プリントをセットして内容を反映</label>
+          <!-- 授業プリントセットエリア (単元 ➔ 第◯時 の2段階選択) -->
+          <div class="lesson-print-picker-card" id="lessonPlanPrintLinkGroup" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 1rem;">
+            <div style="font-weight: 700; color: #1e293b; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem;">
+              <i class="fa-solid fa-file-circle-check text-primary"></i> 授業プリントをセット
             </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
-              <select id="lessonPlanPrintSelect" class="form-control" onchange="onLessonPlanPrintSelectChange()" style="flex: 1;">
-                <option value="">（授業プリントを選択してください）</option>
+
+            <!-- Step 1: 単元選択 -->
+            <div class="form-group mb-2">
+              <label style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem; display: block;">
+                1. 単元を選択:
+              </label>
+              <select id="lessonPlanUnitSelect" class="form-control" onchange="onLessonPlanUnitSelectChange()">
+                <!-- JSで動的生成 -->
               </select>
-              <button type="button" class="btn btn-outline btn-sm text-primary" onclick="applySelectedPrintToPlan()" title="選択したプリントの単元・めあてを入力欄に反映">
-                <i class="fa-solid fa-arrow-down"></i> 反映
-              </button>
             </div>
-            <div class="sub-tip mt-1">※授業プリントを選ぶと、単元名・めあてが自動入力されコマと連携されます。</div>
-          </div>
 
-          <div class="form-group mt-3">
-            <label>学習内容・単元予定・めあて</label>
-            <input type="text" id="lessonPlanInput" class="form-control" placeholder="例: 一次関数の利用① (動点と面積), 計算小テスト">
-          </div>
+            <!-- Step 2: 授業プリント(第◯時)選択 -->
+            <div class="form-group mb-2">
+              <label style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 0.25rem; display: block;">
+                2. 授業プリント（第◯時）を選択:
+              </label>
+              <select id="lessonPlanHourSelect" class="form-control" onchange="onLessonPlanHourSelectChange()">
+                <!-- 単元選択に連動してJSで動的生成 -->
+              </select>
+            </div>
 
-          <div class="form-group mt-3">
-            <label>よく使う単元・進度キーワード (ワンタップ入力)</label>
-            <div class="learned-chip-group" id="lessonKeywordsContainer">
-              <span class="learned-chip" onclick="setLessonKeyword('単元導入・めあて確認')">単元導入</span>
-              <span class="learned-chip" onclick="setLessonKeyword('一次関数の式とグラフ')">一次関数グラフ</span>
-              <span class="learned-chip" onclick="setLessonKeyword('変化の割合・計算演習')">変化の割合</span>
-              <span class="learned-chip" onclick="setLessonKeyword('一次関数の利用 (文章題)')">一次関数利用</span>
-              <span class="learned-chip" onclick="setLessonKeyword('小テスト & 振り返り')">小テスト</span>
-              <span class="learned-chip" onclick="setLessonKeyword('章末問題・発展課題')">章末問題</span>
+            <!-- 選択中プリントの概要プレビュー -->
+            <div id="selectedLessonSummaryBox" class="mt-2" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem; font-size: 0.82rem; color: #334155; line-height: 1.45;">
+              <!-- 選択中のめあて等をプレビュー表示 -->
             </div>
           </div>
         </div>
-        <div class="slot-modal-footer">
-          <button type="button" class="btn btn-outline text-danger" onclick="clearCurrentLessonPlan()">
-            <i class="fa-solid fa-eraser"></i> 予定をクリア
-          </button>
-          <div style="flex: 1;"></div>
-          <button type="button" class="btn btn-outline text-success" id="btnOpenWorksheetFromModal" onclick="jumpToWorksheetFromSlot()" title="授業プリント工房を開く">
-            <i class="fa-solid fa-file-pen"></i> 授業プリント作成
-          </button>
-          <button type="button" class="btn btn-outline" onclick="closeLessonPlanModal()">キャンセル</button>
-          <button type="button" class="btn btn-primary" onclick="saveLessonPlan()">
-            <i class="fa-solid fa-check"></i> 学習内容を保存
-          </button>
+
+        <div class="slot-modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.25rem; box-sizing: border-box; width: 100%;">
+          <div>
+            <button type="button" class="btn btn-outline text-danger btn-sm" onclick="clearCurrentLessonPlan()" style="white-space: nowrap;">
+              <i class="fa-solid fa-eraser"></i> 予定をクリア
+            </button>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button type="button" class="btn btn-outline text-success btn-sm" id="btnOpenWorksheetFromModal" onclick="jumpToWorksheetFromSlot()" title="この授業プリントを開いて編集・印刷">
+              <i class="fa-solid fa-file-pen"></i> プリントを開く
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="closeLessonPlanModal()">キャンセル</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="saveLessonPlan()">
+              <i class="fa-solid fa-check"></i> 保存
+            </button>
+          </div>
         </div>
       </div>
     </div>

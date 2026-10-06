@@ -560,6 +560,47 @@
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   background: #ffffff;
+  padding: 0.75rem;
+}
+
+.week-override-section {
+  margin-bottom: 1.5rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.week-override-section:last-child {
+  margin-bottom: 0.5rem;
+}
+
+.week-section-header {
+  background: #f1f5f9;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.week-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.current-week-badge {
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 700;
 }
 
 .week-override-excel-table {
@@ -590,6 +631,11 @@
   background-color: #f0fdf4;
 }
 
+.week-override-excel-table tr.row-holiday td {
+  background-color: #f8fafc !important;
+  color: #94a3b8;
+}
+
 .week-override-excel-table tr:hover td {
   background-color: #f8fafc;
 }
@@ -599,6 +645,25 @@
   font-weight: 800;
   color: #1e293b;
   white-space: nowrap;
+}
+
+.day-holiday-select {
+  width: 100%;
+  font-size: 0.8rem;
+  padding: 4px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: #475569;
+  cursor: pointer;
+}
+
+.day-holiday-select.is-holiday {
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+  border-color: #f87171 !important;
+  font-weight: 700;
 }
 
 .excel-slot-select {

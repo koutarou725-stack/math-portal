@@ -821,7 +821,7 @@ function updateTimetableDayMemo(dateStr, value) {
 }
 
 // ------------------------------------------
-// 1週間の特時・校時振替マネージャー (Excel風シンプル表)
+// 特時・校時振替 ＆ 祝日・お休みマネージャー (複数週スクロール対応)
 // ------------------------------------------
 function openDayOverrideModal() {
   const modal = document.getElementById('dayOverrideModal');
@@ -829,10 +829,11 @@ function openDayOverrideModal() {
   
   const rangeText = document.getElementById('overrideWeekRangeText');
   if (rangeText) {
-    rangeText.textContent = `${weekDays[0].month}月${weekDays[0].date}日(${weekDays[0].dayName}) 〜 ${weekDays[4].month}月${weekDays[4].date}日(${weekDays[4].dayName}) の校時振替`;
+    rangeText.textContent = `${weekDays[0].month}月${weekDays[0].date}日(${weekDays[0].dayName})〜 の特時・校時振替とお休み設定`;
   }
 
-  renderWeekOverrideColumns(weekDays);
+  // 今週から向こう6週間分（約1ヶ月半、月またぎ対応）を生成
+  renderMultiWeekOverride(6);
   modal.classList.remove('hidden');
 }
 
@@ -840,7 +841,7 @@ function closeDayOverrideModal() {
   document.getElementById('dayOverrideModal').classList.add('hidden');
 }
 
-function renderWeekOverrideColumns(weekDays) {
+function renderMultiWeekOverride(numberOfWeeks = 6) {
   const container = document.getElementById('weekOverrideColumnsContainer');
   if (!container) return;
 
@@ -859,100 +860,140 @@ function renderWeekOverrideColumns(weekDays) {
     { code: 'special_行事', label: '行事' },
     { code: 'special_学年', label: '学年' },
     { code: 'special_自習', label: '自習' },
-    { code: 'none', label: '（カット）' }
+    { code: 'none', label: '（カット/空欄）' }
   ];
 
-  let tbodyRowsHtml = '';
+  const holidayPresets = [
+    { label: '授業あり (通常)', val: '' },
+    { label: '🎌 祝日・休日', val: '祝日・休日' },
+    { label: '🍂 秋休み', val: '秋休み' },
+    { label: '☕ 振替休業日', val: '振替休業日' },
+    { label: '🏫 開校・創立記念日', val: '開校・創立記念日' },
+    { label: '🌳 都民/市民の日', val: '都民/市民の日' },
+    { label: '🔒 学校閉庁日', val: '学校閉庁日' },
+    { label: '📝 自宅学習日', val: '自宅学習日' }
+  ];
 
-  weekDays.forEach(w => {
-    const existing = state.dateOverrides[w.dateStr];
-    const isToday = w.isToday;
+  let allSectionsHtml = '';
 
-    let periodTds = '';
-    for (let p = 1; p <= 6; p++) {
-      const currentVal = existing?.slots ? existing.slots[p] : `${w.dayKey}_${p}`;
-      const isShifted = (currentVal !== `${w.dayKey}_${p}` && currentVal !== 'none' && !currentVal.startsWith('special_'));
-      const isSpecial = currentVal.startsWith('special_');
-      const isCut = (currentVal === 'none');
+  for (let wIdx = 0; wIdx < numberOfWeeks; wIdx++) {
+    const offset = state.currentWeekOffset + wIdx;
+    const weekDays = getWeekDays(offset);
+    const isCurrentWeek = (wIdx === 0);
 
-      let classAttr = 'excel-slot-select';
-      if (isShifted) classAttr += ' is-shifted';
-      else if (isSpecial) classAttr += ' is-special';
-      else if (isCut) classAttr += ' is-cut';
+    let tbodyRowsHtml = '';
 
-      // オプション構築
-      let optGroupsHtml = '';
+    weekDays.forEach(w => {
+      const existing = state.dateOverrides[w.dateStr];
+      const isToday = w.isToday;
 
-      // 通常（この曜日のコマ）
-      optGroupsHtml += `<optgroup label="通常"><option value="${w.dayKey}_${p}">通常 (${w.dayName}${p})</option></optgroup>`;
+      // 既存のメモが休日リストに含まれているか、またはコマがすべて none か
+      const existingMemo = existing?.memo || '';
+      const isAllCut = existing?.slots && Object.keys(existing.slots).length >= 5 && Object.values(existing.slots).every(v => v === 'none');
+      const matchedHoliday = holidayPresets.find(h => h.val && existingMemo.includes(h.val))?.val || (isAllCut ? '祝日・休日' : '');
+      const isHoliday = !!matchedHoliday;
 
-      // 他の曜日コマ（51, 12等のExcelコマ番号付き）
-      daysOptions.forEach(day => {
-        let opts = '';
-        for (let pOpt = 1; pOpt <= 6; pOpt++) {
-          const val = `${day.code}_${pOpt}`;
-          const isSelected = (val === currentVal) ? 'selected' : '';
-          const codeNum = `${day.num}${pOpt}`; // 例: 51, 12, 34
-          opts += `<option value="${val}" ${isSelected}>${day.label}${pOpt} (${codeNum})</option>`;
-        }
-        optGroupsHtml += `<optgroup label="${day.label}曜コマ">${opts}</optgroup>`;
-      });
+      // お休みセレクトボックス
+      let holidayOpts = holidayPresets.map(h => 
+        `<option value="${h.val}" ${h.val === matchedHoliday ? 'selected' : ''}>${h.label}</option>`
+      ).join('');
 
-      // 特活・総合・学活
-      let specialOpts = '';
-      specialOptions.forEach(sp => {
-        const isSelected = (sp.code === currentVal) ? 'selected' : '';
-        specialOpts += `<option value="${sp.code}" ${isSelected}>${sp.label}</option>`;
-      });
-      optGroupsHtml += `<optgroup label="特活・総合・その他">${specialOpts}</optgroup>`;
+      let periodTds = '';
+      for (let p = 1; p <= 6; p++) {
+        const currentVal = existing?.slots ? existing.slots[p] : `${w.dayKey}_${p}`;
+        const isShifted = (currentVal !== `${w.dayKey}_${p}` && currentVal !== 'none' && !currentVal.startsWith('special_'));
+        const isSpecial = currentVal.startsWith('special_');
+        const isCut = (currentVal === 'none');
 
-      periodTds += `
-        <td>
-          <select class="${classAttr}" id="ov_slot_${w.dateStr}_${p}" onchange="onExcelSlotSelectChange(this)">
-            ${optGroupsHtml}
-          </select>
-        </td>
-      `;
-    }
+        let classAttr = 'excel-slot-select';
+        if (isShifted) classAttr += ' is-shifted';
+        else if (isSpecial) classAttr += ' is-special';
+        else if (isCut) classAttr += ' is-cut';
 
-    tbodyRowsHtml += `
-      <tr class="${isToday ? 'row-today' : ''}">
-        <td class="excel-day-cell">
-          <strong>${w.month}/${w.date} (${w.dayName})</strong>
-        </td>
-        <td style="text-align: center;">
-          <div class="day-preset-quick-btns">
-            <button type="button" class="day-preset-btn" onclick="applyDayColPreset('${w.dateStr}', '${w.dayKey}', 'reset')">通常</button>
-            <button type="button" class="day-preset-btn" onclick="applyDayColPreset('${w.dateStr}', '${w.dayKey}', 'mon')">月校時</button>
-            <button type="button" class="day-preset-btn" onclick="applyDayColPreset('${w.dateStr}', '${w.dayKey}', 'wed')">水校時</button>
-            <button type="button" class="day-preset-btn" onclick="applyDayColPreset('${w.dateStr}', '${w.dayKey}', 'fri')">金校時</button>
-            <button type="button" class="day-preset-btn" onclick="applyDayColPreset('${w.dateStr}', '${w.dayKey}', 'short4')">4時間</button>
-          </div>
-        </td>
-        ${periodTds}
-      </tr>
-    `;
-  });
+        // オプション構築
+        let optGroupsHtml = '';
 
-  container.innerHTML = `
-    <table class="week-override-excel-table">
-      <thead>
-        <tr>
-          <th style="width: 100px;">月日・曜日</th>
-          <th style="width: 175px;">一括プリセット</th>
-          <th>1限</th>
-          <th>2限</th>
-          <th>3限</th>
-          <th>4限</th>
-          <th>5限</th>
-          <th>6限</th>
+        // 通常（この曜日のコマ）
+        optGroupsHtml += `<optgroup label="通常"><option value="${w.dayKey}_${p}">通常 (${w.dayName}${p})</option></optgroup>`;
+
+        // 他の曜日コマ（51, 12等のExcelコマ番号付き）
+        daysOptions.forEach(day => {
+          let opts = '';
+          for (let pOpt = 1; pOpt <= 6; pOpt++) {
+            const val = `${day.code}_${pOpt}`;
+            const isSelected = (val === currentVal) ? 'selected' : '';
+            const codeNum = `${day.num}${pOpt}`; // 例: 51, 12, 34
+            opts += `<option value="${val}" ${isSelected}>${day.label}${pOpt} (${codeNum})</option>`;
+          }
+          optGroupsHtml += `<optgroup label="${day.label}曜コマ">${opts}</optgroup>`;
+        });
+
+        // 特活・総合・学活
+        let specialOpts = '';
+        specialOptions.forEach(sp => {
+          const isSelected = (sp.code === currentVal) ? 'selected' : '';
+          specialOpts += `<option value="${sp.code}" ${isSelected}>${sp.label}</option>`;
+        });
+        optGroupsHtml += `<optgroup label="特活・総合・その他">${specialOpts}</optgroup>`;
+
+        periodTds += `
+          <td>
+            <select class="${classAttr}" id="ov_slot_${w.dateStr}_${p}" onchange="onExcelSlotSelectChange(this)">
+              ${optGroupsHtml}
+            </select>
+          </td>
+        `;
+      }
+
+      tbodyRowsHtml += `
+        <tr class="${isToday ? 'row-today' : ''} ${isHoliday ? 'row-holiday' : ''}" id="ov_row_${w.dateStr}">
+          <td class="excel-day-cell">
+            <strong>${w.month}/${w.date} (${w.dayName})</strong>
+          </td>
+          <td>
+            <select class="day-holiday-select ${isHoliday ? 'is-holiday' : ''}" 
+                    id="ov_holiday_${w.dateStr}" 
+                    onchange="onDayHolidaySelectChange('${w.dateStr}', '${w.dayKey}', this.value)">
+              ${holidayOpts}
+            </select>
+          </td>
+          ${periodTds}
         </tr>
-      </thead>
-      <tbody>
-        ${tbodyRowsHtml}
-      </tbody>
-    </table>
-  `;
+      `;
+    });
+
+    const weekTitle = `${weekDays[0].month}月${weekDays[0].date}日(${weekDays[0].dayName}) 〜 ${weekDays[4].month}月${weekDays[4].date}日(${weekDays[4].dayName})`;
+
+    allSectionsHtml += `
+      <div class="week-override-section">
+        <div class="week-section-header">
+          <div class="week-section-title">
+            <i class="fa-solid fa-calendar-week text-primary"></i> ${weekTitle}
+            ${isCurrentWeek ? '<span class="current-week-badge">今週</span>' : ''}
+          </div>
+        </div>
+        <table class="week-override-excel-table">
+          <thead>
+            <tr>
+              <th style="width: 100px;">月日・曜日</th>
+              <th style="width: 155px;">お休み設定 (1日)</th>
+              <th>1限</th>
+              <th>2限</th>
+              <th>3限</th>
+              <th>4限</th>
+              <th>5限</th>
+              <th>6限</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tbodyRowsHtml}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  container.innerHTML = allSectionsHtml;
 }
 
 function onExcelSlotSelectChange(selectEl) {
@@ -962,13 +1003,28 @@ function onExcelSlotSelectChange(selectEl) {
     selectEl.classList.add('is-cut');
   } else if (val.startsWith('special_')) {
     selectEl.classList.add('is-special');
-  } else if (!val.includes(selectEl.id.split('_')[2])) { // 日付のdayKeyと不一致
+  } else if (!val.includes(selectEl.id.split('_')[2])) {
     selectEl.classList.add('is-shifted');
   }
 }
 
-function applyDayColPreset(dateStr, defaultDayKey, preset) {
-  if (preset === 'reset') {
+function onDayHolidaySelectChange(dateStr, defaultDayKey, holidayVal) {
+  const row = document.getElementById(`ov_row_${dateStr}`);
+  const holidaySelect = document.getElementById(`ov_holiday_${dateStr}`);
+
+  if (holidayVal) {
+    // 休日設定: 1〜6限をすべて none（お休み）にする
+    for (let p = 1; p <= 6; p++) {
+      const sel = document.getElementById(`ov_slot_${dateStr}_${p}`);
+      if (sel) {
+        sel.value = 'none';
+        onExcelSlotSelectChange(sel);
+      }
+    }
+    if (row) row.classList.add('row-holiday');
+    if (holidaySelect) holidaySelect.classList.add('is-holiday');
+  } else {
+    // 通常に戻す: 1〜6限を defaultDayKey_p に戻す
     for (let p = 1; p <= 6; p++) {
       const sel = document.getElementById(`ov_slot_${dateStr}_${p}`);
       if (sel) {
@@ -976,70 +1032,66 @@ function applyDayColPreset(dateStr, defaultDayKey, preset) {
         onExcelSlotSelectChange(sel);
       }
     }
-    return;
-  }
-
-  if (preset === 'short4') {
-    for (let p = 1; p <= 6; p++) {
-      const sel = document.getElementById(`ov_slot_${dateStr}_${p}`);
-      if (!sel) continue;
-      if (p <= 4) sel.value = `${defaultDayKey}_${p}`;
-      else sel.value = 'none';
-      onExcelSlotSelectChange(sel);
-    }
-    return;
-  }
-
-  // 曜日校時振替 (月〜金)
-  for (let p = 1; p <= 6; p++) {
-    const sel = document.getElementById(`ov_slot_${dateStr}_${p}`);
-    if (sel) {
-      sel.value = `${preset}_${p}`;
-      onExcelSlotSelectChange(sel);
-    }
+    if (row) row.classList.remove('row-holiday');
+    if (holidaySelect) holidaySelect.classList.remove('is-holiday');
   }
 }
 
 function saveWeekOverrides() {
-  const weekDays = getWeekDays(state.currentWeekOffset);
+  // 画面上の全 select (ov_slot_*) から日付を取得
+  const allSlotSelects = document.querySelectorAll('[id^="ov_slot_"]');
+  const dateSet = new Set();
+  allSlotSelects.forEach(sel => {
+    const parts = sel.id.split('_'); // ov, slot, dateStr, period
+    if (parts.length >= 4) {
+      dateSet.add(parts[2]);
+    }
+  });
+
   let changedCount = 0;
 
-  weekDays.forEach(w => {
-    // 既存のメモ（時間割ヘッダーで入力されたもの）を保持
-    const existingMemo = state.dateOverrides[w.dateStr]?.memo || '';
+  dateSet.forEach(dateStr => {
+    const holidaySelect = document.getElementById(`ov_holiday_${dateStr}`);
+    const holidayVal = holidaySelect ? holidaySelect.value : '';
+    const existingMemo = state.dateOverrides[dateStr]?.memo || '';
+    
+    // メモ: 休日が選ばれていればその休日名、それ以外は既存メモ
+    let finalMemo = existingMemo;
+    if (holidayVal) {
+      finalMemo = holidayVal;
+    } else if (existingMemo === '祝日・休日' || existingMemo === '秋休み' || existingMemo === '振替休業日' || existingMemo === '開校・創立記念日' || existingMemo === '都民/市民の日' || existingMemo === '学校閉庁日' || existingMemo === '自宅学習日') {
+      finalMemo = '';
+    }
+
+    const d = new Date(dateStr);
+    const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const defaultDayKey = dayKeys[d.getDay()];
+
     const slots = {};
     let isDifferentFromDefault = false;
 
     for (let p = 1; p <= 6; p++) {
-      const sel = document.getElementById(`ov_slot_${w.dateStr}_${p}`);
-      const val = sel ? sel.value : `${w.dayKey}_${p}`;
+      const sel = document.getElementById(`ov_slot_${dateStr}_${p}`);
+      const val = sel ? sel.value : `${defaultDayKey}_${p}`;
       slots[p] = val;
-      if (val !== `${w.dayKey}_${p}`) isDifferentFromDefault = true;
+      if (val !== `${defaultDayKey}_${p}`) isDifferentFromDefault = true;
     }
 
-    if (isDifferentFromDefault) {
-      state.dateOverrides[w.dateStr] = {
-        memo: existingMemo,
+    if (isDifferentFromDefault || finalMemo) {
+      state.dateOverrides[dateStr] = {
+        memo: finalMemo,
         slots: slots
       };
       changedCount++;
     } else {
-      // 振替コマがない場合、メモがあればメモだけ残す
-      if (existingMemo) {
-        state.dateOverrides[w.dateStr] = {
-          memo: existingMemo,
-          slots: {}
-        };
-      } else {
-        delete state.dateOverrides[w.dateStr];
-      }
+      delete state.dateOverrides[dateStr];
     }
   });
 
   localStorage.setItem('math_portal_date_overrides', JSON.stringify(state.dateOverrides));
   closeDayOverrideModal();
   renderRealTimetableGrid();
-  showToast('<i class="fa-solid fa-circle-check text-success"></i> 1週間の特時・校時振替を時間割に反映しました！');
+  showToast('<i class="fa-solid fa-circle-check text-success"></i> 翌月までの特時・お休み設定を一括保存しました！');
   triggerAutoCloudSync();
 }
 
@@ -1275,12 +1327,11 @@ function saveSlotEdit() {
 }
 
 // ------------------------------------------
-// 週案・学習予定モーダル (実時間割での進度・予定管理)
+// 週案・授業プリントセット モーダル (実時間割での進度・予定管理)
 // ------------------------------------------
 function openLessonPlanModal(dateStr, period, className, subjectName) {
   state.editingLessonPlan = { dateStr, period, className, subjectName };
   const key = `${dateStr}_${period}`;
-  const existingPlan = state.lessonPlans[key] || '';
   state.lessonPlanPrintRefs = state.lessonPlanPrintRefs || JSON.parse(localStorage.getItem('math_portal_lesson_plan_prints') || '{}');
   const existingPrintRef = state.lessonPlanPrintRefs[key] || null;
 
@@ -1290,89 +1341,119 @@ function openLessonPlanModal(dateStr, period, className, subjectName) {
     const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
     const dateFormatted = `${d.getMonth() + 1}/${d.getDate()} (${dayNames[d.getDay()]}) ${period}限`;
     banner.innerHTML = `
-      <div><strong>${dateFormatted}</strong> : <span style="font-size: 1rem; font-weight: 800;">${escapeHtml(className)}</span></div>
-      <div><span class="tt-subject-badge" style="background:#dbeafe; color:#1d4ed8;">${escapeHtml(subjectName)}</span></div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div><strong>${dateFormatted}</strong> : <span style="font-size: 1.05rem; font-weight: 800;">${escapeHtml(className)}</span></div>
+        <div><span class="tt-subject-badge" style="background:#dbeafe; color:#1d4ed8; font-weight:700;">${escapeHtml(subjectName)}</span></div>
+      </div>
     `;
   }
 
-  const input = document.getElementById('lessonPlanInput');
-  if (input) input.value = existingPlan;
-
-  // 授業プリント連動セレクターの初期化
-  initLessonPlanPrintSelect(className, subjectName, existingPrintRef);
+  // 2段階選択（単元 ➔ 時数）の初期化
+  initTwoStepLessonPrintSelect(className, subjectName, existingPrintRef);
 
   document.getElementById('lessonPlanModal').classList.remove('hidden');
-  setTimeout(() => input?.focus(), 100);
 }
 
-function initLessonPlanPrintSelect(className, subjectName, existingPrintRef) {
-  const container = document.getElementById('lessonPlanPrintLinkGroup');
-  const select = document.getElementById('lessonPlanPrintSelect');
-  if (!container || !select) return;
-
-  const isMath = !subjectName || subjectName === '数学' || subjectName.includes('数学');
-  container.style.display = isMath ? 'block' : 'none';
-
+function initTwoStepLessonPrintSelect(className, subjectName, existingPrintRef) {
   let grade = extractGradeFromClassName(className) || '3';
   if (!boardLessonDatabase[grade]) grade = '3';
 
+  state.editingLessonPlan.currentGrade = grade;
+
+  const unitSelect = document.getElementById('lessonPlanUnitSelect');
+  if (!unitSelect) return;
+
   const gData = boardLessonDatabase[grade];
-  let optionsHtml = `<option value="">（授業プリントを選択して内容をセット）</option>`;
+  if (!gData || !gData.units || gData.units.length === 0) return;
 
-  if (gData && gData.units) {
-    gData.units.forEach(u => {
-      const lessons = (typeof getUnitLessons === 'function') ? getUnitLessons(grade, u.id) : (u.lessons || []);
-      if (lessons.length > 0) {
-        let optItems = '';
-        lessons.forEach(l => {
-          const val = `${grade}__${u.id}__${l.hour}`;
-          const isSelected = existingPrintRef && existingPrintRef.grade === grade && existingPrintRef.unitId === u.id && Number(existingPrintRef.hour) === Number(l.hour) ? 'selected' : '';
-          optItems += `<option value="${val}" ${isSelected}>第${l.hour}時: ${escapeHtml(l.title)}</option>`;
-        });
-        optionsHtml += `<optgroup label="【${gData.gradeLabel}】${escapeHtml(u.unitName)}">${optItems}</optgroup>`;
-      }
-    });
-  }
+  // 単元セレクトのオプション生成
+  unitSelect.innerHTML = gData.units.map((u, idx) => {
+    const isSelected = existingPrintRef && existingPrintRef.unitId === u.id ? 'selected' : (!existingPrintRef && idx === 0 ? 'selected' : '');
+    return `<option value="${u.id}" ${isSelected}>${escapeHtml(u.unitName)}</option>`;
+  }).join('');
 
-  select.innerHTML = optionsHtml;
+  const targetUnitId = (existingPrintRef && existingPrintRef.unitId) ? existingPrintRef.unitId : gData.units[0].id;
+  const targetHour = (existingPrintRef && existingPrintRef.hour) ? Number(existingPrintRef.hour) : null;
+
+  // 時数セレクトの生成とプレビュー更新
+  updateLessonPlanHourSelect(grade, targetUnitId, targetHour);
 }
 
-function onLessonPlanPrintSelectChange() {
-  applySelectedPrintToPlan();
+function updateLessonPlanHourSelect(grade, unitId, selectedHour = null) {
+  const hourSelect = document.getElementById('lessonPlanHourSelect');
+  if (!hourSelect) return;
+
+  const lessons = (typeof getUnitLessons === 'function') ? getUnitLessons(grade, unitId) : [];
+  if (lessons.length === 0) {
+    hourSelect.innerHTML = '<option value="">（この単元にはプリントがありません）</option>';
+    updateLessonPreviewBox(null, null);
+    return;
+  }
+
+  hourSelect.innerHTML = lessons.map((l, idx) => {
+    const isSelected = selectedHour !== null ? (Number(l.hour) === Number(selectedHour) ? 'selected' : '') : (idx === 0 ? 'selected' : '');
+    return `<option value="${l.hour}" ${isSelected}>第${l.hour}時: ${escapeHtml(l.title)}</option>`;
+  }).join('');
+
+  const currentHour = hourSelect.value ? Number(hourSelect.value) : lessons[0].hour;
+  const currentLesson = lessons.find(l => Number(l.hour) === currentHour) || lessons[0];
+  const unit = (boardLessonDatabase[grade]?.units || []).find(u => u.id === unitId);
+
+  updateLessonPreviewBox(unit, currentLesson);
 }
 
-function applySelectedPrintToPlan() {
-  const select = document.getElementById('lessonPlanPrintSelect');
-  const input = document.getElementById('lessonPlanInput');
-  if (!select || !input) return;
+function updateLessonPreviewBox(unit, lesson) {
+  const box = document.getElementById('selectedLessonSummaryBox');
+  if (!box) return;
 
-  const val = select.value;
-  if (!val) return;
-
-  const [grade, unitId, hour] = val.split('__');
-  const gData = boardLessonDatabase[grade];
-  const unit = gData?.units?.find(u => u.id === unitId);
-  const lessons = (typeof getUnitLessons === 'function') ? getUnitLessons(grade, unitId) : (unit?.lessons || []);
-  const lesson = lessons.find(l => Number(l.hour) === Number(hour));
-
-  if (lesson && unit) {
-    // 学習内容入力欄にセット
-    input.value = `第${lesson.hour}時: ${lesson.title}`;
-    // 編集ステートに保持
-    state.editingLessonPlan.selectedPrintRef = { grade, unitId, hour: Number(hour) };
-    showToast(`📄 第${lesson.hour}時「${lesson.title}」を学習内容に反映しました`);
+  if (!lesson || !unit) {
+    box.innerHTML = '<span class="text-muted">プリントを選択してください</span>';
+    return;
   }
+
+  const objBlock = (lesson.leftBlocks || []).find(b => b.type === 'objective');
+  const objText = objBlock?.data?.text || '本時のめあてを設定して学習を進めます';
+
+  box.innerHTML = `
+    <div style="font-weight: 700; color: #1e293b; margin-bottom: 0.25rem;">
+      <i class="fa-solid fa-file-lines text-primary"></i> 【${escapeHtml(unit.unitName)}】第${lesson.hour}時: ${escapeHtml(lesson.title)}
+    </div>
+    <div style="color: #64748b; font-size: 0.78rem;">
+      <strong>めあて:</strong> ${escapeHtml(objText)}
+    </div>
+  `;
+
+  // 一時ステートに保持
+  state.editingLessonPlan.selectedPrintRef = {
+    grade: state.editingLessonPlan.currentGrade,
+    unitId: unit.id,
+    hour: Number(lesson.hour),
+    title: lesson.title
+  };
+}
+
+function onLessonPlanUnitSelectChange() {
+  const grade = state.editingLessonPlan?.currentGrade || '3';
+  const unitSelect = document.getElementById('lessonPlanUnitSelect');
+  if (!unitSelect) return;
+  updateLessonPlanHourSelect(grade, unitSelect.value, null);
+}
+
+function onLessonPlanHourSelectChange() {
+  const grade = state.editingLessonPlan?.currentGrade || '3';
+  const unitSelect = document.getElementById('lessonPlanUnitSelect');
+  const hourSelect = document.getElementById('lessonPlanHourSelect');
+  if (!unitSelect || !hourSelect) return;
+
+  const lessons = (typeof getUnitLessons === 'function') ? getUnitLessons(grade, unitSelect.value) : [];
+  const currentLesson = lessons.find(l => Number(l.hour) === Number(hourSelect.value));
+  const unit = (boardLessonDatabase[grade]?.units || []).find(u => u.id === unitSelect.value);
+
+  updateLessonPreviewBox(unit, currentLesson);
 }
 
 function closeLessonPlanModal() {
   document.getElementById('lessonPlanModal').classList.add('hidden');
-}
-
-function setLessonKeyword(keyword) {
-  const input = document.getElementById('lessonPlanInput');
-  if (input) {
-    input.value = input.value ? `${input.value} / ${keyword}` : keyword;
-  }
 }
 
 function clearCurrentLessonPlan() {
@@ -1386,35 +1467,26 @@ function clearCurrentLessonPlan() {
   localStorage.setItem('math_portal_lesson_plans', JSON.stringify(state.lessonPlans));
   renderRealTimetableGrid();
   closeLessonPlanModal();
-  showToast('🗑️ 学習予定をクリアしました');
+  showToast('🗑️ 授業予定をクリアしました');
   triggerAutoCloudSync();
 }
 
 function saveLessonPlan() {
   const { dateStr, period, selectedPrintRef } = state.editingLessonPlan;
-  const input = document.getElementById('lessonPlanInput');
-  const val = input ? input.value.trim() : '';
   const key = `${dateStr}_${period}`;
 
-  if (val) {
-    state.lessonPlans[key] = val;
-    if (selectedPrintRef) {
-      state.lessonPlanPrintRefs = state.lessonPlanPrintRefs || {};
-      state.lessonPlanPrintRefs[key] = selectedPrintRef;
-      localStorage.setItem('math_portal_lesson_plan_prints', JSON.stringify(state.lessonPlanPrintRefs));
-    }
-  } else {
-    delete state.lessonPlans[key];
-    if (state.lessonPlanPrintRefs) {
-      delete state.lessonPlanPrintRefs[key];
-      localStorage.setItem('math_portal_lesson_plan_prints', JSON.stringify(state.lessonPlanPrintRefs));
-    }
+  if (selectedPrintRef) {
+    const text = `第${selectedPrintRef.hour}時: ${selectedPrintRef.title}`;
+    state.lessonPlans[key] = text;
+    state.lessonPlanPrintRefs = state.lessonPlanPrintRefs || {};
+    state.lessonPlanPrintRefs[key] = selectedPrintRef;
+    localStorage.setItem('math_portal_lesson_plan_prints', JSON.stringify(state.lessonPlanPrintRefs));
+    localStorage.setItem('math_portal_lesson_plans', JSON.stringify(state.lessonPlans));
+    showToast(`📝 【${text}】をセットしました`);
   }
 
-  localStorage.setItem('math_portal_lesson_plans', JSON.stringify(state.lessonPlans));
   renderRealTimetableGrid();
   closeLessonPlanModal();
-  showToast(val ? `📝 学習予定【${val}】を保存しました` : '📝 学習予定をクリアしました');
   triggerAutoCloudSync();
 }
 
