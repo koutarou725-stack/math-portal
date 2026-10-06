@@ -123,9 +123,14 @@
                   <span>本日の授業: <strong>3コマ</strong> (2年1組 / 2年3組 / 3年2組)</span>
                 </div>
                 <div class="quick-status-item" id="heroExamStatusItem" onclick="openExamSettingModal()" style="cursor: pointer;" title="クリックして定期考査日程を変更">
-                  <i class="fa-solid fa-clock-rotate-left text-success"></i>
+                  <i class="fa-solid fa-bullseye text-warning"></i>
                   <span id="heroExamStatusText">次回定期テストまで: <strong>計算中...</strong></span>
                 </div>
+              </div>
+
+              <!-- トップバナー内のクラス別考査コマ数テーブル -->
+              <div class="hero-exam-classes-table-container" id="heroExamClassesTableContainer">
+                <!-- JSで動的にクラス別コマ数表を生成 -->
               </div>
             </div>
           </div>

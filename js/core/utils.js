@@ -2,6 +2,41 @@ function escapeHtml(str) {
   return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// ドロップダウンや時間割セル、プレビュー用のTeX数式クリーンアップ（$y=ax+b$ ➔ y=ax+b 等）
+function cleanMathText(str) {
+  if (!str) return '';
+  let s = String(str);
+  // 関数レプリサーを使って $...$ を安全・確実に日本語・自然な数式テキストに変換
+  s = s.replace(/\$([^\$]+)\$/g, (match, inner) => {
+    let t = inner.trim();
+    return t.replace(/\\displaystyle\s*/g, '')
+            .replace(/\\text\{([^\}]+)\}/g, '$1')
+            .replace(/\\implies/g, '➔')
+            .replace(/\\sqrt\{([^\}]+)\}/g, '√$1')
+            .replace(/\\sqrt\{2\}/g, '√2')
+            .replace(/\\sqrt\{3\}/g, '√3')
+            .replace(/\\sqrt/g, '√')
+            .replace(/\\pi/g, 'π')
+            .replace(/\\times/g, '×')
+            .replace(/\\div/g, '÷')
+            .replace(/\\pm/g, '±')
+            .replace(/\\le/g, '≦')
+            .replace(/\\ge/g, '≧')
+            .replace(/\\angle\s*/g, '∠')
+            .replace(/\\triangle\s*/g, '△')
+            .replace(/\\sim/g, '∽')
+            .replace(/\\equiv/g, '≡')
+            .replace(/\\quad/g, ' ')
+            .replace(/\\,/g, ' ')
+            .replace(/\\ /g, ' ')
+            .replace(/\^2/g, '²')
+            .replace(/\^3/g, '³')
+            .replace(/\\frac\{([^\}]+)\}\{([^\}]+)\}/g, '$1/$2');
+  });
+  return s;
+}
+window.cleanMathText = cleanMathText;
+
 function showToast(msg) {
   let toast = document.getElementById('appToast');
   if (!toast) {

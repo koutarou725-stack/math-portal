@@ -19,6 +19,7 @@
 
 .timetable-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   text-align: center;
 }
@@ -30,11 +31,24 @@
   font-weight: 700;
   border-bottom: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
+  box-sizing: border-box;
 }
 
-.timetable-table th.time-col {
-  width: 74px;
+.timetable-table th.time-col,
+.timetable-table td.time-col {
+  width: 72px;
+  min-width: 72px;
+  max-width: 72px;
   background: #f1f5f9;
+}
+
+/* 月〜金の各曜日列: 幅を均等固定（横に伸びすぎるのを完全に防止） */
+.timetable-table th:not(.time-col),
+.timetable-table td:not(.time-col) {
+  width: calc((100% - 72px) / 5);
+  max-width: calc((100% - 72px) / 5);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .timetable-table th.col-active {
@@ -49,6 +63,7 @@
   border-right: 1px solid var(--border-color);
   vertical-align: top;
   height: 72px;
+  box-sizing: border-box;
 }
 
 .timetable-table td.col-active {
@@ -336,12 +351,15 @@
   background: rgba(255, 255, 255, 0.9);
   border: 1px dashed rgba(0, 0, 0, 0.15);
   border-radius: 3px;
-  padding: 0.15rem 0.25rem;
+  padding: 0.18rem 0.28rem;
   font-size: 0.68rem;
   cursor: pointer;
   transition: all 0.15s;
   text-align: left;
-  line-height: 1.2;
+  line-height: 1.25;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .tt-lesson-plan:hover {
@@ -358,6 +376,10 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
 }
 
 .lesson-plan-text.placeholder {
@@ -1266,4 +1288,147 @@
 .exam-setting-link-btn:hover {
   background: #2563eb;
   color: #ffffff;
+}
+
+/* ========================================================
+   トップバナー（ヒーロー）用 定期考査クラス別コマ数テーブル
+   ======================================================== */
+.hero-exam-classes-table-container {
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.hero-exam-table-card {
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 0.65rem 0.95rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s ease;
+  color: #f8fafc;
+}
+
+.hero-exam-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 0.35rem;
+}
+
+.hero-exam-table-header .table-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+.hero-exam-table-header .table-sub {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.hero-exam-table-scroll {
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.hero-exam-grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.hero-exam-grid-table th,
+.hero-exam-grid-table td {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
+}
+
+.hero-exam-grid-table thead th {
+  background: rgba(30, 41, 59, 0.85);
+  color: #93c5fd;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.hero-exam-grid-table thead th.head-label {
+  background: rgba(15, 23, 42, 0.9);
+  color: #cbd5e1;
+  text-align: left;
+  font-weight: 700;
+  min-width: 80px;
+}
+
+.hero-exam-grid-table tbody th.head-label {
+  background: rgba(15, 23, 42, 0.8);
+  color: #cbd5e1;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.74rem;
+}
+
+.hero-exam-grid-table tbody td {
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8fafc;
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-exam-grid-table tbody td strong {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #38bdf8;
+  margin-right: 2px;
+}
+
+.hero-exam-grid-table tbody td .unit {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.hero-exam-grid-table tbody td.count-low {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.hero-exam-grid-table tbody td.count-low strong {
+  color: #f87171;
+}
+
+.hero-exam-grid-table tbody td.count-high {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.hero-exam-grid-table tbody td.count-high strong {
+  color: #4ade80;
+}
+
+.hero-exam-table-alert {
+  margin-top: 0.45rem;
+  font-size: 0.72rem;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  background: rgba(251, 191, 36, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border-left: 3px solid #f59e0b;
+}
+
+.hero-quick-status .quick-status-item#heroExamStatusItem:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }

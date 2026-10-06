@@ -763,9 +763,9 @@ function renderRealTimetableGrid() {
             </div>
 
             <!-- 週案・学習内容入力枠 (クリックで予定を打てる) -->
-            <div class="tt-lesson-plan" onclick="openLessonPlanModal('${w.dateStr}', ${t.p}, '${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}')" title="クリックしてこの時間の学習予定・単元名を入力">
+            <div class="tt-lesson-plan" onclick="openLessonPlanModal('${w.dateStr}', ${t.p}, '${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}')" title="クリックしてこの時間の学習予定・単元名を入力: ${escapeHtml(cleanMathText(currentPlan))}">
               <div class="lesson-plan-text ${currentPlan ? '' : 'placeholder'}">
-                ${currentPlan ? `<i class="fa-solid fa-book-open" style="font-size: 0.65rem; margin-right: 2px;"></i>${escapeHtml(currentPlan)}` : '＋ 予定入力'}
+                ${currentPlan ? `<i class="fa-solid fa-book-open" style="font-size: 0.65rem; margin-right: 2px;"></i>${escapeHtml(cleanMathText(currentPlan))}` : '＋ 予定入力'}
               </div>
             </div>
 
@@ -1368,7 +1368,8 @@ function initTwoStepLessonPrintSelect(className, subjectName, existingPrintRef) 
   // 単元セレクトのオプション生成
   unitSelect.innerHTML = gData.units.map((u, idx) => {
     const isSelected = existingPrintRef && existingPrintRef.unitId === u.id ? 'selected' : (!existingPrintRef && idx === 0 ? 'selected' : '');
-    return `<option value="${u.id}" ${isSelected}>${escapeHtml(u.unitName)}</option>`;
+    const cleanUnit = (typeof cleanMathText === 'function') ? cleanMathText(u.unitName) : u.unitName;
+    return `<option value="${u.id}" ${isSelected}>${escapeHtml(cleanUnit)}</option>`;
   }).join('');
 
   const targetUnitId = (existingPrintRef && existingPrintRef.unitId) ? existingPrintRef.unitId : gData.units[0].id;
@@ -1395,7 +1396,8 @@ function onLessonPlanGradeSelectChange() {
   }
 
   unitSelect.innerHTML = gData.units.map(u => {
-    return `<option value="${u.id}">${escapeHtml(u.unitName)}</option>`;
+    const cleanUnit = (typeof cleanMathText === 'function') ? cleanMathText(u.unitName) : u.unitName;
+    return `<option value="${u.id}">${escapeHtml(cleanUnit)}</option>`;
   }).join('');
 
   const targetUnitId = gData.units[0].id;
@@ -1415,7 +1417,8 @@ function updateLessonPlanHourSelect(grade, unitId, selectedHour = null) {
 
   hourSelect.innerHTML = lessons.map((l, idx) => {
     const isSelected = selectedHour !== null ? (Number(l.hour) === Number(selectedHour) ? 'selected' : '') : (idx === 0 ? 'selected' : '');
-    return `<option value="${l.hour}" ${isSelected}>第${l.hour}時: ${escapeHtml(l.title)}</option>`;
+    const cleanTitle = (typeof cleanMathText === 'function') ? cleanMathText(l.title) : l.title;
+    return `<option value="${l.hour}" ${isSelected}>第${l.hour}時: ${escapeHtml(cleanTitle)}</option>`;
   }).join('');
 
   const currentHour = hourSelect.value ? Number(hourSelect.value) : lessons[0].hour;
@@ -1435,14 +1438,17 @@ function updateLessonPreviewBox(unit, lesson) {
   }
 
   const objBlock = (lesson.leftBlocks || []).find(b => b.type === 'objective');
-  const objText = objBlock?.data?.text || '本時のめあてを設定して学習を進めます';
+  const rawObjText = objBlock?.data?.text || '本時のめあてを設定して学習を進めます';
+  const cleanUnitName = (typeof cleanMathText === 'function') ? cleanMathText(unit.unitName) : unit.unitName;
+  const cleanTitle = (typeof cleanMathText === 'function') ? cleanMathText(lesson.title) : lesson.title;
+  const cleanObj = (typeof cleanMathText === 'function') ? cleanMathText(rawObjText) : rawObjText;
 
   box.innerHTML = `
     <div style="font-weight: 700; color: #1e293b; margin-bottom: 0.25rem;">
-      <i class="fa-solid fa-file-lines text-primary"></i> 【${escapeHtml(unit.unitName)}】第${lesson.hour}時: ${escapeHtml(lesson.title)}
+      <i class="fa-solid fa-file-lines text-primary"></i> 【${escapeHtml(cleanUnitName)}】第${lesson.hour}時: ${escapeHtml(cleanTitle)}
     </div>
     <div style="color: #64748b; font-size: 0.78rem;">
-      <strong>めあて:</strong> ${escapeHtml(objText)}
+      <strong>めあて:</strong> ${escapeHtml(cleanObj)}
     </div>
   `;
 
@@ -1451,7 +1457,7 @@ function updateLessonPreviewBox(unit, lesson) {
     grade: state.editingLessonPlan.currentGrade,
     unitId: unit.id,
     hour: Number(lesson.hour),
-    title: lesson.title
+    title: cleanTitle
   };
 }
 
@@ -1499,7 +1505,9 @@ function saveLessonPlan() {
   const key = `${dateStr}_${period}`;
 
   if (selectedPrintRef) {
-    const text = `第${selectedPrintRef.hour}時: ${selectedPrintRef.title}`;
+    const cleanTitle = (typeof cleanMathText === 'function') ? cleanMathText(selectedPrintRef.title) : selectedPrintRef.title;
+    selectedPrintRef.title = cleanTitle;
+    const text = `第${selectedPrintRef.hour}時: ${cleanTitle}`;
     state.lessonPlans[key] = text;
     state.lessonPlanPrintRefs = state.lessonPlanPrintRefs || {};
     state.lessonPlanPrintRefs[key] = selectedPrintRef;
@@ -1751,17 +1759,20 @@ function renderExamCountdownBar() {
 
 function updateHeroExamStatus() {
   const textEl = document.getElementById('heroExamStatusText');
-  if (!textEl) return;
+  const tableContainer = document.getElementById('heroExamClassesTableContainer');
+  if (!textEl && !tableContainer) return;
 
   const data = calculateExamCountdown();
   if (!data || data.isPast) {
-    textEl.innerHTML = `次回定期テスト: <strong>日程設定はこちら</strong>`;
+    if (textEl) textEl.innerHTML = `次回定期考査: <strong>日程設定はこちら</strong>`;
+    if (tableContainer) tableContainer.innerHTML = '';
     return;
   }
 
   const sortedClasses = Object.keys(data.classCounts).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
   if (sortedClasses.length === 0) {
-    textEl.innerHTML = `${escapeHtml(data.examName)}まで: <strong>あと ${data.diffDays}日</strong>`;
+    if (textEl) textEl.innerHTML = `${escapeHtml(data.examName)}まで: <strong>あと ${data.diffDays}日</strong> ｜ 登録クラスなし`;
+    if (tableContainer) tableContainer.innerHTML = '';
     return;
   }
 
@@ -1770,7 +1781,54 @@ function updateHeroExamStatus() {
   const maxC = Math.max(...counts);
   const rangeStr = (minC === maxC) ? `各クラス ${minC}コマ` : `各クラス ${minC}〜${maxC}コマ`;
 
-  textEl.innerHTML = `${escapeHtml(data.examName)}まで: <strong>残り ${rangeStr}</strong> (計${data.totalLessons}コマ)`;
+  if (textEl) {
+    textEl.innerHTML = `${escapeHtml(data.examName)} (${escapeHtml(data.examDateStr)}) まで: <strong>あと ${data.diffDays}日</strong> ｜ 残り ${rangeStr} (計${data.totalLessons}コマ)`;
+  }
+
+  if (tableContainer) {
+    const gap = maxC - minC;
+    let diffAlert = '';
+    if (gap > 0 && sortedClasses.length >= 2) {
+      diffAlert = `<div class="hero-exam-table-alert"><i class="fa-solid fa-triangle-exclamation text-warning"></i> クラス差: 最大 ${gap}コマの開きがあります（特時・振替での進度調整を推奨）</div>`;
+    }
+
+    let thCells = sortedClasses.map(cls => `<th>${escapeHtml(cls)}</th>`).join('');
+    let tdCells = sortedClasses.map(cls => {
+      const c = data.classCounts[cls];
+      const isLow = (minC !== maxC && c === minC);
+      const isHigh = (minC !== maxC && c === maxC);
+      let badgeClass = '';
+      if (isLow) badgeClass = 'count-low';
+      else if (isHigh) badgeClass = 'count-high';
+      return `<td class="${badgeClass}"><strong>${c}</strong><span class="unit">コマ</span></td>`;
+    }).join('');
+
+    tableContainer.innerHTML = `
+      <div class="hero-exam-table-card">
+        <div class="hero-exam-table-header">
+          <span class="table-title"><i class="fa-solid fa-table-list text-info"></i> ${escapeHtml(data.examName)} (${escapeHtml(data.examDateStr)}) までのクラス別 授業コマ数</span>
+          <span class="table-sub"><i class="fa-solid fa-calendar-check text-success"></i> 実施日までの確定・予定コマ数</span>
+        </div>
+        <div class="hero-exam-table-scroll">
+          <table class="hero-exam-grid-table">
+            <thead>
+              <tr>
+                <th class="head-label">クラス名</th>
+                ${thCells}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="head-label">残り授業数</th>
+                ${tdCells}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        ${diffAlert}
+      </div>
+    `;
+  }
 }
 
 // モーダル操作

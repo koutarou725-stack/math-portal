@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try { if (typeof renderRealTimetableGrid === 'function') renderRealTimetableGrid(); } catch (e) { console.warn('renderRealTimetableGrid:', e); }
   try { if (typeof renderBaseTimetableGrid === 'function') renderBaseTimetableGrid(); } catch (e) { console.warn('renderBaseTimetableGrid:', e); }
   try { if (typeof renderTodayScheduleMini === 'function') renderTodayScheduleMini(); } catch (e) { console.warn('renderTodayScheduleMini:', e); }
+  try { if (typeof updateHeroExamStatus === 'function') updateHeroExamStatus(); } catch (e) { console.warn('updateHeroExamStatus:', e); }
 
   try { initCloudSync(); } catch (e) { console.warn('initCloudSync:', e); }
 
@@ -2567,7 +2568,7 @@ const boardLessonDatabase = {
       },
 {
         "id": "u_2_3",
-        "unitName": "第3章 一次関数 $y=ax+b$",
+        "unitName": "第3章 一次関数 y=ax+b",
         "totalHours": 10,
         "bookRef": "",
         "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCGShIQnCM6Ro_fEPW9OmVhAUe0_xiCbUTJC7fY-2_AnUI?e=XJU1aJ",
@@ -6238,7 +6239,7 @@ const boardLessonDatabase = {
       },
       {
         "id": "u_3_4",
-        "unitName": "第4章 関数 $y=ax^2$",
+        "unitName": "第4章 関数 y=ax²",
         "totalHours": 13,
         "bookRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQBsot4tPrvfR6d1CrKod23RAbnHrYbd4ENCW_ch6H37kTo?e=soOvGY",
         "pointRef": "https://1drv.ms/b/c/7afb9670452d4dba/IQCblJE6bR7eTbSxIJztZhC7AT3DtdJt5CoGfk2ny97l7m0?e=OZ0znx",
@@ -8150,19 +8151,8 @@ function escapeHtmlB4(str) {
 
 // ドロップダウンoption用の簡易TeXプレーンテキスト化
 function stripTeXForOption(str) {
-  return String(str || '')
-    .replace(/\$y=ax\^2\$/g, 'y=ax²')
-    .replace(/\$ax\+by=c\$/g, 'ax+by=c')
-    .replace(/\$y=ax\+b\$/g, 'y=ax+b')
-    .replace(/\$x\^2\+\(a\+b\)x\+ab\$/g, 'x²+(a+b)x+ab')
-    .replace(/\$\\sqrt\{2\}\$/g, '√2')
-    .replace(/\$\\sqrt\{3\}\$/g, '√3')
-    .replace(/\$\\sqrt\{\\quad\}\$/g, '√')
-    .replace(/\$a>0\$/g, 'a>0')
-    .replace(/\$a<0\$/g, 'a<0')
-    .replace(/\$y\$/g, 'y')
-    .replace(/\$x\$/g, 'x')
-    .replace(/\$([^\$]+)\$/g, '$1');
+  if (typeof cleanMathText === 'function') return cleanMathText(str);
+  return String(str || '').replace(/\$([^\$]+)\$/g, '$1');
 }
 
 // 数式文字列を保護し、プレーンテキスト化された式を美しいKaTeX数式（$ ... $）に自動修復する
