@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   try { renderDigitalLibrary(); } catch (e) { console.warn('renderDigitalLibrary:', e); }
   try { loadSampleSheet(true); } catch (e) { console.warn('loadSampleSheet:', e); }
-  try { renderLinearGraph(); } catch (e) { console.warn('renderLinearGraph:', e); }
-  try { renderGeometryFig(); } catch (e) { console.warn('renderGeometryFig:', e); }
+  try { if (typeof renderMathGraph === 'function') renderMathGraph(); else renderLinearGraph(); } catch (e) { console.warn('renderLinearGraph:', e); }
+  try { if (typeof onGeometryPatternChange === 'function') onGeometryPatternChange(); else renderGeometryFig(); } catch (e) { console.warn('renderGeometryFig:', e); }
   try { onTestGradeChange(); } catch (e) { console.warn('onTestGradeChange:', e); }
   try { renderMemosList(); } catch (e) { console.warn('renderMemosList:', e); }
 });

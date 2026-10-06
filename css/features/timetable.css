@@ -1432,3 +1432,47 @@
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-1px);
 }
+
+/* ヒーローバナー 左右分割レイアウト (省スペース化) */
+.hero-banner .hero-overlay {
+  padding: 1.15rem 2rem !important;
+}
+
+.hero-content.hero-content-split {
+  max-width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 1.5rem !important;
+}
+
+.hero-text-col {
+  flex: 0 1 360px !important;
+  min-width: 260px !important;
+}
+
+.hero-text-col .hero-title {
+  margin-bottom: 0 !important;
+  font-size: 1.85rem !important;
+}
+
+.hero-table-col {
+  flex: 1 1 540px !important;
+  max-width: 650px !important;
+}
+
+.hero-table-col .hero-exam-classes-table-container {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 1024px) {
+  .hero-content.hero-content-split {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+  .hero-text-col, .hero-table-col {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}

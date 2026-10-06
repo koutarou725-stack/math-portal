@@ -2540,8 +2540,8 @@ body.mode-student .answer-space-inline .answer-tag {
 .math-editor-modal-content {
   background: #ffffff;
   border-radius: 14px;
-  width: 760px;
-  max-width: 95vw;
+  width: 860px;
+  max-width: 96vw;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -2635,17 +2635,25 @@ body.mode-student .answer-space-inline .answer-tag {
 /* かんたん組み立てウィジェット (分数・平方根・累乗) */
 .math-quick-builders {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+}
+
+@media (max-width: 768px) {
+  .math-quick-builders {
+    grid-template-columns: 1fr;
+  }
 }
 
 .builder-card {
+  flex: 1 1 210px;
   background: #ffffff;
   border: 1.5px solid #e9d5ff;
   border-radius: 8px;
-  padding: 0.65rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
   box-shadow: 0 1px 3px rgba(126, 34, 206, 0.04);
 }
@@ -2662,14 +2670,14 @@ body.mode-student .answer-space-inline .answer-tag {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  width: 75px;
+  width: 52px;
 }
 
 .fraction-builder-form input {
   text-align: center;
   padding: 0.15rem 0.25rem !important;
   font-size: 0.78rem !important;
-  height: 24px !important;
+  height: 22px !important;
   width: 100% !important;
 }
 
@@ -2682,34 +2690,57 @@ body.mode-student .answer-space-inline .answer-tag {
 .sqrt-builder-form {
   display: flex;
   align-items: center;
-  gap: 2px;
-  flex: 1;
+  gap: 3px;
+  width: 58px;
 }
 
 .sqrt-symbol {
   font-size: 1.15rem;
   font-weight: 700;
   color: #6b21a8;
+  line-height: 1;
 }
 
 .sqrt-builder-form input {
   padding: 0.15rem 0.35rem !important;
   font-size: 0.78rem !important;
-  height: 24px !important;
+  height: 22px !important;
   width: 100% !important;
 }
 
 .power-builder-form {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
+  width: 70px;
 }
 
 .power-builder-form input {
   text-align: center;
   padding: 0.15rem 0.25rem !important;
   font-size: 0.78rem !important;
-  height: 24px !important;
+  height: 22px !important;
+}
+
+.builder-card .btn {
+  padding: 0.25rem 0.6rem !important;
+  font-size: 0.75rem !important;
+  height: 26px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.25rem !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  border-color: #c084fc !important;
+  color: #7e22ce !important;
+  background: #faf5ff !important;
+  font-weight: 600 !important;
+}
+
+.builder-card .btn:hover {
+  background: #7e22ce !important;
+  color: #ffffff !important;
 }
 
 /* タブナビゲーション */
@@ -2757,7 +2788,7 @@ body.mode-student .answer-space-inline .answer-tag {
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 0.75rem;
-  min-height: 140px;
+  min-height: 120px;
 }
 
 .math-pane {
@@ -2818,47 +2849,6 @@ body.mode-student .answer-space-inline .answer-tag {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-}
-
-/* テンプレートグリッド */
-.template-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
-  gap: 0.6rem;
-}
-
-.math-tpl-btn {
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 0.6rem 0.75rem;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.math-tpl-btn:hover {
-  border-color: #a855f7;
-  background: #faf5ff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(126, 34, 206, 0.12);
-}
-
-.tpl-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #6b21a8;
-}
-
-.tpl-preview {
-  font-size: 0.95rem;
-  color: #1e293b;
-  min-height: 28px;
-  display: flex;
-  align-items: center;
 }
 
 /* TeXコード入力欄 */

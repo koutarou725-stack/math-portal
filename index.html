@@ -23,9 +23,9 @@
   <link rel="stylesheet" href="css/layout.css">
   <!-- 各機能モジュールスタイル -->
   <link rel="stylesheet" href="css/features/home.css">
-  <link rel="stylesheet" href="css/features/timetable.css?v=20261006_9">
-  <link rel="stylesheet" href="css/features/class-print.css?v=20261006_10">
-  <link rel="stylesheet" href="css/features/practice-print.css?v=20261006_3">
+  <link rel="stylesheet" href="css/features/timetable.css?v=20261006_11">
+  <link rel="stylesheet" href="css/features/class-print.css?v=20261006_11">
+  <link rel="stylesheet" href="css/features/practice-print.css?v=20261006_11">
   <link rel="stylesheet" href="css/features/graph-generator.css">
   <link rel="stylesheet" href="css/features/settings.css">
   <link rel="stylesheet" href="css/features/library.css">
@@ -113,14 +113,16 @@
         <div class="hero-banner">
           <img src="assets/hero.jpg" alt="Junior High Math Dashboard" class="hero-image">
           <div class="hero-overlay">
-            <div class="hero-content">
-              <span class="hero-tag"><i class="fa-solid fa-graduation-cap"></i> 中学校 数学科 教員ポータル</span>
-              <h2 class="hero-title">数学科 授業ハブ & ワークスペース</h2>
-              
-
-              <!-- トップバナー内のクラス別考査コマ数テーブル -->
-              <div class="hero-exam-classes-table-container" id="heroExamClassesTableContainer">
-                <!-- JSで動的にクラス別コマ数表を生成 -->
+            <div class="hero-content hero-content-split">
+              <div class="hero-text-col">
+                <span class="hero-tag"><i class="fa-solid fa-graduation-cap"></i> 中学校 数学科 教員ポータル</span>
+                <h2 class="hero-title" style="margin-bottom: 0;">数学科 授業ハブ & ワークスペース</h2>
+              </div>
+              <div class="hero-table-col">
+                <!-- トップバナー内のクラス別考査コマ数テーブル -->
+                <div class="hero-exam-classes-table-container" id="heroExamClassesTableContainer">
+                  <!-- JSで動的にクラス別コマ数表を生成 -->
+                </div>
               </div>
             </div>
           </div>
@@ -951,9 +953,6 @@
             <button type="button" class="math-tab-btn" data-mathtab="geometry" onclick="switchMathTab('geometry')">
               <i class="fa-solid fa-draw-polygon"></i> 図形・幾何記号
             </button>
-            <button type="button" class="math-tab-btn" data-mathtab="templates" onclick="switchMathTab('templates')">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> 定番・公式テンプレート
-            </button>
           </div>
 
           <div class="math-palette-panes">
@@ -1098,48 +1097,6 @@
                 </button>
               </div>
             </div>
-
-            <!-- パネル 4: 中学数学の定番テンプレート -->
-            <div class="math-pane" id="mathPane-templates">
-              <div class="template-grid">
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('\\begin{cases} 2x + y = 7 \\\\ x - y = 2 \\end{cases}')">
-                  <div class="tpl-title">連立方程式（2元）</div>
-                  <div class="tpl-preview" data-tex="\begin{cases} 2x + y = 7 \\ x - y = 2 \end{cases}">連立方程式</div>
-                </button>
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}')">
-                  <div class="tpl-title">解の公式（2次方程式）</div>
-                  <div class="tpl-preview" data-tex="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}">解の公式</div>
-                </button>
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('y = ax + b')">
-                  <div class="tpl-title">一次関数の式</div>
-                  <div class="tpl-preview" data-tex="y = ax + b">y = ax + b</div>
-                </button>
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('y = ax^2')">
-                  <div class="tpl-title">二次関数の式</div>
-                  <div class="tpl-preview" data-tex="y = ax^2">y = ax²</div>
-                </button>
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('y = \\frac{a}{x}')">
-                  <div class="tpl-title">反比例の式</div>
-                  <div class="tpl-preview" data-tex="y = \frac{a}{x}">y = a/x</div>
-                </button>
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('a^2 + b^2 = c^2')">
-                  <div class="tpl-title">三平方の定理</div>
-                  <div class="tpl-preview" data-tex="a^2 + b^2 = c^2">a² + b² = c²</div>
-                </button>
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('(x+a)(x+b) = x^2 + (a+b)x + ab')">
-                  <div class="tpl-title">乗法公式 (1)</div>
-                  <div class="tpl-preview" data-tex="(x+a)(x+b) = x^2 + (a+b)x + ab">公式1</div>
-                </button>
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('(a+b)^2 = a^2 + 2ab + b^2')">
-                  <div class="tpl-title">乗法公式 (2) 平方</div>
-                  <div class="tpl-preview" data-tex="(a+b)^2 = a^2 + 2ab + b^2">公式2</div>
-                </button>
-                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('(a+b)(a-b) = a^2 - b^2')">
-                  <div class="tpl-title">乗法公式 (3) 和と差の積</div>
-                  <div class="tpl-preview" data-tex="(a+b)(a-b) = a^2 - b^2">公式3</div>
-                </button>
-              </div>
-            </div>
           </div>
 
           <!-- コード編集入力エリア & コントロール -->
@@ -1255,21 +1212,7 @@
             </div>
           </div>
 
-          <!-- 2. 数式エディタ＆パレット起動カード (TeX不要で数式作成) -->
-          <div class="panel-section mb-3" style="padding: 0.75rem 0.85rem; background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border: 1.5px solid #d8b4fe; border-radius: var(--radius-md); box-shadow: 0 1px 3px rgba(126,34,206,0.08);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <h3 style="font-size: 0.88rem; margin: 0; color: #6b21a8; font-weight: 700;"><i class="fa-solid fa-square-root-variable"></i> 数式エディタ</h3>
-              <span class="badge" style="background: #e9d5ff; color: #6b21a8; font-size: 0.65rem; font-weight: 700;">TeX知識不要</span>
-            </div>
-            <p style="font-size: 0.73rem; color: #581c87; margin-bottom: 0.5rem; line-height: 1.35;">
-              分数・平方根・累乗・図形記号などをボタン操作で視覚的に作成・挿入できます。
-            </p>
-            <button type="button" class="btn btn-sm btn-block" onclick="openMathFormulaEditorModal()" style="background: #7e22ce; color: #ffffff; font-weight: 700; font-size: 0.8rem; padding: 0.45rem 0.5rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(126,34,206,0.25); display: flex; align-items: center; justify-content: center; gap: 0.4rem; border: none; cursor: pointer;">
-              <i class="fa-solid fa-calculator"></i> 数式を作成・挿入
-            </button>
-          </div>
-
-          <!-- 3. レゴ式パーツ追加パレット (2列×4行) -->
+          <!-- 2. レゴ式パーツ追加パレット (2列×4行) -->
           <div class="panel-section mb-3" style="padding: 0.75rem 0.85rem; background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
             <div class="panel-header" style="margin-bottom: 0.35rem; display: flex; align-items: center; justify-content: space-between;">
               <h3 style="font-size: 0.9rem; margin: 0;"><i class="fa-solid fa-cubes text-primary"></i> パーツ追加</h3>
@@ -1649,92 +1592,132 @@
 
         <div class="tools-grid-container">
           
-          <!-- ツール1: 一次関数グラフ作成 & 問題生成 -->
+          <!-- ツール1: 中学数学 関数・グラフジェネレーター (比例・一次関数・反比例・二次関数) -->
           <div class="tool-card">
             <div class="tool-card-header">
               <div class="tool-title">
                 <i class="fa-solid fa-chart-line text-primary"></i>
-                <h3>一次関数グラフ・方眼紙ジェネレーター</h3>
+                <h3>中学校 関数・グラフジェネレーター (方眼紙付き)</h3>
               </div>
-              <span class="badge">中2 関数</span>
+              <span class="badge" id="funcGradeBadge">中1〜中3 関数全般</span>
             </div>
             <div class="tool-body">
+              <!-- 関数種別の選択タブ -->
+              <div class="func-type-selector-bar mb-3">
+                <label style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-right: 0.5rem;">関数の種類:</label>
+                <div class="func-type-btn-group" id="funcTypeGroup">
+                  <button type="button" class="btn btn-xs btn-outline active" data-functype="linear" onclick="setFunctionType('linear')">一次関数 y = ax + b</button>
+                  <button type="button" class="btn btn-xs btn-outline" data-functype="prop" onclick="setFunctionType('prop')">比例 y = ax</button>
+                  <button type="button" class="btn btn-xs btn-outline" data-functype="invprop" onclick="setFunctionType('invprop')">反比例 y = a/x</button>
+                  <button type="button" class="btn btn-xs btn-outline" data-functype="quad" onclick="setFunctionType('quad')">二次関数 y = ax²</button>
+                </div>
+              </div>
+
               <div class="control-row">
-                <div class="control-col">
-                  <label>直線の式: <span class="math-preview" id="linearEqPreview">y = 2x + 1</span></label>
-                  <div class="input-inline">
-                    <span>傾き a = </span>
-                    <input type="number" id="funcA" value="2" step="0.5" class="form-control form-control-sm" onchange="renderLinearGraph()">
-                    <span>切片 b = </span>
-                    <input type="number" id="funcB" value="1" step="1" class="form-control form-control-sm" onchange="renderLinearGraph()">
+                <div class="control-col" style="flex: 1.2;">
+                  <div class="func-formula-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+                    <label style="margin: 0;">関数の式: <strong class="math-preview text-primary" id="linearEqPreview" style="font-size: 1.05rem;">y = 2x + 1</strong></label>
+                    <button type="button" class="btn btn-xs btn-outline" onclick="openMathFormulaEditorModal()" title="数式エディタから式をセット" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; border-color: #c084fc; color: #7e22ce;">
+                      <i class="fa-solid fa-square-root-variable"></i> 数式エディタ
+                    </button>
+                  </div>
+
+                  <!-- パラメータ入力欄 (文字が縦割れしない横並び構造) -->
+                  <div class="func-params-row" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                    <div class="param-input-group" style="display: flex; align-items: center; gap: 0.35rem;">
+                      <span class="param-label" id="paramLabelA" style="white-space: nowrap; font-size: 0.82rem; font-weight: 600; color: #334155;">傾き a =</span>
+                      <input type="number" id="funcA" value="2" step="0.5" class="form-control form-control-sm" style="width: 70px; text-align: center;" onchange="renderMathGraph()">
+                    </div>
+                    <div class="param-input-group" id="paramGroupB" style="display: flex; align-items: center; gap: 0.35rem;">
+                      <span class="param-label" style="white-space: nowrap; font-size: 0.82rem; font-weight: 600; color: #334155;">切片 b =</span>
+                      <input type="number" id="funcB" value="1" step="1" class="form-control form-control-sm" style="width: 70px; text-align: center;" onchange="renderMathGraph()">
+                    </div>
                   </div>
                 </div>
-                <div class="control-col">
-                  <label>表示設定</label>
-                  <div class="checkbox-group">
-                    <label><input type="checkbox" id="showPointsCheck" checked onchange="renderLinearGraph()"> 切片・整数点を表示</label>
-                    <label><input type="checkbox" id="showLineCheck" checked onchange="renderLinearGraph()"> 直線を描画 (解答用)</label>
+
+                <div class="control-col" style="flex: 0.9;">
+                  <label style="margin-bottom: 0.35rem;">表示設定</label>
+                  <div class="checkbox-group" style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <label style="font-size: 0.8rem; display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                      <input type="checkbox" id="showPointsCheck" checked onchange="renderMathGraph()"> 切片・代表点を表示
+                    </label>
+                    <label style="font-size: 0.8rem; display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                      <input type="checkbox" id="showLineCheck" checked onchange="renderMathGraph()"> グラフ線を描画 (解答用)
+                    </label>
                   </div>
                 </div>
               </div>
 
-              <!-- SVG 描画プレビュー -->
-              <div class="svg-canvas-wrapper" id="linearGraphContainer">
+              <!-- SVG 描画プレビュー (中学校教科書完全準拠: 矢印なし直線軸、方眼紙枠内クリップ) -->
+              <div class="svg-canvas-wrapper" id="linearGraphContainer" style="display: flex; justify-content: center; align-items: center; padding: 0.75rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin: 0.75rem 0;">
                 <!-- SVGがここに描画される -->
               </div>
 
-              <div class="tool-actions">
-                <button class="btn btn-outline btn-sm" onclick="randomizeLinear()">
+              <div class="tool-actions" style="display: flex; justify-content: space-between; align-items: center;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="randomizeFunctionGraph()">
                   <i class="fa-solid fa-shuffle"></i> 整数になる数値をランダム生成
                 </button>
-                <button class="btn btn-primary btn-sm" onclick="insertGraphToWorksheet()">
+                <button type="button" class="btn btn-primary btn-sm" onclick="insertGraphToWorksheet()">
                   <i class="fa-solid fa-arrow-down-to-bracket"></i> 授業プリントに挿入
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- ツール2: 平面図形（平行線と角・三角形・円周角） -->
+          <!-- ツール2: 中学1〜3年対応 図形・作図・角度問題ジェネレーター -->
           <div class="tool-card">
             <div class="tool-card-header">
               <div class="tool-title">
                 <i class="fa-solid fa-shapes text-accent"></i>
-                <h3>図形・角度問題ジェネレーター</h3>
+                <h3>図形・作図・角度問題ジェネレーター</h3>
               </div>
-              <span class="badge">中2・中3 図形</span>
+              <span class="badge" id="geoGradeBadge">中1〜中3 図形領域</span>
             </div>
             <div class="tool-body">
               <div class="control-row">
-                <div class="control-col">
-                  <label>問題パターン</label>
-                  <select id="geometryPattern" class="form-control form-control-sm" onchange="renderGeometryFig()">
-                    <option value="parallel_chevron">平行線と折れ線の角 (くの字型)</option>
-                    <option value="triangle_exterior">三角形の内角と外角 (スリッパの法則)</option>
-                    <option value="inscribed_angle">円周角と中心角の定理</option>
+                <div class="control-col" style="flex: 1.1;">
+                  <label>図形・問題パターン:</label>
+                  <select id="geometryPattern" class="form-control form-control-sm" onchange="onGeometryPatternChange()">
+                    <optgroup label="中1 平面図形・作図">
+                      <option value="angle_bisector">角の二等分線 (コンパス作図痕跡)</option>
+                      <option value="perp_bisector">垂直二等分線 (コンパス作図痕跡)</option>
+                      <option value="sector_arc">おうぎ形 (半径と中心角)</option>
+                    </optgroup>
+                    <optgroup label="中2 平行線・三角形・四角形">
+                      <option value="parallel_chevron" selected>平行線と折れ線の角 (くの字型)</option>
+                      <option value="parallel_zigzag">平行線とジグザグ折れ線 (2回折れ)</option>
+                      <option value="triangle_exterior">三角形の内角と外角 (スリッパの法則)</option>
+                      <option value="boomerang">ブーメラン型四角形 (凹み角)</option>
+                      <option value="isosceles">二等辺三角形 (底角・頂角)</option>
+                    </optgroup>
+                    <optgroup label="中3 円の性質・相似・三平方">
+                      <option value="inscribed_angle">円周角と中心角の定理 (点P自由移動)</option>
+                      <option value="diameter_inscribed">半円と直径に対する円周角 (90°)</option>
+                      <option value="similarity_pyramid">相似ピラミッド型 (平行線と線分比)</option>
+                      <option value="similarity_hourglass">相似砂時計型 (蝶ネクタイ)</option>
+                      <option value="pythagoras">直角三角形と三平方の定理</option>
+                    </optgroup>
                   </select>
                 </div>
-                <div class="control-col">
-                  <label id="geoParamLabel">角度パラメータ</label>
-                  <div class="input-inline">
-                    <span>角1 = </span>
-                    <input type="number" id="geoAngle1" value="45" min="20" max="80" step="5" class="form-control form-control-sm" onchange="renderGeometryFig()">
-                    <span>°　角2 = </span>
-                    <input type="number" id="geoAngle2" value="35" min="20" max="80" step="5" class="form-control form-control-sm" onchange="renderGeometryFig()">
-                    <span>°</span>
+
+                <div class="control-col" style="flex: 1.1;">
+                  <label id="geoParamLabel">パラメータ設定:</label>
+                  <div class="geo-params-container" id="geoParamsContainer" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                    <!-- JSで選択パターンに応じた入力欄（スライダーや数値入力）を動的生成 -->
                   </div>
                 </div>
               </div>
 
               <!-- SVG 描画プレビュー -->
-              <div class="svg-canvas-wrapper" id="geometryContainer">
+              <div class="svg-canvas-wrapper" id="geometryContainer" style="display: flex; justify-content: center; align-items: center; padding: 0.75rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; margin: 0.75rem 0;">
                 <!-- SVGがここに描画される -->
               </div>
 
-              <div class="tool-actions">
-                <div class="calc-answer">
-                  求める角 <span class="math">x</span> = <strong id="geoAnswerDisplay">80°</strong>
+              <div class="tool-actions" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="calc-answer" style="font-size: 0.92rem; color: #1e293b; font-weight: 700;">
+                  <span id="geoAnswerLabel">求める角 x</span> = <strong id="geoAnswerDisplay" class="text-danger" style="font-size: 1.1rem;">80°</strong>
                 </div>
-                <button class="btn btn-primary btn-sm" onclick="insertGeometryToWorksheet()">
+                <button type="button" class="btn btn-primary btn-sm" onclick="insertGeometryToWorksheet()">
                   <i class="fa-solid fa-arrow-down-to-bracket"></i> 授業プリントに挿入
                 </button>
               </div>
@@ -1896,10 +1879,10 @@
   <!-- 各機能モジュール -->
   <script src="js/features/timetable.js?v=20261006_9"></script>
   <script src="js/features/class-print.js?v=20261006_8"></script>
-  <script src="js/features/practice-print.js"></script>
+  <script src="js/features/practice-print.js?v=20261006_11"></script>
   <script src="js/features/settings.js"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
-  <script src="js/core/init.js?v=20261006_10"></script>
+  <script src="js/core/init.js?v=20261006_11"></script>
 </body>
 </html>

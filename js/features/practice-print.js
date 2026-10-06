@@ -1,212 +1,1011 @@
 // ==========================================
-// // SVG動的作図エンジン (関数 & 図形)
+// // 中学校数学科 作図・グラフ & 図形問題 SVG動的描画エンジン
+// // (中1〜中3教科書完全準拠: 矢印なし直線軸、方眼紙枠内クリップ、全領域対応)
+// ==========================================
 
-function generateLinearSvg(a, b, showPoints = true, showLine = true, width = 240, height = 240) {
-  const halfW = width / 2;
-  const halfH = height / 2;
+// --- 1. 関数・グラフエンジン ---
+
+let currentFunctionType = 'linear'; // 'linear' | 'prop' | 'invprop' | 'quad'
+
+function setFunctionType(type) {
+  currentFunctionType = type;
+  if (!state.currentFuncType) state.currentFuncType = type;
+  state.currentFuncType = type;
+
+  // ボタンのactiveクラス切り替え
+  const group = document.getElementById('funcTypeGroup');
+  if (group) {
+    group.querySelectorAll('button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.functype === type);
+    });
+  }
+
+  // ラベルとBパラメータの表示切り替え
+  const labelA = document.getElementById('paramLabelA');
+  const groupB = document.getElementById('paramGroupB');
+  const badge = document.getElementById('funcGradeBadge');
+
+  if (type === 'linear') {
+    if (labelA) labelA.textContent = '傾き a =';
+    if (groupB) groupB.style.display = 'flex';
+    if (badge) badge.textContent = '中2 一次関数';
+  } else if (type === 'prop') {
+    if (labelA) labelA.textContent = '比例定数 a =';
+    if (groupB) groupB.style.display = 'none';
+    if (badge) badge.textContent = '中1 比例';
+  } else if (type === 'invprop') {
+    if (labelA) labelA.textContent = '比例定数 a =';
+    if (groupB) groupB.style.display = 'none';
+    if (badge) badge.textContent = '中1 反比例';
+  } else if (type === 'quad') {
+    if (labelA) labelA.textContent = '比例定数 a =';
+    if (groupB) groupB.style.display = 'none';
+    if (badge) badge.textContent = '中3 y = ax²';
+  }
+
+  renderMathGraph();
+}
+
+/**
+ * 中学校数学教科書準拠の関数グラフSVG生成
+ * - 軸先端の矢印なし（中学校教科書仕様）
+ * - 方眼紙の枠外へのはみ出しを clipPath で完全防止
+ * - 比例・一次関数・反比例・二次関数に対応
+ */
+function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true, width = 250, height = 250) {
+  const pad = 25; // 軸の文字や原点用の外側マージン
+  const gridW = width - pad * 2;
+  const gridH = height - pad * 2;
+  const halfW = pad + gridW / 2;
+  const halfH = pad + gridH / 2;
   const range = 5;
-  const step = (width - 30) / (range * 2);
+  const step = gridW / (range * 2);
 
+  const clipId = 'graphClip_' + Math.random().toString(36).substr(2, 9);
+
+  // 方眼紙グリッド線
   let gridLines = '';
   for (let i = -range; i <= range; i++) {
     const x = halfW + i * step;
     const y = halfH - i * step;
-    gridLines += `<line x1="${x}" y1="15" x2="${x}" y2="${height - 15}" stroke="#e2e8f0" stroke-width="1" />`;
-    gridLines += `<line x1="15" y1="${y}" x2="${width - 15}" y2="${y}" stroke="#e2e8f0" stroke-width="1" />`;
+    gridLines += `<line x1="${x.toFixed(1)}" y1="${pad}" x2="${x.toFixed(1)}" y2="${pad + gridH}" stroke="#e2e8f0" stroke-width="1" />`;
+    gridLines += `<line x1="${pad}" y1="${y.toFixed(1)}" x2="${pad + gridW}" y2="${y.toFixed(1)}" stroke="#e2e8f0" stroke-width="1" />`;
   }
 
+  // 座標軸 (中学校教科書仕様: 先端矢印なし！普通の直線。端に x, y, 交点左下に O)
   const axisLines = `
-    <line x1="10" y1="${halfH}" x2="${width - 10}" y2="${halfH}" stroke="#000" stroke-width="1.5" marker-end="url(#arrow)" />
-    <text x="${width - 12}" y="${halfH + 14}" font-size="11" font-family="serif" font-style="italic">x</text>
-    <line x1="${halfW}" y1="${height - 10}" x2="${halfW}" y2="10" stroke="#000" stroke-width="1.5" marker-end="url(#arrow)" />
-    <text x="${halfW - 14}" y="14" font-size="11" font-family="serif" font-style="italic">y</text>
-    <text x="${halfW - 12}" y="${halfH + 12}" font-size="10" font-family="serif" font-style="italic">O</text>
+    <!-- x軸 (矢印なし) -->
+    <line x1="${pad - 10}" y1="${halfH}" x2="${pad + gridW + 10}" y2="${halfH}" stroke="#0f172a" stroke-width="1.6" />
+    <text x="${pad + gridW + 12}" y="${halfH + 4}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a">x</text>
+
+    <!-- y軸 (矢印なし) -->
+    <line x1="${halfW}" y1="${pad + gridH + 10}" x2="${halfW}" y2="${pad - 10}" stroke="#0f172a" stroke-width="1.6" />
+    <text x="${halfW - 5}" y="${pad - 14}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a" text-anchor="middle">y</text>
+
+    <!-- 原点 O -->
+    <text x="${halfW - 10}" y="${halfH + 13}" font-size="11" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a">O</text>
   `;
 
-  let lineSvg = '';
-  if (showLine) {
-    const xMin = -range;
-    const xMax = range;
-    const y1 = a * xMin + b;
-    const y2 = a * xMax + b;
-    const px1 = halfW + xMin * step;
-    const py1 = halfH - y1 * step;
-    const px2 = halfW + xMax * step;
-    const py2 = halfH - y2 * step;
-
-    lineSvg = `<line x1="${px1}" y1="${py1}" x2="${px2}" y2="${py2}" stroke="#2563eb" stroke-width="2" stroke-linecap="round" />`;
-  }
-
+  // グラフ描画要素 (clip-path で方眼紙内 [pad, pad, gridW, gridH] に完全に収める)
+  let plotSvg = '';
   let pointsSvg = '';
-  if (showPoints) {
-    const interceptPx = halfW;
-    const interceptPy = halfH - b * step;
-    pointsSvg += `<circle cx="${interceptPx}" cy="${interceptPy}" r="3.5" fill="#dc2626" />`;
-    pointsSvg += `<text x="${interceptPx + 5}" y="${interceptPy - 4}" font-size="10" fill="#dc2626" font-weight="bold">${b}</text>`;
+
+  if (showLine) {
+    if (type === 'linear' || type === 'prop') {
+      const actualB = type === 'prop' ? 0 : b;
+      // x = -range〜+range の直線
+      const x1 = -range - 1;
+      const x2 = range + 1;
+      const y1 = a * x1 + actualB;
+      const y2 = a * x2 + actualB;
+      const px1 = halfW + x1 * step;
+      const py1 = halfH - y1 * step;
+      const px2 = halfW + x2 * step;
+      const py2 = halfH - y2 * step;
+
+      plotSvg = `<line x1="${px1.toFixed(1)}" y1="${py1.toFixed(1)}" x2="${px2.toFixed(1)}" y2="${py2.toFixed(1)}" stroke="#2563eb" stroke-width="2.2" clip-path="url(#${clipId})" stroke-linecap="round" />`;
+
+      if (showPoints) {
+        if (type === 'linear') {
+          // 切片 (0, b)
+          if (Math.abs(actualB) <= range) {
+            const ipX = halfW;
+            const ipY = halfH - actualB * step;
+            pointsSvg += `<circle cx="${ipX}" cy="${ipY}" r="3.5" fill="#dc2626" />`;
+            pointsSvg += `<text x="${ipX + 6}" y="${ipY - 4}" font-size="10.5" fill="#dc2626" font-weight="bold">${actualB}</text>`;
+          }
+        } else {
+          // 比例の代表点 (1, a)
+          if (Math.abs(a) <= range) {
+            const pX = halfW + 1 * step;
+            const pY = halfH - a * step;
+            pointsSvg += `<circle cx="${pX}" cy="${pY}" r="3.5" fill="#dc2626" />`;
+            pointsSvg += `<text x="${pX + 5}" y="${pY - 4}" font-size="10" fill="#dc2626" font-weight="bold">(1, ${a})</text>`;
+          }
+        }
+      }
+    } else if (type === 'invprop') {
+      // 反比例 y = a/x (双曲線: x > 0 と x < 0 の2本)
+      const renderBranch = (minX, maxX) => {
+        let pathD = '';
+        const samples = 35;
+        for (let i = 0; i <= samples; i++) {
+          const xVal = minX + (maxX - minX) * (i / samples);
+          if (Math.abs(xVal) < 0.1) continue;
+          const yVal = a / xVal;
+          const px = halfW + xVal * step;
+          const py = halfH - yVal * step;
+          if (pathD === '') pathD += `M ${px.toFixed(1)} ${py.toFixed(1)}`;
+          else pathD += ` L ${px.toFixed(1)} ${py.toFixed(1)}`;
+        }
+        return pathD ? `<path d="${pathD}" fill="none" stroke="#2563eb" stroke-width="2.2" clip-path="url(#${clipId})" stroke-linecap="round" />` : '';
+      };
+
+      plotSvg += renderBranch(-range - 1, -0.15);
+      plotSvg += renderBranch(0.15, range + 1);
+
+      if (showPoints) {
+        // 整数の代表点をいくつかプロット
+        for (let x = -range; x <= range; x++) {
+          if (x !== 0 && Math.abs(x) <= range && a % x === 0 && Math.abs(a / x) <= range) {
+            const y = a / x;
+            const px = halfW + x * step;
+            const py = halfH - y * step;
+            pointsSvg += `<circle cx="${px}" cy="${py}" r="3" fill="#dc2626" />`;
+          }
+        }
+      }
+    } else if (type === 'quad') {
+      // 二次関数 y = a x² (放物線)
+      let pathD = '';
+      const samples = 60;
+      for (let i = 0; i <= samples; i++) {
+        const xVal = -range - 1 + ((range * 2 + 2) * i) / samples;
+        const yVal = a * xVal * xVal;
+        const px = halfW + xVal * step;
+        const py = halfH - yVal * step;
+        if (i === 0) pathD += `M ${px.toFixed(1)} ${py.toFixed(1)}`;
+        else pathD += ` L ${px.toFixed(1)} ${py.toFixed(1)}`;
+      }
+      plotSvg = `<path d="${pathD}" fill="none" stroke="#2563eb" stroke-width="2.2" clip-path="url(#${clipId})" stroke-linecap="round" />`;
+
+      if (showPoints) {
+        // 原点と代表点
+        pointsSvg += `<circle cx="${halfW}" cy="${halfH}" r="3.5" fill="#dc2626" />`;
+        if (Math.abs(a) <= range) {
+          const px1 = halfW + 1 * step;
+          const py1 = halfH - a * step;
+          pointsSvg += `<circle cx="${px1}" cy="${py1}" r="3" fill="#dc2626" />`;
+          pointsSvg += `<text x="${px1 + 4}" y="${py1 - 4}" font-size="9.5" fill="#dc2626">(1, ${a})</text>`;
+        }
+      }
+    }
   }
 
   return `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="background:#ffffff; border-radius:6px; overflow:visible;">
       <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#000"/>
-        </marker>
+        <!-- 方眼紙の枠内だけにグラフを描画するクリップパス (はみ出し完全防止) -->
+        <clipPath id="${clipId}">
+          <rect x="${pad}" y="${pad}" width="${gridW}" height="${gridH}" />
+        </clipPath>
       </defs>
+      <!-- 方眼グリッド背景 -->
+      <rect x="${pad}" y="${pad}" width="${gridW}" height="${gridH}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" />
       ${gridLines}
+      <!-- 方眼内クリップされたグラフ線 -->
+      ${plotSvg}
+      <!-- 座標軸 (矢印なし直線) -->
       ${axisLines}
-      ${lineSvg}
+      <!-- 代表点 -->
       ${pointsSvg}
     </svg>
   `;
 }
 
-function renderLinearGraph() {
-  const a = parseFloat(document.getElementById('funcA').value) || 1;
-  const b = parseFloat(document.getElementById('funcB').value) || 0;
-  const showPoints = document.getElementById('showPointsCheck').checked;
-  const showLine = document.getElementById('showLineCheck').checked;
+// 既存コード互換用のラッパー
+function generateLinearSvg(a, b, showPoints = true, showLine = true, width = 240, height = 240) {
+  return generateFunctionSvg('linear', a, b, showPoints, showLine, width, height);
+}
 
-  state.linearFunc = { a, b, showPoints, showLine };
+function renderMathGraph() {
+  const a = parseFloat(document.getElementById('funcA')?.value) || 1;
+  const b = parseFloat(document.getElementById('funcB')?.value) || 0;
+  const showPoints = document.getElementById('showPointsCheck')?.checked ?? true;
+  const showLine = document.getElementById('showLineCheck')?.checked ?? true;
 
-  const sign = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+  state.currentFuncType = currentFunctionType;
+  state.mathFunc = { type: currentFunctionType, a, b, showPoints, showLine };
+  state.linearFunc = { a, b, showPoints, showLine }; // 互換用
+
+  // 数式プレビュー更新
+  let formulaStr = '';
   const aStr = a === 1 ? '' : a === -1 ? '-' : a;
-  document.getElementById('linearEqPreview').textContent = `y = ${aStr}x ${sign}`;
+  if (currentFunctionType === 'linear') {
+    const sign = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+    formulaStr = b === 0 ? `y = ${aStr}x` : `y = ${aStr}x ${sign}`;
+  } else if (currentFunctionType === 'prop') {
+    formulaStr = `y = ${aStr}x`;
+  } else if (currentFunctionType === 'invprop') {
+    formulaStr = `y = ${a}/x`;
+  } else if (currentFunctionType === 'quad') {
+    formulaStr = `y = ${aStr}x²`;
+  }
+
+  const prevEl = document.getElementById('linearEqPreview');
+  if (prevEl) prevEl.textContent = formulaStr;
 
   const container = document.getElementById('linearGraphContainer');
   if (container) {
-    container.innerHTML = generateLinearSvg(a, b, showPoints, showLine, 260, 260);
+    container.innerHTML = generateFunctionSvg(currentFunctionType, a, b, showPoints, showLine, 260, 260);
   }
+}
+
+function renderLinearGraph() {
+  renderMathGraph();
+}
+
+function randomizeFunctionGraph() {
+  let newA = 1;
+  let newB = 0;
+
+  if (currentFunctionType === 'linear') {
+    const aList = [-3, -2, -1, 1, 2, 3, 0.5, -0.5];
+    const bList = [-3, -2, -1, 0, 1, 2, 3];
+    newA = aList[Math.floor(Math.random() * aList.length)];
+    newB = bList[Math.floor(Math.random() * bList.length)];
+  } else if (currentFunctionType === 'prop') {
+    const aList = [-3, -2, -1, 1, 2, 3, 0.5, -0.5];
+    newA = aList[Math.floor(Math.random() * aList.length)];
+    newB = 0;
+  } else if (currentFunctionType === 'invprop') {
+    const aList = [-12, -8, -6, -4, 4, 6, 8, 12];
+    newA = aList[Math.floor(Math.random() * aList.length)];
+    newB = 0;
+  } else if (currentFunctionType === 'quad') {
+    const aList = [-1, -0.5, 0.5, 1, 2, -2];
+    newA = aList[Math.floor(Math.random() * aList.length)];
+    newB = 0;
+  }
+
+  const inA = document.getElementById('funcA');
+  const inB = document.getElementById('funcB');
+  if (inA) inA.value = newA;
+  if (inB) inB.value = newB;
+
+  renderMathGraph();
 }
 
 function randomizeLinear() {
-  const aList = [-3, -2, -1, 1, 2, 3, 0.5, -0.5];
-  const bList = [-3, -2, -1, 0, 1, 2, 3];
-  const newA = aList[Math.floor(Math.random() * aList.length)];
-  const newB = bList[Math.floor(Math.random() * bList.length)];
-
-  document.getElementById('funcA').value = newA;
-  document.getElementById('funcB').value = newB;
-  renderLinearGraph();
+  randomizeFunctionGraph();
 }
 
 function insertGraphToWorksheet() {
-  const { a, b } = state.linearFunc;
-  const sign = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+  const { type, a, b } = state.mathFunc || { type: 'linear', a: 2, b: 1 };
+  let formula = '';
+  let questionText = '';
+  let answerText = '';
+
   const aStr = a === 1 ? '' : a === -1 ? '-' : a;
-  const formula = `y = ${aStr}x ${sign}`;
+  if (type === 'linear') {
+    const sign = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+    formula = b === 0 ? `y = ${aStr}x` : `y = ${aStr}x ${sign}`;
+    questionText = `右の図は、一次関数 <strong>${formula}</strong> のグラフである。<br>① 直線の傾きと切片をそれぞれ答えなさい。<br>② xの変域が -1 ≦ x ≦ 2 のときのyの変域を求めなさい。`;
+    const yMin = Math.min(a * (-1) + b, a * 2 + b);
+    const yMax = Math.max(a * (-1) + b, a * 2 + b);
+    answerText = `① 傾き: ${a} , 切片: ${b}　② ${yMin} ≦ y ≦ ${yMax}`;
+  } else if (type === 'prop') {
+    formula = `y = ${aStr}x`;
+    questionText = `右の図は、比例 <strong>${formula}</strong> のグラフである。<br>① 比例定数を答えなさい。<br>② 点 (2, y) がこの直線上にあるとき、yの値を求めなさい。`;
+    answerText = `① 比例定数: ${a}　② y = ${a * 2}`;
+  } else if (type === 'invprop') {
+    formula = `y = ${a}/x`;
+    questionText = `右の図は、反比例 <strong>${formula}</strong> のグラフである。<br>① この双曲線が通る座標を1つ答えなさい。<br>② x = 2 のときの y の値を求めなさい。`;
+    answerText = `① (1, ${a}) など　② y = ${a / 2}`;
+  } else if (type === 'quad') {
+    formula = `y = ${aStr}x²`;
+    questionText = `右の図は、関数 <strong>${formula}</strong> のグラフである。<br>① x = 3 のときの y の値を求めなさい。<br>② x の値が 1 から 3 まで増加するときの変化の割合を求めなさい。`;
+    const rate = (a * 9 - a * 1) / (3 - 1);
+    answerText = `① y = ${a * 9}　② 変化の割合: ${rate}`;
+  }
 
   addBlock('graph-block', {
-    text: `右の図は、一次関数 <strong>${formula}</strong> のグラフである。<br>① 直線の傾きと切片をそれぞれ答えなさい。<br>② xの変域が -1 ≦ x ≦ 2 のときのyの変域を求めなさい。`,
-    answer: `① 傾き: ${a} , 切片: ${b}　② ${Math.min(a*(-1)+b, a*2+b)} ≦ y ≦ ${Math.max(a*(-1)+b, a*2+b)}`,
-    svgHtml: generateLinearSvg(a, b, true, true, 200, 200)
+    text: questionText,
+    answer: answerText,
+    svgHtml: generateFunctionSvg(type, a, b, true, true, 200, 200)
   });
 
   switchTab('worksheet');
 }
 
-function generateParallelChevronSvg(a1, a2, width = 240, height = 180) {
-  const lY = 35;
-  const mY = height - 35;
-  const p1 = { x: 50, y: lY };
-  const v = { x: 140, y: (lY + mY) / 2 };
-  const p2 = { x: 60, y: mY };
-
-  return `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-      <line x1="20" y1="${lY}" x2="${width - 20}" y2="${lY}" stroke="#000" stroke-width="2" />
-      <text x="${width - 15}" y="${lY + 4}" font-size="12" font-style="italic">l</text>
-      <line x1="20" y1="${mY}" x2="${width - 20}" y2="${mY}" stroke="#000" stroke-width="2" />
-      <text x="${width - 15}" y="${mY + 4}" font-size="12" font-style="italic">m</text>
-      <text x="25" y="${(lY + mY)/2}" font-size="11" fill="#666">l // m</text>
-      <polyline points="${p1.x},${p1.y} ${v.x},${v.y} ${p2.x},${p2.y}" fill="none" stroke="#2563eb" stroke-width="2.5" />
-      <circle cx="${v.x}" cy="${v.y}" r="3" fill="#2563eb" />
-      <text x="${p1.x + 15}" y="${p1.y + 18}" font-size="12" font-weight="bold">${a1}°</text>
-      <text x="${v.x - 28}" y="${v.y + 4}" font-size="13" font-weight="bold" fill="#dc2626">x</text>
-      <text x="${p2.x + 15}" y="${p2.y - 8}" font-size="12" font-weight="bold">${a2}°</text>
-    </svg>
-  `;
+function openMathFormulaEditorModal() {
+  openMathEditorModal();
 }
 
-function generateTriangleExteriorSvg(a1, a2, width = 240, height = 180) {
-  return `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="40,140 100,40 180,140" fill="none" stroke="#2563eb" stroke-width="2" />
-      <line x1="180" y1="140" x2="230" y2="140" stroke="#2563eb" stroke-width="2" />
-      <text x="${55}" y="132" font-size="12" font-weight="bold">${a1}°</text>
-      <text x="96" y="65" font-size="12" font-weight="bold">${a2}°</text>
-      <text x="188" y="130" font-size="14" font-weight="bold" fill="#dc2626">x</text>
-    </svg>
-  `;
+
+// --- 2. 中1〜中3 図形・作図・角度問題ジェネレーター ---
+
+function onGeometryPatternChange() {
+  const pattern = document.getElementById('geometryPattern')?.value || 'parallel_chevron';
+  const container = document.getElementById('geoParamsContainer');
+  const badge = document.getElementById('geoGradeBadge');
+
+  if (!container) return;
+
+  // 学年バッジ更新
+  if (['angle_bisector', 'perp_bisector', 'sector_arc'].includes(pattern)) {
+    if (badge) badge.textContent = '中1 平面図形・作図';
+  } else if (['parallel_chevron', 'parallel_zigzag', 'triangle_exterior', 'boomerang', 'isosceles'].includes(pattern)) {
+    if (badge) badge.textContent = '中2 平行と合同・多角形';
+  } else {
+    if (badge) badge.textContent = '中3 円の性質・相似・三平方';
+  }
+
+  // 入力パラメータUIの動的差し替え
+  let html = '';
+  if (pattern === 'angle_bisector') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">∠AOB =</span>
+        <input type="number" id="geoParam1" value="60" min="30" max="120" step="5" class="form-control form-control-sm" style="width:65px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+    `;
+  } else if (pattern === 'perp_bisector') {
+    html = `
+      <span style="font-size:0.8rem; color:#64748b;">線分ABの垂直二等分線（コンパス作図跡付き）</span>
+    `;
+  } else if (pattern === 'sector_arc') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">半径 r =</span>
+        <input type="number" id="geoParam1" value="6" min="1" max="15" class="form-control form-control-sm" style="width:55px; text-align:center;" onchange="renderGeometryFig()">cm
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">中心角 =</span>
+        <input type="number" id="geoParam2" value="60" min="15" max="300" step="15" class="form-control form-control-sm" style="width:65px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+    `;
+  } else if (pattern === 'parallel_chevron') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">角1 =</span>
+        <input type="number" id="geoParam1" value="45" min="10" max="80" step="5" class="form-control form-control-sm" style="width:60px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">角2 =</span>
+        <input type="number" id="geoParam2" value="35" min="10" max="80" step="5" class="form-control form-control-sm" style="width:60px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+    `;
+  } else if (pattern === 'parallel_zigzag') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">角1 =</span>
+        <input type="number" id="geoParam1" value="30" min="10" max="70" class="form-control form-control-sm" style="width:55px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">角2 =</span>
+        <input type="number" id="geoParam2" value="50" min="10" max="80" class="form-control form-control-sm" style="width:55px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">角3 =</span>
+        <input type="number" id="geoParam3" value="40" min="10" max="70" class="form-control form-control-sm" style="width:55px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+    `;
+  } else if (pattern === 'triangle_exterior') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">内角1 =</span>
+        <input type="number" id="geoParam1" value="55" min="15" max="100" class="form-control form-control-sm" style="width:60px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">内角2 =</span>
+        <input type="number" id="geoParam2" value="65" min="15" max="100" class="form-control form-control-sm" style="width:60px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+    `;
+  } else if (pattern === 'boomerang') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">角A=</span>
+        <input type="number" id="geoParam1" value="40" min="15" max="80" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">角B=</span>
+        <input type="number" id="geoParam2" value="30" min="15" max="70" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">角C=</span>
+        <input type="number" id="geoParam3" value="35" min="15" max="70" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+    `;
+  } else if (pattern === 'isosceles') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">頂角 A =</span>
+        <input type="number" id="geoParam1" value="40" min="20" max="140" step="5" class="form-control form-control-sm" style="width:65px; text-align:center;" onchange="renderGeometryFig()">°
+      </div>
+    `;
+  } else if (pattern === 'inscribed_angle') {
+    // 【ユーザー要望】中心角に加え、円周上の点Pの位置をスライダーで自由に動かせる！
+    html = `
+      <div style="display:flex; flex-direction:column; gap:0.35rem; width:100%;">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span style="font-size:0.8rem; font-weight:600;">中心角 ∠AOB =</span>
+          <input type="number" id="geoParam1" value="80" min="40" max="150" step="5" class="form-control form-control-sm" style="width:65px; text-align:center;" onchange="renderGeometryFig()">°
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem; background:#f8fafc; padding:0.25rem 0.5rem; border-radius:4px; border:1px solid #e2e8f0;">
+          <span style="font-size:0.8rem; font-weight:700; color:#4338ca;"><i class="fa-solid fa-arrows-left-right"></i> 点Pの円周上位置:</span>
+          <input type="range" id="geoParamP" min="30" max="150" value="90" step="1" style="flex:1; cursor:pointer;" oninput="renderGeometryFig()">
+          <span id="geoParamPVal" style="font-size:0.75rem; color:#64748b; font-family:monospace;">P位置: 90°</span>
+        </div>
+      </div>
+    `;
+  } else if (pattern === 'diameter_inscribed') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <span style="font-size:0.8rem; font-weight:700; color:#4338ca;">点Pの位置:</span>
+        <input type="range" id="geoParamP" min="25" max="155" value="65" step="1" style="width:130px; cursor:pointer;" oninput="renderGeometryFig()">
+      </div>
+    `;
+  } else if (pattern === 'similarity_pyramid') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">AD =</span>
+        <input type="number" id="geoParam1" value="4" min="1" max="15" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">DB =</span>
+        <input type="number" id="geoParam2" value="2" min="1" max="15" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">DE =</span>
+        <input type="number" id="geoParam3" value="6" min="1" max="20" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
+      </div>
+    `;
+  } else if (pattern === 'similarity_hourglass') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">AO =</span>
+        <input type="number" id="geoParam1" value="6" min="1" max="15" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">OD =</span>
+        <input type="number" id="geoParam2" value="4" min="1" max="15" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">AB =</span>
+        <input type="number" id="geoParam3" value="9" min="1" max="20" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
+      </div>
+    `;
+  } else if (pattern === 'pythagoras') {
+    html = `
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">底辺 a =</span>
+        <input type="number" id="geoParam1" value="3" min="1" max="20" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">
+      </div>
+      <div style="display:flex; align-items:center; gap:0.35rem;">
+        <span style="font-size:0.8rem; font-weight:600;">高さ b =</span>
+        <input type="number" id="geoParam2" value="4" min="1" max="20" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+  renderGeometryFig();
 }
 
-function generateInscribedAngleSvg(a1, width = 240, height = 200) {
-  const cx = width / 2;
-  const cy = height / 2 + 10;
-  const r = 70;
-  
-  return `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#333" stroke-width="1.8" />
-      <circle cx="${cx}" cy="${cy}" r="3" fill="#000" />
-      <text x="${cx + 5}" y="${cy - 5}" font-size="11" font-style="italic">O</text>
-      <polyline points="${cx - 50},${cy + 49} ${cx},${cy - 70} ${cx + 50},${cy + 49}" fill="none" stroke="#2563eb" stroke-width="2" />
-      <polyline points="${cx - 50},${cy + 49} ${cx},${cy} ${cx + 50},${cy + 49}" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,3" />
-      <text x="${cx - 5}" y="${cy - 48}" font-size="14" font-weight="bold" fill="#dc2626">x</text>
-      <text x="${cx - 10}" y="${cy + 25}" font-size="12" font-weight="bold">${a1 * 2}°</text>
-    </svg>
-  `;
-}
-
+/**
+ * 幾何問題SVGレンダラー
+ */
 function renderGeometryFig() {
-  const pattern = document.getElementById('geometryPattern').value;
-  const a1 = parseInt(document.getElementById('geoAngle1').value) || 45;
-  const a2 = parseInt(document.getElementById('geoAngle2').value) || 35;
+  const pattern = document.getElementById('geometryPattern')?.value || 'parallel_chevron';
   const container = document.getElementById('geometryContainer');
+  const ansLabel = document.getElementById('geoAnswerLabel');
   const ansDisplay = document.getElementById('geoAnswerDisplay');
 
-  let answerText = '';
-  let svg = '';
+  const p1 = parseFloat(document.getElementById('geoParam1')?.value) || 0;
+  const p2 = parseFloat(document.getElementById('geoParam2')?.value) || 0;
+  const p3 = parseFloat(document.getElementById('geoParam3')?.value) || 0;
+  const pRange = parseFloat(document.getElementById('geoParamP')?.value) || 90;
 
-  if (pattern === 'parallel_chevron') {
-    svg = generateParallelChevronSvg(a1, a2, 260, 200);
-    answerText = `${a1 + a2}°`;
+  const pRangeLabel = document.getElementById('geoParamPVal');
+  if (pRangeLabel) pRangeLabel.textContent = `P位置: ${pRange}°`;
+
+  let svg = '';
+  let answerText = '';
+  let labelText = '求める角 x';
+
+  if (pattern === 'angle_bisector') {
+    labelText = '角の大きさ';
+    const half = (p1 / 2).toFixed(1);
+    answerText = `${half}°`;
+    svg = generateAngleBisectorSvg(p1, 260, 200);
+  } else if (pattern === 'perp_bisector') {
+    labelText = '作図の性質';
+    answerText = 'AM = BM , ∠AMP = 90°';
+    svg = generatePerpBisectorSvg(260, 200);
+  } else if (pattern === 'sector_arc') {
+    labelText = '弧の長さ l / 面積 S';
+    const r = p1 || 6;
+    const a = p2 || 60;
+    const arcLen = ((2 * Math.PI * r * a) / 360).toFixed(1);
+    const area = ((Math.PI * r * r * a) / 360).toFixed(1);
+    answerText = `l = ${((2 * r * a) / 360).toFixed(2).replace(/\.00$/, '')}π cm , S = ${((r * r * a) / 360).toFixed(2).replace(/\.00$/, '')}π cm²`;
+    svg = generateSectorArcSvg(r, a, 260, 200);
+  } else if (pattern === 'parallel_chevron') {
+    labelText = '求める角 x';
+    answerText = `${p1 + p2}°`;
+    svg = generateParallelChevronSvg(p1, p2, 260, 190);
+  } else if (pattern === 'parallel_zigzag') {
+    labelText = '求める角 x';
+    const ans = p1 + p3 - p2 > 0 ? `${p1 + p3 - p2}°` : `${p2 - p1 + p3}°`;
+    answerText = `${p1 + p3}° (または ${Math.abs(p1 + p2 - p3)}°)`;
+    svg = generateParallelZigzagSvg(p1, p2, p3, 260, 190);
   } else if (pattern === 'triangle_exterior') {
-    svg = generateTriangleExteriorSvg(a1, a2, 260, 200);
-    answerText = `${a1 + a2}°`;
+    labelText = '求める角 x';
+    answerText = `${p1 + p2}°`;
+    svg = generateTriangleExteriorSvg(p1, p2, 260, 190);
+  } else if (pattern === 'boomerang') {
+    labelText = '求める角 x';
+    answerText = `${p1 + p2 + p3}°`;
+    svg = generateBoomerangSvg(p1, p2, p3, 260, 190);
+  } else if (pattern === 'isosceles') {
+    labelText = '底角 x';
+    answerText = `${((180 - p1) / 2).toFixed(1)}°`;
+    svg = generateIsoscelesSvg(p1, 260, 200);
   } else if (pattern === 'inscribed_angle') {
-    svg = generateInscribedAngleSvg(a1, 260, 200);
-    answerText = `${a1}°`;
+    labelText = '円周角 ∠x';
+    const half = (p1 / 2).toFixed(1).replace(/\.0$/, '');
+    answerText = `${half}° (中心角 ${p1}° の半分)`;
+    svg = generateInscribedAngleSvg(p1, pRange, 260, 210);
+  } else if (pattern === 'diameter_inscribed') {
+    labelText = '円周角 ∠APB';
+    answerText = `90° (直径に対する円周角)`;
+    svg = generateDiameterInscribedSvg(pRange, 260, 200);
+  } else if (pattern === 'similarity_pyramid') {
+    labelText = '線分 BC の長さ x';
+    const bc = ((p1 + p2) * p3 / p1).toFixed(1);
+    answerText = `${bc} cm`;
+    svg = generateSimilarityPyramidSvg(p1, p2, p3, 260, 200);
+  } else if (pattern === 'similarity_hourglass') {
+    labelText = '線分 CD の長さ x';
+    const cd = (p2 * p3 / p1).toFixed(1);
+    answerText = `${cd} cm`;
+    svg = generateSimilarityHourglassSvg(p1, p2, p3, 260, 200);
+  } else if (pattern === 'pythagoras') {
+    labelText = '斜辺 c の長さ';
+    const cVal = Math.sqrt(p1 * p1 + p2 * p2);
+    const cStr = Number.isInteger(cVal) ? `${cVal}` : `√${p1 * p1 + p2 * p2} (≈ ${cVal.toFixed(2)})`;
+    answerText = cStr;
+    svg = generatePythagorasSvg(p1, p2, 260, 200);
   }
 
   if (container) container.innerHTML = svg;
+  if (ansLabel) ansLabel.textContent = labelText;
   if (ansDisplay) ansDisplay.textContent = answerText;
-  state.geometry = { pattern, angle1: a1, angle2: a2, answer: answerText };
+
+  state.geometry = { pattern, p1, p2, p3, pRange, answer: answerText, svg };
+}
+
+// --- 各幾何図形の個別SVG生成関数 ---
+
+function generateAngleBisectorSvg(angle = 60, width = 260, height = 200) {
+  const ox = 40, oy = height - 40;
+  const len = 170;
+  const rad = (angle * Math.PI) / 180;
+  const halfRad = rad / 2;
+
+  const ax = ox + len * Math.cos(0);
+  const ay = oy - len * Math.sin(0);
+  const bx = ox + len * Math.cos(rad);
+  const by = oy - len * Math.sin(rad);
+
+  const arcR = 80;
+  const px = ox + arcR;
+  const py = oy;
+  const qx = ox + arcR * Math.cos(rad);
+  const qy = oy - arcR * Math.sin(rad);
+
+  const rx = ox + (len - 15) * Math.cos(halfRad);
+  const ry = oy - (len - 15) * Math.sin(halfRad);
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <!-- 2辺 OA, OB -->
+      <line x1="${ox}" y1="${oy}" x2="${ax}" y2="${ay}" stroke="#0f172a" stroke-width="2" />
+      <line x1="${ox}" y1="${oy}" x2="${bx}" y2="${by}" stroke="#0f172a" stroke-width="2" />
+      <!-- コンパス第1弧 (頂点O中心) -->
+      <path d="M ${px} ${py - 15} A ${arcR} ${arcR} 0 0 0 ${qx + 10} ${qy + 15}" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3,3" />
+      <circle cx="${px}" cy="${py}" r="2.5" fill="#3b82f6" />
+      <circle cx="${qx}" cy="${qy}" r="2.5" fill="#3b82f6" />
+      <!-- コンパス交差弧 (P, Q中心) -->
+      <circle cx="${rx - 10}" cy="${ry}" r="25" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2,2" clip-path="url(#rClip)" />
+      <!-- 角の二等分線 OR -->
+      <line x1="${ox}" y1="${oy}" x2="${rx + 15}" y2="${ry - 5}" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,2" />
+      <circle cx="${ox}" cy="${oy}" r="3" fill="#0f172a" />
+      <text x="${ox - 15}" y="${oy + 5}" font-size="12" font-style="italic">O</text>
+      <text x="${ax + 5}" y="${ay + 5}" font-size="12" font-style="italic">A</text>
+      <text x="${bx - 10}" y="${by - 5}" font-size="12" font-style="italic">B</text>
+      <text x="${rx + 20}" y="${ry}" font-size="11" fill="#2563eb" font-weight="bold">二等分線</text>
+      <text x="${ox + 35}" y="${oy - 8}" font-size="10" fill="#dc2626">${(angle / 2).toFixed(1)}°</text>
+    </svg>
+  `;
+}
+
+function generatePerpBisectorSvg(width = 260, height = 200) {
+  const ax = 50, ay = 100;
+  const bx = 210, by = 100;
+  const mx = (ax + bx) / 2, my = ay;
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <!-- 線分 AB -->
+      <line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="#0f172a" stroke-width="2.2" />
+      <circle cx="${ax}" cy="${ay}" r="3.5" fill="#0f172a" />
+      <circle cx="${bx}" cy="${by}" r="3.5" fill="#0f172a" />
+      <text x="${ax - 15}" y="${ay + 4}" font-size="12" font-style="italic">A</text>
+      <text x="${bx + 8}" y="${ay + 4}" font-size="12" font-style="italic">B</text>
+      <!-- コンパス作図弧 (点A中心, 点B中心) -->
+      <path d="M ${mx - 20} 25 A 95 95 0 0 1 ${mx + 20} 55" fill="none" stroke="#94a3b8" stroke-width="1.2" />
+      <path d="M ${mx + 20} 25 A 95 95 0 0 0 ${mx - 20} 55" fill="none" stroke="#94a3b8" stroke-width="1.2" />
+      <path d="M ${mx - 20} 145 A 95 95 0 0 1 ${mx + 20} 175" fill="none" stroke="#94a3b8" stroke-width="1.2" />
+      <path d="M ${mx + 20} 145 A 95 95 0 0 0 ${mx - 20} 175" fill="none" stroke="#94a3b8" stroke-width="1.2" />
+      <!-- 垂直二等分線 -->
+      <line x1="${mx}" y1="20" x2="${mx}" y2="180" stroke="#2563eb" stroke-width="2" />
+      <!-- 直角マーク & 中点記号 -->
+      <rect x="${mx}" y="${my - 12}" width="12" height="12" fill="none" stroke="#0f172a" stroke-width="1.2" />
+      <circle cx="${mx}" cy="${my}" r="2.5" fill="#0f172a" />
+      <text x="${mx + 5}" y="${my + 16}" font-size="11" font-style="italic">M</text>
+      <!-- 等長マーク -->
+      <line x1="${(ax + mx)/2 - 3}" y1="${ay - 6}" x2="${(ax + mx)/2 + 3}" y2="${ay + 6}" stroke="#dc2626" stroke-width="1.5" />
+      <line x1="${(mx + bx)/2 - 3}" y1="${ay - 6}" x2="${(mx + bx)/2 + 3}" y2="${ay + 6}" stroke="#dc2626" stroke-width="1.5" />
+      <text x="${mx + 10}" y="35" font-size="11" fill="#2563eb" font-weight="bold">垂直二等分線</text>
+    </svg>
+  `;
+}
+
+function generateSectorArcSvg(r = 6, angle = 60, width = 260, height = 200) {
+  const ox = 50, oy = height - 40;
+  const drawR = 125;
+  const rad = (angle * Math.PI) / 180;
+  const ex = ox + drawR * Math.cos(rad);
+  const ey = oy - drawR * Math.sin(rad);
+  const largeArc = angle > 180 ? 1 : 0;
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <!-- おうぎ形面 -->
+      <path d="M ${ox} ${oy} L ${ox + drawR} ${oy} A ${drawR} ${drawR} 0 ${largeArc} 0 ${ex} ${ey} Z" fill="#eff6ff" stroke="#2563eb" stroke-width="2" />
+      <circle cx="${ox}" cy="${oy}" r="3" fill="#0f172a" />
+      <text x="${ox - 14}" y="${oy + 4}" font-size="12" font-style="italic">O</text>
+      <text x="${ox + drawR / 2}" y="${oy + 16}" font-size="11" fill="#475569" font-weight="bold">r = ${r}cm</text>
+      <!-- 中心角の弧 -->
+      <path d="M ${ox + 35} ${oy} A 35 35 0 0 0 ${ox + 35 * Math.cos(rad)} ${oy - 35 * Math.sin(rad)}" fill="none" stroke="#dc2626" stroke-width="1.5" />
+      <text x="${ox + 42}" y="${oy - 12}" font-size="11" fill="#dc2626" font-weight="bold">${angle}°</text>
+    </svg>
+  `;
+}
+
+function generateParallelChevronSvg(a1 = 45, a2 = 35, width = 260, height = 190) {
+  const lY = 35;
+  const mY = height - 35;
+  const p1 = { x: 55, y: lY };
+  const v = { x: 145, y: (lY + mY) / 2 };
+  const p2 = { x: 65, y: mY };
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="${lY}" x2="${width - 20}" y2="${lY}" stroke="#0f172a" stroke-width="2" />
+      <text x="${width - 15}" y="${lY + 4}" font-size="12" font-style="italic">l</text>
+      <line x1="20" y1="${mY}" x2="${width - 20}" y2="${mY}" stroke="#0f172a" stroke-width="2" />
+      <text x="${width - 15}" y="${mY + 4}" font-size="12" font-style="italic">m</text>
+      <text x="25" y="${(lY + mY)/2}" font-size="11" fill="#64748b" font-weight="bold">l // m</text>
+      <!-- 折れ線 -->
+      <polyline points="${p1.x},${p1.y} ${v.x},${v.y} ${p2.x},${p2.y}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="${v.x}" cy="${v.y}" r="3" fill="#2563eb" />
+      <!-- 補助線 点線 -->
+      <line x1="${v.x - 30}" y1="${v.y}" x2="${v.x + 40}" y2="${v.y}" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3,3" />
+      <text x="${p1.x + 12}" y="${p1.y + 18}" font-size="11" font-weight="bold">${a1}°</text>
+      <text x="${v.x - 26}" y="${v.y + 4}" font-size="13" font-weight="bold" fill="#dc2626">x</text>
+      <text x="${p2.x + 12}" y="${p2.y - 8}" font-size="11" font-weight="bold">${a2}°</text>
+    </svg>
+  `;
+}
+
+function generateParallelZigzagSvg(a1 = 30, a2 = 50, a3 = 40, width = 260, height = 190) {
+  const lY = 30;
+  const mY = height - 30;
+  const p0 = { x: 50, y: lY };
+  const p1 = { x: 120, y: 75 };
+  const p2 = { x: 80, y: 125 };
+  const p3 = { x: 150, y: mY };
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="${lY}" x2="${width - 20}" y2="${lY}" stroke="#0f172a" stroke-width="2" />
+      <text x="${width - 15}" y="${lY + 4}" font-size="12" font-style="italic">l</text>
+      <line x1="20" y1="${mY}" x2="${width - 20}" y2="${mY}" stroke="#0f172a" stroke-width="2" />
+      <text x="${width - 15}" y="${mY + 4}" font-size="12" font-style="italic">m</text>
+      <polyline points="${p0.x},${p0.y} ${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="${p0.x + 12}" y="${p0.y + 18}" font-size="10.5" font-weight="bold">${a1}°</text>
+      <text x="${p1.x - 28}" y="${p1.y + 4}" font-size="12" font-weight="bold" fill="#dc2626">x</text>
+      <text x="${p2.x + 12}" y="${p2.y + 4}" font-size="10.5" font-weight="bold">${a2}°</text>
+      <text x="${p3.x - 28}" y="${p3.y - 8}" font-size="10.5" font-weight="bold">${a3}°</text>
+    </svg>
+  `;
+}
+
+function generateTriangleExteriorSvg(a1 = 55, a2 = 65, width = 260, height = 190) {
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="40,150 110,45 190,150" fill="#f8fafc" stroke="#2563eb" stroke-width="2.2" />
+      <!-- 延長線 -->
+      <line x1="190" y1="150" x2="245" y2="150" stroke="#0f172a" stroke-width="1.8" />
+      <text x="56" y="142" font-size="11" font-weight="bold">${a1}°</text>
+      <text x="105" y="72" font-size="11" font-weight="bold">${a2}°</text>
+      <path d="M 205 150 A 15 15 0 0 0 197 137" fill="none" stroke="#dc2626" stroke-width="1.8" />
+      <text x="204" y="140" font-size="13" font-weight="bold" fill="#dc2626">x</text>
+    </svg>
+  `;
+}
+
+function generateBoomerangSvg(a1 = 40, a2 = 30, a3 = 35, width = 260, height = 190) {
+  const ax = 130, ay = 30;
+  const bx = 45, by = 160;
+  const dx = 130, dy = 110;
+  const cx = 215, cy = 160;
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="${ax},${ay} ${bx},${by} ${dx},${dy} ${cx},${cy}" fill="#f8fafc" stroke="#2563eb" stroke-width="2.2" stroke-linejoin="round" />
+      <circle cx="${ax}" cy="${ay}" r="3" fill="#0f172a" />
+      <circle cx="${bx}" cy="${by}" r="3" fill="#0f172a" />
+      <circle cx="${cx}" cy="${cy}" r="3" fill="#0f172a" />
+      <circle cx="${dx}" cy="${dy}" r="3" fill="#dc2626" />
+      <text x="${ax - 8}" y="${ay + 25}" font-size="10.5" font-weight="bold">${a1}°</text>
+      <text x="${bx + 15}" y="${by - 10}" font-size="10.5" font-weight="bold">${a2}°</text>
+      <text x="${cx - 35}" y="${cy - 10}" font-size="10.5" font-weight="bold">${a3}°</text>
+      <text x="${dx - 6}" y="${dy + 24}" font-size="13" font-weight="bold" fill="#dc2626">x</text>
+    </svg>
+  `;
+}
+
+function generateIsoscelesSvg(topAngle = 40, width = 260, height = 200) {
+  const ax = 130, ay = 30;
+  const bx = 60, by = 170;
+  const cx = 200, cy = 170;
+  const baseAngle = ((180 - topAngle) / 2).toFixed(1);
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="${ax},${ay} ${bx},${by} ${cx},${cy}" fill="#f8fafc" stroke="#2563eb" stroke-width="2.2" />
+      <!-- 等辺マーク (AB = AC) -->
+      <line x1="90" y1="95" x2="100" y2="105" stroke="#dc2626" stroke-width="1.8" />
+      <line x1="160" y1="105" x2="170" y2="95" stroke="#dc2626" stroke-width="1.8" />
+      <text x="${ax - 5}" y="${ay - 6}" font-size="12" font-style="italic">A</text>
+      <text x="${bx - 14}" y="${by + 4}" font-size="12" font-style="italic">B</text>
+      <text x="${cx + 6}" y="${cy + 4}" font-size="12" font-style="italic">C</text>
+      <text x="${ax - 10}" y="${ay + 30}" font-size="11" font-weight="bold">${topAngle}°</text>
+      <text x="${bx + 16}" y="${by - 10}" font-size="12" font-weight="bold" fill="#dc2626">x</text>
+    </svg>
+  `;
+}
+
+/**
+ * 【円周角と中心角の定理】
+ * - 弧ABに対する中心角
+ * - 円周上の点Pの位置を角度スライダー (pAngleDeg) で自在に移動可能！
+ * - どこにPがあっても円周角は中心角の1/2であることを視覚的に確認
+ */
+function generateInscribedAngleSvg(centralAngle = 80, pAngleDeg = 90, width = 260, height = 210) {
+  const cx = width / 2;
+  const cy = height / 2 + 10;
+  const r = 70;
+
+  // 弧AB: 円の下側に左右対称に配置
+  const halfC = centralAngle / 2;
+  const radA = ((270 - halfC) * Math.PI) / 180;
+  const radB = ((270 + halfC) * Math.PI) / 180;
+  const ax = cx + r * Math.cos(radA);
+  const ay = cy - r * Math.sin(radA);
+  const bx = cx + r * Math.cos(radB);
+  const by = cy - r * Math.sin(radB);
+
+  // 点P: 円の上側の円周上、pAngleDeg (20°〜160°) で位置を自由に変更
+  // 90°が真上
+  const radP = (pAngleDeg * Math.PI) / 180;
+  const px = cx + r * Math.cos(radP);
+  const py = cy - r * Math.sin(radP);
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <!-- 円O -->
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#0f172a" stroke-width="1.8" />
+      <circle cx="${cx}" cy="${cy}" r="3" fill="#0f172a" />
+      <text x="${cx + 6}" y="${cy - 4}" font-size="11" font-family="'Times New Roman', serif" font-style="italic">O</text>
+
+      <!-- 中心角の弦 OA, OB (破線) -->
+      <line x1="${cx}" y1="${cy}" x2="${ax}" y2="${ay}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,3" />
+      <line x1="${cx}" y1="${cy}" x2="${bx}" y2="${by}" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,3" />
+
+      <!-- 円周角の弦 PA, PB (実線) -->
+      <polyline points="${ax},${ay} ${px},${py} ${bx},${by}" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+
+      <!-- 点 A, B, P -->
+      <circle cx="${ax}" cy="${ay}" r="3.5" fill="#0f172a" />
+      <text x="${ax - 14}" y="${ay + 14}" font-size="12" font-family="'Times New Roman', serif" font-style="italic">A</text>
+      <circle cx="${bx}" cy="${by}" r="3.5" fill="#0f172a" />
+      <text x="${bx + 6}" y="${by + 14}" font-size="12" font-family="'Times New Roman', serif" font-style="italic">B</text>
+
+      <!-- 動かせる点P (アクセント色で目立たせる) -->
+      <circle cx="${px}" cy="${py}" r="5" fill="#dc2626" stroke="#ffffff" stroke-width="1.5" />
+      <text x="${px - 4}" y="${py - 8}" font-size="13" font-family="'Times New Roman', serif" font-weight="bold" fill="#dc2626">P</text>
+
+      <!-- 中心角の角度ラベル -->
+      <text x="${cx - 10}" y="${cy + 22}" font-size="11" font-weight="bold" fill="#475569">${centralAngle}°</text>
+
+      <!-- 円周角 ∠x -->
+      <text x="${px - (px > cx ? 18 : -8)}" y="${py + 18}" font-size="13" font-weight="bold" fill="#dc2626">x</text>
+    </svg>
+  `;
+}
+
+function generateDiameterInscribedSvg(pAngleDeg = 65, width = 260, height = 200) {
+  const cx = width / 2;
+  const cy = height - 50;
+  const r = 80;
+
+  const ax = cx - r;
+  const ay = cy;
+  const bx = cx + r;
+  const by = cy;
+
+  const radP = (pAngleDeg * Math.PI) / 180;
+  const px = cx + r * Math.cos(radP);
+  const py = cy - r * Math.sin(radP);
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <!-- 半円 -->
+      <path d="M ${ax} ${ay} A ${r} ${r} 0 0 1 ${bx} ${by}" fill="#f8fafc" stroke="#0f172a" stroke-width="1.8" />
+      <!-- 直径 AB -->
+      <line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="#0f172a" stroke-width="2" />
+      <circle cx="${cx}" cy="${cy}" r="3" fill="#0f172a" />
+      <text x="${cx}" y="${cy + 16}" font-size="11" font-style="italic" text-anchor="middle">O</text>
+      <!-- 直角三角形 APB -->
+      <polyline points="${ax},${ay} ${px},${py} ${bx},${by}" fill="none" stroke="#2563eb" stroke-width="2.2" />
+      <circle cx="${ax}" cy="${ay}" r="3.5" fill="#0f172a" />
+      <circle cx="${bx}" cy="${by}" r="3.5" fill="#0f172a" />
+      <circle cx="${px}" cy="${py}" r="4.5" fill="#dc2626" />
+      <text x="${ax - 14}" y="${ay + 4}" font-size="12" font-style="italic">A</text>
+      <text x="${bx + 6}" y="${ay + 4}" font-size="12" font-style="italic">B</text>
+      <text x="${px}" y="${py - 8}" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">P</text>
+      <text x="${px - 2}" y="${py + 18}" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">90°</text>
+    </svg>
+  `;
+}
+
+function generateSimilarityPyramidSvg(ad = 4, db = 2, de = 6, width = 260, height = 200) {
+  const ax = 130, ay = 30;
+  const bx = 45, by = 175;
+  const cx = 215, cy = 175;
+
+  const t = ad / (ad + db);
+  const dx = ax + (bx - ax) * t;
+  const dy = ay + (by - ay) * t;
+  const ex = ax + (cx - ax) * t;
+  const ey = ay + (cy - ay) * t;
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="${ax},${ay} ${bx},${by} ${cx},${cy}" fill="#f8fafc" stroke="#0f172a" stroke-width="2" />
+      <line x1="${dx}" y1="${dy}" x2="${ex}" y2="${ey}" stroke="#2563eb" stroke-width="2.2" />
+      <text x="${ax - 4}" y="${ay - 6}" font-size="12" font-style="italic">A</text>
+      <text x="${bx - 14}" y="${by + 6}" font-size="12" font-style="italic">B</text>
+      <text x="${cx + 6}" y="${by + 6}" font-size="12" font-style="italic">C</text>
+      <text x="${dx - 14}" y="${dy + 4}" font-size="12" font-style="italic">D</text>
+      <text x="${ex + 6}" y="${ey + 4}" font-size="12" font-style="italic">E</text>
+      <!-- 平行マーク -->
+      <polygon points="${(dx+ex)/2-5},${dy-4} ${(dx+ex)/2},${dy} ${(dx+ex)/2-5},${dy+4}" fill="#2563eb" />
+      <polygon points="${(bx+cx)/2-5},${by-4} ${(bx+cx)/2},${by} ${(bx+cx)/2-5},${by+4}" fill="#2563eb" />
+      <!-- 寸法表示 -->
+      <text x="${(ax+dx)/2 - 16}" y="${(ay+dy)/2}" font-size="10.5" font-weight="bold">${ad}</text>
+      <text x="${(dx+bx)/2 - 16}" y="${(dy+by)/2}" font-size="10.5" font-weight="bold">${db}</text>
+      <text x="${(dx+ex)/2}" y="${dy - 6}" font-size="10.5" font-weight="bold" fill="#2563eb" text-anchor="middle">${de}</text>
+      <text x="${(bx+cx)/2}" y="${by + 16}" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">x</text>
+    </svg>
+  `;
+}
+
+function generateSimilarityHourglassSvg(ao = 6, od = 4, ab = 9, width = 260, height = 200) {
+  const ax = 50, ay = 35;
+  const bx = 180, by = 35;
+  const ox = 120, oy = 110;
+  const dx = 190, dy = 175;
+  const cx = 80, cy = 175;
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="#0f172a" stroke-width="2" />
+      <line x1="${cx}" y1="${cy}" x2="${dx}" y2="${dy}" stroke="#0f172a" stroke-width="2" />
+      <line x1="${ax}" y1="${ay}" x2="${dx}" y2="${dy}" stroke="#2563eb" stroke-width="2" />
+      <line x1="${bx}" y1="${by}" x2="${cx}" y2="${cy}" stroke="#2563eb" stroke-width="2" />
+      <circle cx="${ox}" cy="${oy}" r="3" fill="#0f172a" />
+      <text x="${ax - 14}" y="${ay + 4}" font-size="12" font-style="italic">A</text>
+      <text x="${bx + 8}" y="${ay + 4}" font-size="12" font-style="italic">B</text>
+      <text x="${ox + 6}" y="${oy - 4}" font-size="11" font-style="italic">O</text>
+      <text x="${cx - 14}" y="${cy + 4}" font-size="12" font-style="italic">C</text>
+      <text x="${dx + 8}" y="${dy + 4}" font-size="12" font-style="italic">D</text>
+      <text x="${(ax+bx)/2}" y="${ay - 6}" font-size="11" font-weight="bold" text-anchor="middle">${ab}</text>
+      <text x="${(ax+ox)/2 - 12}" y="${(ay+oy)/2}" font-size="10.5" font-weight="bold">${ao}</text>
+      <text x="${(ox+dx)/2 + 10}" y="${(oy+dy)/2}" font-size="10.5" font-weight="bold">${od}</text>
+      <text x="${(cx+dx)/2}" y="${cy + 16}" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">x</text>
+    </svg>
+  `;
+}
+
+function generatePythagorasSvg(a = 3, b = 4, width = 260, height = 200) {
+  const ox = 60, oy = 160;
+  const ax = ox, ay = 50;
+  const bx = 200, by = oy;
+
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="${ax},${ay} ${ox},${oy} ${bx},${by}" fill="#f8fafc" stroke="#2563eb" stroke-width="2.2" />
+      <!-- 直角マーク -->
+      <rect x="${ox}" y="${oy - 14}" width="14" height="14" fill="none" stroke="#0f172a" stroke-width="1.4" />
+      <text x="${ox - 14}" y="${oy + 14}" font-size="12" font-style="italic">C</text>
+      <text x="${ax - 14}" y="${ay + 4}" font-size="12" font-style="italic">A</text>
+      <text x="${bx + 8}" y="${by + 4}" font-size="12" font-style="italic">B</text>
+      <text x="${ox - 16}" y="${(ay + oy) / 2}" font-size="11" font-weight="bold">${b}</text>
+      <text x="${(ox + bx) / 2}" y="${oy + 16}" font-size="11" font-weight="bold">${a}</text>
+      <text x="${(ax + bx) / 2 + 10}" y="${(ay + by) / 2}" font-size="13" font-weight="bold" fill="#dc2626">x</text>
+    </svg>
+  `;
 }
 
 function insertGeometryToWorksheet() {
-  const { pattern, angle1, angle2, answer } = state.geometry;
-  let text = '';
-  let svg = '';
+  const geo = state.geometry || {};
+  const pattern = geo.pattern || 'parallel_chevron';
+  let title = '右の図において、次の問いに答えなさい。';
+  let ans = geo.answer || '';
 
-  if (pattern === 'parallel_chevron') {
-    text = `右の図で、直線 l // m であるとき、∠x の大きさを求めなさい。`;
-    svg = generateParallelChevronSvg(angle1, angle2, 200, 150);
+  if (pattern === 'angle_bisector') {
+    title = '右の図は、∠AOB の二等分線の作図である。二等分された角の大きさを求めなさい。';
+  } else if (pattern === 'perp_bisector') {
+    title = '右の図は、線分ABの垂直二等分線の作図である。点Mおよび直線について成り立つ性質を答えなさい。';
+  } else if (pattern === 'sector_arc') {
+    title = '右の図のおうぎ形について、弧の長さと面積をそれぞれ求めなさい。';
+  } else if (pattern === 'parallel_chevron') {
+    title = '右の図で、直線 l // m であるとき、∠x の大きさを求めなさい。';
+  } else if (pattern === 'parallel_zigzag') {
+    title = '右の図で、直線 l // m であるとき、∠x の大きさを求めなさい。';
   } else if (pattern === 'triangle_exterior') {
-    text = `右の図の三角形において、外角 ∠x の大きさを求めなさい。`;
-    svg = generateTriangleExteriorSvg(angle1, angle2, 200, 150);
+    title = '右の図の三角形において、外角 ∠x の大きさを求めなさい。';
+  } else if (pattern === 'boomerang') {
+    title = '右の図の四角形において、∠x の大きさを求めなさい。';
+  } else if (pattern === 'isosceles') {
+    title = '右の図の二等辺三角形 (AB = AC) において、底角 ∠x の大きさを求めなさい。';
   } else if (pattern === 'inscribed_angle') {
-    text = `右の図で、点Oを中心とする円において、円周角 ∠x の大きさを求めなさい。`;
-    svg = generateInscribedAngleSvg(angle1, 200, 160);
+    title = '右の図で、点Oを中心とする円において、円周角 ∠x の大きさを求めなさい。';
+  } else if (pattern === 'diameter_inscribed') {
+    title = '右の図で、線分ABを直径とする半円において、円周角 ∠APB の大きさを求めなさい。';
+  } else if (pattern === 'similarity_pyramid') {
+    title = '右の図で、DE // BC であるとき、線分 BC の長さ x を求めなさい。';
+  } else if (pattern === 'similarity_hourglass') {
+    title = '右の図で、AB // CD であるとき、線分 CD の長さ x を求めなさい。';
+  } else if (pattern === 'pythagoras') {
+    title = '右の直角三角形において、斜辺 x の長さを求めなさい。';
   }
 
   addBlock('geometry-block', {
-    text: text,
-    answer: `∠x = ${answer}`,
-    svgHtml: svg
+    text: title,
+    answer: ans,
+    svgHtml: geo.svg || ''
   });
 
   switchTab('worksheet');
 }
+
 
 // ==========================================
 // // 練習プリント専用 インライン図・表作図エンジン
