@@ -4319,7 +4319,7 @@ function renderWorksheetB4() {
   setTimeout(updateB4SheetLimitUI, 120);
 }
 
-// B4用紙の収まり状態の判定・UI更新（固定820px用紙内）
+// B4用紙の収まり状態の判定・UI更新（固定935px用紙内・印刷プレビュー実寸245mm完全準拠）
 function updateB4SheetLimitUI() {
   const sheet = document.getElementById('printableSheet');
   const badge = document.getElementById('b4FitBadge');
@@ -4329,7 +4329,7 @@ function updateB4SheetLimitUI() {
   const rightCol = document.getElementById('blocksRightCol');
   const container = document.querySelector('.b4-columns-container');
   
-  const availableHeight = container ? container.clientHeight : 680;
+  const availableHeight = container ? container.clientHeight : 790;
   const maxContentHeight = Math.max(
     leftCol ? leftCol.scrollHeight : 0,
     rightCol ? rightCol.scrollHeight : 0

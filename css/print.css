@@ -88,15 +88,42 @@
   body[data-print-target="worksheet"] .sheet-paper {
     display: block !important;
     width: 100% !important;
-    min-height: auto !important;
     box-shadow: none !important;
-    padding: 0 !important;
+    padding: 0 0 8mm 0 !important;
     border: none !important;
     page-break-after: avoid;
     break-after: avoid;
   }
 
+  body[data-print-target="worksheet"] .sheet-paper.paper-b4-landscape {
+    height: 245mm !important;
+    min-height: 245mm !important;
+    max-height: 245mm !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  body[data-print-target="worksheet"] .sheet-paper.paper-b4-landscape .sheet-footer.b4-sheet-footer {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    border-top: 0.5pt solid #000000 !important;
+    padding-top: 1mm !important;
+    background: transparent !important;
+  }
+
   body[data-print-target="worksheet"] .sheet-block {
     break-inside: avoid;
-    padding: 4px 0 !important;
+    padding: 3px 0 !important;
+  }
+
+  /* 生徒用プリント印刷時は上部の「生徒用」バッジを完全非表示 */
+  body.mode-student .sheet-mode-badge,
+  body[data-print-target="worksheet"].mode-student .sheet-mode-badge {
+    display: none !important;
   }
