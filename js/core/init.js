@@ -116,7 +116,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "方程式と解",
                   "content": "文字に当てはめる値によって成り立ったり成り立たなかったりする等式を <strong>方程式</strong>、等式を成り立たせる文字の値をその <strong>解</strong> という。"
                 }
@@ -179,7 +179,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "等式の4つの性質",
                   "content": "$A = B$ ならば<br>① $A + C = B + C$（両辺に同じ数を加えても成り立つ）<br>② $A - C = B - C$（両辺から同じ数を引いても成り立つ）<br>③ $AC = BC$（両辺に同じ数をかけても成り立つ）<br>④ $\\frac{A}{C} = \\frac{B}{C}$（両辺を同じ数で割っても成り立つ）"
                 }
@@ -233,7 +233,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "解き方のステップ",
                   "content": "① まず $x$ を含まない数（定数項）を反対側に移す。<br>② $x$ の係数で両辺を割る！"
                 }
@@ -287,7 +287,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "移項のルール",
                   "content": "一方の辺にある項を、<strong>符号を変えて</strong>他方の辺に移すことを <strong>移項</strong> という。<br>左辺に文字の項、右辺に数の項を集めて $ax = b$ の形にする！"
                 }
@@ -350,7 +350,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "かっこ付き方程式の手順",
                   "content": "① 分配法則でカッコをはずす（符号に特に注意！）。<br>② 文字の項を左辺、数の項を右辺に移項する。<br>③ $ax = b$ の形にして両辺を $a$ で割る。"
                 }
@@ -404,7 +404,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "分数・小数の処理",
                   "content": "・小数は両辺を 10倍、100倍して整数にする。<br>・分数は <strong>分母の最小公倍数を両辺にかける</strong>！<br>分子が多項式のときはカッコをつけてからかけること！"
                 }
@@ -467,7 +467,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "文章題の解き方4ステップ",
                   "content": "① 求めたい数量を文字 $x$ で表す。<br>② 数量の等しい関係を見つけて方程式をつくる。<br>③ 方程式を解く。<br>④ 解が問題の条件（正の整数など）に適しているか確かめる。"
                 }
@@ -521,7 +521,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "速さの問題のポイント",
                   "content": "・時間を表す式（$\\frac{\\text{道のり}}{\\text{速さ}}$）を作って等式にする。<br>・単位（分速と分、時速と時間、mとkm）がそろっているか必ずチェック！"
                 }
@@ -599,7 +599,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "一次関数の定義",
                   "content": "<strong>$y = ax + b$</strong>（$a, b$ は定数、$a \\neq 0$）の形で表されるとき、$y$ は $x$ の <strong>一次関数</strong> であるという。<br>$b = 0$ のとき比例 $y = ax$ となる（比例は一次関数の特別な場合）。"
                 }
@@ -662,7 +662,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "変化の割合",
                   "content": "<strong>変化の割合 ＝ $\\frac{y \\text{の増加量}}{x \\text{の増加量}}$ ＝ $a$（一定！）</strong><br>一次関数 $y = ax + b$ では、どの区間をとっても変化の割合は常に $a$ になる。"
                 }
@@ -725,7 +725,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "グラフの傾きと切片",
                   "content": "一次関数 $y = ax + b$ のグラフは、<strong>傾き $a$、切片 $b$ の直線</strong>。<br>・切片 $b$: $y$ 軸と交わる点の $y$ 座標 $(0, b)$<br>・傾き $a$: 右に 1 進んだときの上下の変化量"
                 }
@@ -788,7 +788,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "グラフのかき方手順",
                   "content": "① $y$ 軸上に切片 $(0, b)$ をとる。<br>② その点から傾き（分母だけ右、分子だけ上/下）に従って2つ目の点をとる。<br>③ 2点を通る直線をまっすぐ引く！"
                 }
@@ -842,7 +842,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "傾きと1点からの決定",
                   "content": "① 傾き $a$ をあてはめて $y = ax + b$ とおく。<br>② 点 $(x_1, y_1)$ を代入して方程式を解き、切片 $b$ を求める！"
                 }
@@ -905,7 +905,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "2点を通る直線",
                   "content": "・2直線が平行 ➔ <strong>傾き $a$ が等しい</strong>！<br>・2点を通る直線は「傾きを求めてから代入」または「連立方程式」で確実に求まる。"
                 }
@@ -968,7 +968,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "方程式のグラフ",
                   "content": "二元一次方程式 $ax + by = c$ のグラフは直線になる！<br>・$y =$ の形に変形して傾きと切片を読み取る。<br>・$x = k$ は $y$ 軸に平行な直線、$y = k$ は $x$ 軸に平行な直線。"
                 }
@@ -1031,7 +1031,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "グラフの交点と連立方程式",
                   "content": "<strong>2直線の交点の座標 ＝ 連立方程式の解 $(x, y)$</strong><br>代入法や加減法で解くことで、グラフ用紙の目盛りに頼らず正確な交点が得られる！"
                 }
@@ -1094,7 +1094,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "文章題の立式",
                   "content": "「初めの量」が切片 $b$、「1あたり増える（減る）量」が傾き $a$ になる！<br>$x$ や $y$ の変域にも気を配ろう。"
                 }
@@ -1157,7 +1157,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "動点問題の解法",
                   "content": "点 P がどの辺上にあるかで <strong>変域を区切る</strong>！<br>変域ごとに底辺と高さを $x$ で表して式を作り、折れ線のグラフで変化を可視化しよう。"
                 }
@@ -1228,7 +1228,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "多項式と単項式の乗法・除法は、数と同じように考えて計算できる。"
                 }
@@ -1282,7 +1282,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "式の展開",
                   "content": "$(3a+1)(2b-4)=6ab-12a+2b-4$ のように，多項式の積の形の式を単項式の和の形に表すことを<strong>「展開する」</strong>という。<br>$(a+b)(c+d)=ac+ad+bc+bd$"
                 }
@@ -1301,7 +1301,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "展開のポイント",
                   "content": "・式の展開でも，<strong>同類項があるときはまとめる</strong>。<br>・式の展開でも，<strong>分配法則と同じように</strong>計算できる。"
                 }
@@ -1344,7 +1344,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "式の展開は，<strong>項の数が増えても，これまでと同じ方法で</strong>計算できる。"
                 }
@@ -1398,7 +1398,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "展開の公式",
                   "content": "$(a+b)^2=a^2+2ab+b^2$　… 和の平方<br>$(a-b)^2=a^2-2ab+b^2$　… 差の平方<br>$(a+b)(a-b)=a^2-b^2$　… 和と差の積"
                 }
@@ -1445,7 +1445,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "展開の公式",
                   "content": "<strong>$(x+a)(x+b)=x^2+(a+b)x+ab$</strong><br>例）$(x+1)(x+10)=x^2+11x+10$<br>　　$(x-9)(x+7)=x^2-2x-63$<br>　　$(x-6)(x-3)=x^2-9x+18$"
                 }
@@ -1492,7 +1492,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "同じ式の展開でも，<strong>計算の仕方は必ずしも1通りとは限らない</strong>。"
                 }
@@ -1539,7 +1539,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "まず，教師が比較的取り組みやすい問いを"
                 }
@@ -1586,7 +1586,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "「くくる」という言葉を知らない生徒がい"
                 }
@@ -1633,7 +1633,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "公式の指導では，それを覚えさせることだ"
                 }
@@ -1680,7 +1680,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "前時と同じように，式を言語化して，生徒"
                 }
@@ -1727,7 +1727,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "「これまでの公式では因数分解できない式"
                 }
@@ -1774,7 +1774,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "「因数分解できた式の一部を変えると，因"
                 }
@@ -1821,7 +1821,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "問題１の図は，事前に拡大印刷してつくっておくか，プロジェクターで投影してもよいでしょう。"
                 }
@@ -1868,7 +1868,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "ここまでの教師の演出が，生徒の「先生は"
                 }
@@ -1915,7 +1915,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "久し振りの文字式の証明で，どうすればい"
                 }
@@ -1962,7 +1962,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "裏にマグネットをつけた長方形を14個準備しておき，四角形をつくります。"
                 }
@@ -2009,7 +2009,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "まず，なぜこのような公式を考えるのか，"
                 }
@@ -2066,7 +2066,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "（2）と（3）の四角形が正方形であることの"
                 }
@@ -2113,7 +2113,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "平方根の意味を理解していれば簡単な問題"
                 }
@@ -2160,7 +2160,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "課題では，ICT を活用して正方形をつくってもよいでしょう。"
                 }
@@ -2207,7 +2207,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "問題１の解決方法を参考にしながら，問題２の解決に取り組めるようにします。"
                 }
@@ -2254,7 +2254,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "この問題を生徒に解決させることは困難で"
                 }
@@ -2301,7 +2301,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "ここで指導する内容はトピック的で，生徒"
                 }
@@ -2348,7 +2348,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "問題１を生徒に委ねて解決させることはな"
                 }
@@ -2395,7 +2395,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "（3）と（4）の計算は，次の指導につなげる"
                 }
@@ -2442,7 +2442,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "教師が次々問題を与えるだけではなく，発"
                 }
@@ -2489,7 +2489,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "この比較は，生徒が16 について考える"
                 }
@@ -2536,7 +2536,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "根号の外の数が２乗されて根号の中に入ったことがわかるように，数の対応関係を明確に示します。"
                 }
@@ -2583,7 +2583,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "面積が８の正方形の図は，事前につくっておいて提示します。"
                 }
@@ -2630,7 +2630,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "ここからは，各自で解決に取り組ませても"
                 }
@@ -2677,7 +2677,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "学校生活でも利用する機会の多いＡ４判の"
                 }
@@ -2734,7 +2734,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "連立方程式を一次方程式から発展的に考え"
                 }
@@ -2781,7 +2781,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "教師が式変形の仕方を一方的に示すのでは"
                 }
@@ -2828,7 +2828,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "ここで行っているのは，式を目的の形に変"
                 }
@@ -2875,7 +2875,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "前時に指導した方法で解くといっても，こ"
                 }
@@ -2922,7 +2922,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "ここで，教師が（1）の二次方程式を平方の"
                 }
@@ -2969,7 +2969,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "生徒に自力で解決することを求める問題で"
                 }
@@ -3016,7 +3016,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "条件を変えて新しい問題を生み出し，「ち"
                 }
@@ -3063,7 +3063,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "解の公式を使った解き方と因数分解を使った解き方を比較できるように板書します。"
                 }
@@ -3110,7 +3110,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "解の吟味は，一次方程式や連立方程式の指"
                 }
@@ -3157,7 +3157,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "「何を文字で表すか」から生徒に自由に考"
                 }
@@ -3204,7 +3204,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "どこから生徒に任せて解決に取り組ませる"
                 }
@@ -3261,7 +3261,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "生徒にとって久しぶりの関数の学習です。"
                 }
@@ -3308,7 +3308,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "既習の比例と比較しながら考えることは，"
                 }
@@ -3355,7 +3355,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "第２学年までの指導で，表の対応するx"
                 }
@@ -3402,7 +3402,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "問題１を生徒に任せて解決させることはな"
                 }
@@ -3449,7 +3449,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "前時の授業で問題を解決する際に用いた，"
                 }
@@ -3496,7 +3496,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "問題１では，ICT を活用して，比例定数によるグラフの変化を視覚的に捉えられるようにします。"
                 }
@@ -3543,7 +3543,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "重要な公式や手順を確認し、ミスしやすい点に注意する。"
                 }
@@ -3590,7 +3590,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "これまでは，x とy の値の対応の状況に着"
                 }
@@ -3637,7 +3637,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "変域は既習事項であり，これまでは２年生"
                 }
@@ -3684,7 +3684,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "生徒に任せて解決させるのは難しいでしょ"
                 }
@@ -3731,7 +3731,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "ここでは，y がx"
                 }
@@ -3778,7 +3778,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "２組の対応表とグラフを，対比しながら考察できるようにします。"
                 }
@@ -3825,7 +3825,7 @@ const boardLessonDatabase = {
               {
                 "type": "point-box",
                 "data": {
-                  "badge": "板書まとめ",
+                  "badge": "本時のまとめ",
                   "title": "本時のまとめ",
                   "content": "これまでとはまったく異なった特徴をもつ"
                 }
@@ -4253,20 +4253,23 @@ function loadBoardLessonPreset(grade, unitId, hour, isInitialLoad = false) {
     }
   }
 
-  state.blocksLeft = sanitizeFormulas(JSON.parse(JSON.stringify(source.leftBlocks || []))).map(b => {
+  const normalizeBlock = b => {
     b.id = generateBlockId();
     if (b.type === 'graph-block' && !b.data.svgHtml) {
       b.data.svgHtml = generateLinearSvg(2, 1, true, true, 190, 180);
     }
-    return b;
-  });
-  state.blocksRight = sanitizeFormulas(JSON.parse(JSON.stringify(source.rightBlocks || []))).map(b => {
-    b.id = generateBlockId();
-    if (b.type === 'graph-block' && !b.data.svgHtml) {
-      b.data.svgHtml = generateLinearSvg(2, 1, true, true, 190, 180);
+    if (b.type === 'point-box') {
+      if (!b.data.badge || b.data.badge === '板書まとめ') {
+        b.data.badge = '本時のまとめ';
+      }
+      if (b.data.title === '本時のまとめ' || b.data.title === '板書まとめ') {
+        b.data.title = '';
+      }
     }
     return b;
-  });
+  };
+  state.blocksLeft = sanitizeFormulas(JSON.parse(JSON.stringify(source.leftBlocks || []))).map(normalizeBlock);
+  state.blocksRight = sanitizeFormulas(JSON.parse(JSON.stringify(source.rightBlocks || []))).map(normalizeBlock);
   syncB4Blocks();
 
   b4History = [];
@@ -4323,7 +4326,7 @@ function updateB4SheetLimitUI() {
   const limitLine = document.getElementById('b4PageLimitLine');
   if (!sheet) return;
 
-  const B4_STANDARD_HEIGHT = 820; // 1160px幅に対するB4横の比率高さ
+  const B4_STANDARD_HEIGHT = 1020; // 1160px幅に対するB4横の印刷収容限界高さ（印刷プレビューと一致）
   const currentHeight = sheet.scrollHeight || sheet.offsetHeight;
   const diff = currentHeight - B4_STANDARD_HEIGHT;
 
@@ -4406,11 +4409,13 @@ function renderBlockColumn(blocks, colSide) {
           </div>`}
         </div>`;
     } else if (block.type === 'point-box') {
+      const bBadge = (d.badge === '板書まとめ' || !d.badge) ? '本時のまとめ' : d.badge;
+      const bTitle = (d.title && d.title !== bBadge && d.title !== '本時のまとめ' && d.title !== '板書まとめ') ? d.title : '';
       html = `
         <div class="point-summary-box">
           <div class="point-summary-header">
-            <span class="point-badge"><i class="fa-solid fa-bookmark"></i> ${escapeHtmlB4(d.badge || 'まとめ')}</span>
-            <strong ${editB4('title', '見出し', 'text')}>${escapeHtmlB4(d.title)}</strong>
+            <span class="point-badge"><i class="fa-solid fa-bookmark"></i> ${escapeHtmlB4(bBadge)}</span>
+            <strong ${editB4('title', '見出し (省略可)', 'text')}>${escapeHtmlB4(bTitle)}</strong>
           </div>
           <div class="point-summary-body" ${editB4('content', 'まとめを入力')} style="min-height: ${d.customHeight || 40}px;">${fmtB4(d.content)}</div>
         </div>`;

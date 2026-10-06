@@ -48,7 +48,7 @@ function addBlock(type, customData = null) {
     };
   } else if (type === 'point-box') {
     block.data = {
-      badge: customData?.badge || '要点公式',
+      badge: customData?.badge || '本時のまとめ',
       title: customData?.title || '重要ポイント・公式まとめ',
       content: customData?.content || '公式や定義のまとめを入力します。'
     };
@@ -212,7 +212,7 @@ function renderWorksheet() {
           <div class="board-task-canvas" style="min-height: ${block.data.thinkingSpaceHeight || 85}px;">
             <div class="canvas-grid-label">【自分の考え・途中式・説明】</div>
             <div class="answer-space answer-text-inline">
-              <span class="answer-label">【板書まとめ・模範解】</span>
+              <span class="answer-label">【本時のまとめ・模範解】</span>
               <span class="answer-text">${block.data.answer}</span>
             </div>
           </div>
@@ -222,7 +222,7 @@ function renderWorksheet() {
       blockContentHtml = `
         <div class="point-summary-box">
           <div class="point-summary-header">
-            <span class="point-badge"><i class="fa-solid fa-bookmark"></i> ${block.data.badge || '要点公式'}</span>
+            <span class="point-badge"><i class="fa-solid fa-bookmark"></i> ${block.data.badge || '本時のまとめ'}</span>
             <strong contenteditable="true" data-field="title" oninput="updateBlockData(${index}, 'title', this.innerText)" onblur="updateBlockData(${index}, 'title', this.innerText)">${block.data.title}</strong>
           </div>
           <div class="point-summary-body" contenteditable="true" data-field="content" style="min-height: ${block.data.customHeight || 40}px;" oninput="updateBlockData(${index}, 'content', this.innerHTML)" onblur="updateBlockData(${index}, 'content', this.innerHTML)">
@@ -320,7 +320,7 @@ lessonUnitPresets = {
       {
         type: 'point-box',
         data: {
-          badge: '板書まとめ',
+          badge: '本時のまとめ',
           title: '置き換えによる展開のポイント',
           content: '式の中に同じまとまりがあるときは、それを <strong>1つの文字 $M$</strong> とおくことで、知っている乗法公式にあてはめて簡単に展開できる！'
         }
@@ -426,7 +426,7 @@ lessonUnitPresets = {
       {
         type: 'point-box',
         data: {
-          badge: '板書まとめ',
+          badge: '本時のまとめ',
           title: '因数分解による解法のまとめ',
           content: '2次方程式の左辺を $(x-\\alpha)(x-\\beta)=0$ の形に因数分解できれば、解は <strong>$x = \\alpha, \\beta$</strong> とすぐに求められる！'
         }
