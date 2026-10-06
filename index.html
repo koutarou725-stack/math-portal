@@ -24,13 +24,13 @@
   <!-- 各機能モジュールスタイル -->
   <link rel="stylesheet" href="css/features/home.css">
   <link rel="stylesheet" href="css/features/timetable.css">
-  <link rel="stylesheet" href="css/features/class-print.css?v=20261006_1">
-  <link rel="stylesheet" href="css/features/practice-print.css">
+  <link rel="stylesheet" href="css/features/class-print.css?v=20261006_2">
+  <link rel="stylesheet" href="css/features/practice-print.css?v=20261006_2">
   <link rel="stylesheet" href="css/features/graph-generator.css">
   <link rel="stylesheet" href="css/features/settings.css">
   <link rel="stylesheet" href="css/features/library.css">
   <!-- 印刷用スタイル -->
-  <link rel="stylesheet" href="css/print.css">
+  <link rel="stylesheet" href="css/print.css?v=20261006_2">
 </head>
 <body>
 
@@ -884,83 +884,47 @@
             </div>
           </div>
 
-          <!-- 2. マイプリント保存＆呼び出し管理 -->
-          <div class="panel-section mb-3 my-worksheet-card" style="padding: 0.7rem 0.8rem;">
-            <div class="panel-header" style="margin-bottom: 0.4rem;">
-              <h3 style="font-size: 0.9rem;"><i class="fa-solid fa-folder-bookmark text-success"></i> マイプリント保存</h3>
+          <!-- 2. レゴ式パーツ追加パレット (2列×4行) -->
+          <div class="panel-section mb-3" style="padding: 0.75rem 0.85rem; background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+            <div class="panel-header" style="margin-bottom: 0.35rem; display: flex; align-items: center; justify-content: space-between;">
+              <h3 style="font-size: 0.9rem; margin: 0;"><i class="fa-solid fa-cubes text-primary"></i> パーツ追加</h3>
+              <span class="badge" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;">2列×4行</span>
             </div>
-            <div class="my-ws-btn-row" style="display: flex; gap: 0.35rem;">
-              <button class="btn btn-outline-success" onclick="saveWorksheetToStorage()" style="flex: 1.2; justify-content: center; padding: 0.45rem 0.3rem; font-weight: 700; font-size: 0.78rem;">
-                <i class="fa-solid fa-copy"></i> 別名保存
+            
+            <div class="block-palette">
+              <button class="palette-item" onclick="addBlockToSide('objective', 'left')" title="本時のめあて (左面)">
+                <i class="fa-solid fa-bullseye"></i>
+                <div><strong>めあて</strong></div>
               </button>
-              <button class="btn btn-outline" onclick="openSavedWorksheetsModal()" style="flex: 1; justify-content: center; padding: 0.45rem 0.3rem; font-size: 0.78rem;">
-                <i class="fa-solid fa-folder-open"></i> 一覧
+              <button class="palette-item" onclick="addBlockToSide('review', 'left')" title="導入・前時の復習 (左面)">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <div><strong>復習</strong></div>
+              </button>
+              <button class="palette-item" onclick="addBlockToSide('board-task', 'left')" title="板書・主発問 課題枠 (左面)">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <div><strong>課題枠</strong></div>
+              </button>
+              <button class="palette-item" onclick="addBlockToSide('point-box', 'left')" title="要点まとめ 公式枠">
+                <i class="fa-solid fa-bookmark text-warning"></i>
+                <div><strong>要点・公式</strong></div>
+              </button>
+              <button class="palette-item" onclick="addBlockToSide('question', 'right')" title="問い・練習問題 (右面)">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <div><strong>練習問題</strong></div>
+              </button>
+              <button class="palette-item" onclick="addBlockToSide('reflection', 'right')" title="振り返り・自己評価 (右面)">
+                <i class="fa-solid fa-star text-warning"></i>
+                <div><strong>振り返り</strong></div>
+              </button>
+              <button class="palette-item" onclick="addBlockToSide('graph-block', 'right')" title="関数・グラフ枠 (右面)">
+                <i class="fa-solid fa-chart-line"></i>
+                <div><strong>グラフ枠</strong></div>
+              </button>
+              <button class="palette-item" onclick="addBlockToSide('geometry-block', 'right')" title="図形問題枠 (右面)">
+                <i class="fa-solid fa-draw-polygon"></i>
+                <div><strong>図形枠</strong></div>
               </button>
             </div>
-          </div>
-
-          <!-- 3. 教材資料室リンク -->
-          <div class="panel-section mb-3 ws-reference-card">
-            <div class="panel-header" style="margin-bottom: 0.2rem;">
-              <h3 style="font-size: 0.88rem;"><i class="fa-solid fa-book-open-reader text-info"></i> 教材資料室で確認</h3>
-            </div>
-            <div class="ws-ref-buttons" style="display: flex; flex-direction: column; gap: 0.3rem;">
-              <button class="btn btn-sm btn-outline btn-block text-primary" id="btnWsViewBoard" onclick="openCurrentB4BoardPdf()" style="font-size: 0.78rem; padding: 0.4rem;">
-                <i class="fa-solid fa-chalkboard-user"></i> 板書・指導展開例 (明治図書)
-              </button>
-              <button class="btn btn-sm btn-outline btn-block" id="btnWsViewPoint" onclick="openCurrentB4PointPdf()" style="font-size: 0.78rem; padding: 0.4rem;">
-                <i class="fa-solid fa-book-open"></i> 要点ブック (学研)
-              </button>
-              <button class="btn btn-sm btn-ghost btn-block text-secondary" onclick="switchTab('library')" style="font-size: 0.76rem; padding: 0.25rem;">
-                <i class="fa-solid fa-arrow-up-right-from-square"></i> 資料室全体を開く
-              </button>
-            </div>
-          </div>
-
-          <!-- 4. レゴ式パーツ追加パレット -->
-          <div class="panel-header">
-            <h3><i class="fa-solid fa-cubes"></i> パーツ追加</h3>
-            <span class="badge">レゴ方式</span>
-          </div>
-          <p class="panel-desc">クリックして用紙にブロックを追加します。</p>
-          
-          <div class="block-palette">
-            <button class="palette-item" onclick="addBlockToSide('objective', 'left')" title="本時のめあて (左面)">
-              <i class="fa-solid fa-bullseye"></i>
-              <div><strong>めあて</strong></div>
-            </button>
-            <button class="palette-item" onclick="addBlockToSide('review', 'left')" title="導入・前時の復習 (左面)">
-              <i class="fa-solid fa-clock-rotate-left"></i>
-              <div><strong>復習</strong></div>
-            </button>
-            <button class="palette-item" onclick="addBlockToSide('board-task', 'left')" title="板書・主発問 課題枠 (左面)">
-              <i class="fa-solid fa-chalkboard-user"></i>
-              <div><strong>課題枠</strong></div>
-            </button>
-            <button class="palette-item" onclick="addBlockToSide('point-box', 'left')" title="要点まとめ 公式枠">
-              <i class="fa-solid fa-bookmark text-warning"></i>
-              <div><strong>要点・公式</strong></div>
-            </button>
-            <button class="palette-item" onclick="addBlockToSide('question', 'right')" title="問い・練習問題 (右面)">
-              <i class="fa-solid fa-pen-to-square"></i>
-              <div><strong>練習問題</strong></div>
-            </button>
-            <button class="palette-item" onclick="addBlockToSide('graph-block', 'right')" title="関数・グラフ枠">
-              <i class="fa-solid fa-chart-line"></i>
-              <div><strong>グラフ枠</strong></div>
-            </button>
-            <button class="palette-item" onclick="addBlockToSide('geometry-block', 'right')" title="図形問題枠">
-              <i class="fa-solid fa-draw-polygon"></i>
-              <div><strong>図形枠</strong></div>
-            </button>
-            <button class="palette-item" onclick="addBlockToSide('summary', 'left')" title="まとめ (左面)">
-              <i class="fa-solid fa-lightbulb"></i>
-              <div><strong>まとめ</strong></div>
-            </button>
-            <button class="palette-item" onclick="addBlockToSide('reflection', 'right')" title="振り返り・自己評価 (右面)">
-              <i class="fa-solid fa-star text-warning"></i>
-              <div><strong>振り返り</strong></div>
-            </button>
           </div>
 
           <!-- 5. 印刷・出力操作 -->
@@ -1533,15 +1497,15 @@
 
   <!-- コアロジック (状態管理・初期化・共通処理) -->
   <script src="js/core/state.js"></script>
-  <script src="js/core/utils.js?v=20261003_6"></script>
+  <script src="js/core/utils.js?v=20261006_2"></script>
   <script src="js/core/cloud-sync.js"></script>
   <!-- 各機能モジュール -->
   <script src="js/features/timetable.js?v=20261003_6"></script>
-  <script src="js/features/class-print.js?v=20261006_1"></script>
+  <script src="js/features/class-print.js?v=20261006_2"></script>
   <script src="js/features/practice-print.js"></script>
   <script src="js/features/settings.js"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
-  <script src="js/core/init.js?v=20261006_1"></script>
+  <script src="js/core/init.js?v=20261006_2"></script>
 </body>
 </html>

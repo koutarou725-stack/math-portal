@@ -48,11 +48,11 @@
   line-height: 1.4;
 }
 
-/* ブロックパレット (2列シンプルグリッド) */
+/* ブロックパレット (2列×4行 コンパクトグリッド) */
 .block-palette {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
 .palette-item {
@@ -61,27 +61,27 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0.55rem 0.3rem;
+  padding: 0.4rem 0.25rem;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
-  min-height: 56px;
+  min-height: 46px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
 
 .palette-item:hover {
   background: #f0f9ff;
   border-color: #0284c7;
-  transform: translateY(-2px);
-  box-shadow: 0 3px 6px rgba(2, 132, 199, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(2, 132, 199, 0.12);
 }
 
 .palette-item i {
-  font-size: 1.2rem;
-  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  margin-bottom: 0.15rem;
   color: #0284c7;
   text-align: center;
 }
@@ -248,7 +248,7 @@
 .sheet-block {
   position: relative;
   border-radius: 4px;
-  padding: 6px;
+  padding: 2px 3px;
   transition: all 0.15s ease;
 }
 
@@ -297,11 +297,11 @@
 .objective-box {
   border: 2px solid #000;
   border-radius: 6px;
-  padding: 8px 14px;
+  padding: 5px 10px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 4px;
   background: #fafafa;
 }
 
@@ -326,15 +326,15 @@
 .review-box {
   border: 1px dashed #666;
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 5px 10px;
   background: #fff;
 }
 
 .review-title {
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   font-weight: 700;
   color: #444;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -1050,7 +1050,7 @@ body.show-answers .answer-text {
   background: #ffffff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
-  padding: 24px 32px 30px 32px;
+  padding: 16px 26px 20px 26px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -1147,8 +1147,8 @@ body.show-answers .answer-text {
 /* B4 ヘッダー */
 .b4-sheet-header {
   border-bottom: 2px solid #0f172a;
-  padding-bottom: 8px;
-  margin-bottom: 14px;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -1158,7 +1158,7 @@ body.show-answers .answer-text {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   flex-wrap: wrap;
 }
 
@@ -1168,7 +1168,7 @@ body.show-answers .answer-text {
   border: 1px solid #bae6fd;
   font-size: 0.76rem;
   font-weight: 700;
-  padding: 0.15rem 0.55rem;
+  padding: 0.12rem 0.5rem;
   border-radius: 4px;
 }
 
@@ -1178,23 +1178,23 @@ body.show-answers .answer-text {
   border: 1px solid #fde68a;
   font-size: 0.76rem;
   font-weight: 700;
-  padding: 0.15rem 0.55rem;
+  padding: 0.12rem 0.5rem;
   border-radius: 4px;
 }
 
 .b4-sheet-title {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: #0f172a;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 /* B4 左右2カラム見開きグリッド */
 .b4-columns-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 22px;
   flex: 1;
   position: relative;
 }
@@ -1212,7 +1212,7 @@ body.show-answers .answer-text {
 .b4-column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .empty-col-drop {
@@ -1369,27 +1369,42 @@ body.show-answers .answer-text {
 /* B4横 印刷スタイル (@media print) */
 @media print {
 
+  body[data-print-target="worksheet"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
   body[data-print-target="worksheet"] .sheet-paper.paper-b4-landscape {
     width: 100% !important;
     max-width: 100% !important;
-    height: 100% !important;
-    min-height: 242mm !important;
-    max-height: 245mm !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: 240mm !important;
     padding: 0 !important;
+    margin: 0 !important;
     box-shadow: none !important;
     border: none !important;
-    break-after: avoid;
-    page-break-after: avoid;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+    overflow: hidden !important;
   }
 
   body[data-print-target="worksheet"] .b4-sheet-header {
     border-bottom: 1.5pt solid #000000 !important;
-    margin-bottom: 4mm !important;
-    padding-bottom: 2mm !important;
+    margin-bottom: 3mm !important;
+    padding-bottom: 1.5mm !important;
   }
 
   body[data-print-target="worksheet"] .b4-columns-container {
-    gap: 8mm !important;
+    gap: 6mm !important;
   }
 
   body[data-print-target="worksheet"] .b4-center-fold-line {
@@ -2171,6 +2186,108 @@ body.show-answers .answer-text.answer-block {
 }
 
 .btn-guide-add:hover {
+  background: #f0f9ff;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+/* 自分の考え・途中式枠 削除/追加スタイル */
+.board-task-canvas {
+  position: relative;
+}
+.btn-canvas-remove {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  cursor: pointer;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  z-index: 5;
+}
+.board-task-canvas:hover .btn-canvas-remove {
+  opacity: 1;
+}
+.btn-canvas-remove:hover {
+  color: #ef4444;
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.board-task-no-canvas {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+.btn-canvas-add {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-canvas-add:hover {
+  background: #f0f9ff;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+/* 振り返りコメント記述枠 削除/追加スタイル */
+.reflection-comment-line {
+  position: relative;
+}
+.btn-comment-remove {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  cursor: pointer;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  z-index: 5;
+}
+.reflection-comment-line:hover .btn-comment-remove {
+  opacity: 1;
+}
+.btn-comment-remove:hover {
+  color: #ef4444;
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.reflection-no-comment {
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+.btn-reflection-comment-add {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-reflection-comment-add:hover {
   background: #f0f9ff;
   border-color: #0284c7;
   color: #0284c7;

@@ -4395,10 +4395,15 @@ function renderBlockColumn(blocks, colSide) {
           <div class="board-task-no-guide no-print">
             <button type="button" class="btn-guide-add" onclick="addBoardTaskGuide('${colSide}', ${index})"><i class="fa-solid fa-plus"></i> 見通しヒント枠を追加</button>
           </div>`}
-          <div class="board-task-canvas" style="min-height: ${d.thinkingSpaceHeight || 85}px;">
+          ${d.hideCanvas ? `
+          <div class="board-task-no-canvas no-print">
+            <button type="button" class="btn-canvas-add" onclick="toggleBoardTaskCanvas('${colSide}', ${index}, false)"><i class="fa-solid fa-plus"></i> 自分の考え・途中式枠を追加</button>
+          </div>` : `
+          <div class="board-task-canvas" style="min-height: ${d.thinkingSpaceHeight || 80}px;">
+            <button type="button" class="btn-canvas-remove no-print" onclick="toggleBoardTaskCanvas('${colSide}', ${index}, true)" title="自分の考え・途中式枠を削除"><i class="fa-solid fa-xmark"></i></button>
             <div class="canvas-grid-label" ${editB4('canvasLabel', 'ラベルを入力 (消去可能)', 'text')}>${escapeHtmlB4(d.canvasLabel !== undefined ? d.canvasLabel : '自分の考え・途中式')}</div>
             <div class="answer-text answer-block"><span class="answer-tag">解答例</span><div ${editB4('answer', '解答例を入力')}>${fmtB4(d.answer)}</div></div>
-          </div>
+          </div>`}
         </div>`;
     } else if (block.type === 'point-box') {
       html = `
@@ -4441,9 +4446,14 @@ function renderBlockColumn(blocks, colSide) {
               ${d.scaleOptions ? fmtB4(d.scaleOptions) : '<span>[ A: よくわかった ]</span> <span>[ B: だいたい ]</span> <span>[ C: もう少し ]</span>'}
             </div>
           </div>
-          <div class="reflection-comment-line" ${d.customHeight ? `style="min-height: ${d.customHeight}px;"` : ''}>
-            <span class="comment-label" ${editB4('commentLabel', '記述欄の案内を入力', 'text')}>${escapeHtmlB4(d.commentLabel || '今日の授業で学んだこと・疑問点:')}</span>
-          </div>
+          ${d.hideComment ? `
+          <div class="reflection-no-comment no-print">
+            <button type="button" class="btn-reflection-comment-add" onclick="toggleReflectionComment('${colSide}', ${index}, false)"><i class="fa-solid fa-plus"></i> コメント記述枠を追加</button>
+          </div>` : `
+          <div class="reflection-comment-line" style="${d.customHeight ? `min-height: ${d.customHeight}px;` : 'min-height: 38px;'}">
+            <button type="button" class="btn-comment-remove no-print" onclick="toggleReflectionComment('${colSide}', ${index}, true)" title="コメント記述枠を削除"><i class="fa-solid fa-xmark"></i></button>
+            <span class="comment-label" ${editB4('commentLabel', '記述欄の案内を入力', 'text')}>${escapeHtmlB4(d.commentLabel !== undefined ? d.commentLabel : '今日の授業で学んだこと・疑問点:')}</span>
+          </div>`}
         </div>`;
     }
 
@@ -5053,3 +5063,31 @@ function addBoardTaskGuide(colSide, index) {
     showToast('<i class="fa-solid fa-plus text-primary"></i> 見通しヒント欄を追加しました');
   }
 }
+
+// 自分の考え・途中式枠の削除 / 追加操作
+function toggleBoardTaskCanvas(colSide, index, hide) {
+  pushB4History();
+  const arr = colSide === 'left' ? state.blocksLeft : state.blocksRight;
+  if (arr && arr[index] && arr[index].data) {
+    arr[index].data.hideCanvas = !!hide;
+    syncB4Blocks();
+    setB4Dirty(true);
+    renderWorksheetB4();
+    showToast(hide ? '<i class="fa-solid fa-trash-can text-danger"></i> 自分の考え・途中式枠を削除しました' : '<i class="fa-solid fa-plus text-primary"></i> 自分の考え・途中式枠を追加しました');
+  }
+}
+window.toggleBoardTaskCanvas = toggleBoardTaskCanvas;
+
+// 振り返りコメント枠の削除 / 追加操作
+function toggleReflectionComment(colSide, index, hide) {
+  pushB4History();
+  const arr = colSide === 'left' ? state.blocksLeft : state.blocksRight;
+  if (arr && arr[index] && arr[index].data) {
+    arr[index].data.hideComment = !!hide;
+    syncB4Blocks();
+    setB4Dirty(true);
+    renderWorksheetB4();
+    showToast(hide ? '<i class="fa-solid fa-trash-can text-danger"></i> コメント記述枠を削除しました' : '<i class="fa-solid fa-plus text-primary"></i> コメント記述枠を追加しました');
+  }
+}
+window.toggleReflectionComment = toggleReflectionComment;

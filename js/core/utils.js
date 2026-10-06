@@ -105,7 +105,9 @@ function setPrintPageOrientation(sizeOrientation) {
     styleEl.id = 'printPageOrientationStyle';
     document.head.appendChild(styleEl);
   }
-  styleEl.textContent = `@page { size: ${sizeOrientation} !important; margin: 8mm 10mm !important; }`;
+  const isLandscape = sizeOrientation.includes('landscape');
+  const marginStr = isLandscape ? '5mm 6mm' : '8mm 10mm';
+  styleEl.textContent = `@page { size: ${sizeOrientation} !important; margin: ${marginStr} !important; }`;
 }
 
 function printStudentTestPaper() {
