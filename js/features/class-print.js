@@ -1043,8 +1043,9 @@ function initBlockResize() {
     const onMouseMove = (moveEvt) => {
       if (!isResizing || !currentTargetEl) return;
       const deltaY = moveEvt.clientY - startY;
-      const minLimit = currentField === 'spaceHeight' ? 24 : (currentField === 'thinkingSpaceHeight' ? 45 : 30);
-      const newHeight = Math.max(minLimit, Math.round(startHeight + deltaY));
+      const minLimit = currentField === 'spaceHeight' ? 24 : 30;
+      const maxLimit = 650;
+      const newHeight = Math.min(maxLimit, Math.max(minLimit, Math.round(startHeight + deltaY)));
 
       currentTargetEl.style.minHeight = `${newHeight}px`;
       if (badgeEl) {

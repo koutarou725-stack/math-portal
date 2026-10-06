@@ -4319,26 +4319,29 @@ function renderWorksheetB4() {
   setTimeout(updateB4SheetLimitUI, 120);
 }
 
-// B4用紙の限界線（820px）および収まり状態の判定・UI更新
+// B4用紙の収まり状態の判定・UI更新（固定820px用紙内）
 function updateB4SheetLimitUI() {
   const sheet = document.getElementById('printableSheet');
   const badge = document.getElementById('b4FitBadge');
-  const limitLine = document.getElementById('b4PageLimitLine');
   if (!sheet) return;
 
-  const B4_STANDARD_HEIGHT = 1020; // 1160px幅に対するB4横の印刷収容限界高さ（印刷プレビューと一致）
-  const currentHeight = sheet.scrollHeight || sheet.offsetHeight;
-  const diff = currentHeight - B4_STANDARD_HEIGHT;
+  const leftCol = document.getElementById('blocksLeftCol');
+  const rightCol = document.getElementById('blocksRightCol');
+  const container = document.querySelector('.b4-columns-container');
+  
+  const availableHeight = container ? container.clientHeight : 680;
+  const maxContentHeight = Math.max(
+    leftCol ? leftCol.scrollHeight : 0,
+    rightCol ? rightCol.scrollHeight : 0
+  );
+  const diff = maxContentHeight - availableHeight;
 
-  if (diff > 12) {
+  if (diff > 8) {
     sheet.classList.add('is-overflowing');
     if (badge) {
       badge.className = 'b4-fit-badge fit-over no-print';
-      badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> B4はみ出し中 (+${diff}px)`;
-      badge.title = `B4横用紙1枚の範囲を約 ${diff}px 超過しています。余白やブロックの高さを縮めてください。`;
-    }
-    if (limitLine) {
-      limitLine.innerHTML = `<span class="b4-limit-badge"><i class="fa-solid fa-scissors"></i> B4用紙 下端ライン (これより下は次ページへはみ出し)</span>`;
+      badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> B4はみ出し中 (+${Math.round(diff)}px)`;
+      badge.title = `B4用紙1枚の枠を約 ${Math.round(diff)}px 超過しています。枠の高さを縮めてください。`;
     }
   } else {
     sheet.classList.remove('is-overflowing');
@@ -4346,9 +4349,6 @@ function updateB4SheetLimitUI() {
       badge.className = 'b4-fit-badge fit-ok no-print';
       badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> B4用紙内 (1枚)`;
       badge.title = 'B4横用紙1枚の範囲に収まっています。';
-    }
-    if (limitLine) {
-      limitLine.innerHTML = `<span class="b4-limit-badge"><i class="fa-solid fa-scissors"></i> B4用紙 下端ライン (257mm)</span>`;
     }
   }
 }
