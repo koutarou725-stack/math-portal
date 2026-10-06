@@ -1055,7 +1055,7 @@ body.show-answers .answer-text {
   background: #ffffff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
-  padding: 16px 26px 10px 26px;
+  padding: 16px 26px 42px 26px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -2291,10 +2291,12 @@ body.show-answers .answer-text.answer-block {
   padding: 0.5rem 0.85rem !important;
 }
 
-/* B4ワークシート フッター固定表示（見切れ防止・絶対下がらない固定配置） */
+/* B4ワークシート フッター絶対固定（用紙の最下部に常駐・絶対下がらない・見切れない） */
 .sheet-paper.paper-b4-landscape .sheet-footer.b4-sheet-footer {
-  margin-top: auto !important;
-  flex-shrink: 0 !important;
+  position: absolute !important;
+  bottom: 10px !important;
+  left: 26px !important;
+  right: 26px !important;
   height: 26px !important;
   min-height: 26px !important;
   max-height: 26px !important;
@@ -2308,12 +2310,11 @@ body.show-answers .answer-text.answer-block {
   align-items: center !important;
   box-sizing: border-box !important;
   background: #ffffff !important;
-  position: relative !important;
   z-index: 50 !important;
 }
 
 .sheet-paper.paper-b4-landscape .b4-columns-container {
   flex: 1 1 auto !important;
   min-height: 0 !important;
-  margin-bottom: 4px !important;
+  position: relative !important;
 }

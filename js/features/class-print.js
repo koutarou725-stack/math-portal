@@ -1034,17 +1034,27 @@ function initBlockResize() {
     document.body.classList.add('is-resizing-block');
     currentBlockEl.classList.add('active-resizing');
 
-    // フッターの位置からブロックが広げられる最大高さを厳格に算出（フッター境でピタッと止める）
+    // カラム全体の最下端からフッターまでの「残り空きスペース」を厳密に計算！
+    // どのパーツ（上・中・下）を広げても、カラム全体がフッター境界を超えないように制御！
+    const colEl = currentBlockEl.closest('.b4-column');
     const footerEl = document.querySelector('.sheet-footer.b4-sheet-footer');
-    let maxAllowedHeight = 650;
-    if (footerEl && currentTargetEl) {
-      const targetRect = currentTargetEl.getBoundingClientRect();
+    let maxAllowedHeight = startHeight + 600;
+
+    if (footerEl && currentTargetEl && colEl) {
       const footerRect = footerEl.getBoundingClientRect();
-      // フッター上端から要素上端までの距離（ハンドル・マージン分14pxを差し引く）
-      const spaceToFooter = Math.floor(footerRect.top - targetRect.top - 14);
-      if (spaceToFooter > 30) {
-        maxAllowedHeight = spaceToFooter;
-      }
+      const allBlocks = Array.from(colEl.querySelectorAll('.sheet-block'));
+      let colBottom = 0;
+      allBlocks.forEach(b => {
+        const r = b.getBoundingClientRect();
+        if (r.bottom > colBottom) colBottom = r.bottom;
+      });
+      if (colBottom === 0) colBottom = colEl.getBoundingClientRect().bottom;
+
+      // カラム全体の最下端からフッター上端までの残り空きスペース（マージン8pxを確保）
+      const remainingSpace = Math.floor(footerRect.top - colBottom - 8);
+
+      // 広げられる最大高さ = このパーツの現在高さ + カラム全体の残り空きスペース
+      maxAllowedHeight = Math.max(startHeight, startHeight + remainingSpace);
     }
 
     // 高さバッジの生成・表示
