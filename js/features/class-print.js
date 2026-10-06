@@ -1034,6 +1034,19 @@ function initBlockResize() {
     document.body.classList.add('is-resizing-block');
     currentBlockEl.classList.add('active-resizing');
 
+    // フッターの位置からブロックが広げられる最大高さを厳格に算出（フッター境でピタッと止める）
+    const footerEl = document.querySelector('.sheet-footer.b4-sheet-footer');
+    let maxAllowedHeight = 650;
+    if (footerEl && currentTargetEl) {
+      const targetRect = currentTargetEl.getBoundingClientRect();
+      const footerRect = footerEl.getBoundingClientRect();
+      // フッター上端から要素上端までの距離（ハンドル・マージン分14pxを差し引く）
+      const spaceToFooter = Math.floor(footerRect.top - targetRect.top - 14);
+      if (spaceToFooter > 30) {
+        maxAllowedHeight = spaceToFooter;
+      }
+    }
+
     // 高さバッジの生成・表示
     badgeEl = document.createElement('div');
     badgeEl.className = 'resize-height-badge';
@@ -1044,8 +1057,8 @@ function initBlockResize() {
       if (!isResizing || !currentTargetEl) return;
       const deltaY = moveEvt.clientY - startY;
       const minLimit = currentField === 'spaceHeight' ? 24 : 30;
-      const maxLimit = 650;
-      const newHeight = Math.min(maxLimit, Math.max(minLimit, Math.round(startHeight + deltaY)));
+      // フッターの境界より下には絶対に広がらないようストッパーをかける
+      const newHeight = Math.min(maxAllowedHeight, Math.max(minLimit, Math.round(startHeight + deltaY)));
 
       currentTargetEl.style.minHeight = `${newHeight}px`;
       if (badgeEl) {
