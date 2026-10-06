@@ -502,9 +502,9 @@
             </div>
           </div>
 
-          <!-- 月〜金の5列カードグリッド -->
-          <div class="week-override-columns" id="weekOverrideColumnsContainer">
-            <!-- JSで動的に月〜金の5列を生成 -->
+          <!-- 月〜金のシンプル校時振替テーブル（Excel形式） -->
+          <div class="week-override-table-wrapper" id="weekOverrideColumnsContainer">
+            <!-- JSで動的に月〜金のテーブルを生成 -->
           </div>
         </div>
         <div class="slot-modal-footer">
@@ -561,7 +561,7 @@
 
     <!-- 週案・学習内容入力モーダル (実時間割用) -->
     <div id="lessonPlanModal" class="modal-overlay hidden">
-      <div class="slot-modal-content">
+      <div class="slot-modal-content" style="max-width: 580px;">
         <div class="slot-modal-header">
           <h3><i class="fa-solid fa-book-open text-primary"></i> <span id="lessonPlanTitle">学習内容・授業予定の入力</span></h3>
           <button class="modal-close-btn" onclick="closeLessonPlanModal()"><i class="fa-solid fa-xmark"></i></button>
@@ -571,10 +571,25 @@
             <!-- クラス、校時、教科名を表示 -->
           </div>
 
+          <!-- 数学コマ専用: 授業プリントから内容をセット -->
+          <div class="form-group mt-3" id="lessonPlanPrintLinkGroup">
+            <div class="label-with-action">
+              <label><i class="fa-solid fa-file-lines text-primary"></i> 授業プリントをセットして内容を反映</label>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <select id="lessonPlanPrintSelect" class="form-control" onchange="onLessonPlanPrintSelectChange()" style="flex: 1;">
+                <option value="">（授業プリントを選択してください）</option>
+              </select>
+              <button type="button" class="btn btn-outline btn-sm text-primary" onclick="applySelectedPrintToPlan()" title="選択したプリントの単元・めあてを入力欄に反映">
+                <i class="fa-solid fa-arrow-down"></i> 反映
+              </button>
+            </div>
+            <div class="sub-tip mt-1">※授業プリントを選ぶと、単元名・めあてが自動入力されコマと連携されます。</div>
+          </div>
+
           <div class="form-group mt-3">
-            <label>今週の学習内容・単元予定・めあて</label>
+            <label>学習内容・単元予定・めあて</label>
             <input type="text" id="lessonPlanInput" class="form-control" placeholder="例: 一次関数の利用① (動点と面積), 計算小テスト">
-            <div class="sub-tip mt-1">※この時間の学習予定を入力します。ここで入力した内容はプリント作成時にも引き継がれます。</div>
           </div>
 
           <div class="form-group mt-3">
@@ -594,14 +609,8 @@
             <i class="fa-solid fa-eraser"></i> 予定をクリア
           </button>
           <div style="flex: 1;"></div>
-          <button type="button" class="btn btn-outline text-primary" onclick="jumpToOfficialPrintsFromSlot()" title="この学年の単元別学習プリント(PDF)一覧を開く">
-            <i class="fa-solid fa-file-pdf"></i> 公式プリント・要点ブック
-          </button>
-          <button type="button" class="btn btn-outline text-info" onclick="jumpToBoardingPrintsFromSlot()" title="この学年・単元の板書＆指導展開例書籍を開く">
-            <i class="fa-solid fa-chalkboard-user"></i> 板書・展開例
-          </button>
-          <button type="button" class="btn btn-outline text-success" onclick="jumpToWorksheetFromSlot()" title="この時間の単元・板書データをもとに授業プリントを作成">
-            <i class="fa-solid fa-file-lines"></i> 授業プリント作成
+          <button type="button" class="btn btn-outline text-success" id="btnOpenWorksheetFromModal" onclick="jumpToWorksheetFromSlot()" title="授業プリント工房を開く">
+            <i class="fa-solid fa-file-pen"></i> 授業プリント作成
           </button>
           <button type="button" class="btn btn-outline" onclick="closeLessonPlanModal()">キャンセル</button>
           <button type="button" class="btn btn-primary" onclick="saveLessonPlan()">
@@ -912,6 +921,15 @@
               <select id="b4HourSelect" class="form-control" onchange="onB4HourChange()">
                 <!-- JSで動的生成 -->
               </select>
+              <!-- 時数の追加・削除ボタン -->
+              <div style="display: flex; gap: 0.35rem; margin-top: 0.35rem;">
+                <button type="button" class="btn btn-xs btn-outline text-primary" onclick="addNewB4LessonHour()" style="flex: 1; font-size: 0.72rem; padding: 0.25rem 0.35rem;" title="この単元に新しい授業時数を追加します">
+                  <i class="fa-solid fa-plus"></i> 時数を追加
+                </button>
+                <button type="button" class="btn btn-xs btn-outline text-danger" onclick="deleteCurrentB4LessonHour()" style="flex: 1; font-size: 0.72rem; padding: 0.25rem 0.35rem;" title="現在選択中の授業時数を削除します">
+                  <i class="fa-solid fa-trash-can"></i> 時数を削除
+                </button>
+              </div>
             </div>
 
             <!-- テンプレート状態表示 & 保存ボタン -->

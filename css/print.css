@@ -85,25 +85,50 @@
     width: 100% !important;
   }
 
+  body[data-print-target="worksheet"] .b4-zoom-scaled {
+    transform: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   body[data-print-target="worksheet"] .sheet-paper {
     display: block !important;
     width: 100% !important;
     box-shadow: none !important;
-    padding: 0 0 8mm 0 !important;
+    padding: 0 0 6mm 0 !important;
     border: none !important;
     page-break-after: avoid;
     break-after: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   body[data-print-target="worksheet"] .sheet-paper.paper-b4-landscape {
-    height: 245mm !important;
-    min-height: 245mm !important;
-    max-height: 245mm !important;
+    height: 236mm !important;
+    min-height: 0 !important;
+    max-height: 236mm !important;
     position: relative !important;
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  body[data-print-target="worksheet"] .b4-columns-container {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: 195mm !important;
+    gap: 6mm !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   body[data-print-target="worksheet"] .sheet-paper.paper-b4-landscape .sheet-footer.b4-sheet-footer {
@@ -115,11 +140,13 @@
     border-top: 0.5pt solid #000000 !important;
     padding-top: 1mm !important;
     background: transparent !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   body[data-print-target="worksheet"] .sheet-block {
     break-inside: avoid;
-    padding: 3px 0 !important;
+    padding: 2px 0 !important;
   }
 
   /* 生徒用プリント印刷時は上部の「生徒用」バッジを完全非表示 */

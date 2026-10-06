@@ -1045,17 +1045,17 @@ body.show-answers .answer-text {
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 実際のB4横用紙 (364mm x 257mm 実寸固定サイズ: 1160px x 935px)
-   ※印刷プレビュー実効高245mmと完全に一致させ、下端までフル活用 */
+/* 実際のB4横用紙 (364mm x 257mm 実寸固定サイズ: 1160px x 900px)
+   ※印刷プレビュー実効高(約236mm)と完全に一致させ、1枚に100%収容 */
 .sheet-paper.paper-b4-landscape {
   width: 1160px;
-  height: 935px !important;
-  min-height: 935px !important;
-  max-height: 935px !important;
+  height: 900px !important;
+  min-height: 900px !important;
+  max-height: 900px !important;
   background: #ffffff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
-  padding: 16px 26px 42px 26px;
+  padding: 14px 24px 38px 24px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -1334,6 +1334,10 @@ body.show-answers .answer-text {
 
 /* B4横 印刷スタイル (@media print) */
 @media print {
+  @page {
+    size: B4 landscape !important;
+    margin: 5mm 6mm !important;
+  }
 
   body[data-print-target="worksheet"] {
     margin: 0 !important;
@@ -1344,15 +1348,25 @@ body.show-answers .answer-text {
     overflow: hidden !important;
     page-break-after: avoid !important;
     break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  body[data-print-target="worksheet"] .b4-zoom-scaled {
+    transform: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   body[data-print-target="worksheet"] .sheet-paper.paper-b4-landscape {
     width: 100% !important;
     max-width: 100% !important;
-    height: 245mm !important;
-    min-height: 245mm !important;
-    max-height: 245mm !important;
-    padding: 0 0 8mm 0 !important;
+    height: 236mm !important;
+    min-height: 0 !important;
+    max-height: 236mm !important;
+    padding: 0 0 6mm 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
     border: none !important;
@@ -1365,19 +1379,34 @@ body.show-answers .answer-text {
     page-break-inside: avoid !important;
     break-after: avoid !important;
     page-break-after: avoid !important;
+    break-before: avoid !important;
+    page-break-before: avoid !important;
     overflow: hidden !important;
   }
 
   body[data-print-target="worksheet"] .b4-sheet-header {
     border-bottom: 1.5pt solid #000000 !important;
-    margin-bottom: 2.5mm !important;
+    margin-bottom: 2mm !important;
     padding-bottom: 1.5mm !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   body[data-print-target="worksheet"] .b4-columns-container {
     flex: 1 1 auto !important;
     min-height: 0 !important;
+    max-height: 195mm !important;
     gap: 6mm !important;
+    overflow: hidden !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  body[data-print-target="worksheet"] .b4-column {
+    height: 100% !important;
+    overflow: hidden !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   body[data-print-target="worksheet"] .sheet-paper.paper-b4-landscape .sheet-footer.b4-sheet-footer {
@@ -1390,6 +1419,8 @@ body.show-answers .answer-text {
     border-top: 0.5pt solid #000000 !important;
     padding-top: 1mm !important;
     box-sizing: border-box !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   body[data-print-target="worksheet"] .b4-center-fold-line {

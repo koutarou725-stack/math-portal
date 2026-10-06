@@ -3933,18 +3933,186 @@ function loadSavedWorksheet(id) {
   showToast('<i class="fa-solid fa-folder-open text-primary"></i> 「' + item.name + '」を読み込みました');
 }
 
-// データベースから単元情報を取得
+// ============================================================
+// 単元の時数カスタマイズ（時数の追加・削除・永続化）
+// ============================================================
+const CUSTOM_LESSONS_STORAGE_KEY = 'math_portal_custom_lessons';
+
+function getCustomLessonsData() {
+  try {
+    return JSON.parse(localStorage.getItem(CUSTOM_LESSONS_STORAGE_KEY) || '{}') || {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveCustomLessonsData(data) {
+  try {
+    localStorage.setItem(CUSTOM_LESSONS_STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.error('saveCustomLessonsData error:', e);
+  }
+}
+
+function getUnitLessons(grade, unitId) {
+  const gData = boardLessonDatabase[grade];
+  if (!gData) return [];
+  const unit = gData.units.find(u => u.id === unitId) || gData.units[0];
+  if (!unit) return [];
+  const key = `${grade}_${unit.id}`;
+  const customData = getCustomLessonsData()[key] || { added: [], deleted: [] };
+  const deletedHours = customData.deleted || [];
+  
+  // デフォルト時数から deleted を除外
+  let list = (unit.lessons || []).filter(l => !deletedHours.includes(l.hour)).map(l => ({ ...l }));
+  
+  // 追加された時数
+  (customData.added || []).forEach(al => {
+    if (!deletedHours.includes(al.hour)) {
+      list.push({ ...al });
+    }
+  });
+
+  // hour 昇順でソート
+  list.sort((a, b) => a.hour - b.hour);
+  return list;
+}
+
+// データベースから単元情報を取得（カスタム時数を統合）
 function getUnitInfo(grade, unitId) {
   const gData = boardLessonDatabase[grade];
   if (!gData) return null;
-  return gData.units.find(u => u.id === unitId) || gData.units[0];
+  const unit = gData.units.find(u => u.id === unitId) || gData.units[0];
+  if (!unit) return null;
+  const lessons = getUnitLessons(grade, unit.id);
+  return {
+    ...unit,
+    totalHours: lessons.length,
+    lessons: lessons
+  };
 }
 
 // データベースから時数情報を取得
 function getLessonInfo(grade, unitId, hour) {
   const unit = getUnitInfo(grade, unitId);
-  if (!unit) return null;
+  if (!unit || !unit.lessons || unit.lessons.length === 0) return null;
   return unit.lessons.find(l => l.hour === Number(hour)) || unit.lessons[0];
+}
+
+// 時数を新しく追加
+function addNewB4LessonHour() {
+  const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
+  if (!unit) return;
+  const existingLessons = unit.lessons || [];
+  const maxHour = existingLessons.length > 0 ? Math.max(...existingLessons.map(l => l.hour)) : 0;
+  const nextHour = maxHour + 1;
+
+  const titlePrompt = prompt(`【第${nextHour}時】の授業タイトルを入力してください（例: 章末問題演習、小テスト、発展課題など）:`, `第${nextHour}時 演習・まとめ`);
+  if (titlePrompt === null) return; // キャンセル
+  const finalTitle = titlePrompt.trim() || `第${nextHour}時 演習・まとめ`;
+
+  const newLesson = {
+    hour: nextHour,
+    title: finalTitle,
+    leftBlocks: [
+      {
+        type: 'objective',
+        data: { text: `${unit.unitName}の学習を振り返り、問題演習に取り組むことができる。` }
+      },
+      {
+        type: 'review',
+        data: { title: '前時のポイント', content: '重要公式や計算方法を振り返ろう' }
+      },
+      {
+        type: 'board-task',
+        data: {
+          qNum: '【本時の課題】',
+          text: '本時の基本・応用問題に取り組みましょう。',
+          thinkingSpaceHeight: 85,
+          answer: '各自の解法を確認'
+        }
+      },
+      {
+        type: 'point-box',
+        data: {
+          badge: '本時のまとめ',
+          title: '本時の要点',
+          content: '間違えた問題は解き直しをして確認しよう。'
+        }
+      }
+    ],
+    rightBlocks: [
+      {
+        type: 'question',
+        data: {
+          qNum: '問題 1',
+          text: '次の計算に取り組みましょう。',
+          spaceHeight: 75,
+          answer: ''
+        }
+      },
+      {
+        type: 'reflection',
+        data: {
+          commentPrompt: '今日の授業で学んだこと・疑問点:'
+        }
+      }
+    ]
+  };
+
+  const key = `${currentB4Grade}_${currentB4UnitId}`;
+  const allCustom = getCustomLessonsData();
+  if (!allCustom[key]) allCustom[key] = { added: [], deleted: [] };
+  allCustom[key].added.push(newLesson);
+  // もし以前削除されていたhourなら削除リストから除去
+  allCustom[key].deleted = (allCustom[key].deleted || []).filter(h => h !== nextHour);
+  saveCustomLessonsData(allCustom);
+
+  state.b4Dirty = false;
+  currentB4Hour = nextHour;
+  updateB4HourDropdown();
+  applyB4LessonSelection();
+  showToast(`<i class="fa-solid fa-plus-circle text-success"></i> 第${nextHour}時「${finalTitle}」を追加しました！`);
+}
+
+// 現在選択中の時数を削除
+function deleteCurrentB4LessonHour() {
+  const unit = getUnitInfo(currentB4Grade, currentB4UnitId);
+  if (!unit || !unit.lessons) return;
+  if (unit.lessons.length <= 1) {
+    alert('これ以上時数を削除することはできません（最低1時間は必要です）。');
+    return;
+  }
+
+  const currentLesson = unit.lessons.find(l => l.hour === currentB4Hour) || unit.lessons[0];
+  if (!confirm(`第${currentLesson.hour}時「${currentLesson.title}」をこの単元から削除しますか？\n※削除した時数のプリントは表示されなくなります。`)) {
+    return;
+  }
+
+  const key = `${currentB4Grade}_${currentB4UnitId}`;
+  const allCustom = getCustomLessonsData();
+  if (!allCustom[key]) allCustom[key] = { added: [], deleted: [] };
+  if (!allCustom[key].deleted) allCustom[key].deleted = [];
+  allCustom[key].deleted.push(currentLesson.hour);
+  // addedにあったらそこからも除去
+  allCustom[key].added = (allCustom[key].added || []).filter(l => l.hour !== currentLesson.hour);
+  saveCustomLessonsData(allCustom);
+
+  // テンプレート上書きがあれば削除
+  const tplKey = lessonTemplateKey(currentB4Grade, currentB4UnitId, currentLesson.hour);
+  const tpls = getLessonTemplates();
+  if (tpls[tplKey]) {
+    delete tpls[tplKey];
+    localStorage.setItem(LESSON_TEMPLATE_KEY, JSON.stringify(tpls));
+  }
+
+  state.b4Dirty = false;
+  // 残った時数から新しい時数を選択
+  const remaining = getUnitLessons(currentB4Grade, currentB4UnitId);
+  currentB4Hour = remaining.length > 0 ? remaining[0].hour : 1;
+  updateB4HourDropdown();
+  applyB4LessonSelection();
+  showToast(`<i class="fa-solid fa-trash-can text-danger"></i> 第${currentLesson.hour}時を削除しました`);
 }
 
 // ============================================================
