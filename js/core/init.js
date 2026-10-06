@@ -8586,6 +8586,7 @@ function initB4EditingHandlers() {
   sheet.addEventListener('focusin', (e) => {
     const t = getEditTarget(e.target);
     if (!t) return;
+    lastFocusedB4Editable = t.editable;
     b4EditSnapshotTaken = false;
     t.editable.classList.add('is-editing');
     // 内部に KaTeX 要素がある場合、DOMの乱れを防ぎ自然に編集できるよう raw TeX に展開
@@ -8593,6 +8594,15 @@ function initB4EditingHandlers() {
       const rawHtml = extractHtmlWithTeX(t.editable);
       t.editable.innerHTML = rawHtml;
     }
+    trackB4Selection();
+  });
+
+  sheet.addEventListener('mouseup', () => {
+    trackB4Selection();
+  });
+
+  sheet.addEventListener('keyup', () => {
+    trackB4Selection();
   });
 
   sheet.addEventListener('input', (e) => {
@@ -8603,6 +8613,8 @@ function initB4EditingHandlers() {
     }
     const t = getEditTarget(e.target);
     if (!t) return;
+    lastFocusedB4Editable = t.editable;
+    trackB4Selection();
     if (!b4EditSnapshotTaken) {
       pushB4History();
       b4EditSnapshotTaken = true;
@@ -8639,6 +8651,7 @@ function initB4EditingHandlers() {
     e.preventDefault();
     const text = (e.clipboardData || window.clipboardData).getData('text/plain');
     document.execCommand('insertText', false, text);
+    trackB4Selection();
   });
 
   sheet.addEventListener('keydown', (e) => {
@@ -8657,17 +8670,17 @@ function initB4EditingHandlers() {
     });
   }
 
-  // 数式（.katex）クリックで数式編集ポップオーバーを起動
+  // 数式（.katex）クリックでビジュアル数式エディタを起動
   sheet.addEventListener('dblclick', (e) => {
     const katexEl = e.target.closest('.katex');
     if (katexEl) {
       e.preventDefault();
       e.stopPropagation();
-      openMathEditorPopover(katexEl);
+      openMathFormulaEditorModal('', katexEl);
     }
   });
 
-  // キーボードショートカット: Ctrl+S = テンプレート保存 / Ctrl+Z = 元に戻す
+  // キーボードショートカット: Ctrl+S = テンプレート保存 / Ctrl+Z = 元に戻す / Ctrl+M = 数式エディタ
   document.addEventListener('keydown', (e) => {
     const tab = document.getElementById('tab-worksheet');
     if (!tab || !tab.classList.contains('active')) return;
@@ -8678,6 +8691,9 @@ function initB4EditingHandlers() {
       if (document.activeElement && document.activeElement.isContentEditable) return;
       e.preventDefault();
       undoB4();
+    } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'm') {
+      e.preventDefault();
+      openMathFormulaEditorModal();
     }
   });
 
@@ -8689,105 +8705,335 @@ function initB4EditingHandlers() {
   });
 }
 
-// ---- 数式編集ポップオーバー機能 ----
+// ---- 中学数学 ビジュアル数式エディタ & パレット機能 ----
 let mathEditorEl = null;
 let currentEditingKatex = null;
+let lastFocusedB4Editable = null;
+let lastB4CaretRange = null;
 
-function openMathEditorPopover(katexEl) {
-  if (!katexEl) return;
-  currentEditingKatex = katexEl;
-  const ann = katexEl.querySelector('annotation[encoding="application/x-tex"]') || katexEl.querySelector('annotation');
-  const currentTex = ann ? ann.textContent.trim() : (katexEl.getAttribute('data-tex') || '');
-
-  if (!mathEditorEl) {
-    mathEditorEl = document.createElement('div');
-    mathEditorEl.className = 'math-popover-editor no-print';
-    mathEditorEl.innerHTML = `
-      <div class="math-popover-header">
-        <span><i class="fa-solid fa-square-root-variable text-primary"></i> 数式を編集（LaTeX）</span>
-        <button type="button" class="math-popover-close" onclick="closeMathEditorPopover()">&times;</button>
-      </div>
-      <div class="math-popover-body">
-        <input type="text" class="math-tex-input" id="mathPopoverInput" placeholder="TeXコード (例: 3a+2b)" />
-        <div class="math-popover-preview" id="mathPopoverPreview"></div>
-      </div>
-      <div class="math-popover-footer">
-        <button type="button" class="btn btn-xs btn-outline" onclick="closeMathEditorPopover()">キャンセル</button>
-        <button type="button" class="btn btn-xs btn-primary-solid" onclick="applyMathEditorPopover()">決定 (Enter)</button>
-      </div>
-    `;
-    document.body.appendChild(mathEditorEl);
-
-    const input = mathEditorEl.querySelector('#mathPopoverInput');
-    input.addEventListener('input', () => {
-      const prev = mathEditorEl.querySelector('#mathPopoverPreview');
-      if (prev && typeof katex !== 'undefined') {
-        try {
-          katex.render(input.value || ' ', prev, { throwOnError: false });
-        } catch (e) {
-          prev.textContent = input.value;
-        }
-      }
-    });
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        applyMathEditorPopover();
-      } else if (e.key === 'Escape') {
-        closeMathEditorPopover();
-      }
-    });
+// 選択状態・カーソル位置を記憶
+function trackB4Selection() {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  const range = sel.getRangeAt(0);
+  const common = range.commonAncestorContainer;
+  const editable = common.nodeType === 1 ? common.closest('[contenteditable="true"]') : common.parentElement?.closest('[contenteditable="true"]');
+  if (editable) {
+    lastFocusedB4Editable = editable;
+    lastB4CaretRange = range.cloneRange();
   }
-
-  const rect = katexEl.getBoundingClientRect();
-  const input = mathEditorEl.querySelector('#mathPopoverInput');
-  input.value = currentTex;
-  mathEditorEl.style.display = 'block';
-
-  let top = rect.top + window.scrollY - mathEditorEl.offsetHeight - 8;
-  if (top < window.scrollY + 10) top = rect.bottom + window.scrollY + 8;
-  let left = rect.left + window.scrollX + (rect.width / 2) - 140;
-  left = Math.max(10, Math.min(window.innerWidth - 300, left));
-
-  mathEditorEl.style.top = top + 'px';
-  mathEditorEl.style.left = left + 'px';
-
-  const prev = mathEditorEl.querySelector('#mathPopoverPreview');
-  if (prev && typeof katex !== 'undefined') {
-    try { katex.render(currentTex || ' ', prev, { throwOnError: false }); } catch (e) {}
-  }
-  setTimeout(() => input.focus(), 50);
 }
+window.trackB4Selection = trackB4Selection;
 
-function closeMathEditorPopover() {
-  if (mathEditorEl) mathEditorEl.style.display = 'none';
-  currentEditingKatex = null;
-}
+// モーダルを開く
+function openMathFormulaEditorModal(initialTex = '', targetKatex = null) {
+  const modal = document.getElementById('mathFormulaEditorModal');
+  if (!modal) return;
 
-function applyMathEditorPopover() {
-  if (!mathEditorEl || !currentEditingKatex) return;
-  const input = mathEditorEl.querySelector('#mathPopoverInput');
-  const newTex = (input?.value || '').trim();
-  const editable = currentEditingKatex.closest('[contenteditable="true"]');
-  const t = getEditTarget(editable);
+  currentEditingKatex = targetKatex || null;
+  let defaultTex = initialTex;
 
-  if (newTex) {
-    const textNode = document.createTextNode(`$${newTex}$`);
-    currentEditingKatex.replaceWith(textNode);
-  } else {
-    currentEditingKatex.remove();
-  }
-
-  closeMathEditorPopover();
-
-  if (editable && t) {
-    pushB4History();
-    updateColBlockData(t.col, t.index, t.field, extractHtmlWithTeX(editable));
-    if (typeof applyKaTeXIfAvailable === 'function') {
-      applyKaTeXIfAvailable(editable);
+  // targetKatex がある場合（ダブルクリック時など）
+  if (targetKatex) {
+    const ann = targetKatex.querySelector('annotation[encoding="application/x-tex"]') || targetKatex.querySelector('annotation');
+    defaultTex = ann ? ann.textContent.trim() : (targetKatex.getAttribute('data-tex') || '');
+  } else if (!defaultTex && lastFocusedB4Editable) {
+    // 選択テキストがあれば取得
+    const sel = window.getSelection();
+    if (sel && sel.toString().trim()) {
+      defaultTex = sel.toString().trim();
     }
   }
+
+  const input = document.getElementById('mathFormulaTexInput');
+  if (input) {
+    input.value = defaultTex || '';
+    if (!input.dataset.listenerAttached) {
+      input.addEventListener('input', renderMathFormulaPreview);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          applyMathFormulaToActivePrint();
+        } else if (e.key === 'Escape') {
+          closeMathFormulaEditorModal();
+        }
+      });
+      input.dataset.listenerAttached = 'true';
+    }
+  }
+
+  // クイック入力欄をクリア
+  const qNum = document.getElementById('quickFractionNum');
+  const qDen = document.getElementById('quickFractionDen');
+  const qSqrt = document.getElementById('quickSqrtVal');
+  const qBase = document.getElementById('quickPowerBase');
+  const qExp = document.getElementById('quickPowerExp');
+  if (qNum) qNum.value = '';
+  if (qDen) qDen.value = '';
+  if (qSqrt) qSqrt.value = '';
+  if (qBase) qBase.value = '';
+  if (qExp) qExp.value = '';
+
+  modal.classList.remove('hidden');
+  switchMathTab('common');
+  renderMathFormulaPreview();
+  renderPaletteButtonKatex();
+
+  setTimeout(() => {
+    if (input) input.focus();
+  }, 100);
 }
+window.openMathFormulaEditorModal = openMathFormulaEditorModal;
+
+// モーダルを閉じる
+function closeMathFormulaEditorModal() {
+  const modal = document.getElementById('mathFormulaEditorModal');
+  if (modal) modal.classList.add('hidden');
+  currentEditingKatex = null;
+}
+window.closeMathFormulaEditorModal = closeMathFormulaEditorModal;
+
+// タブ切り替え
+function switchMathTab(tabId) {
+  const tabs = document.querySelectorAll('.math-tab-btn');
+  tabs.forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-mathtab') === tabId);
+  });
+  const panes = document.querySelectorAll('.math-pane');
+  panes.forEach(p => {
+    p.classList.toggle('active', p.id === `mathPane-${tabId}`);
+  });
+  renderPaletteButtonKatex();
+}
+window.switchMathTab = switchMathTab;
+
+// パレット内の各ボタンの数式を描画
+function renderPaletteButtonKatex() {
+  if (typeof katex === 'undefined') return;
+  const elements = document.querySelectorAll('#mathFormulaEditorModal [data-tex]');
+  elements.forEach(el => {
+    if (el.getAttribute('data-rendered')) return;
+    const tex = el.getAttribute('data-tex');
+    if (!tex) return;
+    try {
+      katex.render(tex, el, { throwOnError: false });
+      el.setAttribute('data-rendered', 'true');
+    } catch (e) {
+      // フォールバック
+    }
+  });
+}
+window.renderPaletteButtonKatex = renderPaletteButtonKatex;
+
+// リアルタイムプレビュー描画
+function renderMathFormulaPreview() {
+  const input = document.getElementById('mathFormulaTexInput');
+  const stage = document.getElementById('mathFormulaStage');
+  if (!stage) return;
+  const tex = (input ? input.value : '').trim();
+
+  if (!tex) {
+    stage.innerHTML = '<span class="math-preview-placeholder">下のボタンを押すか、数式を入力するとここに表示されます</span>';
+    return;
+  }
+
+  if (typeof katex !== 'undefined') {
+    try {
+      katex.render(tex, stage, {
+        throwOnError: false,
+        displayMode: true
+      });
+    } catch (e) {
+      stage.textContent = tex;
+    }
+  } else {
+    stage.textContent = tex;
+  }
+}
+window.renderMathFormulaPreview = renderMathFormulaPreview;
+
+// スニペットをカーソル位置に挿入
+function insertMathFormulaSnippet(snippet) {
+  const input = document.getElementById('mathFormulaTexInput');
+  if (!input) return;
+
+  const start = input.selectionStart || 0;
+  const end = input.selectionEnd || 0;
+  const oldVal = input.value;
+  const newVal = oldVal.substring(0, start) + snippet + oldVal.substring(end);
+  input.value = newVal;
+
+  // カーソル移動
+  input.focus();
+  const newPos = start + snippet.length;
+  input.setSelectionRange(newPos, newPos);
+
+  renderMathFormulaPreview();
+}
+window.insertMathFormulaSnippet = insertMathFormulaSnippet;
+
+// かんたん分数生成
+function insertQuickFraction() {
+  const num = (document.getElementById('quickFractionNum')?.value || 'a').trim();
+  const den = (document.getElementById('quickFractionDen')?.value || 'b').trim();
+  insertMathFormulaSnippet(`\\frac{${num}}{${den}}`);
+}
+window.insertQuickFraction = insertQuickFraction;
+
+// かんたん平方根生成
+function insertQuickSqrt() {
+  const val = (document.getElementById('quickSqrtVal')?.value || 'x').trim();
+  insertMathFormulaSnippet(`\\sqrt{${val}}`);
+}
+window.insertQuickSqrt = insertQuickSqrt;
+
+// かんたん累乗生成
+function insertQuickPower() {
+  const base = (document.getElementById('quickPowerBase')?.value || 'x').trim();
+  const exp = (document.getElementById('quickPowerExp')?.value || '2').trim();
+  insertMathFormulaSnippet(`${base}^{${exp}}`);
+}
+window.insertQuickPower = insertQuickPower;
+
+// クリア・1文字削除
+function clearMathFormulaEditor() {
+  const input = document.getElementById('mathFormulaTexInput');
+  if (input) {
+    input.value = '';
+    renderMathFormulaPreview();
+    input.focus();
+  }
+}
+window.clearMathFormulaEditor = clearMathFormulaEditor;
+
+function backspaceMathFormulaEditor() {
+  const input = document.getElementById('mathFormulaTexInput');
+  if (!input) return;
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  if (start !== end) {
+    input.value = input.value.substring(0, start) + input.value.substring(end);
+    input.setSelectionRange(start, start);
+  } else if (start > 0) {
+    input.value = input.value.substring(0, start - 1) + input.value.substring(start);
+    input.setSelectionRange(start - 1, start - 1);
+  }
+  renderMathFormulaPreview();
+  input.focus();
+}
+window.backspaceMathFormulaEditor = backspaceMathFormulaEditor;
+
+// プリント上の選択要素に数式を挿入・反映
+function applyMathFormulaToActivePrint() {
+  const input = document.getElementById('mathFormulaTexInput');
+  const tex = (input ? input.value : '').trim();
+  if (!tex) {
+    alert('数式が入力されていません。');
+    return;
+  }
+
+  // 1. 既存のKaTeX要素を更新する場合
+  if (currentEditingKatex) {
+    const editable = currentEditingKatex.closest('[contenteditable="true"]');
+    const t = getEditTarget(editable);
+    const textNode = document.createTextNode(`$${tex}$`);
+    currentEditingKatex.replaceWith(textNode);
+    closeMathFormulaEditorModal();
+
+    if (editable && t) {
+      pushB4History();
+      updateColBlockData(t.col, t.index, t.field, extractHtmlWithTeX(editable));
+      if (typeof applyKaTeXIfAvailable === 'function') {
+        applyKaTeXIfAvailable(editable);
+      }
+    }
+    if (typeof showToast === 'function') showToast('<i class="fa-solid fa-check text-success"></i> 数式を更新しました', 'success');
+    return;
+  }
+
+  // 2. 直前にフォーカスしていた編集領域がある場合
+  let targetEditable = lastFocusedB4Editable;
+  if (!targetEditable || !document.body.contains(targetEditable)) {
+    // ターゲットがなければ、右側または左側の最初の編集ブロックを探す
+    const firstBlockText = document.querySelector('#printableSheet [contenteditable="true"]');
+    targetEditable = firstBlockText;
+  }
+
+  if (targetEditable) {
+    targetEditable.focus();
+    const formulaStr = `$${tex}$`;
+
+    // セレクション位置に挿入
+    if (lastB4CaretRange && targetEditable.contains(lastB4CaretRange.commonAncestorContainer)) {
+      try {
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(lastB4CaretRange);
+        document.execCommand('insertText', false, formulaStr);
+      } catch (e) {
+        document.execCommand('insertText', false, formulaStr);
+      }
+    } else {
+      // 末尾に追加
+      if (targetEditable.innerHTML.trim() !== '') {
+        targetEditable.innerHTML += ' ' + formulaStr;
+      } else {
+        targetEditable.innerHTML = formulaStr;
+      }
+    }
+
+    const t = getEditTarget(targetEditable);
+    if (t) {
+      pushB4History();
+      updateColBlockData(t.col, t.index, t.field, extractHtmlWithTeX(targetEditable));
+    }
+    if (typeof applyKaTeXIfAvailable === 'function') {
+      setTimeout(() => applyKaTeXIfAvailable(targetEditable), 10);
+    }
+    closeMathFormulaEditorModal();
+    if (typeof showToast === 'function') showToast('<i class="fa-solid fa-square-root-variable text-purple"></i> 数式を挿入しました', 'success');
+  } else {
+    // クリップボードにコピー
+    copyMathFormulaToClipboard();
+    closeMathFormulaEditorModal();
+    alert('数式をコピーしました。挿入したい枠をクリックして Ctrl+V で貼り付けてください。');
+  }
+}
+window.applyMathFormulaToActivePrint = applyMathFormulaToActivePrint;
+
+// クリップボードにコピー
+function copyMathFormulaToClipboard() {
+  const input = document.getElementById('mathFormulaTexInput');
+  const tex = (input ? input.value : '').trim();
+  if (!tex) return;
+  const str = `$${tex}$`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(str).then(() => {
+      if (typeof showToast === 'function') showToast('<i class="fa-solid fa-copy text-info"></i> 数式をクリップボードにコピーしました', 'info');
+    }).catch(() => {
+      prompt('数式コード:', str);
+    });
+  } else {
+    prompt('数式コード:', str);
+  }
+}
+window.copyMathFormulaToClipboard = copyMathFormulaToClipboard;
+
+// 互換性ラッパー
+function openMathEditorPopover(katexEl) {
+  openMathFormulaEditorModal('', katexEl);
+}
+window.openMathEditorPopover = openMathEditorPopover;
+
+function closeMathEditorPopover() {
+  closeMathFormulaEditorModal();
+}
+window.closeMathEditorPopover = closeMathEditorPopover;
+
+function applyMathEditorPopover() {
+  applyMathFormulaToActivePrint();
+}
+window.applyMathEditorPopover = applyMathEditorPopover;
 
 function flushActiveEditableB4() {
   const t = getEditTarget(document.activeElement);

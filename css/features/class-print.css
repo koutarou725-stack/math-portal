@@ -2534,3 +2534,384 @@ body.mode-student .answer-space-inline .answer-tag {
   }
 }
 
+/* ========================================================
+   数式エディタ & パレット モーダル スタイル (TeX不要のビジュアル作成)
+   ======================================================== */
+.math-editor-modal-content {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 760px;
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  animation: modalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.math-modal-header {
+  background: linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%);
+  color: #ffffff;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.math-modal-header h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+}
+
+.math-modal-subtitle {
+  font-size: 0.78rem;
+  color: #e9d5ff;
+  line-height: 1.4;
+  display: block;
+}
+
+.math-modal-body {
+  padding: 1.2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #f8fafc;
+}
+
+/* リアルタイムプレビュー領域 */
+.math-preview-section {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.math-preview-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.preview-mode-tag {
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.math-preview-stage {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  font-size: 1.4rem;
+  color: #0f172a;
+  overflow-x: auto;
+}
+
+.math-preview-placeholder {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* かんたん組み立てウィジェット (分数・平方根・累乗) */
+.math-quick-builders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.75rem;
+}
+
+.builder-card {
+  background: #ffffff;
+  border: 1.5px solid #e9d5ff;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 3px rgba(126, 34, 206, 0.04);
+}
+
+.builder-card-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #6b21a8;
+  white-space: nowrap;
+}
+
+.fraction-builder-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 75px;
+}
+
+.fraction-builder-form input {
+  text-align: center;
+  padding: 0.15rem 0.25rem !important;
+  font-size: 0.78rem !important;
+  height: 24px !important;
+  width: 100% !important;
+}
+
+.fraction-bar-line {
+  width: 100%;
+  height: 1.5px;
+  background: #64748b;
+}
+
+.sqrt-builder-form {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.sqrt-symbol {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #6b21a8;
+}
+
+.sqrt-builder-form input {
+  padding: 0.15rem 0.35rem !important;
+  font-size: 0.78rem !important;
+  height: 24px !important;
+  width: 100% !important;
+}
+
+.power-builder-form {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.power-builder-form input {
+  text-align: center;
+  padding: 0.15rem 0.25rem !important;
+  font-size: 0.78rem !important;
+  height: 24px !important;
+}
+
+/* タブナビゲーション */
+.math-palette-tabs-nav {
+  display: flex;
+  gap: 0.35rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 2px;
+}
+
+.math-tab-btn {
+  background: #f1f5f9;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.math-tab-btn:hover {
+  color: #7e22ce;
+  background: #faf5ff;
+}
+
+.math-tab-btn.active {
+  background: #ffffff;
+  color: #7e22ce;
+  border-color: #cbd5e1 #cbd5e1 #ffffff;
+  font-weight: 700;
+  margin-bottom: -2px;
+  padding-bottom: calc(0.45rem + 2px);
+  border-bottom: 2px solid #ffffff;
+}
+
+/* パレットパネル */
+.math-palette-panes {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.75rem;
+  min-height: 140px;
+}
+
+.math-pane {
+  display: none;
+}
+
+.math-pane.active {
+  display: block;
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 0.5rem;
+}
+
+.math-sym-btn {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.4rem 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 54px;
+}
+
+.math-sym-btn:hover {
+  border-color: #a855f7;
+  background: #faf5ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(126, 34, 206, 0.12);
+}
+
+.math-sym-btn:active {
+  transform: translateY(0);
+}
+
+.math-sym-render {
+  font-size: 1.05rem;
+  color: #1e293b;
+  margin-bottom: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+}
+
+.math-sym-name {
+  font-size: 0.65rem;
+  color: #64748b;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* テンプレートグリッド */
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 0.6rem;
+}
+
+.math-tpl-btn {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.math-tpl-btn:hover {
+  border-color: #a855f7;
+  background: #faf5ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(126, 34, 206, 0.12);
+}
+
+.tpl-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b21a8;
+}
+
+.tpl-preview {
+  font-size: 0.95rem;
+  color: #1e293b;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+/* TeXコード入力欄 */
+.math-code-edit-area {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+}
+
+.math-code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.math-code-header label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  margin: 0;
+}
+
+.math-code-quick-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+#mathFormulaTexInput {
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  padding: 0.45rem 0.65rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+#mathFormulaTexInput:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+  outline: none;
+}
+
+/* フッター */
+.math-modal-footer {
+  padding: 0.85rem 1.25rem;
+  background: #f1f5f9;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+

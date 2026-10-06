@@ -117,16 +117,6 @@
               <span class="hero-tag"><i class="fa-solid fa-graduation-cap"></i> 中学校 数学科 教員ポータル</span>
               <h2 class="hero-title">数学科 授業ハブ & ワークスペース</h2>
               
-              <div class="hero-quick-status">
-                <div class="quick-status-item">
-                  <i class="fa-solid fa-bell text-warning"></i>
-                  <span>本日の授業: <strong>3コマ</strong> (2年1組 / 2年3組 / 3年2組)</span>
-                </div>
-                <div class="quick-status-item" id="heroExamStatusItem" onclick="openExamSettingModal()" style="cursor: pointer;" title="クリックして定期考査日程を変更">
-                  <i class="fa-solid fa-bullseye text-warning"></i>
-                  <span id="heroExamStatusText">次回定期テストまで: <strong>計算中...</strong></span>
-                </div>
-              </div>
 
               <!-- トップバナー内のクラス別考査コマ数テーブル -->
               <div class="hero-exam-classes-table-container" id="heroExamClassesTableContainer">
@@ -887,6 +877,297 @@
       </div>
     </div>
 
+    <!-- 中学数学 数式エディタ＆パレットモーダル (TeX知識不要のビジュアル作成) -->
+    <div id="mathFormulaEditorModal" class="modal-overlay hidden">
+      <div class="math-editor-modal-content">
+        <div class="math-modal-header">
+          <div>
+            <h3><i class="fa-solid fa-square-root-variable text-purple"></i> 中学数学 数式エディタ & パレット</h3>
+            <span class="math-modal-subtitle">TeXコードの知識不要！ボタンを押すだけで分数・平方根・図形記号などをプリントに挿入できます</span>
+          </div>
+          <button type="button" class="modal-close-btn" onclick="closeMathFormulaEditorModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="math-modal-body">
+          <!-- リアルタイム・プレビュー表示領域 -->
+          <div class="math-preview-section">
+            <div class="math-preview-label">
+              <span><i class="fa-solid fa-eye text-primary"></i> プレビュー (実際の見た目)</span>
+              <span class="preview-mode-tag">数式表示</span>
+            </div>
+            <div class="math-preview-stage" id="mathFormulaStage">
+              <span class="math-preview-placeholder">下のボタンを押すか、数式を入力するとここに表示されます</span>
+            </div>
+          </div>
+
+          <!-- かんたん組み立てウィジェット（分数・ルートなど、TeXが全く分からない人向け） -->
+          <div class="math-quick-builders">
+            <!-- 分数ビルダー -->
+            <div class="builder-card">
+              <span class="builder-card-title"><i class="fa-solid fa-divide text-purple"></i> 分数をつくる:</span>
+              <div class="fraction-builder-form">
+                <input type="text" id="quickFractionNum" class="form-control form-control-xs" placeholder="分子 (例: 3x)" onkeydown="if(event.key==='Enter') insertQuickFraction()">
+                <div class="fraction-bar-line"></div>
+                <input type="text" id="quickFractionDen" class="form-control form-control-xs" placeholder="分母 (例: 4)" onkeydown="if(event.key==='Enter') insertQuickFraction()">
+              </div>
+              <button type="button" class="btn btn-xs btn-outline" onclick="insertQuickFraction()">
+                <i class="fa-solid fa-plus"></i> 追加
+              </button>
+            </div>
+
+            <!-- 平方根ビルダー -->
+            <div class="builder-card">
+              <span class="builder-card-title"><i class="fa-solid fa-square-root-variable text-purple"></i> 平方根をつくる:</span>
+              <div class="sqrt-builder-form">
+                <span class="sqrt-symbol">√</span>
+                <input type="text" id="quickSqrtVal" class="form-control form-control-xs" placeholder="中身 (例: 5)" onkeydown="if(event.key==='Enter') insertQuickSqrt()">
+              </div>
+              <button type="button" class="btn btn-xs btn-outline" onclick="insertQuickSqrt()">
+                <i class="fa-solid fa-plus"></i> 追加
+              </button>
+            </div>
+
+            <!-- 累乗ビルダー -->
+            <div class="builder-card">
+              <span class="builder-card-title"><i class="fa-solid fa-superscript text-purple"></i> 累乗をつくる:</span>
+              <div class="power-builder-form">
+                <input type="text" id="quickPowerBase" class="form-control form-control-xs" style="width: 50px;" placeholder="底 (x)" onkeydown="if(event.key==='Enter') insertQuickPower()">
+                <input type="text" id="quickPowerExp" class="form-control form-control-xs" style="width: 40px; transform: translateY(-4px);" placeholder="指数(2)" onkeydown="if(event.key==='Enter') insertQuickPower()">
+              </div>
+              <button type="button" class="btn btn-xs btn-outline" onclick="insertQuickPower()">
+                <i class="fa-solid fa-plus"></i> 追加
+              </button>
+            </div>
+          </div>
+
+          <!-- タブ切り替え式・記号パレット -->
+          <div class="math-palette-tabs-nav">
+            <button type="button" class="math-tab-btn active" data-mathtab="common" onclick="switchMathTab('common')">
+              <i class="fa-solid fa-calculator"></i> 基本・分数・指数
+            </button>
+            <button type="button" class="math-tab-btn" data-mathtab="symbols" onclick="switchMathTab('symbols')">
+              <i class="fa-solid fa-plus-minus"></i> 演算・不等号・文字
+            </button>
+            <button type="button" class="math-tab-btn" data-mathtab="geometry" onclick="switchMathTab('geometry')">
+              <i class="fa-solid fa-draw-polygon"></i> 図形・幾何記号
+            </button>
+            <button type="button" class="math-tab-btn" data-mathtab="templates" onclick="switchMathTab('templates')">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> 定番・公式テンプレート
+            </button>
+          </div>
+
+          <div class="math-palette-panes">
+            <!-- パネル 1: 基本・分数・指数 -->
+            <div class="math-pane active" id="mathPane-common">
+              <div class="palette-grid">
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\frac{a}{b}')" title="分数">
+                  <span class="math-sym-render" data-tex="\frac{a}{b}">a/b</span>
+                  <span class="math-sym-name">分数 \frac{a}{b}</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\sqrt{x}')" title="平方根">
+                  <span class="math-sym-render" data-tex="\sqrt{x}">√x</span>
+                  <span class="math-sym-name">平方根 \sqrt{x}</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('x^2')" title="xの2乗">
+                  <span class="math-sym-render" data-tex="x^2">x²</span>
+                  <span class="math-sym-name">2乗 x^2</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('x^3')" title="xの3乗">
+                  <span class="math-sym-render" data-tex="x^3">x³</span>
+                  <span class="math-sym-name">3乗 x^3</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('x^n')" title="xのn乗">
+                  <span class="math-sym-render" data-tex="x^n">xⁿ</span>
+                  <span class="math-sym-name">n乗 x^n</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('(x)')" title="かっこ">
+                  <span class="math-sym-render" data-tex="(x)">(x)</span>
+                  <span class="math-sym-name">丸括弧 ( )</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('[x]')" title="大かっこ">
+                  <span class="math-sym-render" data-tex="[x]">[x]</span>
+                  <span class="math-sym-name">角括弧 [ ]</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\{ x \\}')" title="中かっこ">
+                  <span class="math-sym-render" data-tex="\{x\}">{x}</span>
+                  <span class="math-sym-name">波括弧 { }</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- パネル 2: 演算・不等号・文字 -->
+            <div class="math-pane" id="mathPane-symbols">
+              <div class="palette-grid">
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\times ')" title="かける">
+                  <span class="math-sym-render" data-tex="\times">×</span>
+                  <span class="math-sym-name">×</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\div ')" title="わる">
+                  <span class="math-sym-render" data-tex="\div">÷</span>
+                  <span class="math-sym-name">÷</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\pm ')" title="プラスマイナス">
+                  <span class="math-sym-render" data-tex="\pm">±</span>
+                  <span class="math-sym-name">±</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\leqq ')" title="以下 (≦)">
+                  <span class="math-sym-render" data-tex="\leqq">≦</span>
+                  <span class="math-sym-name">≦</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\geqq ')" title="以上 (≧)">
+                  <span class="math-sym-render" data-tex="\geqq">≧</span>
+                  <span class="math-sym-name">≧</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' < ')" title="より小さい (<)">
+                  <span class="math-sym-render" data-tex="<">&lt;</span>
+                  <span class="math-sym-name">&lt;</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' > ')" title="より大きい (>)">
+                  <span class="math-sym-render" data-tex=">">&gt;</span>
+                  <span class="math-sym-name">&gt;</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' = ')" title="等しい (=)">
+                  <span class="math-sym-render" data-tex="=">=</span>
+                  <span class="math-sym-name">=</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\neq ')" title="等しくない (≠)">
+                  <span class="math-sym-render" data-tex="\neq">≠</span>
+                  <span class="math-sym-name">≠</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\fallingdotseq ')" title="ほぼ等しい (≒)">
+                  <span class="math-sym-render" data-tex="\fallingdotseq">≒</span>
+                  <span class="math-sym-name">≒</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\pi')" title="円周率パイ">
+                  <span class="math-sym-render" data-tex="\pi">π</span>
+                  <span class="math-sym-name">π</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('^\\circ')" title="度 (角度)">
+                  <span class="math-sym-render" data-tex="^\circ">°</span>
+                  <span class="math-sym-name">° (度)</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\cdot ')" title="中点">
+                  <span class="math-sym-render" data-tex="\cdot">・</span>
+                  <span class="math-sym-name">・</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\ell')" title="直線l">
+                  <span class="math-sym-render" data-tex="\ell">ℓ</span>
+                  <span class="math-sym-name">ℓ</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- パネル 3: 図形・幾何記号 -->
+            <div class="math-pane" id="mathPane-geometry">
+              <div class="palette-grid">
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\triangle ABC')" title="三角形ABC">
+                  <span class="math-sym-render" data-tex="\triangle\mathrm{ABC}">△ABC</span>
+                  <span class="math-sym-name">△ABC</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\angle ABC')" title="角ABC">
+                  <span class="math-sym-render" data-tex="\angle\mathrm{ABC}">∠ABC</span>
+                  <span class="math-sym-name">∠ABC</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\backsim ')" title="相似 (∽)">
+                  <span class="math-sym-render" data-tex="\backsim">∽</span>
+                  <span class="math-sym-name">∽ (相似)</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\equiv ')" title="合同 (≡)">
+                  <span class="math-sym-render" data-tex="\equiv">≡</span>
+                  <span class="math-sym-name">≡ (合同)</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' /\\!/ ')" title="平行 (//)">
+                  <span class="math-sym-render" data-tex="/\!/">//</span>
+                  <span class="math-sym-name">// (平行)</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet(' \\perp ')" title="垂直 (⊥)">
+                  <span class="math-sym-render" data-tex="\perp">⊥</span>
+                  <span class="math-sym-name">⊥ (垂直)</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\triangle ')" title="三角形">
+                  <span class="math-sym-render" data-tex="\triangle">△</span>
+                  <span class="math-sym-name">△</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\angle ')" title="角">
+                  <span class="math-sym-render" data-tex="\angle">∠</span>
+                  <span class="math-sym-name">∠</span>
+                </button>
+                <button type="button" class="math-sym-btn" onclick="insertMathFormulaSnippet('\\frown')" title="弧">
+                  <span class="math-sym-render" data-tex="\frown">⌒</span>
+                  <span class="math-sym-name">⌒ (弧)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- パネル 4: 中学数学の定番テンプレート -->
+            <div class="math-pane" id="mathPane-templates">
+              <div class="template-grid">
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('\\begin{cases} 2x + y = 7 \\\\ x - y = 2 \\end{cases}')">
+                  <div class="tpl-title">連立方程式（2元）</div>
+                  <div class="tpl-preview" data-tex="\begin{cases} 2x + y = 7 \\ x - y = 2 \end{cases}">連立方程式</div>
+                </button>
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}')">
+                  <div class="tpl-title">解の公式（2次方程式）</div>
+                  <div class="tpl-preview" data-tex="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}">解の公式</div>
+                </button>
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('y = ax + b')">
+                  <div class="tpl-title">一次関数の式</div>
+                  <div class="tpl-preview" data-tex="y = ax + b">y = ax + b</div>
+                </button>
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('y = ax^2')">
+                  <div class="tpl-title">二次関数の式</div>
+                  <div class="tpl-preview" data-tex="y = ax^2">y = ax²</div>
+                </button>
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('y = \\frac{a}{x}')">
+                  <div class="tpl-title">反比例の式</div>
+                  <div class="tpl-preview" data-tex="y = \frac{a}{x}">y = a/x</div>
+                </button>
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('a^2 + b^2 = c^2')">
+                  <div class="tpl-title">三平方の定理</div>
+                  <div class="tpl-preview" data-tex="a^2 + b^2 = c^2">a² + b² = c²</div>
+                </button>
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('(x+a)(x+b) = x^2 + (a+b)x + ab')">
+                  <div class="tpl-title">乗法公式 (1)</div>
+                  <div class="tpl-preview" data-tex="(x+a)(x+b) = x^2 + (a+b)x + ab">公式1</div>
+                </button>
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('(a+b)^2 = a^2 + 2ab + b^2')">
+                  <div class="tpl-title">乗法公式 (2) 平方</div>
+                  <div class="tpl-preview" data-tex="(a+b)^2 = a^2 + 2ab + b^2">公式2</div>
+                </button>
+                <button type="button" class="math-tpl-btn" onclick="insertMathFormulaSnippet('(a+b)(a-b) = a^2 - b^2')">
+                  <div class="tpl-title">乗法公式 (3) 和と差の積</div>
+                  <div class="tpl-preview" data-tex="(a+b)(a-b) = a^2 - b^2">公式3</div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- コード編集入力エリア & コントロール -->
+          <div class="math-code-edit-area">
+            <div class="math-code-header">
+              <label for="mathFormulaTexInput"><i class="fa-solid fa-code text-secondary"></i> TeXコード（ボタンを押すと自動入力されます。直接手入力・微調整も可能）:</label>
+              <div class="math-code-quick-actions">
+                <button type="button" class="btn btn-xs btn-ghost text-secondary" onclick="clearMathFormulaEditor()"><i class="fa-solid fa-trash-can"></i> クリア</button>
+                <button type="button" class="btn btn-xs btn-ghost text-secondary" onclick="backspaceMathFormulaEditor()"><i class="fa-solid fa-delete-left"></i> 1文字消去</button>
+              </div>
+            </div>
+            <textarea id="mathFormulaTexInput" class="form-control" rows="2" placeholder="ここに数式コードが入ります（例: \frac{a}{b} や x^2 + 2x + 1）"></textarea>
+          </div>
+        </div>
+
+        <div class="math-modal-footer">
+          <button type="button" class="btn btn-outline" onclick="copyMathFormulaToClipboard()">
+            <i class="fa-solid fa-copy"></i> 式をコピー
+          </button>
+          <div style="flex: 1;"></div>
+          <button type="button" class="btn btn-outline" onclick="closeMathFormulaEditorModal()">閉じる</button>
+          <button type="button" class="btn btn-primary" onclick="applyMathFormulaToActivePrint()" style="background: #7e22ce; border-color: #7e22ce; font-weight: 700; padding: 0.45rem 1.25rem;">
+            <i class="fa-solid fa-check"></i> 選択中の枠に数式を挿入
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- ============================================== -->
     <!-- TAB 2: 授業プリント (ブロック型ワークシート工房) -->
     <!-- ============================================== -->
@@ -974,7 +1255,21 @@
             </div>
           </div>
 
-          <!-- 2. レゴ式パーツ追加パレット (2列×4行) -->
+          <!-- 2. 数式エディタ＆パレット起動カード (TeX不要で数式作成) -->
+          <div class="panel-section mb-3" style="padding: 0.75rem 0.85rem; background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%); border: 1.5px solid #d8b4fe; border-radius: var(--radius-md); box-shadow: 0 1px 3px rgba(126,34,206,0.08);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <h3 style="font-size: 0.88rem; margin: 0; color: #6b21a8; font-weight: 700;"><i class="fa-solid fa-square-root-variable"></i> 数式エディタ</h3>
+              <span class="badge" style="background: #e9d5ff; color: #6b21a8; font-size: 0.65rem; font-weight: 700;">TeX知識不要</span>
+            </div>
+            <p style="font-size: 0.73rem; color: #581c87; margin-bottom: 0.5rem; line-height: 1.35;">
+              分数・平方根・累乗・図形記号などをボタン操作で視覚的に作成・挿入できます。
+            </p>
+            <button type="button" class="btn btn-sm btn-block" onclick="openMathFormulaEditorModal()" style="background: #7e22ce; color: #ffffff; font-weight: 700; font-size: 0.8rem; padding: 0.45rem 0.5rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(126,34,206,0.25); display: flex; align-items: center; justify-content: center; gap: 0.4rem; border: none; cursor: pointer;">
+              <i class="fa-solid fa-calculator"></i> 数式を作成・挿入
+            </button>
+          </div>
+
+          <!-- 3. レゴ式パーツ追加パレット (2列×4行) -->
           <div class="panel-section mb-3" style="padding: 0.75rem 0.85rem; background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
             <div class="panel-header" style="margin-bottom: 0.35rem; display: flex; align-items: center; justify-content: space-between;">
               <h3 style="font-size: 0.9rem; margin: 0;"><i class="fa-solid fa-cubes text-primary"></i> パーツ追加</h3>
@@ -1050,6 +1345,9 @@
                 </button>
               </div>
               <div class="paper-actions">
+                <button type="button" class="btn btn-sm btn-outline" onclick="openMathFormulaEditorModal()" title="TeX知識不要！中学数学の数式・図形記号を視覚的に作成・挿入 (Ctrl+M)" style="background: #faf5ff; border-color: #c084fc; color: #7e22ce; font-weight: 700;">
+                  <i class="fa-solid fa-square-root-variable"></i> 数式エディタ
+                </button>
                 <button type="button" class="btn btn-sm btn-outline" id="b4UndoBtn" onclick="undoB4()" title="操作を元に戻す (Ctrl+Z)" disabled>
                   <i class="fa-solid fa-rotate-left"></i> 元に戻す
                 </button>

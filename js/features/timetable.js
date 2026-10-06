@@ -1806,8 +1806,9 @@ function updateHeroExamStatus() {
     tableContainer.innerHTML = `
       <div class="hero-exam-table-card">
         <div class="hero-exam-table-header">
-          <span class="table-title"><i class="fa-solid fa-table-list text-info"></i> ${escapeHtml(data.examName)} (${escapeHtml(data.examDateStr)}) までのクラス別 授業コマ数</span>
+          <span class="table-title"><i class="fa-solid fa-table-list text-info"></i> ${escapeHtml(data.examName)} (${escapeHtml(data.examDateStr)}) まで: <strong>あと ${data.diffDays}日</strong></span>
           <span class="table-sub"><i class="fa-solid fa-calendar-check text-success"></i> 実施日までの確定・予定コマ数</span>
+          <button type="button" class="btn btn-xs btn-outline" onclick="openExamSettingModal()" style="margin-left: auto; font-size: 11px; padding: 2px 8px; color: #cbd5e1; border-color: rgba(255,255,255,0.25);" title="考査日程の変更"><i class="fa-solid fa-gear"></i> 日程変更</button>
         </div>
         <div class="hero-exam-table-scroll">
           <table class="hero-exam-grid-table">
