@@ -656,6 +656,8 @@ function renderRealTimetableGrid() {
 
   // クラス別授業コマ数サマリーを更新
   renderWeekLessonSummary(weekDays);
+  renderExamCountdownBar();
+  updateHeroExamStatus();
 
   thead.innerHTML = `
     <tr>
@@ -664,9 +666,11 @@ function renderRealTimetableGrid() {
         const override = state.dateOverrides[w.dateStr];
         const activeClass = w.isToday ? 'col-active' : '';
         return `
-          <th class="${activeClass}">
-            <div>${w.month}/${w.date} (${w.dayName})</div>
-            ${override ? `<div class="override-badge" title="${override.memo || '振替あり'}"><i class="fa-solid fa-shuffle"></i> ${override.memo || '特時'}</div>` : ''}
+          <th class="${activeClass} ${override ? 'th-has-override' : ''}">
+            <div class="tt-header-date-wrap">
+              <span>${w.month}/${w.date} (${w.dayName})</span>
+              ${override ? `<span class="override-dot" title="${escapeHtml(override.memo || '特時・校時振替日課あり')}"></span>` : ''}
+            </div>
           </th>
         `;
       }).join('')}
@@ -702,21 +706,23 @@ function renderRealTimetableGrid() {
         <td class="${activeClass}">
           <div class="timetable-cell-content ${themeClass}">
             <div>
-              <span class="${isShiftBadge ? 'override-badge' : 'slot-code-badge'}">${badgeText}</span>
+              <div class="tt-cell-meta-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                <span class="${isShiftBadge ? 'override-badge' : 'slot-code-badge'}" style="margin: 0;">${badgeText}</span>
+                ${slot.subject ? `<span class="tt-subject-badge" style="margin: 0;">${escapeHtml(slot.subject)}</span>` : ''}
+              </div>
               ${slot.class ? `<div class="tt-class-name">${escapeHtml(slot.class)}</div>` : ''}
-              <div><span class="tt-subject-badge">${escapeHtml(slot.subject)}</span></div>
             </div>
 
             <!-- 週案・学習内容入力枠 (クリックで予定を打てる) -->
             <div class="tt-lesson-plan" onclick="openLessonPlanModal('${w.dateStr}', ${t.p}, '${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}')" title="クリックしてこの時間の学習予定・単元名を入力">
               <div class="lesson-plan-text ${currentPlan ? '' : 'placeholder'}">
-                ${currentPlan ? `<i class="fa-solid fa-book-open" style="font-size: 0.65rem; margin-right: 2px;"></i>${escapeHtml(currentPlan)}` : '＋ 予定・単元を入力'}
+                ${currentPlan ? `<i class="fa-solid fa-book-open" style="font-size: 0.65rem; margin-right: 2px;"></i>${escapeHtml(currentPlan)}` : '＋ 予定入力'}
               </div>
             </div>
 
             ${isMath ? `
               <div class="tt-actions">
-                <button class="tt-action-btn" onclick="goToLessonPrep('${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}', '${escapeHtml(currentPlan)}')">
+                <button class="tt-action-btn" onclick="goToLessonPrep('${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}', '${escapeHtml(currentPlan)}')" title="この時間の授業プリントを作成">
                   <i class="fa-solid fa-file-pen"></i> プリント準備
                 </button>
               </div>
@@ -1298,5 +1304,240 @@ function resetTimetableDefault() {
     alert('ベース時間割を白紙に初期化しました。');
   }
 }
+
+// ==========================================
+// 定期考査カウントダウン & クラス別進度管理
+// ==========================================
+
+function calculateExamCountdown() {
+  const settings = state.examSettings;
+  if (!settings || !settings.examDate) return null;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const parts = settings.examDate.split('-').map(Number);
+  if (parts.length !== 3) return null;
+  const examDate = new Date(parts[0], parts[1] - 1, parts[2]);
+  examDate.setHours(0, 0, 0, 0);
+
+  const diffMs = examDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 0) {
+    return {
+      isPast: true,
+      examName: settings.examName || '定期テスト',
+      examDateStr: settings.examDate,
+      diffDays: diffDays,
+      totalLessons: 0,
+      classCounts: {}
+    };
+  }
+
+  const classCounts = {};
+  let totalLessons = 0;
+  const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const targetSubj = (settings.targetSubject || '数学').trim();
+
+  // 今日からテスト前日（examDate - 1日）までを走査
+  const cur = new Date(today);
+  while (cur < examDate) {
+    const dayNum = cur.getDay();
+    if (dayNum !== 0 && dayNum !== 6) { // 月〜金
+      const yStr = cur.getFullYear();
+      const mStr = String(cur.getMonth() + 1).padStart(2, '0');
+      const dStr = String(cur.getDate()).padStart(2, '0');
+      const dateStr = `${yStr}-${mStr}-${dStr}`;
+      const dayKey = dayKeys[dayNum];
+
+      const dayData = getActualSlotsForDate(dateStr, dayKey);
+      for (let p = 1; p <= 6; p++) {
+        const slot = dayData.slots[p];
+        if (slot && slot.class && slot.class.trim() !== '') {
+          const s = slot.subject || '';
+          if (!targetSubj || s.includes(targetSubj) || s === targetSubj) {
+            const cls = slot.class.trim();
+            classCounts[cls] = (classCounts[cls] || 0) + 1;
+            totalLessons++;
+          }
+        }
+      }
+    }
+    cur.setDate(cur.getDate() + 1);
+  }
+
+  return {
+    isPast: false,
+    examName: settings.examName || '定期テスト',
+    examDateStr: settings.examDate,
+    diffDays: diffDays,
+    totalLessons: totalLessons,
+    classCounts: classCounts
+  };
+}
+
+function renderExamCountdownBar() {
+  const container = document.getElementById('examCountdownCard');
+  if (!container) return;
+
+  const data = calculateExamCountdown();
+  if (!data) {
+    container.innerHTML = `
+      <div class="exam-countdown-left">
+        <span class="exam-countdown-title"><i class="fa-solid fa-calendar-check text-primary"></i> 定期テスト進度カウントダウン:</span>
+        <span style="font-size: 0.78rem; color: #64748b;">日程が未設定です</span>
+      </div>
+      <button type="button" class="exam-setting-link-btn" onclick="openExamSettingModal()">
+        <i class="fa-solid fa-gear"></i> 日程を設定する
+      </button>
+    `;
+    return;
+  }
+
+  if (data.isPast) {
+    container.innerHTML = `
+      <div class="exam-countdown-left">
+        <span class="exam-countdown-title"><i class="fa-solid fa-flag-checkered text-success"></i> ${escapeHtml(data.examName)} (${escapeHtml(data.examDateStr)}):</span>
+        <span style="font-size: 0.78rem; color: #10b981; font-weight: 700;">実施終了（お疲れ様でした！）</span>
+      </div>
+      <button type="button" class="exam-setting-link-btn" onclick="openExamSettingModal()">
+        <i class="fa-solid fa-calendar-plus"></i> 次回テスト日程を設定
+      </button>
+    `;
+    return;
+  }
+
+  const sortedClasses = Object.keys(data.classCounts).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+  const pillsHtml = sortedClasses.map(cls => {
+    const c = data.classCounts[cls];
+    return `
+      <div class="exam-class-pill" title="${cls}: テストまでに予定されている授業コマ数">
+        <span class="cls-name">${escapeHtml(cls)}</span>
+        <span class="cls-count">${c}コマ</span>
+      </div>
+    `;
+  }).join('');
+
+  // クラス間での進度のズレ（最大と最小の差）を判定
+  let diffNotice = '';
+  if (sortedClasses.length >= 2) {
+    const counts = sortedClasses.map(cls => data.classCounts[cls]);
+    const maxC = Math.max(...counts);
+    const minC = Math.min(...counts);
+    const gap = maxC - minC;
+    if (gap > 0) {
+      diffNotice = `<span style="font-size: 0.72rem; color: #d97706; font-weight: 700; margin-left: 0.35rem;" title="クラス間で実施コマ数に差があります。特時・振替で調整を検討できます"><i class="fa-solid fa-triangle-exclamation"></i> クラス差: ${gap}コマ</span>`;
+    }
+  }
+
+  container.innerHTML = `
+    <div class="exam-countdown-left">
+      <div class="exam-countdown-title">
+        <i class="fa-solid fa-bullseye text-primary"></i>
+        <span>${escapeHtml(data.examName)} (${escapeHtml(data.examDateStr)}) まで:</span>
+        <span class="exam-countdown-days-badge">あと ${data.diffDays}日</span>
+        ${diffNotice}
+      </div>
+      <div class="exam-class-pills">
+        ${pillsHtml || '<span style="font-size: 0.78rem; color: #94a3b8;">対象クラスのコマなし</span>'}
+      </div>
+    </div>
+    <button type="button" class="exam-setting-link-btn" onclick="openExamSettingModal()" title="定期考査の日程・名称を変更">
+      <i class="fa-solid fa-gear"></i> 日程変更
+    </button>
+  `;
+}
+
+function updateHeroExamStatus() {
+  const textEl = document.getElementById('heroExamStatusText');
+  if (!textEl) return;
+
+  const data = calculateExamCountdown();
+  if (!data || data.isPast) {
+    textEl.innerHTML = `次回定期テスト: <strong>日程設定はこちら</strong>`;
+    return;
+  }
+
+  const sortedClasses = Object.keys(data.classCounts).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+  if (sortedClasses.length === 0) {
+    textEl.innerHTML = `${escapeHtml(data.examName)}まで: <strong>あと ${data.diffDays}日</strong>`;
+    return;
+  }
+
+  const counts = sortedClasses.map(cls => data.classCounts[cls]);
+  const minC = Math.min(...counts);
+  const maxC = Math.max(...counts);
+  const rangeStr = (minC === maxC) ? `各クラス ${minC}コマ` : `各クラス ${minC}〜${maxC}コマ`;
+
+  textEl.innerHTML = `${escapeHtml(data.examName)}まで: <strong>残り ${rangeStr}</strong> (計${data.totalLessons}コマ)`;
+}
+
+// モーダル操作
+function openExamSettingModal() {
+  const modal = document.getElementById('examSettingModal');
+  if (!modal) return;
+
+  const settings = state.examSettings || {};
+  const nameInput = document.getElementById('examNameInput');
+  const dateInput = document.getElementById('examDateInput');
+  const subjInput = document.getElementById('examSubjectInput');
+
+  if (nameInput) nameInput.value = settings.examName || '2学期 中間テスト';
+  if (dateInput) dateInput.value = settings.examDate || '';
+  if (subjInput) subjInput.value = settings.targetSubject || '数学';
+
+  modal.classList.remove('hidden');
+}
+
+function closeExamSettingModal() {
+  document.getElementById('examSettingModal')?.classList.add('hidden');
+}
+
+function saveExamSettings() {
+  const name = document.getElementById('examNameInput')?.value.trim() || '定期テスト';
+  const date = document.getElementById('examDateInput')?.value || '';
+  const subj = document.getElementById('examSubjectInput')?.value.trim() || '数学';
+
+  if (!date) {
+    alert('テストの実施初日（開始日）を選択してください。');
+    return;
+  }
+
+  state.examSettings = {
+    examName: name,
+    examDate: date,
+    targetSubject: subj
+  };
+
+  localStorage.setItem('math_portal_exam_settings', JSON.stringify(state.examSettings));
+  renderExamCountdownBar();
+  updateHeroExamStatus();
+  closeExamSettingModal();
+  triggerAutoCloudSync();
+
+  showToast(`📅 【${name} (${date})】までの授業カウントダウンを設定しました！`);
+}
+
+function clearExamSettings() {
+  if (confirm('定期考査の日程設定をクリアしますか？')) {
+    state.examSettings = { examName: '', examDate: '', targetSubject: '数学' };
+    localStorage.removeItem('math_portal_exam_settings');
+    renderExamCountdownBar();
+    updateHeroExamStatus();
+    closeExamSettingModal();
+    triggerAutoCloudSync();
+    showToast('定期考査の設定をクリアしました。');
+  }
+}
+
+window.calculateExamCountdown = calculateExamCountdown;
+window.renderExamCountdownBar = renderExamCountdownBar;
+window.updateHeroExamStatus = updateHeroExamStatus;
+window.openExamSettingModal = openExamSettingModal;
+window.closeExamSettingModal = closeExamSettingModal;
+window.saveExamSettings = saveExamSettings;
+window.clearExamSettings = clearExamSettings;
+
 
 // 授業プリント工房への直結

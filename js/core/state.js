@@ -119,6 +119,13 @@ const state = {
   lessonPlans: loadStorage('math_portal_lesson_plans', {}),
   editingLessonPlan: { dateStr: '', period: 1, className: '', subjectName: '' },
 
+  // 定期考査設定（次回テスト日・カウントダウン管理）
+  examSettings: loadStorage('math_portal_exam_settings', {
+    examName: '2学期 中間考査',
+    examDate: '2026-10-23',
+    targetSubject: '数学'
+  }),
+
   // Googleスプレッドシート連携（クラウド同期設定）
   cloudSettings: {
     gasUrl: localStorage.getItem('math_portal_gas_url') || '',

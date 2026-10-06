@@ -25,15 +25,15 @@
 
 .timetable-table th {
   background: #f8fafc;
-  padding: 0.85rem 0.5rem;
-  font-size: 0.88rem;
+  padding: 0.5rem 0.35rem;
+  font-size: 0.84rem;
   font-weight: 700;
   border-bottom: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
 }
 
 .timetable-table th.time-col {
-  width: 80px;
+  width: 74px;
   background: #f1f5f9;
 }
 
@@ -44,11 +44,11 @@
 }
 
 .timetable-table td {
-  padding: 0.75rem 0.5rem;
+  padding: 0.25rem 0.25rem;
   border-bottom: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
   vertical-align: top;
-  height: 90px;
+  height: 72px;
 }
 
 .timetable-table td.col-active {
@@ -57,14 +57,16 @@
 
 .period-label {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: var(--text-muted);
+  line-height: 1.1;
 }
 
 .period-time {
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   color: #94a3b8;
   display: block;
+  margin-top: 2px;
 }
 
 .timetable-cell-content {
@@ -73,9 +75,10 @@
   height: 100%;
   justify-content: space-between;
   border-radius: var(--radius-sm);
-  padding: 0.4rem;
+  padding: 0.25rem 0.3rem;
   transition: all 0.15s;
   position: relative;
+  box-sizing: border-box;
 }
 
 .timetable-cell-content:hover .tt-cell-edit-trigger {
@@ -232,19 +235,20 @@
 
 .tt-class-name {
   font-weight: 800;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: var(--text-main);
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .tt-subject-badge {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 0.15rem 0.55rem;
-  border-radius: 4px;
-  margin-top: 0.2rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 3px;
+  margin-top: 0.1rem;
   letter-spacing: 0.02em;
+  line-height: 1.2;
 }
 
 /* 教科別直感カラーテーマ */
@@ -328,16 +332,16 @@
 
 /* 週案・今週の学習予定表示エリア */
 .tt-lesson-plan {
-  margin-top: 0.35rem;
-  background: rgba(255, 255, 255, 0.85);
+  margin-top: 0.18rem;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px dashed rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  padding: 0.25rem 0.35rem;
-  font-size: 0.72rem;
+  border-radius: 3px;
+  padding: 0.15rem 0.25rem;
+  font-size: 0.68rem;
   cursor: pointer;
   transition: all 0.15s;
   text-align: left;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .tt-lesson-plan:hover {
@@ -349,6 +353,7 @@
 .lesson-plan-text {
   color: #1e293b;
   font-weight: 600;
+  font-size: 0.67rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -358,7 +363,7 @@
 .lesson-plan-text.placeholder {
   color: #94a3b8;
   font-weight: normal;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
 }
 
 /* 今週のクラス別授業回数・進度サマリーカード */
@@ -425,20 +430,21 @@
 .tt-actions {
   display: flex;
   justify-content: center;
-  gap: 0.3rem;
-  margin-top: 0.35rem;
+  gap: 0.25rem;
+  margin-top: 0.18rem;
 }
 
 .tt-action-btn {
   background: #ffffff;
   border: 1px solid #bfdbfe;
   color: var(--primary);
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 600;
-  padding: 0.18rem 0.4rem;
+  padding: 0.1rem 0.35rem;
   border-radius: 3px;
   cursor: pointer;
   transition: all 0.15s;
+  line-height: 1.2;
 }
 
 .tt-action-btn:hover {
@@ -986,4 +992,128 @@
   font-size: 0.82rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
+}
+
+/* ========================================================
+   ヘッダー振替ドットインジケーター（日付の横に●）
+   ======================================================== */
+.tt-header-date-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.override-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #f59e0b;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+  cursor: help;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.override-dot:hover {
+  transform: scale(1.3);
+}
+
+/* ========================================================
+   定期考査進度カウントダウンバー（各クラスの残り授業コマ数）
+   ======================================================== */
+.exam-countdown-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 50%, #eff6ff 100%);
+  border: 1.5px solid #93c5fd;
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08);
+}
+
+.exam-countdown-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.exam-countdown-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.exam-countdown-days-badge {
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 12px;
+  letter-spacing: 0.02em;
+}
+
+.exam-class-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.exam-class-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 16px;
+  padding: 0.18rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1e293b;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.exam-class-pill .cls-name {
+  color: #475569;
+}
+
+.exam-class-pill .cls-count {
+  color: #2563eb;
+  font-weight: 800;
+  background: #eff6ff;
+  padding: 0.05rem 0.4rem;
+  border-radius: 8px;
+}
+
+.exam-setting-link-btn {
+  background: transparent;
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.exam-setting-link-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
 }

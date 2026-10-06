@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="css/layout.css">
   <!-- 各機能モジュールスタイル -->
   <link rel="stylesheet" href="css/features/home.css">
-  <link rel="stylesheet" href="css/features/timetable.css">
+  <link rel="stylesheet" href="css/features/timetable.css?v=20261006_9">
   <link rel="stylesheet" href="css/features/class-print.css?v=20261006_8">
   <link rel="stylesheet" href="css/features/practice-print.css?v=20261006_3">
   <link rel="stylesheet" href="css/features/graph-generator.css">
@@ -122,9 +122,9 @@
                   <i class="fa-solid fa-bell text-warning"></i>
                   <span>本日の授業: <strong>3コマ</strong> (2年1組 / 2年3組 / 3年2組)</span>
                 </div>
-                <div class="quick-status-item">
+                <div class="quick-status-item" id="heroExamStatusItem" onclick="openExamSettingModal()" style="cursor: pointer;" title="クリックして定期考査日程を変更">
                   <i class="fa-solid fa-clock-rotate-left text-success"></i>
-                  <span>次回定期テストまで: <strong>残り 18 コマ</strong></span>
+                  <span id="heroExamStatusText">次回定期テストまで: <strong>計算中...</strong></span>
                 </div>
               </div>
             </div>
@@ -339,6 +339,9 @@
               <button class="btn btn-sm btn-ghost" onclick="changeWeekOffset(0)">今週に戻る</button>
             </div>
             <div class="tt-actions">
+              <button class="btn btn-sm btn-outline text-primary" onclick="openExamSettingModal()" title="次回定期考査の日程とカウントダウンを設定">
+                <i class="fa-solid fa-calendar-check"></i> 定期テスト日程設定
+              </button>
               <button class="btn btn-sm btn-primary" onclick="openDayOverrideModal()">
                 <i class="fa-solid fa-shuffle"></i> 特時・校時振替を設定
               </button>
@@ -348,13 +351,13 @@
             </div>
           </div>
 
-          <div class="info-banner-tip">
-            <i class="fa-solid fa-lightbulb text-warning"></i>
-            <span>職員会議で決まった<strong>「月曜だけど金2が入る」「木曜校時で実施」</strong>などの日課変更は、上の<strong>「特時・校時振替を設定」</strong>からワンタッチで反映できます。また、各マスをクリックして<strong>今週の学習内容・授業メモ</strong>を登録できます。</span>
+          <!-- 次回定期考査カウントダウン進度バー -->
+          <div class="exam-countdown-card mt-2" id="examCountdownCard">
+            <!-- JSで動的に集計して表示 -->
           </div>
 
           <!-- 今週のクラス別授業回数・進度サマリーバー -->
-          <div class="week-lesson-summary-card mt-3" id="weekLessonSummaryCard">
+          <div class="week-lesson-summary-card mt-2" id="weekLessonSummaryCard">
             <!-- JSで各クラスの今週コマ数・偏りを自動計算して表示 -->
           </div>
 
@@ -801,6 +804,55 @@
           <button type="button" class="btn btn-outline" onclick="closeCopyTermModal()">キャンセル</button>
           <button type="button" class="btn btn-primary" onclick="executeCopyTerm()">
             <i class="fa-solid fa-check"></i> コピーして適用
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 定期考査日程 & 進度カウントダウン設定モーダル -->
+    <div id="examSettingModal" class="modal-overlay hidden">
+      <div class="slot-modal-content">
+        <div class="slot-modal-header">
+          <h3><i class="fa-solid fa-calendar-check text-primary"></i> 定期考査の日程・進度管理設定</h3>
+          <button class="modal-close-btn" onclick="closeExamSettingModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="slot-modal-body">
+          <p style="font-size: 0.86rem; color: #475569; margin-bottom: 1rem; line-height: 1.5;">
+            次回定期テストの日程を設定すると、特時や校時振替を反映した<strong>各クラスのテストまでの残り授業コマ数</strong>がトップ画面と時間割に自動集計・表示されます。
+          </p>
+          <div class="form-group mb-3">
+            <label><strong>考査・テスト名</strong></label>
+            <input type="text" id="examNameInput" class="form-control" placeholder="例: 2学期 中間テスト, 後期中間考査 など" list="examNamePresets">
+            <datalist id="examNamePresets">
+              <option value="1学期 中間テスト"></option>
+              <option value="1学期 期末テスト"></option>
+              <option value="2学期 中間テスト"></option>
+              <option value="2学期 期末テスト"></option>
+              <option value="前期 中間テスト"></option>
+              <option value="前期 期末テスト"></option>
+              <option value="後期 中間テスト"></option>
+              <option value="学年末テスト"></option>
+              <option value="実力テスト"></option>
+            </datalist>
+          </div>
+          <div class="form-group mb-3">
+            <label><strong>テスト実施初日（考査開始日）</strong></label>
+            <input type="date" id="examDateInput" class="form-control" style="font-size: 0.95rem;">
+            <span class="sub-tip mt-1">※この日の前日までの持ちコマ（特時・振替反映後）が自動カウントされます。</span>
+          </div>
+          <div class="form-group mb-2">
+            <label><strong>対象教科</strong></label>
+            <input type="text" id="examSubjectInput" class="form-control" value="数学" placeholder="数学">
+          </div>
+        </div>
+        <div class="slot-modal-footer">
+          <button type="button" class="btn btn-outline text-danger" onclick="clearExamSettings()">
+            <i class="fa-solid fa-trash-can"></i> 設定をクリア
+          </button>
+          <div style="flex: 1;"></div>
+          <button type="button" class="btn btn-outline" onclick="closeExamSettingModal()">キャンセル</button>
+          <button type="button" class="btn btn-primary" onclick="saveExamSettings()">
+            <i class="fa-solid fa-check"></i> 設定を保存して反映
           </button>
         </div>
       </div>
@@ -1506,7 +1558,7 @@
   <script src="js/core/utils.js?v=20261006_2"></script>
   <script src="js/core/cloud-sync.js"></script>
   <!-- 各機能モジュール -->
-  <script src="js/features/timetable.js?v=20261003_6"></script>
+  <script src="js/features/timetable.js?v=20261006_9"></script>
   <script src="js/features/class-print.js?v=20261006_8"></script>
   <script src="js/features/practice-print.js"></script>
   <script src="js/features/settings.js"></script>
