@@ -1061,57 +1061,18 @@ body.show-answers .answer-text {
   transition: transform 0.2s ease;
 }
 
-/* B4 用紙境界ガイドライン（印刷時は非表示） */
+/* B4 用紙境界ガイドライン（画面スッキリ化のため非表示） */
 .b4-page-limit-line {
-  position: absolute;
-  top: 1020px;
-  left: 0;
-  right: 0;
-  height: 0;
-  border-top: 2px dashed #e11d48;
-  z-index: 90;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  display: none !important;
 }
 
 .b4-limit-badge {
-  position: absolute;
-  top: -11px;
-  right: 20px;
-  background: #e11d48;
-  color: #ffffff;
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 1px 8px;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(225, 29, 72, 0.25);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  letter-spacing: 0.02em;
-  pointer-events: none;
+  display: none !important;
 }
 
-/* B4 用紙はみ出し警告ストライプ */
+/* B4 用紙はみ出し警告ストライプ（非表示） */
 .b4-overflow-warning-strip {
-  display: none;
-  position: absolute;
-  top: 1020px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    -45deg,
-    rgba(225, 29, 72, 0.03),
-    rgba(225, 29, 72, 0.03) 12px,
-    transparent 12px,
-    transparent 24px
-  );
-  border-bottom: 2px solid #e11d48;
-  pointer-events: none;
-  border-radius: 0 0 4px 4px;
+  display: none !important;
 }
 
 .paper-b4-landscape.is-overflowing .b4-overflow-warning-strip {
@@ -2311,6 +2272,13 @@ body.show-answers .answer-text.answer-block {
 }
 .sheet-paper.paper-b4-landscape .board-task-box {
   padding: 0.5rem 0.85rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+.sheet-paper.paper-b4-landscape .board-task-box .board-task-canvas {
+  flex: 1 1 auto;
+  box-sizing: border-box;
 }
 .sheet-paper.paper-b4-landscape .board-task-header {
   margin-bottom: 0.25rem !important;

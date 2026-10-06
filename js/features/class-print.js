@@ -989,7 +989,7 @@ function initBlockResize() {
     blockIndex = parseInt(currentBlockEl.getAttribute('data-index'), 10);
 
     // リサイズ対象となる要素を特定
-    const boardCanvas = currentBlockEl.querySelector('.board-task-canvas');
+    const boardTaskBox = currentBlockEl.querySelector('.board-task-box');
     const answerSpace = currentBlockEl.querySelector('.answer-space');
     const pointBody = currentBlockEl.querySelector('.point-summary-body');
     const summaryBox = currentBlockEl.querySelector('.summary-box');
@@ -998,9 +998,9 @@ function initBlockResize() {
     const reflectionComment = currentBlockEl.querySelector('.reflection-comment-line');
     const reflectionBox = currentBlockEl.querySelector('.reflection-box');
 
-    if (boardCanvas) {
-      currentTargetEl = boardCanvas;
-      currentField = 'thinkingSpaceHeight';
+    if (boardTaskBox) {
+      currentTargetEl = boardTaskBox;
+      currentField = 'customHeight';
     } else if (answerSpace) {
       currentTargetEl = answerSpace;
       currentField = 'spaceHeight';

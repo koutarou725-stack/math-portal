@@ -4384,7 +4384,7 @@ function renderBlockColumn(blocks, colSide) {
         </div>`;
     } else if (block.type === 'board-task') {
       html = `
-        <div class="board-task-box">
+        <div class="board-task-box" ${d.customHeight ? `style="min-height: ${d.customHeight}px;"` : ''}>
           <div class="board-task-header">
             <span class="board-task-badge"><i class="fa-solid fa-chalkboard-user"></i><span ${editB4('qNum', '見出し', 'text')}>${escapeHtmlB4(d.qNum)}</span></span>
             <div class="board-task-text" ${editB4('text', '課題・問題文を入力')}>${fmtB4(d.text)}</div>
