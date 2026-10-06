@@ -24,7 +24,7 @@
   <!-- 各機能モジュールスタイル -->
   <link rel="stylesheet" href="css/features/home.css">
   <link rel="stylesheet" href="css/features/timetable.css">
-  <link rel="stylesheet" href="css/features/class-print.css?v=20261006_7">
+  <link rel="stylesheet" href="css/features/class-print.css?v=20261006_8">
   <link rel="stylesheet" href="css/features/practice-print.css?v=20261006_3">
   <link rel="stylesheet" href="css/features/graph-generator.css">
   <link rel="stylesheet" href="css/features/settings.css">
@@ -975,9 +975,14 @@
                 <button type="button" class="btn btn-sm btn-outline text-primary" onclick="applyWorksheetToTimetable()" title="このプリントのめあて・単元名を時間割の週案に反映">
                   <i class="fa-solid fa-calendar-plus"></i> 時間割にセット
                 </button>
-                <button type="button" class="btn btn-sm btn-ghost" onclick="toggleAnswerMode()" id="answerModeBtn">
-                  <i class="fa-solid fa-eye"></i> 解答表示切替
-                </button>
+                <div class="worksheet-mode-toggle" id="worksheetModeToggle" title="プリントの表示モード（生徒用: めあて・まとめ・解答を空欄化 / 教員用: 記入内容・解答例を表示）">
+                  <button type="button" class="mode-toggle-btn active" id="btnModeTeacher" onclick="setWorksheetMode('teacher')">
+                    <i class="fa-solid fa-chalkboard-user"></i> 教員用
+                  </button>
+                  <button type="button" class="mode-toggle-btn" id="btnModeStudent" onclick="setWorksheetMode('student')">
+                    <i class="fa-solid fa-user-graduate"></i> 生徒用
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -992,6 +997,7 @@
                   <span class="sheet-badge" id="paperGradeBadge">第3学年 数学科 授業プリント</span>
                   <span class="sheet-unit-badge" id="paperUnitBadge">第1章 多項式・展開と因数分解</span>
                   <span class="sheet-hour-badge" id="paperHourBadge">【第 5 時 / 全 11 時】</span>
+                  <span class="sheet-mode-badge" id="sheetModeBadge">【教員用・記入済】</span>
                 </div>
                 <h2 class="sheet-title b4-sheet-title" contenteditable="true" id="paperTitle">式の展開の工夫（置き換えの利用）</h2>
               </div>
@@ -1501,11 +1507,11 @@
   <script src="js/core/cloud-sync.js"></script>
   <!-- 各機能モジュール -->
   <script src="js/features/timetable.js?v=20261003_6"></script>
-  <script src="js/features/class-print.js?v=20261006_7"></script>
+  <script src="js/features/class-print.js?v=20261006_8"></script>
   <script src="js/features/practice-print.js"></script>
   <script src="js/features/settings.js"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
-  <script src="js/core/init.js?v=20261006_7"></script>
+  <script src="js/core/init.js?v=20261006_8"></script>
 </body>
 </html>

@@ -1476,8 +1476,59 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     initBlockResize();
     initFloatingTextToolbar();
+    setWorksheetMode('teacher', true);
   });
 } else {
   initBlockResize();
   initFloatingTextToolbar();
+  setWorksheetMode('teacher', true);
 }
+
+// ==========================================
+// 授業プリント: 教員用 / 生徒用 表示切替
+// ==========================================
+let currentWorksheetMode = 'teacher'; // 'teacher' (教員用・記入済) または 'student' (生徒用・空欄)
+
+function setWorksheetMode(mode, silent = false) {
+  if (mode !== 'student' && mode !== 'teacher') mode = 'teacher';
+  currentWorksheetMode = mode;
+  if (window.state) window.state.worksheetMode = mode;
+
+  const isStudent = (mode === 'student');
+  document.body.classList.toggle('mode-student', isStudent);
+  document.body.classList.toggle('mode-teacher', !isStudent);
+
+  // ツールバーのボタンスタイル更新
+  const btnTeacher = document.getElementById('btnModeTeacher');
+  const btnStudent = document.getElementById('btnModeStudent');
+  if (btnTeacher) btnTeacher.classList.toggle('active', !isStudent);
+  if (btnStudent) btnStudent.classList.toggle('active', isStudent);
+
+  // 用紙ヘッダーのモードバッジ更新
+  const badge = document.getElementById('sheetModeBadge');
+  if (badge) {
+    if (isStudent) {
+      badge.textContent = '【生徒用】';
+      badge.className = 'sheet-mode-badge mode-student-badge';
+    } else {
+      badge.textContent = '【教員用・記入済】';
+      badge.className = 'sheet-mode-badge mode-teacher-badge';
+    }
+  }
+
+  // トースト通知（初回サイレント時は通知しない）
+  if (!silent && typeof showToast === 'function') {
+    if (isStudent) {
+      showToast('<i class="fa-solid fa-user-graduate text-info"></i> 【生徒用モード】めあて・まとめ・解答を空欄にしました（手書き板書写し用）');
+    } else {
+      showToast('<i class="fa-solid fa-chalkboard-user text-primary"></i> 【教員用モード】事前入力のめあて・まとめ・解答例を表示しました');
+    }
+  }
+
+  // 用紙下端リミットUIの更新
+  if (typeof updateB4SheetLimitUI === 'function') {
+    setTimeout(updateB4SheetLimitUI, 50);
+  }
+}
+window.setWorksheetMode = setWorksheetMode;
+

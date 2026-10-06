@@ -2318,3 +2318,163 @@ body.show-answers .answer-text.answer-block {
   min-height: 0 !important;
   position: relative !important;
 }
+
+/* ========================================================
+   教員用 / 生徒用 表示切り替えスイッチ & スタイル
+   ======================================================== */
+.worksheet-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.mode-toggle-btn {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: inherit;
+  line-height: 1.2;
+}
+
+.mode-toggle-btn:hover {
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.mode-toggle-btn.active#btnModeTeacher {
+  background: #ffffff;
+  color: #7c3aed;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(124, 58, 237, 0.15), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.mode-toggle-btn.active#btnModeStudent {
+  background: #ffffff;
+  color: #0284c7;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.15), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* 用紙ヘッダーのモードバッジ */
+.sheet-mode-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+}
+
+.sheet-mode-badge.mode-teacher-badge,
+body:not(.mode-student) .sheet-mode-badge {
+  background: #f5f3ff;
+  color: #7c3aed;
+  border: 1px solid #ddd6fe;
+}
+
+body.mode-student .sheet-mode-badge,
+.sheet-mode-badge.mode-student-badge {
+  background: #e0f2fe;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+}
+
+/* ========================================================
+   【生徒用モード】(body.mode-student)
+   - めあて、まとめ：空欄化（手書き用ノート罫線・スペース維持）
+   - 解答例：非表示
+   ======================================================== */
+body.mode-student .objective-text {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.mode-student .objective-box {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 24px,
+    rgba(148, 163, 184, 0.22) 24px,
+    rgba(148, 163, 184, 0.22) 25px
+  ) !important;
+  background-size: 100% 25px !important;
+}
+
+body.mode-student .point-summary-body,
+body.mode-student .summary-content {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.mode-student .point-summary-box,
+body.mode-student .summary-box {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 24px,
+    rgba(148, 163, 184, 0.22) 24px,
+    rgba(148, 163, 184, 0.22) 25px
+  ) !important;
+  background-size: 100% 25px !important;
+}
+
+/* 解答例は生徒用モードでは完全に隠す（解答枠の高さは確保されたまま） */
+body.mode-student .answer-text,
+body.mode-student .answer-block,
+body.mode-student .answer-space .answer-tag,
+body.mode-student .answer-space-inline .answer-tag {
+  display: none !important;
+}
+
+/* 印刷時も現在のモード設定を忠実に反映 */
+@media print {
+  body.mode-student .objective-text {
+    visibility: hidden !important;
+  }
+  body.mode-student .objective-box {
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent 24px,
+      rgba(100, 116, 139, 0.25) 24px,
+      rgba(100, 116, 139, 0.25) 25px
+    ) !important;
+    background-size: 100% 25px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body.mode-student .point-summary-body,
+  body.mode-student .summary-content {
+    visibility: hidden !important;
+  }
+  body.mode-student .point-summary-box,
+  body.mode-student .summary-box {
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent 24px,
+      rgba(100, 116, 139, 0.25) 24px,
+      rgba(100, 116, 139, 0.25) 25px
+    ) !important;
+    background-size: 100% 25px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body.mode-student .answer-text,
+  body.mode-student .answer-block {
+    display: none !important;
+  }
+}
+
