@@ -127,12 +127,29 @@ const state = {
   }),
 
   // クラス別 指導進度マトリクス管理データ
+  matrixGrade: localStorage.getItem('math_portal_matrix_grade') || '2',
+  gradeSelectedUnits: loadStorage('math_portal_grade_selected_units', {
+    '1': 'unit_linear_1',
+    '2': 'unit_linear_2',
+    '3': 'unit_poly_3'
+  }),
   classProgress: loadStorage('math_portal_class_progress', {
     'unit_linear_2': {
       '2-1': 6,
       '2-2': 5,
       '2-3': 4,
-      '2-4': 6
+      '2-4': 6,
+      '2-6': 5
+    },
+    'unit_linear_1': {
+      '1-1': 5,
+      '1-2': 4,
+      '1-3': 5
+    },
+    'unit_poly_3': {
+      '3-1': 7,
+      '3-2': 7,
+      '3-3': 6
     }
   }),
   currentProgressUnit: localStorage.getItem('math_portal_current_progress_unit') || 'unit_linear_2',
