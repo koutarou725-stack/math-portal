@@ -838,7 +838,10 @@ function openDayOverrideModal() {
 }
 
 function closeDayOverrideModal() {
-  document.getElementById('dayOverrideModal').classList.add('hidden');
+  document.getElementById('dayOverrideModal')?.classList.add('hidden');
+  if (typeof closeTimetableSettingsHubModal === 'function') {
+    closeTimetableSettingsHubModal();
+  }
 }
 
 function renderMultiWeekOverride(numberOfWeeks = 6) {
@@ -1083,9 +1086,10 @@ function saveWeekOverrides() {
   });
 
   localStorage.setItem('math_portal_date_overrides', JSON.stringify(state.dateOverrides));
-  closeDayOverrideModal();
+  if (typeof closeTimetableSettingsHubModal === 'function') closeTimetableSettingsHubModal();
+  else if (typeof closeDayOverrideModal === 'function') closeDayOverrideModal();
   renderRealTimetableGrid();
-  showToast('<i class="fa-solid fa-circle-check text-success"></i> 翌月までの特時・お休み設定を一括保存しました！');
+  showToast('<i class="fa-solid fa-circle-check text-success"></i> 月行事・校時振替を一括保存しました！');
   triggerAutoCloudSync();
 }
 
@@ -1966,6 +1970,7 @@ function openTimetableSettingsHubModal(defaultTab = 'override') {
   const modal = document.getElementById('timetableSettingsHubModal');
   if (!modal) return;
 
+  modal.classList.remove('hidden');
   switchSettingsHubTab(defaultTab);
 
   // 1. 月行事入力 (向こう6週間のExcel風テーブル生成)
@@ -1998,8 +2003,6 @@ function openTimetableSettingsHubModal(defaultTab = 'override') {
   if (bellBreak) bellBreak.value = bell.breakDuration || 10;
   if (bellLunch) bellLunch.value = bell.lunchDuration || 50;
   previewHubBell();
-
-  modal.classList.remove('hidden');
 }
 
 function closeTimetableSettingsHubModal() {

@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="css/layout.css">
   <!-- 各機能モジュールスタイル -->
   <link rel="stylesheet" href="css/features/home.css">
-  <link rel="stylesheet" href="css/features/timetable.css?v=20261007_2">
+  <link rel="stylesheet" href="css/features/timetable.css?v=20261007_3">
   <link rel="stylesheet" href="css/features/class-print.css?v=20261006_11">
   <link rel="stylesheet" href="css/features/practice-print.css?v=20261006_11">
   <link rel="stylesheet" href="css/features/graph-generator.css">
@@ -476,40 +476,6 @@
 
       </div>
     </section>
-
-    <!-- 特時・校時振替 ＆ 祝日・お休み設定モーダル (複数週・月間一括マネージャー) -->
-    <div id="dayOverrideModal" class="modal-overlay hidden">
-      <div class="override-modal-content wide-modal" style="max-width: 960px; width: 95%;">
-        <div class="slot-modal-header">
-          <h3><i class="fa-solid fa-calendar-check text-primary"></i> 特時・校時振替 ＆ 祝日・お休みマネージャー</h3>
-          <button class="modal-close-btn" onclick="closeDayOverrideModal()"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="slot-modal-body" style="max-height: 72vh; overflow-y: auto;">
-          <div class="week-override-header-bar">
-            <div>
-              <strong id="overrideWeekRangeText" style="font-size: 1.05rem; color: var(--text-main);"></strong>
-              <div class="sub-tip mt-1">今週から翌月までの特時・校時振替や、祝日・秋休みなどのお休みを一括設定できます（下へスクロールして全週入力可）</div>
-            </div>
-            <div class="week-override-quick-actions">
-              <button class="btn btn-sm btn-outline text-danger" onclick="clearCurrentWeekOverrides()" title="今週の振替・休日をすべて解除して通常に戻す">
-                <i class="fa-solid fa-rotate-left"></i> 今週をすべて通常校時に戻す
-              </button>
-            </div>
-          </div>
-
-          <!-- 複数週のシンプル校時振替テーブル（Excel形式・祝日お休み対応） -->
-          <div class="week-override-table-wrapper" id="weekOverrideColumnsContainer">
-            <!-- JSで動的に今週〜翌月のテーブルを生成 -->
-          </div>
-        </div>
-        <div class="slot-modal-footer">
-          <button type="button" class="btn btn-outline" onclick="closeDayOverrideModal()">閉じる</button>
-          <button type="button" class="btn btn-primary" onclick="saveWeekOverrides()">
-            <i class="fa-solid fa-check"></i> 特時・お休み設定を一括保存
-          </button>
-        </div>
-      </div>
-    </div>
 
     <!-- コマ単体編集モーダル (ベース時間割用: コマ区分を廃止してスッキリ) -->
     <div id="slotEditModal" class="modal-overlay hidden">
@@ -2037,7 +2003,7 @@
   <script src="js/core/utils.js?v=20261006_2"></script>
   <script src="js/core/cloud-sync.js"></script>
   <!-- 各機能モジュール -->
-  <script src="js/features/timetable.js?v=20261007_2"></script>
+  <script src="js/features/timetable.js?v=20261007_3"></script>
   <script src="js/features/class-print.js?v=20261006_8"></script>
   <script src="js/features/practice-print.js?v=20261006_11"></script>
   <script src="js/features/settings.js"></script>
