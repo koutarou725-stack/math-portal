@@ -22,12 +22,12 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <!-- 各機能モジュールスタイル -->
-  <link rel="stylesheet" href="css/features/home.css">
+  <link rel="stylesheet" href="css/features/home.css?v=20261007_9">
   <link rel="stylesheet" href="css/features/timetable.css?v=20261007_7">
   <link rel="stylesheet" href="css/features/class-print.css?v=20261006_11">
   <link rel="stylesheet" href="css/features/practice-print.css?v=20261006_11">
   <link rel="stylesheet" href="css/features/graph-generator.css?v=20261007_8">
-  <link rel="stylesheet" href="css/features/settings.css">
+  <link rel="stylesheet" href="css/features/settings.css?v=20261007_9">
   <link rel="stylesheet" href="css/features/library.css">
   <!-- 印刷用スタイル -->
   <link rel="stylesheet" href="css/print.css?v=20261006_10">
@@ -61,7 +61,7 @@
           <i class="fa-solid fa-shapes"></i> 作図・グラフ
         </button>
         <button class="nav-tab" data-tab="progress-log">
-          <i class="fa-solid fa-book-bookmark"></i> 授業進路＆メモ
+          <i class="fa-solid fa-book-bookmark"></i> 授業進度＆メモ
         </button>
         <button class="nav-tab" data-tab="library">
           <i class="fa-solid fa-book-open-reader"></i> 資料室
@@ -217,7 +217,7 @@
               <div class="card-badge-wrap">
                 <span class="card-badge">ナレッジ蓄積</span>
               </div>
-              <h3 class="card-title">授業進路＆メモ</h3>
+              <h3 class="card-title">授業進度＆メモ</h3>
             </div>
             <div class="card-arrow">
               <i class="fa-solid fa-arrow-right"></i>
@@ -1876,44 +1876,53 @@
     <section id="tab-progress-log" class="tab-pane">
       <div class="progress-dashboard">
         
-        <div class="page-top-nav no-print">
-          <button class="back-home-btn" onclick="switchTab('home')">
-            <i class="fa-solid fa-arrow-left"></i> ホームに戻る
-          </button>
-          <h2><i class="fa-solid fa-book-bookmark text-amber"></i> 指導進度 & 授業改善メモ (ナレッジベース)</h2>
-        </div>
-
-        <div class="progress-summary-row">
-          <div class="stat-card">
-            <div class="stat-icon bg-blue"><i class="fa-solid fa-calendar-check"></i></div>
-            <div class="stat-info">
-              <span class="stat-label">中2 数学 (全クラス平均進度)</span>
-              <strong class="stat-value">第 3 単元 (62%)</strong>
-              <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 62%;"></div></div>
-            </div>
+        <div class="page-top-nav no-print" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <button class="back-home-btn" onclick="switchTab('home')">
+              <i class="fa-solid fa-arrow-left"></i> ホームに戻る
+            </button>
+            <h2 style="margin: 0; font-size: 1.25rem;"><i class="fa-solid fa-book-bookmark text-amber"></i> 指導進度 & 授業改善メモ (実践ナレッジ)</h2>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon bg-emerald"><i class="fa-solid fa-stopwatch-20"></i></div>
-            <div class="stat-info">
-              <span class="stat-label">次回 定期テストまで</span>
-              <strong class="stat-value">残り 18 授業コマ</strong>
-              <span class="stat-sub">目標範囲: 1次関数の利用まで</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon bg-purple"><i class="fa-solid fa-lightbulb"></i></div>
-            <div class="stat-info">
-              <span class="stat-label">蓄積された授業改善メモ</span>
-              <strong class="stat-value" id="savedMemosCount">2 件</strong>
-              <span class="stat-sub">来年度の指導案に活用可能</span>
-            </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button type="button" class="btn btn-sm btn-primary" onclick="openProgressMemoModal()">
+              <i class="fa-solid fa-plus"></i> 改善メモを新規記録
+            </button>
+            <button type="button" class="btn btn-sm btn-outline" onclick="openExamSettingModal()" title="定期考査の日程・目標を設定">
+              <i class="fa-solid fa-sliders"></i> 考査・目標設定
+            </button>
           </div>
         </div>
 
+        <!-- ① 上部サマリーカード: 考査カウントダウン ＆ クラス差 ＆ ナレッジ蓄積数 -->
+        <div class="progress-summary-row" id="progressSummaryRow">
+          <!-- JSで動的に最新状況をレンダリング -->
+        </div>
+
+        <!-- ② クラス別 最新指導進度 ＆ 次の授業連携セクション -->
+        <div class="classes-progress-section">
+          <div class="section-header" style="margin-bottom: 0.6rem;">
+            <h3><i class="fa-solid fa-users-rectangle text-primary"></i> クラス別 最新指導進度・次の授業プラン</h3>
+            <span style="font-size: 0.75rem; color: #64748b;"><i class="fa-solid fa-arrows-rotate text-success"></i> 時間割・週案メモとリアルタイム連動</span>
+          </div>
+          <div class="classes-progress-grid" id="classesProgressGrid">
+            <!-- クラスごとのカード（2-1, 2-2, 2-3...）が動的生成される -->
+          </div>
+        </div>
+
+        <!-- ③ 単元別 授業改善メモ一覧（つまずき・実践知・時間配分） -->
         <div class="memos-list-section">
-          <div class="section-header">
-            <h3><i class="fa-solid fa-clock-rotate-left"></i> 単元別 授業改善メモ一覧 (つまずき・実践知)</h3>
-            <span class="badge">実践ナレッジ</span>
+          <div class="section-header" style="flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+              <h3><i class="fa-solid fa-clock-rotate-left text-purple"></i> 単元別 授業改善メモ一覧 (つまずき・実践知)</h3>
+              <span class="badge badge-success" id="memosCountBadge">4件</span>
+            </div>
+            <!-- 学年フィルタボタン群 -->
+            <div class="memo-filter-btn-group" id="memoGradeFilterGroup">
+              <button type="button" class="memo-filter-btn active" data-grade="all" onclick="filterMemosByGrade('all')">すべて</button>
+              <button type="button" class="memo-filter-btn" data-grade="1" onclick="filterMemosByGrade('1')">中1</button>
+              <button type="button" class="memo-filter-btn" data-grade="2" onclick="filterMemosByGrade('2')">中2</button>
+              <button type="button" class="memo-filter-btn" data-grade="3" onclick="filterMemosByGrade('3')">中3</button>
+            </div>
           </div>
 
           <div class="memos-grid" id="memosHistoryGrid">
@@ -1923,6 +1932,78 @@
 
       </div>
     </section>
+
+    <!-- 授業改善メモ 新規作成・編集モーダル -->
+    <div id="memoEditModal" class="modal-overlay hidden">
+      <div class="modal-card" style="max-width: 580px; width: 95%;">
+        <div class="modal-header">
+          <h3 id="memoModalTitle"><i class="fa-solid fa-lightbulb text-amber"></i> 授業改善メモを記録</h3>
+          <button class="modal-close-btn" onclick="closeProgressMemoModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 0.85rem; padding: 1.25rem;">
+          <input type="hidden" id="editingMemoId" value="">
+
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 140px;">
+              <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">学年・単元名:</label>
+              <input type="text" id="memoUnitInput" class="form-control form-control-sm" placeholder="例: 中2: 一次関数の変化の割合" list="mathUnitPresetsList">
+              <datalist id="mathUnitPresetsList">
+                <option value="中1: 正の数・負の数">
+                <option value="中1: 文字と式（代入・式の計算）">
+                <option value="中1: 一次方程式">
+                <option value="中1: 比例と反比例">
+                <option value="中1: 平面図形・作図">
+                <option value="中1: 空間図形">
+                <option value="中2: 式の計算">
+                <option value="中2: 連立方程式（加減法・代入法）">
+                <option value="中2: 一次関数の変化の割合">
+                <option value="中2: 一次関数のグラフと切片">
+                <option value="中2: 平行と合同・三角形の合同条件">
+                <option value="中2: 確率">
+                <option value="中3: 多項式の展開と因数分解">
+                <option value="中3: 平方根の計算">
+                <option value="中3: 二次方程式の解き方">
+                <option value="中3: 二次関数 y=ax²">
+                <option value="中3: 図形の相似">
+                <option value="中3: 円周角の定理">
+                <option value="中3: 三平方の定理">
+              </datalist>
+            </div>
+            <div style="width: 140px;">
+              <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">実施日:</label>
+              <input type="date" id="memoDateInput" class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
+              💡 生徒のつまずき・つまずきやすい点・反応:
+            </label>
+            <textarea id="memoPointsInput" class="form-control" rows="3" placeholder="生徒が引っかかった箇所、誤答例、効果的だった発問など"></textarea>
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
+              ⏱ 時間配分・展開の反省:
+            </label>
+            <input type="text" id="memoTimingInput" class="form-control form-control-sm" placeholder="例: 導入7分、活動15分、練習15分、まとめ8分（演習時間が足りなかった等）">
+          </div>
+
+          <div>
+            <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
+              🌱 次回・来年度への改善ポイント・指導のコツ:
+            </label>
+            <textarea id="memoNextYearInput" class="form-control" rows="2" placeholder="来年の自分や同僚へのアドバイス、次回改善したい点"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding: 0.75rem 1.25rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 0.5rem;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeProgressMemoModal()">キャンセル</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="saveProgressMemoFromModal()">
+            <i class="fa-solid fa-floppy-disk"></i> メモを保存
+          </button>
+        </div>
+      </div>
+    </div>
 
   </main>
 
@@ -2019,12 +2100,12 @@
   <script src="js/core/utils.js?v=20261006_2"></script>
   <script src="js/core/cloud-sync.js"></script>
   <!-- 各機能モジュール -->
-  <script src="js/features/timetable.js?v=20261007_7"></script>
+  <script src="js/features/timetable.js?v=20261007_9"></script>
   <script src="js/features/class-print.js?v=20261006_8"></script>
   <script src="js/features/practice-print.js?v=20261007_8"></script>
-  <script src="js/features/settings.js"></script>
+  <script src="js/features/settings.js?v=20261007_9"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
-  <script src="js/core/init.js?v=20261007_8"></script>
+  <script src="js/core/init.js?v=20261007_9"></script>
 </body>
 </html>

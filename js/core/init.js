@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try { if (typeof renderMathGraph === 'function') renderMathGraph(); else renderLinearGraph(); } catch (e) { console.warn('renderLinearGraph:', e); }
   try { if (typeof onGeometryPatternChange === 'function') onGeometryPatternChange(); else renderGeometryFig(); } catch (e) { console.warn('renderGeometryFig:', e); }
   try { onTestGradeChange(); } catch (e) { console.warn('onTestGradeChange:', e); }
-  try { renderMemosList(); } catch (e) { console.warn('renderMemosList:', e); }
+  try { if (typeof renderProgressDashboard === 'function') renderProgressDashboard(); else renderMemosList(); } catch (e) { console.warn('renderProgressDashboard:', e); }
 });
 
 // 日付表示
@@ -61,6 +61,13 @@ function switchTab(tabId) {
     const unitSelect = document.getElementById('b4UnitSelect');
     if (!unitSelect || !unitSelect.options || unitSelect.options.length === 0) {
       selectB4Grade(currentB4Grade || '3', true);
+    }
+  }
+
+  // 指導進度＆授業改善メモタブに切り替えた際、最新データを再集計・描画
+  if (tabId === 'progress-log') {
+    if (typeof renderProgressDashboard === 'function') {
+      renderProgressDashboard();
     }
   }
 

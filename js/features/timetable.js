@@ -1149,33 +1149,48 @@ function resetAllOverrides() {
 
 // ==========================================
 // ホーム画面 (本日の予定ミニバー連動)
+// ユーザー要望: 1限➔①、⚡バッジ➔●ドットインジケーター、クリックで時間割と同じモーダル表示
 // ==========================================
 function renderTodayScheduleMini() {
   const container = document.getElementById('todayMiniSlots');
   if (!container) return;
 
   const now = new Date();
-  const dateStr = now.toISOString().split('T')[0];
+  const yStr = now.getFullYear();
+  const mStr = String(now.getMonth() + 1).padStart(2, '0');
+  const dStr = String(now.getDate()).padStart(2, '0');
+  const dateStr = `${yStr}-${mStr}-${dStr}`;
   const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const dayKey = dayKeys[now.getDay()] || 'mon';
 
   const dayData = getActualSlotsForDate(dateStr, dayKey);
   const periods = [1, 2, 3, 4, 5, 6];
+  const circleNums = ['①', '②', '③', '④', '⑤', '⑥'];
 
   let html = '';
-  let mathClassCount = 0;
 
   periods.forEach(p => {
     const slot = dayData.slots[p];
-    if (slot && slot.type !== 'free') {
-      if (slot.type === 'math') mathClassCount++;
+    const circleNum = circleNums[p - 1] || `${p}`;
+    const isCut = (slot && (slot.type === 'cut' || slot.isCut || slot.sourceCode === 'カット'));
+    const hasContent = slot && ((slot.class && slot.class.trim() !== '') || (slot.subject && slot.subject.trim() !== ''));
+
+    if (isCut) {
       html += `
-        <div class="mini-slot-card" onclick="goToLessonPrep('${slot.class}', '${slot.subject}')">
-          <span class="slot-period">${p}限</span>
-          ${slot.class ? `<span class="slot-class">${slot.class}</span>` : ''}
-          <span class="slot-subject">${slot.subject}</span>
-          ${slot.isOverridden ? `<span class="override-badge" style="font-size: 0.65rem;">⚡ ${slot.sourceCode}</span>` : ''}
-          <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem; color: #94a3b8;"></i>
+        <div class="mini-slot-card is-cut" onclick="openLessonPlanModal('${dateStr}', ${p}, '', 'カット')" title="${p}限: カット（授業なし / クリックで業務メモ確認）">
+          <span class="slot-period">${circleNum}</span>
+          <span class="slot-cut-text" style="color: #94a3b8; font-weight: 700; font-size: 0.76rem;">カット</span>
+          <span class="slot-override-dot" title="カット（授業なし日課）"></span>
+        </div>
+      `;
+    } else if (hasContent) {
+      const isShifted = slot.isOverridden;
+      html += `
+        <div class="mini-slot-card ${isShifted ? 'is-overridden' : ''}" onclick="openLessonPlanModal('${dateStr}', ${p}, '${escapeHtml(slot.class || '')}', '${escapeHtml(slot.subject || '')}')" title="${p}限: ${escapeHtml(slot.class || '')} ${escapeHtml(slot.subject || '')}${isShifted ? ` (変更: ${escapeHtml(slot.sourceCode)})` : ''} - クリックで内容・予定を確認">
+          <span class="slot-period">${circleNum}</span>
+          ${slot.class ? `<span class="slot-class">${escapeHtml(slot.class)}</span>` : ''}
+          ${slot.subject ? `<span class="slot-subject">${escapeHtml(slot.subject)}</span>` : ''}
+          ${isShifted ? `<span class="slot-override-dot" title="時間割変更: ${escapeHtml(slot.sourceCode)}"></span>` : ''}
         </div>
       `;
     }

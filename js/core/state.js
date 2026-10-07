@@ -139,7 +139,7 @@ const state = {
   linearFunc: { a: 2, b: 1, showPoints: true, showLine: true },
   geometry: { pattern: 'parallel_chevron', angle1: 45, angle2: 35 },
   
-  memos: [
+  memos: loadStorage('math_portal_memos', [
     {
       id: 1,
       unit: '中2: 一次関数の変化の割合',
@@ -155,8 +155,24 @@ const state = {
       points: '負の数を代入するときにカッコを付け忘れて符号ミスする生徒が半数いた。赤ペンで（ ）を強調させること。',
       timing: '演習に時間がかかりまとめが駆け足になった。',
       nextYear: '例題で (-3)^2 と -3^2 の違いを冒頭で全員で復唱させる。'
+    },
+    {
+      id: 3,
+      unit: '中2: 連立方程式（加減法）',
+      date: '2026/09/10',
+      points: '係数を揃えた後の引き算で、下段の式の符号変え忘れが頻発。下段の符号を○で囲んで赤字で書き直す手順を徹底させた。',
+      timing: '符号変えの練習に10分追加してちょうど良かった。',
+      nextYear: '引き算ではなく「符号を変えて足す」指導法を最初から提示する方が定着が良い。'
+    },
+    {
+      id: 4,
+      unit: '中3: 二次方程式（解の公式）',
+      date: '2026/09/05',
+      points: 'ルートの中の計算 b² - 4ac で、負の数の2乗と -4ac の符号処理でミスが多い。',
+      timing: '解の公式のリズム暗記に5分、代入のみの練習に15分。',
+      nextYear: '公式代入の1行目は計算せず、カッコをつけてそのまま書かせること。'
     }
-  ]
+  ])
 };
 
 // レガシーキー (first_term, second_term) からの互換マイグレーション

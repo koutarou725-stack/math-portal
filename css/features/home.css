@@ -300,3 +300,30 @@
   background: #eff6ff;
   transform: translateX(4px);
 }
+
+.slot-override-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #f59e0b;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 2px;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+  flex-shrink: 0;
+}
+
+.mini-slot-card.is-overridden {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.mini-slot-card.is-overridden:hover {
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+
+.mini-slot-card.is-cut {
+  background: #f8fafc;
+  border-style: dashed;
+  opacity: 0.85;
+}
