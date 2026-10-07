@@ -285,16 +285,16 @@ function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true,
 
   // 座標軸 (中学校教科書仕様: 先端矢印なし！普通の直線。端に x, y, 交点左下に O)
   const axisLines = `
-    <!-- x軸 (矢印なし) -->
-    <line x1="${pad - 10}" y1="${halfH}" x2="${pad + gridW + 10}" y2="${halfH}" stroke="#0f172a" stroke-width="1.6" />
-    <text x="${pad + gridW + 12}" y="${halfH + 4}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a">x</text>
+    <!-- x軸 (方眼紙の枠内にピッタリ収まる直線・はみ出しなし) -->
+    <line x1="${pad}" y1="${halfH}" x2="${pad + gridW}" y2="${halfH}" stroke="#0f172a" stroke-width="1.8" />
+    <text x="${pad + gridW - 4}" y="${halfH - 6}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a" text-anchor="end">x</text>
 
-    <!-- y軸 (矢印なし) -->
-    <line x1="${halfW}" y1="${pad + gridH + 10}" x2="${halfW}" y2="${pad - 10}" stroke="#0f172a" stroke-width="1.6" />
-    <text x="${halfW - 5}" y="${pad - 14}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a" text-anchor="middle">y</text>
+    <!-- y軸 (方眼紙の枠内にピッタリ収まる直線・はみ出しなし) -->
+    <line x1="${halfW}" y1="${pad + gridH}" x2="${halfW}" y2="${pad}" stroke="#0f172a" stroke-width="1.8" />
+    <text x="${halfW + 7}" y="${pad + 12}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a" text-anchor="start">y</text>
 
     <!-- 原点 O -->
-    <text x="${halfW - 10}" y="${halfH + 13}" font-size="11" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a">O</text>
+    <text x="${halfW - 6}" y="${halfH + 13}" font-size="11" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a" text-anchor="end">O</text>
   `;
 
   // グラフ描画要素
@@ -679,181 +679,10 @@ function onGeometryPatternChange() {
   // 入力パラメータUIの動的差し替え
   let html = '';
   if (pattern === 'angle_bisector') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">∠AOB =</span>
-        <input type="number" id="geoParam1" value="60" min="30" max="120" step="5" class="form-control form-control-sm" style="width:65px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-    `;
-  } else if (pattern === 'perp_bisector') {
-    html = `
-      <span style="font-size:0.8rem; color:#64748b;">線分ABの垂直二等分線（コンパス作図跡付き）</span>
-    `;
-  } else if (pattern === 'sector_arc') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">半径 r =</span>
-        <input type="number" id="geoParam1" value="6" min="1" max="15" class="form-control form-control-sm" style="width:55px; text-align:center;" onchange="renderGeometryFig()">cm
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">中心角 =</span>
-        <input type="number" id="geoParam2" value="60" min="15" max="300" step="15" class="form-control form-control-sm" style="width:65px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-    `;
-  } else if (pattern === 'parallel_chevron') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">角1 =</span>
-        <input type="number" id="geoParam1" value="45" min="10" max="80" step="5" class="form-control form-control-sm" style="width:60px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">角2 =</span>
-        <input type="number" id="geoParam2" value="35" min="10" max="80" step="5" class="form-control form-control-sm" style="width:60px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-    `;
-  } else if (pattern === 'parallel_zigzag') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">角1 =</span>
-        <input type="number" id="geoParam1" value="30" min="10" max="70" class="form-control form-control-sm" style="width:55px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">角2 =</span>
-        <input type="number" id="geoParam2" value="50" min="10" max="80" class="form-control form-control-sm" style="width:55px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">角3 =</span>
-        <input type="number" id="geoParam3" value="40" min="10" max="70" class="form-control form-control-sm" style="width:55px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-    `;
-  } else if (pattern === 'triangle_exterior') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">内角1 =</span>
-        <input type="number" id="geoParam1" value="55" min="15" max="100" class="form-control form-control-sm" style="width:60px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">内角2 =</span>
-        <input type="number" id="geoParam2" value="65" min="15" max="100" class="form-control form-control-sm" style="width:60px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-    `;
-  } else if (pattern === 'boomerang') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">角A=</span>
-        <input type="number" id="geoParam1" value="40" min="15" max="80" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">角B=</span>
-        <input type="number" id="geoParam2" value="30" min="15" max="70" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">角C=</span>
-        <input type="number" id="geoParam3" value="35" min="15" max="70" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-    `;
-  } else if (pattern === 'isosceles') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">頂角 A =</span>
-        <input type="number" id="geoParam1" value="40" min="20" max="140" step="5" class="form-control form-control-sm" style="width:65px; text-align:center;" onchange="renderGeometryFig()">°
-      </div>
-    `;
-  } else if (pattern === 'inscribed_angle') {
-    // 【ユーザー要望】中心角に加え、円周上の点Pの位置をスライダーで自由に動かせる！
-    html = `
-      <div style="display:flex; flex-direction:column; gap:0.35rem; width:100%;">
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <span style="font-size:0.8rem; font-weight:600;">中心角 ∠AOB =</span>
-          <input type="number" id="geoParam1" value="80" min="40" max="150" step="5" class="form-control form-control-sm" style="width:65px; text-align:center;" onchange="renderGeometryFig()">°
-        </div>
-        <div style="display:flex; align-items:center; gap:0.5rem; background:#f8fafc; padding:0.25rem 0.5rem; border-radius:4px; border:1px solid #e2e8f0;">
-          <span style="font-size:0.8rem; font-weight:700; color:#4338ca;"><i class="fa-solid fa-arrows-left-right"></i> 点Pの円周上位置:</span>
-          <input type="range" id="geoParamP" min="30" max="150" value="90" step="1" style="flex:1; cursor:pointer;" oninput="renderGeometryFig()">
-          <span id="geoParamPVal" style="font-size:0.75rem; color:#64748b; font-family:monospace;">P位置: 90°</span>
-        </div>
-      </div>
-    `;
-  } else if (pattern === 'diameter_inscribed') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.5rem;">
-        <span style="font-size:0.8rem; font-weight:700; color:#4338ca;">点Pの位置:</span>
-        <input type="range" id="geoParamP" min="25" max="155" value="65" step="1" style="width:130px; cursor:pointer;" oninput="renderGeometryFig()">
-      </div>
-    `;
-  } else if (pattern === 'similarity_pyramid') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">AD =</span>
-        <input type="number" id="geoParam1" value="4" min="1" max="15" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">DB =</span>
-        <input type="number" id="geoParam2" value="2" min="1" max="15" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">DE =</span>
-        <input type="number" id="geoParam3" value="6" min="1" max="20" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
-      </div>
-    `;
-  } else if (pattern === 'similarity_hourglass') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">AO =</span>
-        <input type="number" id="geoParam1" value="6" min="1" max="15" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">OD =</span>
-        <input type="number" id="geoParam2" value="4" min="1" max="15" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">AB =</span>
-        <input type="number" id="geoParam3" value="9" min="1" max="20" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">cm
-      </div>
-    `;
-  } else if (pattern === 'pythagoras') {
-    html = `
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">底辺 a =</span>
-        <input type="number" id="geoParam1" value="3" min="1" max="20" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">
-      </div>
-      <div style="display:flex; align-items:center; gap:0.35rem;">
-        <span style="font-size:0.8rem; font-weight:600;">高さ b =</span>
-        <input type="number" id="geoParam2" value="4" min="1" max="20" class="form-control form-control-sm" style="width:50px; text-align:center;" onchange="renderGeometryFig()">
-      </div>
-    `;
-  }
-
-  container.innerHTML = html;
-  renderGeometryFig();
-}
-
-/**
- * 幾何問題SVGレンダラー
- */
-function renderGeometryFig() {
-  const pattern = document.getElementById('geometryPattern')?.value || 'parallel_chevron';
-  const container = document.getElementById('geometryContainer');
-  const ansLabel = document.getElementById('geoAnswerLabel');
-  const ansDisplay = document.getElementById('geoAnswerDisplay');
-
-  const p1 = parseFloat(document.getElementById('geoParam1')?.value) || 0;
-  const p2 = parseFloat(document.getElementById('geoParam2')?.value) || 0;
-  const p3 = parseFloat(document.getElementById('geoParam3')?.value) || 0;
-  const pRange = parseFloat(document.getElementById('geoParamP')?.value) || 90;
-
-  const pRangeLabel = document.getElementById('geoParamPVal');
-  if (pRangeLabel) pRangeLabel.textContent = `P位置: ${pRange}°`;
-
-  let svg = '';
-  let answerText = '';
-  let labelText = '求める角 x';
-
-  if (pattern === 'angle_bisector') {
     labelText = '角の大きさ';
-    const half = (p1 / 2).toFixed(1);
-    answerText = `${half}°`;
-    svg = generateAngleBisectorSvg(p1, 260, 200);
+    const half = (p1 / 2).toFixed(1).replace(/\.0$/, '');
+    answerText = `∠AOB = ${p1}° （二等分された角 = ${half}°）`;
+    svg = generateAngleBisectorSvg(p1, 280, 220);
   } else if (pattern === 'perp_bisector') {
     labelText = '作図の性質';
     answerText = 'AM = BM , ∠AMP = 90°';
@@ -923,45 +752,108 @@ function renderGeometryFig() {
 
 // --- 各幾何図形の個別SVG生成関数 ---
 
-function generateAngleBisectorSvg(angle = 60, width = 260, height = 200) {
-  const ox = 40, oy = height - 40;
-  const len = 170;
+function generateAngleBisectorSvg(angle = 60, width = 280, height = 220) {
   const rad = (angle * Math.PI) / 180;
   const halfRad = rad / 2;
 
-  const ax = ox + len * Math.cos(0);
-  const ay = oy - len * Math.sin(0);
+  // 角度に応じた頂点Oの位置と辺の長さ（鋭角・直角・鈍角すべてで見切れないスマート配置）
+  let ox = 50, oy = height - 35, len = 165;
+  if (angle > 100) {
+    ox = 125;
+    len = 130;
+  } else if (angle > 70) {
+    ox = 80;
+    len = 145;
+  }
+
+  const ax = ox + len;
+  const ay = oy;
   const bx = ox + len * Math.cos(rad);
   const by = oy - len * Math.sin(rad);
 
-  const arcR = 80;
+  // 1. 頂点O中心の円弧（半径 arcR）
+  const arcR = Math.min(len * 0.55, 75);
   const px = ox + arcR;
   const py = oy;
   const qx = ox + arcR * Math.cos(rad);
   const qy = oy - arcR * Math.sin(rad);
 
-  const rx = ox + (len - 15) * Math.cos(halfRad);
-  const ry = oy - (len - 15) * Math.sin(halfRad);
+  // O中心の作図弧（PからQへ余裕を持たせて描画）
+  const padRad = 0.08;
+  const arcStartRad = Math.max(0, -padRad);
+  const arcEndRad = rad + padRad;
+  const arcPath = `M ${ox + arcR * Math.cos(arcStartRad)} ${oy - arcR * Math.sin(arcStartRad)} ` +
+                  `A ${arcR} ${arcR} 0 0 0 ${ox + arcR * Math.cos(arcEndRad)} ${oy - arcR * Math.sin(arcEndRad)}`;
+
+  // 2. 交点Cの位置（二等分線上）
+  const distC = Math.min(len * 0.85, arcR * 1.45);
+  const cx = ox + distC * Math.cos(halfRad);
+  const cy = oy - distC * Math.sin(halfRad);
+
+  // Pを中心とする円弧（C付近で交差する短い弧）
+  const pcDist = Math.hypot(cx - px, cy - py);
+  const pAngleToC = Math.atan2(py - cy, cx - px);
+  const pArcStart = pAngleToC - 0.28;
+  const pArcEnd = pAngleToC + 0.28;
+  const pArcPath = `M ${px + pcDist * Math.cos(pArcStart)} ${py - pcDist * Math.sin(pArcStart)} ` +
+                   `A ${pcDist} ${pcDist} 0 0 1 ${px + pcDist * Math.cos(pArcEnd)} ${py - pcDist * Math.sin(pArcEnd)}`;
+
+  // Qを中心とする円弧（C付近で交差する短い弧）
+  const qcDist = Math.hypot(cx - qx, cy - qy);
+  const qAngleToC = Math.atan2(qy - cy, cx - qx);
+  const qArcStart = qAngleToC - 0.28;
+  const qArcEnd = qAngleToC + 0.28;
+  const qArcPath = `M ${qx + qcDist * Math.cos(qArcStart)} ${qy - qcDist * Math.sin(qArcStart)} ` +
+                   `A ${qcDist} ${qcDist} 0 0 1 ${qx + qcDist * Math.cos(qArcEnd)} ${qy - qcDist * Math.sin(qArcEnd)}`;
+
+  // 3. 二等分線（OからCを通り少し先まで）
+  const lineEndDist = Math.min(len * 1.1, distC + 35);
+  const lineEndX = ox + lineEndDist * Math.cos(halfRad);
+  const lineEndY = oy - lineEndDist * Math.sin(halfRad);
+
+  // 4. 角の大きさの表示用弧（小さな角度マーク）
+  const markR1 = 28;
+  const markPath1 = `M ${ox + markR1} ${oy} A ${markR1} ${markR1} 0 0 0 ${ox + markR1 * Math.cos(halfRad)} ${oy - markR1 * Math.sin(halfRad)}`;
+  const markPath2 = `M ${ox + markR1 * Math.cos(halfRad)} ${oy - markR1 * Math.sin(halfRad)} A ${markR1} ${markR1} 0 0 0 ${ox + markR1 * Math.cos(rad)} ${oy - markR1 * Math.sin(rad)}`;
+
+  const halfDeg = (angle / 2).toFixed(1).replace(/\.0$/, '');
 
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
       <!-- 2辺 OA, OB -->
-      <line x1="${ox}" y1="${oy}" x2="${ax}" y2="${ay}" stroke="#0f172a" stroke-width="2" />
-      <line x1="${ox}" y1="${oy}" x2="${bx}" y2="${by}" stroke="#0f172a" stroke-width="2" />
-      <!-- コンパス第1弧 (頂点O中心) -->
-      <path d="M ${px} ${py - 15} A ${arcR} ${arcR} 0 0 0 ${qx + 10} ${qy + 15}" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3,3" />
+      <line x1="${ox}" y1="${oy}" x2="${ax}" y2="${ay}" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" />
+      <line x1="${ox}" y1="${oy}" x2="${bx}" y2="${by}" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" />
+
+      <!-- 角の等分マーク（弧） -->
+      <path d="${markPath1}" fill="none" stroke="#dc2626" stroke-width="1.2" />
+      <path d="${markPath2}" fill="none" stroke="#dc2626" stroke-width="1.2" />
+
+      <!-- コンパス作図弧1: 頂点Oを中心とする弧 -->
+      <path d="${arcPath}" fill="none" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="3,3" />
       <circle cx="${px}" cy="${py}" r="2.5" fill="#3b82f6" />
       <circle cx="${qx}" cy="${qy}" r="2.5" fill="#3b82f6" />
-      <!-- コンパス交差弧 (P, Q中心) -->
-      <circle cx="${rx - 10}" cy="${ry}" r="25" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2,2" clip-path="url(#rClip)" />
-      <!-- 角の二等分線 OR -->
-      <line x1="${ox}" y1="${oy}" x2="${rx + 15}" y2="${ry - 5}" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,2" />
-      <circle cx="${ox}" cy="${oy}" r="3" fill="#0f172a" />
-      <text x="${ox - 15}" y="${oy + 5}" font-size="12" font-style="italic">O</text>
-      <text x="${ax + 5}" y="${ay + 5}" font-size="12" font-style="italic">A</text>
-      <text x="${bx - 10}" y="${by - 5}" font-size="12" font-style="italic">B</text>
-      <text x="${rx + 20}" y="${ry}" font-size="11" fill="#2563eb" font-weight="bold">二等分線</text>
-      <text x="${ox + 35}" y="${oy - 8}" font-size="10" fill="#dc2626">${(angle / 2).toFixed(1)}°</text>
+
+      <!-- コンパス作図弧2: 点Pを中心とする交差弧 -->
+      <path d="${pArcPath}" fill="none" stroke="#64748b" stroke-width="1.4" />
+      <!-- コンパス作図弧3: 点Qを中心とする交差弧 -->
+      <path d="${qArcPath}" fill="none" stroke="#64748b" stroke-width="1.4" />
+
+      <!-- 交点 C -->
+      <circle cx="${cx}" cy="${cy}" r="2.5" fill="#d97706" />
+
+      <!-- 角の二等分線 -->
+      <line x1="${ox}" y1="${oy}" x2="${lineEndX}" y2="${lineEndY}" stroke="#2563eb" stroke-width="2" stroke-dasharray="5,3" stroke-linecap="round" />
+
+      <!-- 頂点・ラベル -->
+      <circle cx="${ox}" cy="${oy}" r="3.2" fill="#0f172a" />
+      <text x="${ox - 14}" y="${oy + 5}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a">O</text>
+      <text x="${ax + 6}" y="${ay + 4}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a">A</text>
+      <text x="${bx + (Math.cos(rad) < 0 ? -16 : 6)}" y="${by + (Math.sin(rad) > 0 ? -6 : 12)}" font-size="12" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a">B</text>
+
+      <!-- 角度数値表示 -->
+      <text x="${lineEndX + 6}" y="${lineEndY + 4}" font-size="11" fill="#2563eb" font-weight="bold">二等分線</text>
+      <text x="${ox + 42 * Math.cos(halfRad * 0.55)}" y="${oy - 42 * Math.sin(halfRad * 0.55)}" font-size="10.5" fill="#dc2626" font-weight="bold">${halfDeg}°</text>
+      <text x="${ox + 42 * Math.cos(halfRad * 1.45)}" y="${oy - 42 * Math.sin(halfRad * 1.45)}" font-size="10.5" fill="#dc2626" font-weight="bold">${halfDeg}°</text>
     </svg>
   `;
 }
