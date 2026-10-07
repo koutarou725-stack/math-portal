@@ -755,11 +755,12 @@ function renderRealTimetableGrid() {
       return `
         <td class="${activeClass}">
           <div class="timetable-cell-content ${themeClass}">
-            <div class="tt-cell-meta-row" style="display: flex; justify-content: space-between; align-items: center; min-height: 18px;">
-              <div>
+            <div class="tt-cell-meta-row" style="display: flex; justify-content: space-between; align-items: center; min-height: 20px; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
                 ${badgeText ? `<span class="override-badge" style="margin: 0; padding: 1px 4px; font-size: 0.65rem;">${badgeText}</span>` : ''}
+                ${slot.class ? `<span class="tt-class-name-inline">${escapeHtml(slot.class)}</span>` : ''}
               </div>
-              <div style="display: flex; align-items: center; gap: 3px;">
+              <div style="display: flex; align-items: center; gap: 3px; flex-shrink: 0;">
                 ${slot.subject ? `<span class="tt-subject-badge" style="margin: 0;">${escapeHtml(slot.subject)}</span>` : ''}
                 ${isMath ? `
                   <button type="button" class="tt-prep-icon-btn" onclick="event.stopPropagation(); goToLessonPrep('${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}', '${escapeHtml(currentPlan)}', '${w.dateStr}', ${t.p})" title="この時間の授業プリントを作成・編集">
@@ -768,9 +769,6 @@ function renderRealTimetableGrid() {
                 ` : ''}
               </div>
             </div>
-
-            <!-- クラス名 (スッキリ中央配置) -->
-            ${slot.class ? `<div class="tt-class-name">${escapeHtml(slot.class)}</div>` : ''}
 
             <!-- 週案・予定入力枠 (シンプル & コンパクト) -->
             <div class="tt-lesson-plan" onclick="openLessonPlanModal('${w.dateStr}', ${t.p}, '${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}')" title="クリックしてこの時間の学習予定・活動内容を入力: ${escapeHtml(cleanMathText(currentPlan))}">

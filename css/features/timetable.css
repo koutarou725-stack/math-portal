@@ -1590,19 +1590,24 @@
   box-shadow: 0 2px 4px rgba(37,99,235,0.25);
 }
 
-/* クラス名 表示の最適化 (中央揃え・太字ですっきり) */
-.timetable-cell-content .tt-class-name {
-  font-size: 0.92rem;
+/* クラス名 表示の最適化 (1行目インライン配置・視認性の高い太字) */
+.tt-class-name-inline {
+  font-size: 0.95rem;
   font-weight: 800;
-  text-align: center;
-  margin: 0.15rem 0;
-  letter-spacing: 0.02em;
+  color: #1e3a8a;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  line-height: 1;
+  display: inline-block;
 }
 
-/* セルの余白最適化 */
+/* セルの余白最適化 (2段構成でスッキリ整列) */
 .timetable-cell-content {
   padding: 0.3rem 0.35rem !important;
-  gap: 0.15rem;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 0.3rem !important;
 }
 
 /* 予定入力枠 (過剰な破線を控えめにし、すっきりしたデザインへ) */
