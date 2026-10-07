@@ -8947,7 +8947,22 @@ function applyMathFormulaToActivePrint() {
         applyKaTeXIfAvailable(editable);
       }
     }
-    if (typeof showToast === 'function') showToast('<i class="fa-solid fa-check text-success"></i> 数式を更新しました', 'success');
+    return;
+  }
+
+  // 1.5. 関数・グラフジェネレーターからの呼び出しの場合
+  const funcInput = document.getElementById('funcExprInput');
+  const activeTab = document.querySelector('.nav-tab.active')?.dataset?.tab;
+  if ((window.mathEditorFromGraph || activeTab === 'geometry') && funcInput) {
+    window.mathEditorFromGraph = false;
+    let cleanTex = tex.trim();
+    if (cleanTex.startsWith('$') && cleanTex.endsWith('$')) {
+      cleanTex = cleanTex.slice(1, -1).trim();
+    }
+    funcInput.value = cleanTex.toLowerCase().startsWith('y=') || cleanTex.toLowerCase().startsWith('y =') ? cleanTex : `y = ${cleanTex}`;
+    if (typeof renderMathGraph === 'function') renderMathGraph();
+    closeMathFormulaEditorModal();
+    if (typeof showToast === 'function') showToast('<i class="fa-solid fa-chart-line text-primary"></i> 関数式をセットしました', 'success');
     return;
   }
 

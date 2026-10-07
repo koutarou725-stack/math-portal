@@ -1,48 +1,237 @@
 // ==========================================
 // // 中学校数学科 作図・グラフ & 図形問題 SVG動的描画エンジン
 // // (中1〜中3教科書完全準拠: 矢印なし直線軸、方眼紙枠内クリップ、全領域対応)
+// // ユーザー要望: 関数の種類ボタンを廃止し、中学校範囲の任意の式を入力可能＆TeX数式表示
 // ==========================================
 
-// --- 1. 関数・グラフエンジン ---
+// --- 1. 任意関数解析＆グラフ描画エンジン ---
 
-let currentFunctionType = 'linear'; // 'linear' | 'prop' | 'invprop' | 'quad'
+let currentFunctionType = 'linear';
+let currentParsedFunc = null;
 
+/**
+ * 任意の数式文字列を解析し、関数の種類、係数、TeX表現、および評価関数を返す
+ * 中学校の関数領域（比例・反比例・一次関数・二次関数）を完全網羅
+ */
+function parseFunctionExpression(raw) {
+  if (!raw) return null;
+  let str = raw.trim();
+
+  // 1. 全角文字の半角正規化
+  str = str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+  str = str.replace(/＝/g, '=').replace(/＋/g, '+').replace(/[−ー―–]/g, '-');
+  str = str.replace(/／/g, '/').replace(/＾/g, '^').replace(/²|²/g, '^2');
+  str = str.replace(/\frac\{([^}]+)\}\{([^}]+)\}/g, '($1)/($2)'); // TeXの\fracも受け付ける
+  str = str.replace(/\times/g, '*').replace(/×/g, '*');
+  str = str.replace(/\cdot/g, '*').replace(/・/g, '*');
+  str = str.replace(/\quad/g, ' ').replace(/\,/g, ' ');
+  str = str.replace(/\s+/g, ''); // 空白除去
+
+  // 'y=' が先頭にあれば除去
+  if (str.toLowerCase().startsWith('y=')) {
+    str = str.substring(2);
+  }
+
+  // 2. 反比例: a/x または -a/x
+  // 例: 6/x, -12/x, (6)/x, -1/x, 1/x
+  const invMatch = str.match(/^([+-]?(?:(?:\d+\.?\d*)|(?:\(\d+\.?\d*\))))\/x$/i);
+  if (invMatch || str === 'x^-1' || str === '-x^-1') {
+    let aVal = 1;
+    if (str === 'x^-1') aVal = 1;
+    else if (str === '-x^-1') aVal = -1;
+    else {
+      let rawA = invMatch[1].replace(/[()]/g, '');
+      if (rawA === '' || rawA === '+') aVal = 1;
+      else if (rawA === '-') aVal = -1;
+      else aVal = parseFloat(rawA) || 1;
+    }
+
+    const absA = Math.abs(aVal);
+    const signTex = aVal < 0 ? '-' : '';
+    const tex = `y = ${signTex}\frac{${absA}}{x}`;
+
+    return {
+      type: 'invprop',
+      typeName: '反比例',
+      gradeText: '中1 反比例',
+      a: aVal,
+      b: 0,
+      tex: tex,
+      formulaStr: `y = ${aVal}/x`,
+      fn: x => (Math.abs(x) < 1e-6 ? NaN : aVal / x)
+    };
+  }
+
+  // 3. 二次関数: ax^2
+  // 例: 2x^2, -x^2, x^2, 1/2x^2, -1/4x^2, -0.5x^2, x²
+  const quadMatch = str.match(/^([+-]?(?:(?:\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?)|(?:\(\d+(?:\.\d+)?\/\d+(?:\.\d+)?\)))?)x\^?2$/i);
+  if (quadMatch) {
+    let coeffStr = quadMatch[1];
+    let aVal = 1;
+    let texA = '';
+
+    if (!coeffStr || coeffStr === '+') {
+      aVal = 1;
+      texA = '';
+    } else if (coeffStr === '-') {
+      aVal = -1;
+      texA = '-';
+    } else {
+      coeffStr = coeffStr.replace(/[()]/g, '');
+      if (coeffStr.includes('/')) {
+        const [n, d] = coeffStr.split('/').map(Number);
+        aVal = n / d;
+        const sign = aVal < 0 ? '-' : '';
+        texA = `${sign}\frac{${Math.abs(n)}}{${Math.abs(d)}}`;
+      } else {
+        aVal = parseFloat(coeffStr);
+        texA = String(aVal);
+      }
+    }
+
+    const tex = `y = ${texA}x^2`;
+    return {
+      type: 'quad',
+      typeName: '二次関数',
+      gradeText: '中3 y = ax²',
+      a: aVal,
+      b: 0,
+      tex: tex,
+      formulaStr: `y = ${coeffStr || (aVal === 1 ? '' : aVal === -1 ? '-' : aVal)}x²`,
+      fn: x => aVal * x * x
+    };
+  }
+
+  // 4. 一次関数・比例: ax + b, ax, b
+  // 例: 2x+1, -1/2x+3, -3x, x, -x, 4
+  const linearMatch = str.match(/^([+-]?(?:(?:\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?)|(?:\(\d+(?:\.\d+)?\/\d+(?:\.\d+)?\)))?)x(?:([+-]\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?))?$/i);
+  if (linearMatch) {
+    let aStr = linearMatch[1];
+    let bStr = linearMatch[2];
+
+    let aVal = 1;
+    let texA = '';
+    if (!aStr || aStr === '+') {
+      aVal = 1;
+      texA = '';
+    } else if (aStr === '-') {
+      aVal = -1;
+      texA = '-';
+    } else {
+      aStr = aStr.replace(/[()]/g, '');
+      if (aStr.includes('/')) {
+        const [n, d] = aStr.split('/').map(Number);
+        aVal = n / d;
+        const sign = aVal < 0 ? '-' : '';
+        texA = `${sign}\frac{${Math.abs(n)}}{${Math.abs(d)}}`;
+      } else {
+        aVal = parseFloat(aStr);
+        texA = String(aVal);
+      }
+    }
+
+    let bVal = 0;
+    let texB = '';
+    if (bStr) {
+      if (bStr.includes('/')) {
+        const [n, d] = bStr.split('/').map(Number);
+        bVal = n / d;
+        const sign = bVal >= 0 ? '+' : '-';
+        texB = ` ${sign} \frac{${Math.abs(n)}}{${Math.abs(d)}}`;
+      } else {
+        bVal = parseFloat(bStr);
+        const sign = bVal >= 0 ? '+' : '-';
+        texB = ` ${sign} ${Math.abs(bVal)}`;
+      }
+    }
+
+    const isProp = (bVal === 0);
+    const tex = `y = ${texA}x${texB}`;
+    return {
+      type: isProp ? 'prop' : 'linear',
+      typeName: isProp ? '比例' : '一次関数',
+      gradeText: isProp ? '中1 比例' : '中2 一次関数',
+      a: aVal,
+      b: bVal,
+      tex: tex,
+      formulaStr: `y = ${aStr || (aVal === 1 ? '' : aVal === -1 ? '-' : aVal)}x${bVal ? (bVal > 0 ? ' + ' + bVal : ' - ' + Math.abs(bVal)) : ''}`,
+      fn: x => aVal * x + bVal
+    };
+  }
+
+  // 5. 定数関数: y = c
+  const constMatch = str.match(/^([+-]?\d+\.?\d*)$/);
+  if (constMatch) {
+    const cVal = parseFloat(constMatch[1]);
+    return {
+      type: 'linear',
+      typeName: '定数関数',
+      gradeText: '直線 y = c',
+      a: 0,
+      b: cVal,
+      tex: `y = ${cVal}`,
+      formulaStr: `y = ${cVal}`,
+      fn: x => cVal
+    };
+  }
+
+  // 6. 一般関数の安全パース（上記以外の発展式でも描画可能）
+  try {
+    const safeExpr = str.replace(/\^/g, '**');
+    const fn = new Function('x', `return ${safeExpr};`);
+    const testVal = fn(1);
+    if (!isNaN(testVal)) {
+      return {
+        type: 'general',
+        typeName: '一般関数',
+        gradeText: '発展関数',
+        a: 1,
+        b: 0,
+        tex: `y = ${str}`,
+        formulaStr: `y = ${str}`,
+        fn: fn
+      };
+    }
+  } catch (e) {}
+
+  return null;
+}
+
+/**
+ * 互換用: 関数の種類ボタン呼び出し対応
+ */
 function setFunctionType(type) {
   currentFunctionType = type;
   if (!state.currentFuncType) state.currentFuncType = type;
   state.currentFuncType = type;
 
-  // ボタンのactiveクラス切り替え
-  const group = document.getElementById('funcTypeGroup');
-  if (group) {
-    group.querySelectorAll('button').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.functype === type);
-    });
+  // デフォルト式をインプットにセット
+  const input = document.getElementById('funcExprInput');
+  if (input) {
+    if (type === 'linear') input.value = 'y = 2x + 1';
+    else if (type === 'prop') input.value = 'y = 2x';
+    else if (type === 'invprop') input.value = 'y = 6/x';
+    else if (type === 'quad') input.value = 'y = 2x^2';
   }
 
-  // ラベルとBパラメータの表示切り替え
-  const labelA = document.getElementById('paramLabelA');
-  const groupB = document.getElementById('paramGroupB');
-  const badge = document.getElementById('funcGradeBadge');
+  renderMathGraph();
+}
 
-  if (type === 'linear') {
-    if (labelA) labelA.textContent = '傾き a =';
-    if (groupB) groupB.style.display = 'flex';
-    if (badge) badge.textContent = '中2 一次関数';
-  } else if (type === 'prop') {
-    if (labelA) labelA.textContent = '比例定数 a =';
-    if (groupB) groupB.style.display = 'none';
-    if (badge) badge.textContent = '中1 比例';
-  } else if (type === 'invprop') {
-    if (labelA) labelA.textContent = '比例定数 a =';
-    if (groupB) groupB.style.display = 'none';
-    if (badge) badge.textContent = '中1 反比例';
-  } else if (type === 'quad') {
-    if (labelA) labelA.textContent = '比例定数 a =';
-    if (groupB) groupB.style.display = 'none';
-    if (badge) badge.textContent = '中3 y = ax²';
+/**
+ * プリセットチップクリック時の処理
+ */
+function setPresetExpr(expr) {
+  const input = document.getElementById('funcExprInput');
+  if (input) {
+    input.value = expr;
   }
+  renderMathGraph();
+}
 
+/**
+ * 入力欄の入力イベントハンドラ
+ */
+function onFuncExprInputChanged() {
   renderMathGraph();
 }
 
@@ -50,9 +239,9 @@ function setFunctionType(type) {
  * 中学校数学教科書準拠の関数グラフSVG生成
  * - 軸先端の矢印なし（中学校教科書仕様）
  * - 方眼紙の枠外へのはみ出しを clipPath で完全防止
- * - 比例・一次関数・反比例・二次関数に対応
+ * - 比例・一次関数・反比例・二次関数・任意関数に対応
  */
-function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true, width = 250, height = 250) {
+function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true, width = 250, height = 250, customFn = null) {
   const pad = 25; // 軸の文字や原点用の外側マージン
   const gridW = width - pad * 2;
   const gridH = height - pad * 2;
@@ -86,14 +275,13 @@ function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true,
     <text x="${halfW - 10}" y="${halfH + 13}" font-size="11" font-family="'Times New Roman', serif" font-style="italic" fill="#0f172a">O</text>
   `;
 
-  // グラフ描画要素 (clip-path で方眼紙内 [pad, pad, gridW, gridH] に完全に収める)
+  // グラフ描画要素
   let plotSvg = '';
   let pointsSvg = '';
 
   if (showLine) {
     if (type === 'linear' || type === 'prop') {
       const actualB = type === 'prop' ? 0 : b;
-      // x = -range〜+range の直線
       const x1 = -range - 1;
       const x2 = range + 1;
       const y1 = a * x1 + actualB;
@@ -112,15 +300,40 @@ function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true,
             const ipX = halfW;
             const ipY = halfH - actualB * step;
             pointsSvg += `<circle cx="${ipX}" cy="${ipY}" r="3.5" fill="#dc2626" />`;
-            pointsSvg += `<text x="${ipX + 6}" y="${ipY - 4}" font-size="10.5" fill="#dc2626" font-weight="bold">${actualB}</text>`;
+            if (Number.isInteger(actualB)) {
+              pointsSvg += `<text x="${ipX + 6}" y="${ipY - 4}" font-size="10.5" fill="#dc2626" font-weight="bold">${actualB}</text>`;
+            }
+          }
+          // もう1つの整数代表点 (x != 0)
+          for (let tx = 1; tx <= range; tx++) {
+            const ty = a * tx + actualB;
+            if (Math.abs(Math.round(ty) - ty) < 1e-4 && Math.abs(ty) <= range) {
+              const pX = halfW + tx * step;
+              const pY = halfH - ty * step;
+              pointsSvg += `<circle cx="${pX}" cy="${pY}" r="3.2" fill="#dc2626" />`;
+              pointsSvg += `<text x="${pX + 4}" y="${pY - 4}" font-size="9.5" fill="#dc2626">(${tx}, ${Math.round(ty)})</text>`;
+              break;
+            }
           }
         } else {
-          // 比例の代表点 (1, a)
-          if (Math.abs(a) <= range) {
+          // 比例の代表点 (1, a) または整数の点
+          let plotted = false;
+          for (let tx = 1; tx <= range; tx++) {
+            const ty = a * tx;
+            if (Math.abs(Math.round(ty) - ty) < 1e-4 && Math.abs(ty) <= range) {
+              const pX = halfW + tx * step;
+              const pY = halfH - ty * step;
+              pointsSvg += `<circle cx="${pX}" cy="${pY}" r="3.5" fill="#dc2626" />`;
+              pointsSvg += `<text x="${pX + 5}" y="${pY - 4}" font-size="10" fill="#dc2626" font-weight="bold">(${tx}, ${Math.round(ty)})</text>`;
+              plotted = true;
+              break;
+            }
+          }
+          if (!plotted && Math.abs(a) <= range) {
             const pX = halfW + 1 * step;
             const pY = halfH - a * step;
             pointsSvg += `<circle cx="${pX}" cy="${pY}" r="3.5" fill="#dc2626" />`;
-            pointsSvg += `<text x="${pX + 5}" y="${pY - 4}" font-size="10" fill="#dc2626" font-weight="bold">(1, ${a})</text>`;
+            pointsSvg += `<text x="${pX + 5}" y="${pY - 4}" font-size="10" fill="#dc2626" font-weight="bold">(1, ${a.toFixed(1)})</text>`;
           }
         }
       }
@@ -128,7 +341,7 @@ function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true,
       // 反比例 y = a/x (双曲線: x > 0 と x < 0 の2本)
       const renderBranch = (minX, maxX) => {
         let pathD = '';
-        const samples = 35;
+        const samples = 40;
         for (let i = 0; i <= samples; i++) {
           const xVal = minX + (maxX - minX) * (i / samples);
           if (Math.abs(xVal) < 0.1) continue;
@@ -145,20 +358,22 @@ function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true,
       plotSvg += renderBranch(0.15, range + 1);
 
       if (showPoints) {
-        // 整数の代表点をいくつかプロット
+        // 整数の代表点をプロット
         for (let x = -range; x <= range; x++) {
-          if (x !== 0 && Math.abs(x) <= range && a % x === 0 && Math.abs(a / x) <= range) {
+          if (x !== 0) {
             const y = a / x;
-            const px = halfW + x * step;
-            const py = halfH - y * step;
-            pointsSvg += `<circle cx="${px}" cy="${py}" r="3" fill="#dc2626" />`;
+            if (Math.abs(Math.round(y) - y) < 1e-4 && Math.abs(y) <= range) {
+              const px = halfW + x * step;
+              const py = halfH - y * step;
+              pointsSvg += `<circle cx="${px}" cy="${py}" r="3" fill="#dc2626" />`;
+            }
           }
         }
       }
     } else if (type === 'quad') {
       // 二次関数 y = a x² (放物線)
       let pathD = '';
-      const samples = 60;
+      const samples = 70;
       for (let i = 0; i <= samples; i++) {
         const xVal = -range - 1 + ((range * 2 + 2) * i) / samples;
         const yVal = a * xVal * xVal;
@@ -170,14 +385,46 @@ function generateFunctionSvg(type, a, b = 0, showPoints = true, showLine = true,
       plotSvg = `<path d="${pathD}" fill="none" stroke="#2563eb" stroke-width="2.2" clip-path="url(#${clipId})" stroke-linecap="round" />`;
 
       if (showPoints) {
-        // 原点と代表点
+        // 原点
         pointsSvg += `<circle cx="${halfW}" cy="${halfH}" r="3.5" fill="#dc2626" />`;
-        if (Math.abs(a) <= range) {
-          const px1 = halfW + 1 * step;
-          const py1 = halfH - a * step;
-          pointsSvg += `<circle cx="${px1}" cy="${py1}" r="3" fill="#dc2626" />`;
-          pointsSvg += `<text x="${px1 + 4}" y="${py1 - 4}" font-size="9.5" fill="#dc2626">(1, ${a})</text>`;
+        // 代表点
+        for (let tx = 1; tx <= range; tx++) {
+          const ty = a * tx * tx;
+          if (Math.abs(Math.round(ty) - ty) < 1e-4 && Math.abs(ty) <= range) {
+            const px1 = halfW + tx * step;
+            const py1 = halfH - ty * step;
+            pointsSvg += `<circle cx="${px1}" cy="${py1}" r="3.2" fill="#dc2626" />`;
+            pointsSvg += `<text x="${px1 + 4}" y="${py1 - 4}" font-size="9.5" fill="#dc2626">(${tx}, ${Math.round(ty)})</text>`;
+            break;
+          }
         }
+      }
+    } else if (customFn) {
+      // 一般関数の描画
+      let pathD = '';
+      const samples = 80;
+      let lastValid = false;
+      for (let i = 0; i <= samples; i++) {
+        const xVal = -range - 1 + ((range * 2 + 2) * i) / samples;
+        let yVal = NaN;
+        try { yVal = customFn(xVal); } catch (e) {}
+
+        if (isNaN(yVal) || !isFinite(yVal) || Math.abs(yVal) > 50) {
+          lastValid = false;
+          continue;
+        }
+
+        const px = halfW + xVal * step;
+        const py = halfH - yVal * step;
+        if (!lastValid) {
+          pathD += ` M ${px.toFixed(1)} ${py.toFixed(1)}`;
+          lastValid = true;
+        } else {
+          pathD += ` L ${px.toFixed(1)} ${py.toFixed(1)}`;
+        }
+      }
+      if (pathD) {
+        plotSvg = `<path d="${pathD}" fill="none" stroke="#2563eb" stroke-width="2.2" clip-path="url(#${clipId})" stroke-linecap="round" />`;
       }
     }
   }
@@ -208,36 +455,90 @@ function generateLinearSvg(a, b, showPoints = true, showLine = true, width = 240
   return generateFunctionSvg('linear', a, b, showPoints, showLine, width, height);
 }
 
+/**
+ * TeXプレビュー描画ユーティリティ (KaTeX使用)
+ */
+function renderTexFormulaPreview(texStr) {
+  const container = document.getElementById('funcTexPreview');
+  if (!container) return;
+
+  if (typeof katex !== 'undefined') {
+    try {
+      katex.render(texStr, container, {
+        throwOnError: false,
+        displayMode: false
+      });
+      return;
+    } catch (e) {
+      console.warn('KaTeX render error:', e);
+    }
+  }
+  container.textContent = texStr;
+}
+
+/**
+ * 関数・グラフジェネレーターのメインレンダリング関数
+ */
 function renderMathGraph() {
-  const a = parseFloat(document.getElementById('funcA')?.value) || 1;
-  const b = parseFloat(document.getElementById('funcB')?.value) || 0;
+  const exprInput = document.getElementById('funcExprInput');
+  const rawExpr = exprInput ? exprInput.value.trim() : 'y = 2x + 1';
   const showPoints = document.getElementById('showPointsCheck')?.checked ?? true;
   const showLine = document.getElementById('showLineCheck')?.checked ?? true;
 
-  state.currentFuncType = currentFunctionType;
-  state.mathFunc = { type: currentFunctionType, a, b, showPoints, showLine };
-  state.linearFunc = { a, b, showPoints, showLine }; // 互換用
+  // 1. 数式の自動解析
+  const parsed = parseFunctionExpression(rawExpr) || {
+    type: 'linear',
+    typeName: '一次関数',
+    gradeText: '中2 一次関数',
+    a: 2,
+    b: 1,
+    tex: 'y = 2x + 1',
+    formulaStr: 'y = 2x + 1',
+    fn: x => 2 * x + 1
+  };
 
-  // 数式プレビュー更新
-  let formulaStr = '';
-  const aStr = a === 1 ? '' : a === -1 ? '-' : a;
-  if (currentFunctionType === 'linear') {
-    const sign = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
-    formulaStr = b === 0 ? `y = ${aStr}x` : `y = ${aStr}x ${sign}`;
-  } else if (currentFunctionType === 'prop') {
-    formulaStr = `y = ${aStr}x`;
-  } else if (currentFunctionType === 'invprop') {
-    formulaStr = `y = ${a}/x`;
-  } else if (currentFunctionType === 'quad') {
-    formulaStr = `y = ${aStr}x²`;
+  currentParsedFunc = parsed;
+  currentFunctionType = parsed.type;
+
+  // stateの同期
+  state.currentFuncType = parsed.type;
+  state.mathFunc = {
+    type: parsed.type,
+    a: parsed.a,
+    b: parsed.b,
+    tex: parsed.tex,
+    formulaStr: parsed.formulaStr,
+    showPoints,
+    showLine
+  };
+  state.linearFunc = { a: parsed.a, b: parsed.b, showPoints, showLine }; // 互換用
+
+  // 2. TeX数式プレビューの描画 (KaTeX)
+  renderTexFormulaPreview(parsed.tex);
+
+  // 3. 判定バッジの更新
+  const badge = document.getElementById('funcTypeDetectedBadge');
+  if (badge) {
+    badge.textContent = parsed.gradeText;
+  }
+  const mainBadge = document.getElementById('funcGradeBadge');
+  if (mainBadge) {
+    mainBadge.textContent = parsed.gradeText;
   }
 
-  const prevEl = document.getElementById('linearEqPreview');
-  if (prevEl) prevEl.textContent = formulaStr;
-
+  // 4. SVGグラフの描画
   const container = document.getElementById('linearGraphContainer');
   if (container) {
-    container.innerHTML = generateFunctionSvg(currentFunctionType, a, b, showPoints, showLine, 260, 260);
+    container.innerHTML = generateFunctionSvg(
+      parsed.type,
+      parsed.a,
+      parsed.b,
+      showPoints,
+      showLine,
+      260,
+      260,
+      parsed.fn
+    );
   }
 }
 
@@ -245,40 +546,38 @@ function renderLinearGraph() {
   renderMathGraph();
 }
 
+/**
+ * 中学校の代表的な関数からランダムに例をセット
+ */
 function randomizeFunctionGraph() {
-  let newA = 1;
-  let newB = 0;
-
-  if (currentFunctionType === 'linear') {
-    const aList = [-3, -2, -1, 1, 2, 3, 0.5, -0.5];
-    const bList = [-3, -2, -1, 0, 1, 2, 3];
-    newA = aList[Math.floor(Math.random() * aList.length)];
-    newB = bList[Math.floor(Math.random() * bList.length)];
-  } else if (currentFunctionType === 'prop') {
-    const aList = [-3, -2, -1, 1, 2, 3, 0.5, -0.5];
-    newA = aList[Math.floor(Math.random() * aList.length)];
-    newB = 0;
-  } else if (currentFunctionType === 'invprop') {
-    const aList = [-12, -8, -6, -4, 4, 6, 8, 12];
-    newA = aList[Math.floor(Math.random() * aList.length)];
-    newB = 0;
-  } else if (currentFunctionType === 'quad') {
-    const aList = [-1, -0.5, 0.5, 1, 2, -2];
-    newA = aList[Math.floor(Math.random() * aList.length)];
-    newB = 0;
+  const presets = [
+    'y = 2x + 1',
+    'y = -x + 3',
+    'y = -1/2x + 3',
+    'y = 3/2x - 1',
+    'y = 3x',
+    'y = -2x',
+    'y = 6/x',
+    'y = -12/x',
+    'y = 8/x',
+    'y = -4/x',
+    'y = 2x^2',
+    'y = -x^2',
+    'y = 1/2x^2',
+    'y = -1/4x^2'
+  ];
+  const chosen = presets[Math.floor(Math.random() * presets.length)];
+  const input = document.getElementById('funcExprInput');
+  if (input) {
+    input.value = chosen;
   }
-
-  const inA = document.getElementById('funcA');
-  const inB = document.getElementById('funcB');
-  if (inA) inA.value = newA;
-  if (inB) inB.value = newB;
-
   renderMathGraph();
 }
 
 function randomizeLinear() {
   randomizeFunctionGraph();
 }
+
 
 function insertGraphToWorksheet() {
   const { type, a, b } = state.mathFunc || { type: 'linear', a: 2, b: 1 };

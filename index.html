@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="css/features/timetable.css?v=20261007_7">
   <link rel="stylesheet" href="css/features/class-print.css?v=20261006_11">
   <link rel="stylesheet" href="css/features/practice-print.css?v=20261006_11">
-  <link rel="stylesheet" href="css/features/graph-generator.css">
+  <link rel="stylesheet" href="css/features/graph-generator.css?v=20261007_8">
   <link rel="stylesheet" href="css/features/settings.css">
   <link rel="stylesheet" href="css/features/library.css">
   <!-- 印刷用スタイル -->
@@ -1728,41 +1728,57 @@
               <span class="badge" id="funcGradeBadge">中1〜中3 関数全般</span>
             </div>
             <div class="tool-body">
-              <!-- 関数種別の選択タブ -->
-              <div class="func-type-selector-bar mb-3">
-                <label style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-right: 0.5rem;">関数の種類:</label>
-                <div class="func-type-btn-group" id="funcTypeGroup">
-                  <button type="button" class="btn btn-xs btn-outline active" data-functype="linear" onclick="setFunctionType('linear')">一次関数 y = ax + b</button>
-                  <button type="button" class="btn btn-xs btn-outline" data-functype="prop" onclick="setFunctionType('prop')">比例 y = ax</button>
-                  <button type="button" class="btn btn-xs btn-outline" data-functype="invprop" onclick="setFunctionType('invprop')">反比例 y = a/x</button>
-                  <button type="button" class="btn btn-xs btn-outline" data-functype="quad" onclick="setFunctionType('quad')">二次関数 y = ax²</button>
+              <!-- 任意関数の自由入力エリア (中学校数学のあらゆる式に対応) -->
+              <div class="func-free-input-section mb-3">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; gap: 0.5rem; flex-wrap: wrap;">
+                  <label for="funcExprInput" style="font-size: 0.88rem; font-weight: 700; color: #334155; margin: 0; display: flex; align-items: center; gap: 0.35rem;">
+                    <i class="fa-solid fa-pen-to-square text-primary"></i> 関数の式を入力 (中学校の任意の関数):
+                  </label>
+                  <div style="display: flex; gap: 0.4rem; align-items: center;">
+                    <button type="button" class="btn btn-xs btn-outline" onclick="window.mathEditorFromGraph = true; openMathFormulaEditorModal()" title="数式エディタから式をセット" style="font-size: 0.72rem; padding: 0.18rem 0.5rem; border-color: #c084fc; color: #7e22ce;">
+                      <i class="fa-solid fa-keyboard"></i> 数式エディタ
+                    </button>
+                    <button type="button" class="btn btn-xs btn-outline" onclick="randomizeFunctionGraph()" title="中学校の代表的な式をランダム生成" style="font-size: 0.72rem; padding: 0.18rem 0.5rem;">
+                      <i class="fa-solid fa-shuffle"></i> 例をセット
+                    </button>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <input type="text" id="funcExprInput" value="y = 2x + 1" class="form-control" style="font-size: 1.08rem; font-weight: 700; font-family: 'Times New Roman', serif; flex: 1; letter-spacing: 0.02em; border-color: #93c5fd; box-shadow: 0 1px 3px rgba(37,99,235,0.08);" placeholder="例: y = 2x + 1, y = -1/2x + 3, y = 6/x, y = 2x^2, y = -1/4x^2 など" oninput="onFuncExprInputChanged()">
+                </div>
+
+                <!-- ワンクリック入力チップ (中学校の代表的な式を即座に試せる) -->
+                <div class="func-quick-chips" style="display: flex; gap: 0.35rem; margin-top: 0.45rem; flex-wrap: wrap; align-items: center;">
+                  <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">クイック入力:</span>
+                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = 2x + 1')">y = 2x + 1</button>
+                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = -1/2x + 3')">y = -1/2x + 3</button>
+                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = -3x')">y = -3x</button>
+                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = 6/x')">y = 6/x</button>
+                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = -12/x')">y = -12/x</button>
+                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = 2x^2')">y = 2x²</button>
+                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = -1/4x^2')">y = -1/4x²</button>
                 </div>
               </div>
 
-              <div class="control-row">
-                <div class="control-col" style="flex: 1.2;">
-                  <div class="func-formula-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
-                    <label style="margin: 0;">関数の式: <strong class="math-preview text-primary" id="linearEqPreview" style="font-size: 1.05rem;">y = 2x + 1</strong></label>
-                    <button type="button" class="btn btn-xs btn-outline" onclick="openMathFormulaEditorModal()" title="数式エディタから式をセット" style="font-size: 0.72rem; padding: 0.15rem 0.45rem; border-color: #c084fc; color: #7e22ce;">
-                      <i class="fa-solid fa-square-root-variable"></i> 数式エディタ
-                    </button>
-                  </div>
-
-                  <!-- パラメータ入力欄 (文字が縦割れしない横並び構造) -->
-                  <div class="func-params-row" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                    <div class="param-input-group" style="display: flex; align-items: center; gap: 0.35rem;">
-                      <span class="param-label" id="paramLabelA" style="white-space: nowrap; font-size: 0.82rem; font-weight: 600; color: #334155;">傾き a =</span>
-                      <input type="number" id="funcA" value="2" step="0.5" class="form-control form-control-sm" style="width: 70px; text-align: center;" onchange="renderMathGraph()">
+              <!-- TeX 数式プレビュー ＆ 表示設定 -->
+              <div class="control-row" style="align-items: center; margin-bottom: 0.75rem;">
+                <div class="control-col" style="flex: 1.3;">
+                  <div class="func-tex-card" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 0.5rem 0.85rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; min-height: 50px;">
+                    <div>
+                      <span style="font-size: 0.72rem; font-weight: 700; color: #64748b; display: block; margin-bottom: 2px;">TeX 数式表示:</span>
+                      <div id="funcTexPreview" class="tex-formula-display" style="font-size: 1.15rem; color: #1e3a8a; line-height: 1.2;">
+                        <!-- KaTeXで美麗レンダリング -->
+                      </div>
                     </div>
-                    <div class="param-input-group" id="paramGroupB" style="display: flex; align-items: center; gap: 0.35rem;">
-                      <span class="param-label" style="white-space: nowrap; font-size: 0.82rem; font-weight: 600; color: #334155;">切片 b =</span>
-                      <input type="number" id="funcB" value="1" step="1" class="form-control form-control-sm" style="width: 70px; text-align: center;" onchange="renderMathGraph()">
-                    </div>
+                    <span id="funcTypeDetectedBadge" class="badge" style="font-size: 0.72rem; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; white-space: nowrap;">
+                      中2 一次関数
+                    </span>
                   </div>
                 </div>
 
                 <div class="control-col" style="flex: 0.9;">
-                  <label style="margin-bottom: 0.35rem;">表示設定</label>
+                  <label style="margin-bottom: 0.35rem; font-size: 0.8rem; font-weight: 700; color: #475569;">表示設定</label>
                   <div class="checkbox-group" style="display: flex; flex-direction: column; gap: 0.25rem;">
                     <label style="font-size: 0.8rem; display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
                       <input type="checkbox" id="showPointsCheck" checked onchange="renderMathGraph()"> 切片・代表点を表示
@@ -2005,10 +2021,10 @@
   <!-- 各機能モジュール -->
   <script src="js/features/timetable.js?v=20261007_7"></script>
   <script src="js/features/class-print.js?v=20261006_8"></script>
-  <script src="js/features/practice-print.js?v=20261006_11"></script>
+  <script src="js/features/practice-print.js?v=20261007_8"></script>
   <script src="js/features/settings.js"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
-  <script src="js/core/init.js?v=20261006_11"></script>
+  <script src="js/core/init.js?v=20261007_8"></script>
 </body>
 </html>
