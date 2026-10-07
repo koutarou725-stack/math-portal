@@ -1,18 +1,421 @@
 // ==========================================
+// 中学校数学 単元シラバス（学習指導要領準拠・時数マスタ）
+// ==========================================
+const UNIT_SYLLABUS = {
+  'unit_linear_2': {
+    name: '中2: 一次関数（全12時間）',
+    grade: '2',
+    totalHours: 12,
+    hours: [
+      { num: 1, title: '一次関数の意味' },
+      { num: 2, title: '変化の割合' },
+      { num: 3, title: 'グラフの特徴' },
+      { num: 4, title: '切片と傾き' },
+      { num: 5, title: 'グラフのかき方' },
+      { num: 6, title: '式の求め方①' },
+      { num: 7, title: '式の求め方②' },
+      { num: 8, title: '二元一次方程式' },
+      { num: 9, title: 'グラフの交点' },
+      { num: 10, title: '一次関数の利用①' },
+      { num: 11, title: '一次関数の利用②' },
+      { num: 12, title: '単元まとめ' }
+    ]
+  },
+  'unit_equations_2': {
+    name: '中2: 連立方程式（全11時間）',
+    grade: '2',
+    totalHours: 11,
+    hours: [
+      { num: 1, title: '連立方程式の意味' },
+      { num: 2, title: '加減法①' },
+      { num: 3, title: '加減法②' },
+      { num: 4, title: '代入法' },
+      { num: 5, title: 'かっこを含む式' },
+      { num: 6, title: '分数・小数' },
+      { num: 7, title: 'A=B=Cの形' },
+      { num: 8, title: '代金・個数' },
+      { num: 9, title: '速さ・道のり' },
+      { num: 10, title: '割合の利用' },
+      { num: 11, title: '単元まとめ' }
+    ]
+  },
+  'unit_poly_3': {
+    name: '中3: 多項式と展開・因数分解（全11時間）',
+    grade: '3',
+    totalHours: 11,
+    hours: [
+      { num: 1, title: '単項式×多項式' },
+      { num: 2, title: '多項式の乗法' },
+      { num: 3, title: '乗法公式①' },
+      { num: 4, title: '乗法公式②' },
+      { num: 5, title: '乗法公式③' },
+      { num: 6, title: '共通因数' },
+      { num: 7, title: '公式因数分解' },
+      { num: 8, title: '置き換え' },
+      { num: 9, title: '数の計算利用' },
+      { num: 10, title: '式の証明' },
+      { num: 11, title: '単元まとめ' }
+    ]
+  },
+  'unit_quad_3': {
+    name: '中3: 二次方程式（全10時間）',
+    grade: '3',
+    totalHours: 10,
+    hours: [
+      { num: 1, title: '二次方程式の意味' },
+      { num: 2, title: '平方根の解法' },
+      { num: 3, title: '平方完成' },
+      { num: 4, title: '解の公式導出' },
+      { num: 5, title: '解の公式利用' },
+      { num: 6, title: '因数分解解法①' },
+      { num: 7, title: '因数分解解法②' },
+      { num: 8, title: '図形の利用' },
+      { num: 9, title: '動点の利用' },
+      { num: 10, title: '単元まとめ' }
+    ]
+  },
+  'unit_linear_1': {
+    name: '中1: 一次方程式（全11時間）',
+    grade: '1',
+    totalHours: 11,
+    hours: [
+      { num: 1, title: '方程式と解' },
+      { num: 2, title: '等式の性質' },
+      { num: 3, title: '移項の解法' },
+      { num: 4, title: 'かっこを含む式' },
+      { num: 5, title: '小数・分数' },
+      { num: 6, title: '比例式' },
+      { num: 7, title: '代金・過不足' },
+      { num: 8, title: '速さの問題' },
+      { num: 9, title: '割合の問題' },
+      { num: 10, title: '確かめ' },
+      { num: 11, title: '単元まとめ' }
+    ]
+  }
+};
+
+/**
+ * 数学の担当学級（数字-数字、例: 2-1, 2-2）のみを抽出（研究推進部などの業務は除外）
+ */
+function getMathMarksClasses() {
+  const classesSet = new Set();
+  const termKey = state.currentTerm || '2026_first';
+  const baseTT = state.baseTimetables?.[termKey] || {};
+
+  Object.values(baseTT).forEach(slotRow => {
+    Object.values(slotRow).forEach(s => {
+      if (s && s.class && (s.type === 'math' || s.subject === '数学' || s.subject?.includes('数学'))) {
+        const cls = s.class.trim();
+        if (/^[1-3]-[1-9]$/.test(cls) || /^[1-3]年[1-9]組$/.test(cls)) {
+          classesSet.add(cls);
+        }
+      }
+    });
+  });
+
+  if (classesSet.size === 0) {
+    (state.learnedClasses || []).forEach(c => {
+      if (/^[1-3]-[1-9]$/.test(c)) classesSet.add(c);
+    });
+  }
+  if (classesSet.size === 0) {
+    ['2-1', '2-2', '2-3', '2-4'].forEach(c => classesSet.add(c));
+  }
+
+  return Array.from(classesSet).sort((a, b) => a.localeCompare(b, 'ja', { numeric: true }));
+}
+
+/**
+ * 指導進度 & 授業改善メモ ダッシュボードの全体描画
+ */
+function renderProgressDashboard() {
+  renderProgressSummaryRow();
+  renderProgressMatrixTable();
+  renderMemosList(currentMemoGradeFilter);
+}
+
+/**
+ * ② クラス別 指導進度マトリクス表の描画（ユーザー要望: 縦軸=クラス、横軸=授業内容・コマ、●/🚩でクラス差可視化）
+ */
+function renderProgressMatrixTable() {
+  const container = document.getElementById('matrixTableContainer');
+  const selectEl = document.getElementById('progressUnitSelect');
+  const diffBadge = document.getElementById('matrixDiffBadge');
+  if (!container) return;
+
+  const currentUnitKey = state.currentProgressUnit || 'unit_linear_2';
+  const unitData = UNIT_SYLLABUS[currentUnitKey] || UNIT_SYLLABUS['unit_linear_2'];
+
+  // 単元セレクタのオプション生成
+  if (selectEl && selectEl.options.length === 0) {
+    selectEl.innerHTML = Object.entries(UNIT_SYLLABUS).map(([k, u]) => `
+      <option value="${k}" ${k === currentUnitKey ? 'selected' : ''}>${escapeHtml(u.name)}</option>
+    `).join('');
+  } else if (selectEl) {
+    selectEl.value = currentUnitKey;
+  }
+
+  // 対象クラス取得
+  const classes = getMathMarksClasses();
+
+  // 進度データの初期化・取得
+  if (!state.classProgress) state.classProgress = {};
+  if (!state.classProgress[currentUnitKey]) {
+    state.classProgress[currentUnitKey] = {};
+  }
+  const progMap = state.classProgress[currentUnitKey];
+
+  // クラスごとの実施済みコマ数・最大差の算出
+  let minH = 999;
+  let maxH = 0;
+  classes.forEach(c => {
+    if (typeof progMap[c] !== 'number') {
+      progMap[c] = Math.min(5, unitData.totalHours); // デフォルト初期値
+    }
+    const val = progMap[c];
+    if (val < minH) minH = val;
+    if (val > maxH) maxH = val;
+  });
+  if (minH === 999) minH = 0;
+  const classDiff = Math.max(0, maxH - minH);
+
+  if (diffBadge) {
+    diffBadge.textContent = `最大クラス差: ${classDiff}コマ`;
+    if (classDiff >= 2) {
+      diffBadge.style.background = '#fef2f2';
+      diffBadge.style.color = '#dc2626';
+      diffBadge.style.border = '1px solid #fecaca';
+    } else {
+      diffBadge.style.background = '#e0f2fe';
+      diffBadge.style.color = '#0284c7';
+      diffBadge.style.border = 'none';
+    }
+  }
+
+  // テーブルHTML生成
+  let tableHtml = `
+    <table class="progress-matrix-table">
+      <thead>
+        <tr>
+          <th class="matrix-th-class">クラス</th>
+  `;
+
+  unitData.hours.forEach(h => {
+    const memoKey = `${currentUnitKey}_${h.num}`;
+    const hasMemo = !!(state.hourMemos && state.hourMemos[memoKey]);
+    tableHtml += `
+      <th class="matrix-th-hour">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 2px;">
+          <span>第${h.num}時</span>
+          <button type="button" class="btn btn-ghost" style="padding: 0; font-size: 0.72rem; color: ${hasMemo ? '#f59e0b' : '#94a3b8'}; cursor: pointer;" onclick="openHourMemoModal('${currentUnitKey}', ${h.num})" title="第${h.num}時の改善メモを確認・記録">
+            <i class="fa-solid fa-lightbulb"></i>
+          </button>
+        </div>
+        <span class="matrix-hour-title" title="${escapeHtml(h.title)}">${escapeHtml(h.title)}</span>
+      </th>
+    `;
+  });
+
+  tableHtml += `
+          <th class="matrix-th-hour" style="min-width: 90px;">進度操作</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  classes.forEach(cls => {
+    const currentDone = progMap[cls] || 0;
+    tableHtml += `
+      <tr>
+        <td class="matrix-td-class">
+          <i class="fa-solid fa-chalkboard-user"></i> ${escapeHtml(cls)}
+        </td>
+    `;
+
+    unitData.hours.forEach(h => {
+      const isDone = h.num <= currentDone;
+      const isNext = h.num === currentDone + 1;
+      const memoKey = `${currentUnitKey}_${h.num}`;
+      const hasMemo = !!(state.hourMemos && state.hourMemos[memoKey]);
+
+      let cellClass = 'matrix-cell';
+      let cellContent = '';
+
+      if (isDone) {
+        cellClass += ' cell-done';
+        cellContent = `<span class="cell-icon" title="実施済（クリックでここまで完了に設定）">●</span>`;
+      } else if (isNext) {
+        cellClass += ' cell-next';
+        cellContent = `<span class="cell-flag" title="【次の授業】ここからスタート">🚩 次</span>`;
+      } else {
+        cellClass += ' cell-future';
+        cellContent = `<span class="cell-icon" title="未実施（クリックでここまで完了に設定）" style="color: #cbd5e1;">○</span>`;
+      }
+
+      tableHtml += `
+        <td class="${cellClass}" onclick="setClassProgressHour('${currentUnitKey}', '${cls}', ${h.num})">
+          ${cellContent}
+          ${hasMemo ? '<span class="cell-memo-indicator" title="改善メモあり"><i class="fa-solid fa-lightbulb"></i></span>' : ''}
+        </td>
+      `;
+    });
+
+    tableHtml += `
+        <td class="matrix-actions-cell">
+          <div style="display: flex; gap: 3px; justify-content: center;">
+            <button type="button" class="btn btn-xs btn-outline" onclick="stepClassProgress('${currentUnitKey}', '${cls}', -1)" title="1コマ戻す" style="padding: 1px 6px; font-size: 0.72rem;">
+              -1
+            </button>
+            <button type="button" class="btn btn-xs btn-primary" onclick="stepClassProgress('${currentUnitKey}', '${cls}', 1)" title="1コマ進める" style="padding: 1px 6px; font-size: 0.72rem;">
+              +1
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+  tableHtml += `
+      </tbody>
+    </table>
+  `;
+
+  container.innerHTML = tableHtml;
+}
+
+/**
+ * 単元セレクタ変更時
+ */
+function onProgressUnitChanged() {
+  const selectEl = document.getElementById('progressUnitSelect');
+  if (selectEl) {
+    state.currentProgressUnit = selectEl.value;
+    localStorage.setItem('math_portal_current_progress_unit', state.currentProgressUnit);
+    renderProgressMatrixTable();
+  }
+}
+
+/**
+ * マスクリックでそのクラスの進度を設定
+ */
+function setClassProgressHour(unitKey, cls, hourNum) {
+  if (!state.classProgress) state.classProgress = {};
+  if (!state.classProgress[unitKey]) state.classProgress[unitKey] = {};
+
+  const current = state.classProgress[unitKey][cls] || 0;
+  // すでにそのコマが完了なら、そのコマをクリックしたらその手前に戻すトグル機能
+  if (current === hourNum) {
+    state.classProgress[unitKey][cls] = Math.max(0, hourNum - 1);
+  } else {
+    state.classProgress[unitKey][cls] = hourNum;
+  }
+
+  localStorage.setItem('math_portal_class_progress', JSON.stringify(state.classProgress));
+  renderProgressMatrixTable();
+  renderProgressSummaryRow();
+  if (typeof triggerAutoCloudSync === 'function') triggerAutoCloudSync();
+}
+
+/**
+ * +1 / -1 で進度を操作
+ */
+function stepClassProgress(unitKey, cls, delta) {
+  if (!state.classProgress) state.classProgress = {};
+  if (!state.classProgress[unitKey]) state.classProgress[unitKey] = {};
+
+  const unitData = UNIT_SYLLABUS[unitKey] || UNIT_SYLLABUS['unit_linear_2'];
+  const current = state.classProgress[unitKey][cls] || 0;
+  const nextVal = Math.max(0, Math.min(unitData.totalHours, current + delta));
+
+  state.classProgress[unitKey][cls] = nextVal;
+  localStorage.setItem('math_portal_class_progress', JSON.stringify(state.classProgress));
+  renderProgressMatrixTable();
+  renderProgressSummaryRow();
+  if (typeof triggerAutoCloudSync === 'function') triggerAutoCloudSync();
+}
+
+/**
+ * コマ別改善メモモーダルを開く
+ */
+function openHourMemoModal(unitKey, hourNum) {
+  const modal = document.getElementById('hourMemoModal');
+  if (!modal) return;
+
+  const unitData = UNIT_SYLLABUS[unitKey] || UNIT_SYLLABUS['unit_linear_2'];
+  const hourData = unitData.hours.find(h => h.num === hourNum) || { title: `第${hourNum}時` };
+
+  document.getElementById('hourMemoUnitKey').value = unitKey;
+  document.getElementById('hourMemoHourNum').value = hourNum;
+  document.getElementById('hourMemoModalTitle').innerHTML = `<i class="fa-solid fa-lightbulb text-amber"></i> 【${escapeHtml(unitData.name.split('（')[0])}】第${hourNum}時の改善メモ`;
+  document.getElementById('hourMemoTopicName').textContent = `第${hourNum}時: ${hourData.title}`;
+
+  const memoKey = `${unitKey}_${hourNum}`;
+  const existingMemo = (state.hourMemos && state.hourMemos[memoKey]) || '';
+  document.getElementById('hourMemoTextInput').value = existingMemo;
+
+  modal.classList.remove('hidden');
+}
+
+function closeHourMemoModal() {
+  const modal = document.getElementById('hourMemoModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+/**
+ * コマ別改善メモの保存
+ */
+function saveHourMemo() {
+  const unitKey = document.getElementById('hourMemoUnitKey').value;
+  const hourNum = Number(document.getElementById('hourMemoHourNum').value);
+  const text = document.getElementById('hourMemoTextInput').value.trim();
+
+  if (!state.hourMemos) state.hourMemos = {};
+  const memoKey = `${unitKey}_${hourNum}`;
+
+  if (text) {
+    state.hourMemos[memoKey] = text;
+    // 下の「授業改善メモ一覧（ナレッジベース）」にも自動連動で蓄積
+    const unitData = UNIT_SYLLABUS[unitKey] || UNIT_SYLLABUS['unit_linear_2'];
+    const hourData = unitData.hours.find(h => h.num === hourNum) || { title: `第${hourNum}時` };
+    const fullUnitName = `${unitData.name.split('（')[0]} 第${hourNum}時: ${hourData.title}`;
+
+    const existingIdx = (state.memos || []).findIndex(m => m.unit === fullUnitName);
+    if (existingIdx !== -1) {
+      state.memos[existingIdx].points = text;
+      state.memos[existingIdx].date = new Date().toLocaleDateString('ja-JP');
+    } else {
+      state.memos.unshift({
+        id: Date.now(),
+        unit: fullUnitName,
+        date: new Date().toLocaleDateString('ja-JP'),
+        points: text,
+        timing: '通常展開',
+        nextYear: '実践メモ参照'
+      });
+    }
+    localStorage.setItem('math_portal_memos', JSON.stringify(state.memos));
+  } else {
+    delete state.hourMemos[memoKey];
+  }
+
+  localStorage.setItem('math_portal_hour_memos', JSON.stringify(state.hourMemos));
+  closeHourMemoModal();
+  renderProgressDashboard();
+  if (typeof triggerAutoCloudSync === 'function') triggerAutoCloudSync();
+  if (typeof showToast === 'function') {
+    showToast('<i class="fa-solid fa-floppy-disk text-success"></i> 第' + hourNum + '時の改善メモを保存しました', 'success');
+  }
+}
+
+
+// ==========================================
 // TAB 5: 指導進度 & 授業改善メモ (実践ナレッジ蓄積エンジン)
 // 時間割・週案メモ・授業プリント作成と完全連動
 // ==========================================
 
 let currentMemoGradeFilter = 'all';
 
-/**
- * 指導進度 & 授業改善メモ ダッシュボードの全体レンダリング
- */
-function renderProgressDashboard() {
-  renderProgressSummaryRow();
-  renderClassesProgressCards();
-  renderMemosList(currentMemoGradeFilter);
-}
+
 
 /**
  * ① 上部サマリーカード (考査カウントダウン、クラス差警告、メモ蓄積数)

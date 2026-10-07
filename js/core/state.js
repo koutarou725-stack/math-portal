@@ -126,6 +126,20 @@ const state = {
     targetSubject: '数学'
   }),
 
+  // クラス別 指導進度マトリクス管理データ
+  classProgress: loadStorage('math_portal_class_progress', {
+    'unit_linear_2': {
+      '2-1': 6,
+      '2-2': 5,
+      '2-3': 4,
+      '2-4': 6
+    }
+  }),
+  currentProgressUnit: localStorage.getItem('math_portal_current_progress_unit') || 'unit_linear_2',
+  hourMemos: loadStorage('math_portal_hour_memos', {
+    'unit_linear_2_3': '傾きが分数のときに代入で計算ミスが多発。赤ペンで分母を消す作業を入れさせたら改善した。'
+  }),
+
   // Googleスプレッドシート連携（クラウド同期設定）
   cloudSettings: {
     gasUrl: localStorage.getItem('math_portal_gas_url') || '',
