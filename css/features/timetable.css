@@ -1476,3 +1476,50 @@
     max-width: 100% !important;
   }
 }
+
+/* ========================================================
+   時間割・各種設定 集約モーダル (タブ・レイアウト)
+   ======================================================== */
+.tt-settings-hub-btn:hover {
+  background: #f1f5f9 !important;
+  border-color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+
+.hub-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.hub-tab-btn:hover {
+  color: #1e293b;
+}
+
+.hub-tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 700;
+}
+
+.hub-pane {
+  display: none;
+}
+
+.hub-pane.active {
+  display: block;
+}
+
+.lesson-nonmath-card {
+  transition: all 0.2s ease;
+}

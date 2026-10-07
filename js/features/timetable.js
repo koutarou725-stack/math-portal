@@ -1328,6 +1328,9 @@ function openLessonPlanModal(dateStr, period, className, subjectName) {
   const key = `${dateStr}_${period}`;
   state.lessonPlanPrintRefs = state.lessonPlanPrintRefs || JSON.parse(localStorage.getItem('math_portal_lesson_plan_prints') || '{}');
   const existingPrintRef = state.lessonPlanPrintRefs[key] || null;
+  const currentPlan = state.lessonPlans[key] || '';
+
+  const isMath = subjectName === '数学' || subjectName === '数';
 
   const banner = document.getElementById('lessonPlanMetaBanner');
   if (banner) {
@@ -1342,8 +1345,40 @@ function openLessonPlanModal(dateStr, period, className, subjectName) {
     `;
   }
 
-  // 2段階選択（単元 ➔ 時数）の初期化
-  initTwoStepLessonPrintSelect(className, subjectName, existingPrintRef);
+  const titleEl = document.getElementById('lessonPlanTitle');
+  const printGroup = document.getElementById('lessonPlanPrintLinkGroup');
+  const nonMathGroup = document.getElementById('lessonPlanNonMathGroup');
+  const nonMathInput = document.getElementById('lessonPlanNonMathText');
+  const btnOpenWorksheet = document.getElementById('btnOpenWorksheetFromModal');
+
+  if (isMath) {
+    // 数学の場合: プリント選択UIを表示
+    if (titleEl) titleEl.textContent = '授業予定・プリントのセット';
+    if (printGroup) printGroup.style.display = 'block';
+    if (nonMathGroup) nonMathGroup.style.display = 'none';
+    if (btnOpenWorksheet) btnOpenWorksheet.style.display = 'inline-flex';
+    initTwoStepLessonPrintSelect(className, subjectName, existingPrintRef);
+  } else {
+    // 非数学 (学活・道徳・総合・自習・行事など): 単に内容を直接書き込むフォームを表示！
+    if (titleEl) titleEl.textContent = `${subjectName} の予定・活動内容`;
+    if (printGroup) printGroup.style.display = 'none';
+    if (nonMathGroup) nonMathGroup.style.display = 'block';
+    if (btnOpenWorksheet) btnOpenWorksheet.style.display = 'none';
+
+    // プレースホルダーを教科に合わせて親切に設定
+    if (nonMathInput) {
+      nonMathInput.value = currentPlan;
+      if (subjectName.includes('学活') || subjectName.includes('HR')) {
+        nonMathInput.placeholder = '例: 席替え、委員会・係決め、後期目標カード記入、学年集会 など';
+      } else if (subjectName.includes('道徳')) {
+        nonMathInput.placeholder = '例: 主題名「思いやり」、教材「○○」、登場人物の心情把握・振り返り など';
+      } else if (subjectName.includes('総合')) {
+        nonMathInput.placeholder = '例: 職場体験の事前調べ、探究テーマ決め、発表スライド作成 など';
+      } else {
+        nonMathInput.placeholder = `例: ${subjectName} の活動内容・持ち物・連絡事項などを記入してください`;
+      }
+    }
+  }
 
   document.getElementById('lessonPlanModal').classList.remove('hidden');
 }
@@ -1501,19 +1536,40 @@ function clearCurrentLessonPlan() {
 }
 
 function saveLessonPlan() {
-  const { dateStr, period, selectedPrintRef } = state.editingLessonPlan;
+  const { dateStr, period, className, subjectName, selectedPrintRef } = state.editingLessonPlan;
   const key = `${dateStr}_${period}`;
+  const isMath = subjectName === '数学' || subjectName === '数';
 
-  if (selectedPrintRef) {
-    const cleanTitle = (typeof cleanMathText === 'function') ? cleanMathText(selectedPrintRef.title) : selectedPrintRef.title;
-    selectedPrintRef.title = cleanTitle;
-    const text = `第${selectedPrintRef.hour}時: ${cleanTitle}`;
-    state.lessonPlans[key] = text;
-    state.lessonPlanPrintRefs = state.lessonPlanPrintRefs || {};
-    state.lessonPlanPrintRefs[key] = selectedPrintRef;
-    localStorage.setItem('math_portal_lesson_plan_prints', JSON.stringify(state.lessonPlanPrintRefs));
-    localStorage.setItem('math_portal_lesson_plans', JSON.stringify(state.lessonPlans));
-    showToast(`📝 【${text}】をセットしました`);
+  if (isMath) {
+    if (selectedPrintRef) {
+      const cleanTitle = (typeof cleanMathText === 'function') ? cleanMathText(selectedPrintRef.title) : selectedPrintRef.title;
+      selectedPrintRef.title = cleanTitle;
+      const text = `第${selectedPrintRef.hour}時: ${cleanTitle}`;
+      state.lessonPlans[key] = text;
+      state.lessonPlanPrintRefs = state.lessonPlanPrintRefs || {};
+      state.lessonPlanPrintRefs[key] = selectedPrintRef;
+      localStorage.setItem('math_portal_lesson_plan_prints', JSON.stringify(state.lessonPlanPrintRefs));
+      localStorage.setItem('math_portal_lesson_plans', JSON.stringify(state.lessonPlans));
+      showToast(`📝 【${text}】をセットしました`);
+    }
+  } else {
+    // 非数学 (学活・道徳・総合など): 入力テキストをそのまま保存
+    const memoText = document.getElementById('lessonPlanNonMathText')?.value.trim() || '';
+    if (memoText) {
+      state.lessonPlans[key] = memoText;
+      if (state.lessonPlanPrintRefs) {
+        delete state.lessonPlanPrintRefs[key];
+        localStorage.setItem('math_portal_lesson_plan_prints', JSON.stringify(state.lessonPlanPrintRefs));
+      }
+      localStorage.setItem('math_portal_lesson_plans', JSON.stringify(state.lessonPlans));
+      showToast(`📝 【${subjectName}】の予定を保存しました`);
+    } else {
+      delete state.lessonPlans[key];
+      if (state.lessonPlanPrintRefs) delete state.lessonPlanPrintRefs[key];
+      localStorage.setItem('math_portal_lesson_plans', JSON.stringify(state.lessonPlans));
+      localStorage.setItem('math_portal_lesson_plan_prints', JSON.stringify(state.lessonPlanPrintRefs));
+      showToast('🗑️ 予定をクリアしました');
+    }
   }
 
   renderRealTimetableGrid();
@@ -1900,3 +1956,219 @@ window.clearExamSettings = clearExamSettings;
 
 
 // 授業プリント工房への直結
+
+
+// ==========================================
+// 時間割・各種設定 集約ハブモーダル (特時振替・考査日程・時程・ベース設定)
+// ==========================================
+function openTimetableSettingsHubModal(defaultTab = 'override') {
+  const modal = document.getElementById('timetableSettingsHubModal');
+  if (!modal) return;
+
+  switchSettingsHubTab(defaultTab);
+
+  // 初期値のセット
+  // 1. 特時・校時振替
+  const overrideDateInput = document.getElementById('hubOverrideDate');
+  if (overrideDateInput && !overrideDateInput.value) {
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, '0');
+    const d = String(today.getDate()).padStart(2, '0');
+    overrideDateInput.value = `${y}-${m}-${d}`;
+  }
+  renderHubOverrideList();
+
+  // 2. 定期テスト日程
+  const examSettings = state.examSettings || {};
+  const examNameInput = document.getElementById('hubExamName');
+  const examDateInput = document.getElementById('hubExamDate');
+  if (examNameInput) examNameInput.value = examSettings.examName || '後期 中間考査';
+  if (examDateInput) examDateInput.value = examSettings.examDate || '';
+
+  // 3. 学校の時程 (ベル時刻)
+  const bell = state.bellSettings || {};
+  const bellStart = document.getElementById('hubBellStartTime');
+  const bellDur = document.getElementById('hubBellDuration');
+  const bellBreak = document.getElementById('hubBellBreakDuration');
+  const bellLunch = document.getElementById('hubBellLunchDuration');
+  if (bellStart) bellStart.value = bell.startTime || '08:45';
+  if (bellDur) bellDur.value = bell.duration || 50;
+  if (bellBreak) bellBreak.value = bell.breakDuration || 10;
+  if (bellLunch) bellLunch.value = bell.lunchDuration || 50;
+  previewHubBell();
+
+  modal.classList.remove('hidden');
+}
+
+function closeTimetableSettingsHubModal() {
+  document.getElementById('timetableSettingsHubModal')?.classList.add('hidden');
+}
+
+function switchSettingsHubTab(tabName) {
+  const tabs = document.querySelectorAll('.hub-tab-btn');
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.hubtab === tabName));
+
+  const panes = {
+    override: document.getElementById('hubPaneOverride'),
+    exam: document.getElementById('hubPaneExam'),
+    bell: document.getElementById('hubPaneBell'),
+    base: document.getElementById('hubPaneBase')
+  };
+
+  Object.keys(panes).forEach(k => {
+    if (panes[k]) {
+      panes[k].style.display = (k === tabName) ? 'block' : 'none';
+      panes[k].classList.toggle('active', k === tabName);
+    }
+  });
+
+  if (tabName === 'override') renderHubOverrideList();
+  if (tabName === 'bell') previewHubBell();
+}
+
+function applyHubOverride() {
+  const date = document.getElementById('hubOverrideDate')?.value;
+  const type = document.getElementById('hubOverrideType')?.value;
+  if (!date) {
+    alert('日付を選択してください');
+    return;
+  }
+
+  state.dayOverrides = state.dayOverrides || {};
+  state.dayOverrides[date] = type;
+  localStorage.setItem('math_portal_day_overrides', JSON.stringify(state.dayOverrides));
+
+  renderRealTimetableGrid();
+  renderHubOverrideList();
+  showToast(`🔀 【${date}】の振替設定を適用しました`);
+  triggerAutoCloudSync();
+}
+
+function renderHubOverrideList() {
+  const container = document.getElementById('hubOverrideList');
+  if (!container) return;
+
+  const overrides = state.dayOverrides || {};
+  const dates = Object.keys(overrides).sort();
+
+  if (dates.length === 0) {
+    container.innerHTML = '<span class="text-muted" style="font-size:0.78rem;">現在、特時・振替は設定されていません（平常通り）</span>';
+    return;
+  }
+
+  const typeLabels = {
+    mon: '月曜 時間割',
+    tue: '火曜 時間割',
+    wed: '水曜 時間割',
+    thu: '木曜 時間割',
+    fri: '金曜 時間割',
+    short45: '特時 45分短縮',
+    morning4: '午前4時間 (給食後下校)',
+    holiday: '休業日 / 考査日'
+  };
+
+  container.innerHTML = dates.map(d => {
+    const val = overrides[d];
+    const label = typeLabels[val] || val;
+    return `
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0.5rem; background:#ffffff; border:1px solid #e2e8f0; border-radius:4px; margin-bottom:0.25rem;">
+        <div><strong>${d}</strong>: <span class="badge" style="font-size:0.75rem;">${label}</span></div>
+        <button type="button" class="btn btn-xs btn-ghost text-danger" onclick="removeSingleOverride('${d}')" title="削除">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function removeSingleOverride(date) {
+  if (state.dayOverrides && state.dayOverrides[date]) {
+    delete state.dayOverrides[date];
+    localStorage.setItem('math_portal_day_overrides', JSON.stringify(state.dayOverrides));
+    renderRealTimetableGrid();
+    renderHubOverrideList();
+    showToast(`🗑️ ${date} の振替を解除しました`);
+    triggerAutoCloudSync();
+  }
+}
+
+function saveHubExamSetting() {
+  const name = document.getElementById('hubExamName')?.value.trim() || '後期 中間考査';
+  const date = document.getElementById('hubExamDate')?.value;
+
+  if (!date) {
+    alert('実施日を選択してください');
+    return;
+  }
+
+  state.examSettings = state.examSettings || {};
+  state.examSettings.examName = name;
+  state.examSettings.examDate = date;
+  localStorage.setItem('math_portal_exam_settings', JSON.stringify(state.examSettings));
+
+  renderExamCountdownBar();
+  updateHeroExamStatus();
+  showToast(`📅 【${name} (${date})】の日程を保存しました！`);
+  triggerAutoCloudSync();
+}
+
+function previewHubBell() {
+  const start = document.getElementById('hubBellStartTime')?.value || '08:45';
+  const dur = Number(document.getElementById('hubBellDuration')?.value) || 50;
+  const brk = Number(document.getElementById('hubBellBreakDuration')?.value) || 10;
+  const lunch = Number(document.getElementById('hubBellLunchDuration')?.value) || 50;
+
+  const [startH, startM] = start.split(':').map(Number);
+  let cur = startH * 60 + startM;
+
+  const container = document.getElementById('hubBellTimelinePreview');
+  if (!container) return;
+
+  const items = [];
+  const fmt = m => `${Math.floor(m / 60)}:${(m % 60).toString().padStart(2, '0')}`;
+
+  for (let p = 1; p <= 6; p++) {
+    const s = cur;
+    const e = cur + dur;
+    items.push(`
+      <span style="background:#ffffff; border:1px solid #cbd5e1; border-radius:4px; padding:0.2rem 0.45rem;">
+        <strong>${p}限:</strong> ${fmt(s)}〜${fmt(e)}
+      </span>
+    `);
+    cur = (p === 4) ? (e + lunch) : (e + brk);
+  }
+
+  container.innerHTML = items.join('');
+}
+
+function saveHubBellSetting() {
+  const start = document.getElementById('hubBellStartTime')?.value || '08:45';
+  const dur = Number(document.getElementById('hubBellDuration')?.value) || 50;
+  const brk = Number(document.getElementById('hubBellBreakDuration')?.value) || 10;
+  const lunch = Number(document.getElementById('hubBellLunchDuration')?.value) || 50;
+
+  state.bellSettings = {
+    startTime: start,
+    duration: dur,
+    breakDuration: brk,
+    lunchDuration: lunch,
+    customSchedule: null
+  };
+
+  localStorage.setItem('math_portal_bell_settings', JSON.stringify(state.bellSettings));
+  renderRealTimetableGrid();
+  showToast('🕒 学校の時程（ベル時刻）を保存しました！');
+  triggerAutoCloudSync();
+}
+
+// 既存モーダル呼び出しを新設定ハブに統合
+window.openTimetableSettingsHubModal = openTimetableSettingsHubModal;
+window.closeTimetableSettingsHubModal = closeTimetableSettingsHubModal;
+window.switchSettingsHubTab = switchSettingsHubTab;
+window.applyHubOverride = applyHubOverride;
+window.renderHubOverrideList = renderHubOverrideList;
+window.removeSingleOverride = removeSingleOverride;
+window.saveHubExamSetting = saveHubExamSetting;
+window.previewHubBell = previewHubBell;
+window.saveHubBellSetting = saveHubBellSetting;
