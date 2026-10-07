@@ -1523,3 +1523,41 @@
 .lesson-nonmath-card {
   transition: all 0.2s ease;
 }
+
+
+/* 学活・道徳・総合などの活動内容メモ入力 textarea を横に広く */
+#lessonPlanNonMathText {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  min-height: 80px !important;
+  border-radius: 6px !important;
+  padding: 0.65rem 0.85rem !important;
+}
+
+.lesson-nonmath-card {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 時間割各種設定モーダル 幅広 & タブバー最適化 */
+.settings-hub-modal-content {
+  max-width: 960px !important;
+  width: 95% !important;
+}
+
+.settings-hub-tabs {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  gap: 0.5rem !important;
+}
+
+.hub-tab-btn {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  font-size: 0.85rem !important;
+  padding: 0.55rem 0.9rem !important;
+}

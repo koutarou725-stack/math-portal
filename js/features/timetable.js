@@ -5,13 +5,13 @@
 
 function switchTimetableMode(mode) {
   state.timetableMode = mode;
-  document.getElementById('ttModeSchedule').classList.toggle('active', mode === 'schedule');
-  document.getElementById('ttModeBase').classList.toggle('active', mode === 'base');
-  document.getElementById('ttModeBell').classList.toggle('active', mode === 'bell');
+  document.getElementById('ttModeSchedule')?.classList.toggle('active', mode === 'schedule');
+  document.getElementById('ttModeBase')?.classList.toggle('active', mode === 'base');
+  document.getElementById('ttModeBell')?.classList.toggle('active', mode === 'bell');
 
-  document.getElementById('ttSubViewSchedule').classList.toggle('active', mode === 'schedule');
-  document.getElementById('ttSubViewBase').classList.toggle('active', mode === 'base');
-  document.getElementById('ttSubViewBell').classList.toggle('active', mode === 'bell');
+  document.getElementById('ttSubViewSchedule')?.classList.toggle('active', mode === 'schedule');
+  document.getElementById('ttSubViewBase')?.classList.toggle('active', mode === 'base');
+  document.getElementById('ttSubViewBell')?.classList.toggle('active', mode === 'bell');
 
   if (mode === 'schedule') {
     renderRealTimetableGrid();
@@ -1959,7 +1959,8 @@ window.clearExamSettings = clearExamSettings;
 
 
 // ==========================================
-// 時間割・各種設定 集約ハブモーダル (特時振替・考査日程・時程・ベース設定)
+// ==========================================
+// 時間割・各種設定 集約ハブモーダル (月行事入力・考査日程・時程・ベース設定)
 // ==========================================
 function openTimetableSettingsHubModal(defaultTab = 'override') {
   const modal = document.getElementById('timetableSettingsHubModal');
@@ -1967,17 +1968,17 @@ function openTimetableSettingsHubModal(defaultTab = 'override') {
 
   switchSettingsHubTab(defaultTab);
 
-  // 初期値のセット
-  // 1. 特時・校時振替
-  const overrideDateInput = document.getElementById('hubOverrideDate');
-  if (overrideDateInput && !overrideDateInput.value) {
-    const today = new Date();
-    const y = today.getFullYear();
-    const m = String(today.getMonth() + 1).padStart(2, '0');
-    const d = String(today.getDate()).padStart(2, '0');
-    overrideDateInput.value = `${y}-${m}-${d}`;
+  // 1. 月行事入力 (向こう6週間のExcel風テーブル生成)
+  if (defaultTab === 'override') {
+    const weekDays = (typeof getWeekDays === 'function') ? getWeekDays(state.currentWeekOffset) : [];
+    const rangeText = document.getElementById('overrideWeekRangeText');
+    if (rangeText && weekDays.length > 0) {
+      rangeText.textContent = `${weekDays[0].month}月${weekDays[0].date}日(${weekDays[0].dayName})〜 の月行事・校時振替とお休み設定`;
+    }
+    if (typeof renderMultiWeekOverride === 'function') {
+      renderMultiWeekOverride(6);
+    }
   }
-  renderHubOverrideList();
 
   // 2. 定期テスト日程
   const examSettings = state.examSettings || {};
@@ -2023,74 +2024,18 @@ function switchSettingsHubTab(tabName) {
     }
   });
 
-  if (tabName === 'override') renderHubOverrideList();
+  if (tabName === 'override') {
+    const weekDays = (typeof getWeekDays === 'function') ? getWeekDays(state.currentWeekOffset) : [];
+    const rangeText = document.getElementById('overrideWeekRangeText');
+    if (rangeText && weekDays.length > 0) {
+      rangeText.textContent = `${weekDays[0].month}月${weekDays[0].date}日(${weekDays[0].dayName})〜 の月行事・校時振替とお休み設定`;
+    }
+    if (typeof renderMultiWeekOverride === 'function') {
+      renderMultiWeekOverride(6);
+    }
+  }
+
   if (tabName === 'bell') previewHubBell();
-}
-
-function applyHubOverride() {
-  const date = document.getElementById('hubOverrideDate')?.value;
-  const type = document.getElementById('hubOverrideType')?.value;
-  if (!date) {
-    alert('日付を選択してください');
-    return;
-  }
-
-  state.dayOverrides = state.dayOverrides || {};
-  state.dayOverrides[date] = type;
-  localStorage.setItem('math_portal_day_overrides', JSON.stringify(state.dayOverrides));
-
-  renderRealTimetableGrid();
-  renderHubOverrideList();
-  showToast(`🔀 【${date}】の振替設定を適用しました`);
-  triggerAutoCloudSync();
-}
-
-function renderHubOverrideList() {
-  const container = document.getElementById('hubOverrideList');
-  if (!container) return;
-
-  const overrides = state.dayOverrides || {};
-  const dates = Object.keys(overrides).sort();
-
-  if (dates.length === 0) {
-    container.innerHTML = '<span class="text-muted" style="font-size:0.78rem;">現在、特時・振替は設定されていません（平常通り）</span>';
-    return;
-  }
-
-  const typeLabels = {
-    mon: '月曜 時間割',
-    tue: '火曜 時間割',
-    wed: '水曜 時間割',
-    thu: '木曜 時間割',
-    fri: '金曜 時間割',
-    short45: '特時 45分短縮',
-    morning4: '午前4時間 (給食後下校)',
-    holiday: '休業日 / 考査日'
-  };
-
-  container.innerHTML = dates.map(d => {
-    const val = overrides[d];
-    const label = typeLabels[val] || val;
-    return `
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0.5rem; background:#ffffff; border:1px solid #e2e8f0; border-radius:4px; margin-bottom:0.25rem;">
-        <div><strong>${d}</strong>: <span class="badge" style="font-size:0.75rem;">${label}</span></div>
-        <button type="button" class="btn btn-xs btn-ghost text-danger" onclick="removeSingleOverride('${d}')" title="削除">
-          <i class="fa-solid fa-trash-can"></i>
-        </button>
-      </div>
-    `;
-  }).join('');
-}
-
-function removeSingleOverride(date) {
-  if (state.dayOverrides && state.dayOverrides[date]) {
-    delete state.dayOverrides[date];
-    localStorage.setItem('math_portal_day_overrides', JSON.stringify(state.dayOverrides));
-    renderRealTimetableGrid();
-    renderHubOverrideList();
-    showToast(`🗑️ ${date} の振替を解除しました`);
-    triggerAutoCloudSync();
-  }
 }
 
 function saveHubExamSetting() {
@@ -2163,12 +2108,17 @@ function saveHubBellSetting() {
 }
 
 // 既存モーダル呼び出しを新設定ハブに統合
+function openDayOverrideModal() {
+  openTimetableSettingsHubModal('override');
+}
+
+function openExamSettingModal() {
+  openTimetableSettingsHubModal('exam');
+}
+
 window.openTimetableSettingsHubModal = openTimetableSettingsHubModal;
 window.closeTimetableSettingsHubModal = closeTimetableSettingsHubModal;
 window.switchSettingsHubTab = switchSettingsHubTab;
-window.applyHubOverride = applyHubOverride;
-window.renderHubOverrideList = renderHubOverrideList;
-window.removeSingleOverride = removeSingleOverride;
 window.saveHubExamSetting = saveHubExamSetting;
 window.previewHubBell = previewHubBell;
 window.saveHubBellSetting = saveHubBellSetting;
