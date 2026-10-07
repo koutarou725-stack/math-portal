@@ -1738,26 +1738,14 @@
                     <button type="button" class="btn btn-xs btn-outline" onclick="window.mathEditorFromGraph = true; openMathFormulaEditorModal()" title="数式エディタから式をセット" style="font-size: 0.72rem; padding: 0.18rem 0.5rem; border-color: #c084fc; color: #7e22ce;">
                       <i class="fa-solid fa-keyboard"></i> 数式エディタ
                     </button>
-                    <button type="button" class="btn btn-xs btn-outline" onclick="randomizeFunctionGraph()" title="中学校の代表的な式をランダム生成" style="font-size: 0.72rem; padding: 0.18rem 0.5rem;">
-                      <i class="fa-solid fa-shuffle"></i> 例をセット
+                    <button type="button" class="btn btn-xs btn-outline" onclick="randomizeFunctionGraph()" title="代表的な関数をランダム生成" style="font-size: 0.72rem; padding: 0.18rem 0.5rem;">
+                      <i class="fa-solid fa-shuffle"></i> ランダム生成
                     </button>
                   </div>
                 </div>
 
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
-                  <input type="text" id="funcExprInput" value="y = 2x + 1" class="form-control" style="font-size: 1.08rem; font-weight: 700; font-family: 'Times New Roman', serif; flex: 1; letter-spacing: 0.02em; border-color: #93c5fd; box-shadow: 0 1px 3px rgba(37,99,235,0.08);" placeholder="例: y = 2x + 1, y = -1/2x + 3, y = 6/x, y = 2x^2, y = -1/4x^2 など" oninput="onFuncExprInputChanged()">
-                </div>
-
-                <!-- ワンクリック入力チップ (中学校の代表的な式を即座に試せる) -->
-                <div class="func-quick-chips" style="display: flex; gap: 0.35rem; margin-top: 0.45rem; flex-wrap: wrap; align-items: center;">
-                  <span style="font-size: 0.72rem; color: #64748b; font-weight: 600;">クイック入力:</span>
-                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = 2x + 1')">y = 2x + 1</button>
-                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = -1/2x + 3')">y = -1/2x + 3</button>
-                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = -3x')">y = -3x</button>
-                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = 6/x')">y = 6/x</button>
-                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = -12/x')">y = -12/x</button>
-                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = 2x^2')">y = 2x²</button>
-                  <button type="button" class="func-chip-btn" onclick="setPresetExpr('y = -1/4x^2')">y = -1/4x²</button>
+                  <input type="text" id="funcExprInput" value="y = 2x + 1" class="form-control" style="font-size: 1.08rem; font-weight: 700; font-family: 'Times New Roman', serif; flex: 1; letter-spacing: 0.02em; border-color: #93c5fd; box-shadow: 0 1px 3px rgba(37,99,235,0.08);" placeholder="例: y = 2x + 1" oninput="onFuncExprInputChanged()">
                 </div>
               </div>
 
@@ -1797,7 +1785,7 @@
 
               <div class="tool-actions" style="display: flex; justify-content: space-between; align-items: center;">
                 <button type="button" class="btn btn-outline btn-sm" onclick="randomizeFunctionGraph()">
-                  <i class="fa-solid fa-shuffle"></i> 整数になる数値をランダム生成
+                  <i class="fa-solid fa-shuffle"></i> 別の式をランダム生成
                 </button>
                 <button type="button" class="btn btn-primary btn-sm" onclick="insertGraphToWorksheet()">
                   <i class="fa-solid fa-arrow-down-to-bracket"></i> 授業プリントに挿入
@@ -2102,7 +2090,7 @@
   <!-- 各機能モジュール -->
   <script src="js/features/timetable.js?v=20261007_9"></script>
   <script src="js/features/class-print.js?v=20261006_8"></script>
-  <script src="js/features/practice-print.js?v=20261007_8"></script>
+  <script src="js/features/practice-print.js?v=20261007_10"></script>
   <script src="js/features/settings.js?v=20261007_9"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->

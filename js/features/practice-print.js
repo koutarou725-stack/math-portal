@@ -15,26 +15,41 @@ let currentParsedFunc = null;
  */
 function parseFunctionExpression(raw) {
   if (!raw) return null;
-  let str = raw.trim();
+  let str = String(raw).trim();
 
   // 1. 全角文字の半角正規化
   str = str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
   str = str.replace(/＝/g, '=').replace(/＋/g, '+').replace(/[−ー―–]/g, '-');
   str = str.replace(/／/g, '/').replace(/＾/g, '^').replace(/²|²/g, '^2');
-  str = str.replace(/\frac\{([^}]+)\}\{([^}]+)\}/g, '($1)/($2)'); // TeXの\fracも受け付ける
-  str = str.replace(/\times/g, '*').replace(/×/g, '*');
-  str = str.replace(/\cdot/g, '*').replace(/・/g, '*');
-  str = str.replace(/\quad/g, ' ').replace(/\,/g, ' ');
-  str = str.replace(/\s+/g, ''); // 空白除去
+  str = str.replace(/\\times/g, '*').replace(/×/g, '*');
+  str = str.replace(/\\cdot/g, '*').replace(/・/g, '*');
+  str = str.replace(/\\quad/g, ' ').replace(/\\,/g, ' ');
 
-  // 'y=' が先頭にあれば除去
+  // TeXの分数表記 \frac{num}{den} を (num)/(den) に変換
+  // 例: \frac{a}{x} -> (a)/(x), \frac{6}{x} -> (6)/(x), -\frac{1}{2}x -> -(1)/(2)x
+  str = str.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1)/($2)');
+
+  // 空白除去
+  str = str.replace(/\s+/g, '');
+
+  // 先頭の 'y=' を除去
   if (str.toLowerCase().startsWith('y=')) {
     str = str.substring(2);
   }
 
-  // 2. 反比例: a/x または -a/x
-  // 例: 6/x, -12/x, (6)/x, -1/x, 1/x
-  const invMatch = str.match(/^([+-]?(?:(?:\d+\.?\d*)|(?:\(\d+\.?\d*\))))\/x$/i);
+  // もし \frac{a}{x} や a/x のように文字パラメータ 'a' のままなら、中学校数学で標準的な a=6 に自動補正
+  if (str === '(a)/(x)' || str === 'a/x' || str === '(a)/x' || str === 'a/(x)') {
+    str = '6/x';
+  } else if (str === 'ax^2' || str === 'ax²' || str === '(a)x^2' || str === 'a*x^2') {
+    str = '2x^2';
+  } else if (str === 'ax' || str === 'ax+b' || str === 'ax+1') {
+    str = '2x+1';
+  }
+
+  // 2. 反比例: a/x または (a)/(x) または a/(x)
+  // 例: 6/x, -12/x, (6)/(x), -1/x, 1/x, (-6)/x, 8/(x)
+  const invMatch = str.match(/^([+-]?(?:\(?\d+\.?\d*\)?))\/\(?x\)?$/i) ||
+                   str.match(/^\(([+-]?\d+\.?\d*)\)\/\(?x\)?$/i);
   if (invMatch || str === 'x^-1' || str === '-x^-1') {
     let aVal = 1;
     if (str === 'x^-1') aVal = 1;
@@ -48,7 +63,7 @@ function parseFunctionExpression(raw) {
 
     const absA = Math.abs(aVal);
     const signTex = aVal < 0 ? '-' : '';
-    const tex = `y = ${signTex}\frac{${absA}}{x}`;
+    const tex = 'y = ' + signTex + '\\frac{' + absA + '}{x}';
 
     return {
       type: 'invprop',
@@ -57,14 +72,14 @@ function parseFunctionExpression(raw) {
       a: aVal,
       b: 0,
       tex: tex,
-      formulaStr: `y = ${aVal}/x`,
+      formulaStr: 'y = ' + aVal + '/x',
       fn: x => (Math.abs(x) < 1e-6 ? NaN : aVal / x)
     };
   }
 
   // 3. 二次関数: ax^2
-  // 例: 2x^2, -x^2, x^2, 1/2x^2, -1/4x^2, -0.5x^2, x²
-  const quadMatch = str.match(/^([+-]?(?:(?:\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?)|(?:\(\d+(?:\.\d+)?\/\d+(?:\.\d+)?\)))?)x\^?2$/i);
+  // 例: 2x^2, -x^2, x^2, +x^2, 1/2x^2, -1/4x^2, -0.5x^2, (1)/(2)x^2, (-1)/(4)x^2
+  const quadMatch = str.match(/^([+-]?(?:(?:\(?\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?\)?)|(?:\([+-]?\d+\/\d+\))|(?:[+-]?\(?\d+\)?\/[+-]?\(?\d+\)))|[+-])?x\^?2$/i);
   if (quadMatch) {
     let coeffStr = quadMatch[1];
     let aVal = 1;
@@ -77,19 +92,21 @@ function parseFunctionExpression(raw) {
       aVal = -1;
       texA = '-';
     } else {
-      coeffStr = coeffStr.replace(/[()]/g, '');
-      if (coeffStr.includes('/')) {
-        const [n, d] = coeffStr.split('/').map(Number);
+      let cleanCoeff = coeffStr.replace(/[()]/g, '');
+      if (cleanCoeff.includes('/')) {
+        const parts = cleanCoeff.split('/');
+        const n = parseFloat(parts[0]);
+        const d = parseFloat(parts[1]);
         aVal = n / d;
         const sign = aVal < 0 ? '-' : '';
-        texA = `${sign}\frac{${Math.abs(n)}}{${Math.abs(d)}}`;
+        texA = sign + '\\frac{' + Math.abs(n) + '}{' + Math.abs(d) + '}';
       } else {
-        aVal = parseFloat(coeffStr);
-        texA = String(aVal);
+        aVal = parseFloat(cleanCoeff) || 1;
+        texA = (aVal === 1 ? '' : aVal === -1 ? '-' : String(aVal));
       }
     }
 
-    const tex = `y = ${texA}x^2`;
+    const tex = 'y = ' + texA + 'x^2';
     return {
       type: 'quad',
       typeName: '二次関数',
@@ -97,14 +114,14 @@ function parseFunctionExpression(raw) {
       a: aVal,
       b: 0,
       tex: tex,
-      formulaStr: `y = ${coeffStr || (aVal === 1 ? '' : aVal === -1 ? '-' : aVal)}x²`,
+      formulaStr: 'y = ' + (coeffStr || (aVal === 1 ? '' : aVal === -1 ? '-' : aVal)) + 'x²',
       fn: x => aVal * x * x
     };
   }
 
   // 4. 一次関数・比例: ax + b, ax, b
-  // 例: 2x+1, -1/2x+3, -3x, x, -x, 4
-  const linearMatch = str.match(/^([+-]?(?:(?:\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?)|(?:\(\d+(?:\.\d+)?\/\d+(?:\.\d+)?\)))?)x(?:([+-]\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?))?$/i);
+  // 例: 2x+1, -1/2x+3, -3x, x, -x, 4, (1)/(2)x+3, -1/2x-1
+  const linearMatch = str.match(/^([+-]?(?:(?:\(?\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?\)?)|(?:\([+-]?\d+\/\d+\))|(?:[+-]?\(?\d+\)?\/[+-]?\(?\d+\)))|[+-])?x(?:([+-](?:(?:\(?\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)?\)?)|(?:\([+-]?\d+\/\d+\))|(?:[+-]?\(?\d+\)?\/[+-]?\(?\d+\))|\d+(?:\.\d+)?)))?$/i);
   if (linearMatch) {
     let aStr = linearMatch[1];
     let bStr = linearMatch[2];
@@ -118,35 +135,40 @@ function parseFunctionExpression(raw) {
       aVal = -1;
       texA = '-';
     } else {
-      aStr = aStr.replace(/[()]/g, '');
-      if (aStr.includes('/')) {
-        const [n, d] = aStr.split('/').map(Number);
+      let cleanA = aStr.replace(/[()]/g, '');
+      if (cleanA.includes('/')) {
+        const parts = cleanA.split('/');
+        const n = parseFloat(parts[0]);
+        const d = parseFloat(parts[1]);
         aVal = n / d;
         const sign = aVal < 0 ? '-' : '';
-        texA = `${sign}\frac{${Math.abs(n)}}{${Math.abs(d)}}`;
+        texA = sign + '\\frac{' + Math.abs(n) + '}{' + Math.abs(d) + '}';
       } else {
-        aVal = parseFloat(aStr);
-        texA = String(aVal);
+        aVal = parseFloat(cleanA);
+        texA = (aVal === 1 ? '' : aVal === -1 ? '-' : String(aVal));
       }
     }
 
     let bVal = 0;
     let texB = '';
     if (bStr) {
-      if (bStr.includes('/')) {
-        const [n, d] = bStr.split('/').map(Number);
+      let cleanB = bStr.replace(/[()]/g, '');
+      if (cleanB.includes('/')) {
+        const parts = cleanB.split('/');
+        const n = parseFloat(parts[0]);
+        const d = parseFloat(parts[1]);
         bVal = n / d;
         const sign = bVal >= 0 ? '+' : '-';
-        texB = ` ${sign} \frac{${Math.abs(n)}}{${Math.abs(d)}}`;
+        texB = ' ' + sign + ' \\frac{' + Math.abs(n) + '}{' + Math.abs(d) + '}';
       } else {
-        bVal = parseFloat(bStr);
+        bVal = parseFloat(cleanB);
         const sign = bVal >= 0 ? '+' : '-';
-        texB = ` ${sign} ${Math.abs(bVal)}`;
+        texB = ' ' + sign + ' ' + Math.abs(bVal);
       }
     }
 
     const isProp = (bVal === 0);
-    const tex = `y = ${texA}x${texB}`;
+    const tex = 'y = ' + texA + 'x' + texB;
     return {
       type: isProp ? 'prop' : 'linear',
       typeName: isProp ? '比例' : '一次関数',
@@ -154,7 +176,7 @@ function parseFunctionExpression(raw) {
       a: aVal,
       b: bVal,
       tex: tex,
-      formulaStr: `y = ${aStr || (aVal === 1 ? '' : aVal === -1 ? '-' : aVal)}x${bVal ? (bVal > 0 ? ' + ' + bVal : ' - ' + Math.abs(bVal)) : ''}`,
+      formulaStr: 'y = ' + (aStr || (aVal === 1 ? '' : aVal === -1 ? '-' : aVal)) + 'x' + (bVal ? (bVal > 0 ? ' + ' + bVal : ' - ' + Math.abs(bVal)) : ''),
       fn: x => aVal * x + bVal
     };
   }
@@ -169,26 +191,26 @@ function parseFunctionExpression(raw) {
       gradeText: '直線 y = c',
       a: 0,
       b: cVal,
-      tex: `y = ${cVal}`,
-      formulaStr: `y = ${cVal}`,
+      tex: 'y = ' + cVal,
+      formulaStr: 'y = ' + cVal,
       fn: x => cVal
     };
   }
 
-  // 6. 一般関数の安全パース（上記以外の発展式でも描画可能）
+  // 6. 一般関数の安全パース（上記以外の式）
   try {
     const safeExpr = str.replace(/\^/g, '**');
-    const fn = new Function('x', `return ${safeExpr};`);
+    const fn = new Function('x', 'return ' + safeExpr + ';');
     const testVal = fn(1);
-    if (!isNaN(testVal)) {
+    if (!isNaN(testVal) && isFinite(testVal)) {
       return {
         type: 'general',
         typeName: '一般関数',
-        gradeText: '発展関数',
+        gradeText: '一般関数',
         a: 1,
         b: 0,
-        tex: `y = ${str}`,
-        formulaStr: `y = ${str}`,
+        tex: 'y = ' + str,
+        formulaStr: 'y = ' + str,
         fn: fn
       };
     }
@@ -485,17 +507,39 @@ function renderMathGraph() {
   const showPoints = document.getElementById('showPointsCheck')?.checked ?? true;
   const showLine = document.getElementById('showLineCheck')?.checked ?? true;
 
+  const badge = document.getElementById('funcTypeDetectedBadge');
+  const mainBadge = document.getElementById('funcGradeBadge');
+  const container = document.getElementById('linearGraphContainer');
+
   // 1. 数式の自動解析
-  const parsed = parseFunctionExpression(rawExpr) || {
-    type: 'linear',
-    typeName: '一次関数',
-    gradeText: '中2 一次関数',
-    a: 2,
-    b: 1,
-    tex: 'y = 2x + 1',
-    formulaStr: 'y = 2x + 1',
-    fn: x => 2 * x + 1
-  };
+  const parsed = parseFunctionExpression(rawExpr);
+
+  if (!parsed) {
+    // パース途中または不完全な式の場合：
+    // 入力文字列をそのまま KaTeX でプレビュー表示
+    let displayTex = rawExpr;
+    if (!displayTex.toLowerCase().startsWith('y=') && !displayTex.toLowerCase().startsWith('y =')) {
+      displayTex = 'y = ' + displayTex;
+    }
+    renderTexFormulaPreview(displayTex);
+
+    if (badge) {
+      badge.textContent = '式を入力中...';
+      badge.style.background = '#fef3c7';
+      badge.style.color = '#b45309';
+      badge.style.borderColor = '#fde68a';
+    }
+    return;
+  }
+
+  // 正常にパースできた場合
+  if (badge) {
+    badge.textContent = parsed.gradeText;
+    badge.style.background = '#e0f2fe';
+    badge.style.color = '#0369a1';
+    badge.style.borderColor = '#bae6fd';
+  }
+  if (mainBadge) mainBadge.textContent = parsed.gradeText;
 
   currentParsedFunc = parsed;
   currentFunctionType = parsed.type;
@@ -511,23 +555,12 @@ function renderMathGraph() {
     showPoints,
     showLine
   };
-  state.linearFunc = { a: parsed.a, b: parsed.b, showPoints, showLine }; // 互換用
+  state.linearFunc = { a: parsed.a, b: parsed.b, showPoints, showLine };
 
   // 2. TeX数式プレビューの描画 (KaTeX)
   renderTexFormulaPreview(parsed.tex);
 
-  // 3. 判定バッジの更新
-  const badge = document.getElementById('funcTypeDetectedBadge');
-  if (badge) {
-    badge.textContent = parsed.gradeText;
-  }
-  const mainBadge = document.getElementById('funcGradeBadge');
-  if (mainBadge) {
-    mainBadge.textContent = parsed.gradeText;
-  }
-
-  // 4. SVGグラフの描画
-  const container = document.getElementById('linearGraphContainer');
+  // 3. SVGグラフの描画
   if (container) {
     container.innerHTML = generateFunctionSvg(
       parsed.type,
@@ -566,8 +599,11 @@ function randomizeFunctionGraph() {
     'y = 1/2x^2',
     'y = -1/4x^2'
   ];
-  const chosen = presets[Math.floor(Math.random() * presets.length)];
   const input = document.getElementById('funcExprInput');
+  const currentVal = input ? input.value.trim() : '';
+  const candidates = presets.filter(p => p !== currentVal);
+  const chosen = candidates[Math.floor(Math.random() * candidates.length)] || presets[0];
+
   if (input) {
     input.value = chosen;
   }
