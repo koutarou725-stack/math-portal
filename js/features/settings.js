@@ -738,12 +738,19 @@ function renderMemosList(filterGrade = 'all') {
   const group = document.getElementById('memoGradeFilterGroup');
   if (!container) return;
 
-  // 担当学年の取得（担当していない学年のフィルタボタンは非表示）
+  // 担当学年の取得（時間割にない学年はボタンに出さない）
   const assignedGrades = typeof getTeacherAssignedGrades === 'function' ? getTeacherAssignedGrades() : ['2'];
 
+  // もし担当学年外が指定されたら 'all' に戻す
+  if (filterGrade !== 'all' && !assignedGrades.includes(filterGrade)) {
+    filterGrade = 'all';
+    currentMemoGradeFilter = 'all';
+  }
+
+  // フィルタボタングループの動的更新
   if (group) {
     if (assignedGrades.length <= 1) {
-      // 担当学年が1つの場合はフィルタボタン自体不要なので非表示
+      // 担当学年が1学年（中2のみなど）ならフィルタボタン自体を非表示にしてスッキリ！
       group.style.display = 'none';
       filterGrade = 'all';
       currentMemoGradeFilter = 'all';
@@ -757,12 +764,24 @@ function renderMemosList(filterGrade = 'all') {
     }
   }
 
+  // メモリストのフィルタリング（未定義エラーを完全防止）
+  let filtered = state.memos || [];
+  if (filterGrade !== 'all') {
+    filtered = filtered.filter(m => {
+      const u = m.unit || '';
+      return u.includes(`中${filterGrade}`) || u.startsWith(`${filterGrade}年`) || u.startsWith(`${filterGrade}-`);
+    });
+  }
+
+  if (countBadge) countBadge.textContent = `${filtered.length} 件`;
+  if (countEl) countEl.textContent = `${(state.memos || []).length} 件`;
+
   if (filtered.length === 0) {
     container.innerHTML = `
       <div style="grid-column: 1 / -1; padding: 2rem; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 8px; text-align: center; color: #64748b;">
         <i class="fa-solid fa-lightbulb" style="font-size: 1.5rem; color: #cbd5e1; margin-bottom: 0.5rem; display: block;"></i>
         この学年の授業改善メモはまだありません。<br>
-        上部の「<strong class="text-primary">＋ 改善メモを新規記録</strong>」から、授業のつまずきや時間配分のメモを残しておきましょう！
+        マトリクス表の緑の「<strong>● 済</strong>」をクリックするか、上部の「<strong class="text-primary">＋ 改善メモを新規記録</strong>」からメモを残せます！
       </div>
     `;
     return;
