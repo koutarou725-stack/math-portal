@@ -1644,3 +1644,48 @@
   align-items: center !important;
   gap: 2px !important;
 }
+
+/* カットされたコマ (5時間日課などの授業なしコマ) の斜め線デザイン */
+.timetable-cell-content.cut-period {
+  background-color: #f8fafc !important;
+  /* 繊細な斜線ストライプ (ハッチング) + セル対角線のきれいな斜め線 (／) */
+  background-image: 
+    linear-gradient(to top right, transparent calc(50% - 1.5px), #cbd5e1 50%, #cbd5e1 calc(50% + 1.5px), transparent calc(50% + 3px)),
+    repeating-linear-gradient(-45deg, transparent, transparent 6px, rgba(203, 213, 225, 0.45) 6px, rgba(203, 213, 225, 0.45) 7.5px) !important;
+  border: 1px dashed #cbd5e1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 100%;
+}
+
+.timetable-cell-content.cut-period:hover {
+  background-color: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+
+.cut-period-badge {
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  padding: 1px 7px !important;
+  border-radius: 4px !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  z-index: 2;
+  letter-spacing: 0.05em;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.tt-lesson-plan.cut-plan {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid #cbd5e1 !important;
+  z-index: 2;
+}

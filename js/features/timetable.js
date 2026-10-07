@@ -584,7 +584,8 @@ function getActualSlotsForDate(dateStr, dayKey) {
       slots[p] = {
         class: '',
         subject: '',
-        type: 'free',
+        type: 'cut',
+        isCut: true,
         isOverridden: true,
         sourceCode: 'カット'
       };
@@ -736,13 +737,37 @@ function renderRealTimetableGrid() {
       const dayData = getActualSlotsForDate(w.dateStr, w.dayKey);
       const slot = dayData.slots[t.p];
       const activeClass = w.isToday ? 'col-active' : '';
+      const planKey = `${w.dateStr}_${t.p}`;
+      const currentPlan = state.lessonPlans[planKey] || '';
       const hasContent = (slot.class && slot.class.trim() !== '') || (slot.subject && slot.subject.trim() !== '');
+      const isCut = (slot.type === 'cut' || slot.isCut || slot.sourceCode === 'カット');
 
-      if (!hasContent) {
-        // 実時間割でも空きコマはすっきり白紙！
+      if (isCut) {
+        // カットコマ: 斜め線（ハッチング＋対角線）で5時間授業等のコマであることを視覚的に一目で判別！
         return `
           <td class="${activeClass}">
-            <div class="timetable-cell-content free-period">
+            <div class="timetable-cell-content cut-period" onclick="openLessonPlanModal('${w.dateStr}', ${t.p}, '', 'カット')" title="${w.month}月${w.date}日(${w.dayName}) ${t.p}限: カット（5時間日課等で授業なし / クリックで予定・業務メモを入力）">
+              <span class="cut-period-badge">カット</span>
+              ${currentPlan ? `
+                <div class="tt-lesson-plan cut-plan" style="margin-top: 3px; width: 100%;">
+                  <div class="lesson-plan-text"><i class="fa-solid fa-note-sticky" style="font-size: 0.62rem; margin-right: 2px;"></i>${escapeHtml(cleanMathText(currentPlan))}</div>
+                </div>
+              ` : ''}
+            </div>
+          </td>
+        `;
+      }
+
+      if (!hasContent) {
+        // 実時間割の空きコマ（自分の授業が入っていない時間）はすっきり白紙！
+        return `
+          <td class="${activeClass}">
+            <div class="timetable-cell-content free-period" onclick="openLessonPlanModal('${w.dateStr}', ${t.p}, '', '')" title="${w.month}月${w.date}日(${w.dayName}) ${t.p}限: 空きコマ（クリックで予定メモを入力）">
+              ${currentPlan ? `
+                <div class="tt-lesson-plan" style="width: 100%;">
+                  <div class="lesson-plan-text"><i class="fa-solid fa-note-sticky" style="font-size: 0.62rem; margin-right: 2px;"></i>${escapeHtml(cleanMathText(currentPlan))}</div>
+                </div>
+              ` : ''}
             </div>
           </td>
         `;
@@ -750,8 +775,6 @@ function renderRealTimetableGrid() {
 
       const themeClass = getSubjectThemeClass(slot.subject);
       const isMath = (slot.subject === '数学' || (slot.subject && slot.subject.includes('数学')));
-      const planKey = `${w.dateStr}_${t.p}`;
-      const currentPlan = state.lessonPlans[planKey] || '';
       const isSpecial = slot.type === 'special';
       const isShiftBadge = isSpecial || slot.isOverridden;
       // ユーザー要望: 「金1振替」は「金1」でわかるので「振替」は消去。振替時のみ「⚡ 金1」を表示してシンプル化
