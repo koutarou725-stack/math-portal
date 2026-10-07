@@ -748,34 +748,36 @@ function renderRealTimetableGrid() {
       const planKey = `${w.dateStr}_${t.p}`;
       const currentPlan = state.lessonPlans[planKey] || '';
       const isSpecial = slot.type === 'special';
-      const badgeText = isSpecial ? `⚡ ${slot.sourceCode}` : (slot.isOverridden ? `⚡ ${slot.sourceCode} 振替` : slot.sourceCode);
       const isShiftBadge = isSpecial || slot.isOverridden;
+      // ユーザー要望: 「金1振替」は「金1」でわかるので「振替」は消去。振替時のみ「⚡ 金1」を表示してシンプル化
+      const badgeText = isShiftBadge ? `⚡ ${slot.sourceCode}` : '';
 
       return `
         <td class="${activeClass}">
           <div class="timetable-cell-content ${themeClass}">
-            <div>
-              <div class="tt-cell-meta-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                <span class="${isShiftBadge ? 'override-badge' : 'slot-code-badge'}" style="margin: 0;">${badgeText}</span>
+            <div class="tt-cell-meta-row" style="display: flex; justify-content: space-between; align-items: center; min-height: 18px;">
+              <div>
+                ${badgeText ? `<span class="override-badge" style="margin: 0; padding: 1px 4px; font-size: 0.65rem;">${badgeText}</span>` : ''}
+              </div>
+              <div style="display: flex; align-items: center; gap: 3px;">
                 ${slot.subject ? `<span class="tt-subject-badge" style="margin: 0;">${escapeHtml(slot.subject)}</span>` : ''}
+                ${isMath ? `
+                  <button type="button" class="tt-prep-icon-btn" onclick="event.stopPropagation(); goToLessonPrep('${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}', '${escapeHtml(currentPlan)}', '${w.dateStr}', ${t.p})" title="この時間の授業プリントを作成・編集">
+                    <i class="fa-solid fa-file-pen"></i>
+                  </button>
+                ` : ''}
               </div>
-              ${slot.class ? `<div class="tt-class-name">${escapeHtml(slot.class)}</div>` : ''}
             </div>
 
-            <!-- 週案・学習内容入力枠 (クリックで予定を打てる) -->
-            <div class="tt-lesson-plan" onclick="openLessonPlanModal('${w.dateStr}', ${t.p}, '${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}')" title="クリックしてこの時間の学習予定・単元名を入力: ${escapeHtml(cleanMathText(currentPlan))}">
+            <!-- クラス名 (スッキリ中央配置) -->
+            ${slot.class ? `<div class="tt-class-name">${escapeHtml(slot.class)}</div>` : ''}
+
+            <!-- 週案・予定入力枠 (シンプル & コンパクト) -->
+            <div class="tt-lesson-plan" onclick="openLessonPlanModal('${w.dateStr}', ${t.p}, '${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}')" title="クリックしてこの時間の学習予定・活動内容を入力: ${escapeHtml(cleanMathText(currentPlan))}">
               <div class="lesson-plan-text ${currentPlan ? '' : 'placeholder'}">
-                ${currentPlan ? `<i class="fa-solid fa-book-open" style="font-size: 0.65rem; margin-right: 2px;"></i>${escapeHtml(cleanMathText(currentPlan))}` : '＋ 予定入力'}
+                ${currentPlan ? `<i class="fa-solid fa-book-open" style="font-size: 0.62rem; margin-right: 2px; color: var(--primary);"></i>${escapeHtml(cleanMathText(currentPlan))}` : '＋ 予定'}
               </div>
             </div>
-
-            ${isMath ? `
-              <div class="tt-actions">
-                <button class="tt-action-btn" onclick="goToLessonPrep('${escapeHtml(slot.class)}', '${escapeHtml(slot.subject)}', '${escapeHtml(currentPlan)}', '${w.dateStr}', ${t.p})" title="この時間の授業プリントを作成">
-                  <i class="fa-solid fa-file-pen"></i> プリント準備
-                </button>
-              </div>
-            ` : ''}
           </div>
         </td>
       `;
@@ -1146,7 +1148,7 @@ function renderTodayScheduleMini() {
           <span class="slot-period">${p}限</span>
           ${slot.class ? `<span class="slot-class">${slot.class}</span>` : ''}
           <span class="slot-subject">${slot.subject}</span>
-          ${slot.isOverridden ? `<span class="override-badge" style="font-size: 0.65rem;">${slot.type === 'special' ? slot.sourceCode : slot.sourceCode + '振替'}</span>` : ''}
+          ${slot.isOverridden ? `<span class="override-badge" style="font-size: 0.65rem;">⚡ ${slot.sourceCode}</span>` : ''}
           <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem; color: #94a3b8;"></i>
         </div>
       `;

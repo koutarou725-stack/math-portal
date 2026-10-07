@@ -1561,3 +1561,81 @@
   font-size: 0.85rem !important;
   padding: 0.55rem 0.9rem !important;
 }
+
+
+/* プリント準備 アイコンボタン化 & セルシンプル化 */
+.tt-prep-icon-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.tt-prep-icon-btn:hover {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(37,99,235,0.25);
+}
+
+/* クラス名 表示の最適化 (中央揃え・太字ですっきり) */
+.timetable-cell-content .tt-class-name {
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-align: center;
+  margin: 0.15rem 0;
+  letter-spacing: 0.02em;
+}
+
+/* セルの余白最適化 */
+.timetable-cell-content {
+  padding: 0.3rem 0.35rem !important;
+  gap: 0.15rem;
+}
+
+/* 予定入力枠 (過剰な破線を控えめにし、すっきりしたデザインへ) */
+.tt-lesson-plan {
+  margin-top: 0.12rem !important;
+  padding: 0.2rem 0.35rem !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(203, 213, 225, 0.8) !important;
+  border-radius: 4px !important;
+}
+
+.tt-lesson-plan:hover {
+  background: #ffffff !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+.lesson-plan-text {
+  font-size: 0.68rem !important;
+  line-height: 1.3 !important;
+  font-weight: 600 !important;
+}
+
+/* 振替バッジ (金1振替 ➔ ⚡ 金1) をコンパクトに */
+.override-badge {
+  background: #fef3c7 !important;
+  border: 1px solid #f59e0b !important;
+  color: #b45309 !important;
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
+  padding: 1px 4px !important;
+  border-radius: 3px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
