@@ -621,7 +621,7 @@ function formatSourceCodeName(code) {
   return `${dayMap[d] || d}${p}`;
 }
 
-// 今週のクラス別授業数サマリーの集計・表示
+// 今週のクラス別授業数サマリーの集計・表示（純粋に数学の授業コマのみを集計）
 function renderWeekLessonSummary(weekDays) {
   const container = document.getElementById('weekLessonSummaryCard');
   if (!container) return;
@@ -633,7 +633,12 @@ function renderWeekLessonSummary(weekDays) {
     const dayData = getActualSlotsForDate(w.dateStr, w.dayKey);
     for (let p = 1; p <= 6; p++) {
       const slot = dayData.slots[p];
-      if (slot && slot.class && slot.class.trim() !== '') {
+      // ユーザー要望: 「学活」や「道徳」「総合」などを除外して、純粋に「数学」のコマ数のみを集計
+      const isMath = slot && (
+        slot.type === 'math' ||
+        (slot.subject && (slot.subject === '数学' || slot.subject.includes('数学') || slot.subject === '数'))
+      );
+      if (slot && slot.class && slot.class.trim() !== '' && isMath) {
         const cls = slot.class.trim();
         classCounts[cls] = (classCounts[cls] || 0) + 1;
         if (!slotsByClass[cls]) slotsByClass[cls] = [];
@@ -646,8 +651,8 @@ function renderWeekLessonSummary(weekDays) {
 
   if (sortedClasses.length === 0) {
     container.innerHTML = `
-      <div class="summary-title-badge"><i class="fa-solid fa-chart-simple text-primary"></i> 今週の授業コマ数</div>
-      <span style="font-size: 0.78rem; color: #94a3b8;">今週の持ちコマはまだ登録されていません（ベース時間割を登録すると自動集計されます）</span>
+      <div class="summary-title-badge"><i class="fa-solid fa-chart-simple text-primary"></i> 今週の数学授業コマ数</div>
+      <span style="font-size: 0.78rem; color: #94a3b8;">今週の数学の持ちコマは登録されていません</span>
     `;
     return;
   }
@@ -657,7 +662,7 @@ function renderWeekLessonSummary(weekDays) {
     const slotsDetail = (slotsByClass[cls] || []).join(', ');
 
     return `
-      <div class="class-count-pill" title="${cls}: 今週 ${slotsDetail}">
+      <div class="class-count-pill" title="${cls}: 今週の数学 ${slotsDetail}">
         <span>${cls}</span>
         <span class="class-count-badge">${count}コマ</span>
       </div>
@@ -666,7 +671,7 @@ function renderWeekLessonSummary(weekDays) {
 
   container.innerHTML = `
     <div class="summary-title-badge">
-      <i class="fa-solid fa-chart-simple text-primary"></i> 今週のクラス別授業数
+      <i class="fa-solid fa-chart-simple text-primary"></i> 今週のクラス別授業数（数学）
     </div>
     <div class="class-count-pills">
       ${pillsHtml}
