@@ -1997,70 +1997,70 @@
             </div>
           </div>
 
-          <div>
-            <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
-              💡 生徒のつまずき・つまずきやすい点・反応:
-            </label>
-            <textarea id="memoPointsInput" class="form-control" rows="3" placeholder="生徒が引っかかった箇所、誤答例、効果的だった発問など"></textarea>
-          </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
+                💡 生徒のつまずき・つまずきやすい点・反応:
+              </label>
+              <textarea id="memoPointsInput" class="form-control" rows="3" placeholder="生徒が引っかかった箇所、誤答例、効果的だった発問など" style="width: 100% !important; min-width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; display: block;"></textarea>
+            </div>
 
-          <div>
-            <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
-              ⏱ 時間配分・展開の反省:
-            </label>
-            <input type="text" id="memoTimingInput" class="form-control form-control-sm" placeholder="例: 導入7分、活動15分、練習15分、まとめ8分（演習時間が足りなかった等）">
-          </div>
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
+                ⏱ 時間配分・展開の反省:
+              </label>
+              <input type="text" id="memoTimingInput" class="form-control form-control-sm" placeholder="例: 導入7分、活動15分、練習15分、まとめ8分（演習時間が足りなかった等）" style="width: 100% !important; box-sizing: border-box !important;">
+            </div>
 
-          <div>
-            <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
-              🌱 次回・来年度への改善ポイント・指導のコツ:
-            </label>
-            <textarea id="memoNextYearInput" class="form-control" rows="2" placeholder="来年の自分や同僚へのアドバイス、次回改善したい点"></textarea>
-          </div>
-        </div>
-        <div class="slot-modal-footer" style="padding: 0.75rem 1.25rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 0.5rem;">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="closeProgressMemoModal()">キャンセル</button>
-          <button type="button" class="btn btn-primary btn-sm" onclick="saveProgressMemoFromModal()">
-            <i class="fa-solid fa-floppy-disk"></i> メモを保存
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- コマ別 授業改善メモ ポップアップモーダル -->
-    <div id="hourMemoModal" class="modal-overlay hidden">
-      <div class="slot-modal-content" style="max-width: 480px; width: 92%;">
-        <div class="slot-modal-header">
-          <h3 id="hourMemoModalTitle"><i class="fa-solid fa-lightbulb text-amber"></i> 第◯時の授業改善メモ</h3>
-          <button class="modal-close-btn" onclick="closeHourMemoModal()"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="slot-modal-body" style="padding: 1.15rem; display: flex; flex-direction: column; gap: 0.75rem;">
-          <input type="hidden" id="hourMemoUnitKey" value="">
-          <input type="hidden" id="hourMemoHourNum" value="">
-
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.6rem 0.8rem;">
-            <div style="font-size: 0.72rem; color: #64748b; font-weight: 700;">単元・本時の内容:</div>
-            <div id="hourMemoTopicName" style="font-size: 0.88rem; font-weight: 800; color: #1e293b;"></div>
-          </div>
-
-          <div>
-            <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
-              💡 生徒のつまずき・実践メモ（任意）:
-            </label>
-            <textarea id="hourMemoTextInput" class="form-control" rows="3" placeholder="例: 傾きが分数のときに代入で計算ミスが多発。赤ペンで分母を消す作業を入れさせたら改善した。" style="font-size: 0.85rem; line-height: 1.5;"></textarea>
-            <div style="font-size: 0.72rem; color: #64748b; margin-top: 3px;">
-              ※気になった点がある時だけメモを残せます（空欄のままでも進度管理に影響ありません）。
+            <div>
+              <label style="font-size: 0.8rem; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">
+                🌱 次回・来年度への改善ポイント・指導のコツ:
+              </label>
+              <textarea id="memoNextYearInput" class="form-control" rows="2" placeholder="来年の自分や同僚へのアドバイス、次回改善したい点" style="width: 100% !important; min-width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; display: block;"></textarea>
             </div>
           </div>
-        </div>
-        <div class="slot-modal-footer" style="padding: 0.75rem 1.15rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 0.5rem;">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="closeHourMemoModal()">閉じる</button>
-          <button type="button" class="btn btn-primary btn-sm" onclick="saveHourMemo()">
-            <i class="fa-solid fa-floppy-disk"></i> メモを保存
-          </button>
+          <div class="slot-modal-footer" style="padding: 0.75rem 1.25rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeProgressMemoModal()">キャンセル</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="saveProgressMemoFromModal()">
+              <i class="fa-solid fa-floppy-disk"></i> メモを保存
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      <!-- コマ別 授業改善メモ ポップアップモーダル (横長ワイド・快適入力) -->
+      <div id="hourMemoModal" class="modal-overlay hidden">
+        <div class="slot-modal-content" style="max-width: 550px; width: 94%;">
+          <div class="slot-modal-header">
+            <h3 id="hourMemoModalTitle"><i class="fa-solid fa-lightbulb text-amber"></i> 第◯時の授業改善メモ</h3>
+            <button class="modal-close-btn" onclick="closeHourMemoModal()"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div class="slot-modal-body" style="padding: 1.15rem 1.35rem; display: flex; flex-direction: column; gap: 0.85rem;">
+            <input type="hidden" id="hourMemoUnitKey" value="">
+            <input type="hidden" id="hourMemoHourNum" value="">
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.9rem;">
+              <div style="font-size: 0.72rem; color: #64748b; font-weight: 700;">単元・本時の内容:</div>
+              <div id="hourMemoTopicName" style="font-size: 0.88rem; font-weight: 800; color: #1e293b; margin-top: 2px;"></div>
+            </div>
+
+            <div style="width: 100%;">
+              <label style="font-size: 0.82rem; font-weight: 700; color: #1e293b; display: block; margin-bottom: 4px;">
+                💡 生徒のつまずき・実践メモ（任意）:
+              </label>
+              <textarea id="hourMemoTextInput" class="form-control" rows="3" placeholder="例: 傾きが分数のときに代入で計算ミスが多発。赤ペンで分母を消す作業を入れさせたら改善した。" style="width: 100% !important; min-width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; font-size: 0.92rem; line-height: 1.6; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1.5px solid #cbd5e1; resize: vertical; display: block;"></textarea>
+              <div style="font-size: 0.74rem; color: #64748b; margin-top: 4px;">
+                ※気になった点がある時だけメモを残せます（空欄のままでも進度管理に影響ありません）。
+              </div>
+            </div>
+          </div>
+          <div class="slot-modal-footer" style="padding: 0.75rem 1.35rem; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeHourMemoModal()">閉じる</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="saveHourMemo()">
+              <i class="fa-solid fa-floppy-disk"></i> メモを保存
+            </button>
+          </div>
+        </div>
+      </div>
 
   </main>
 
@@ -2160,7 +2160,7 @@
   <script src="js/features/timetable.js?v=20261007_9"></script>
   <script src="js/features/class-print.js?v=20261006_8"></script>
   <script src="js/features/practice-print.js?v=20261007_12"></script>
-  <script src="js/features/settings.js?v=20261007_13"></script>
+  <script src="js/features/settings.js?v=20261007_14"></script>
   <script src="js/features/library.js"></script>
   <!-- 初期化・画面連携 (全モジュール読込後に実行) -->
   <script src="js/core/init.js?v=20261007_9"></script>

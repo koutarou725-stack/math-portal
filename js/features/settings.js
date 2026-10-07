@@ -231,6 +231,42 @@ const UNIT_SYLLABUS = {
 /**
  * 数学の担当学級（数字-数字、例: 2-1, 2-2）を学年ごとに厳密抽出（研究推進部などの業務は除外）
  */
+
+/**
+ * 時間割（ベース時間割）から先生が実際に担当している学年（例: ['2']）を自動抽出
+ */
+function getTeacherAssignedGrades() {
+  const gradesSet = new Set();
+  const termKey = state.currentTerm || '2026_first';
+  const baseTT = state.baseTimetables?.[termKey] || {};
+
+  Object.values(baseTT).forEach(slotRow => {
+    Object.values(slotRow).forEach(s => {
+      if (s && s.class && (s.type === 'math' || s.subject === '数学' || s.subject?.includes('数学'))) {
+        const cls = s.class.trim();
+        const m = cls.match(/^([1-3])[-年]/);
+        if (m) gradesSet.add(m[1]);
+      }
+    });
+  });
+
+  if (gradesSet.size === 0) {
+    (state.learnedClasses || []).forEach(c => {
+      const m = c.match(/^([1-3])[-年]/);
+      if (m) gradesSet.add(m[1]);
+    });
+  }
+
+  if (gradesSet.size === 0) {
+    gradesSet.add('2');
+  }
+
+  return Array.from(gradesSet).sort();
+}
+
+/**
+ * 数学の担当学級（数字-数字、例: 2-1, 2-2）を学年ごとに厳密抽出（研究推進部などの業務は除外）
+ */
 function getMathMarksClasses(targetGrade = '2') {
   const classesSet = new Set();
   const termKey = state.currentTerm || '2026_first';
@@ -322,14 +358,28 @@ function renderProgressMatrixTable() {
   const container = document.getElementById('matrixTableContainer');
   const selectEl = document.getElementById('progressUnitSelect');
   const diffBadge = document.getElementById('matrixDiffBadge');
+  const pillGroup = document.getElementById('matrixGradePillGroup');
   if (!container) return;
 
+  // 時間割から担当学年を動的検出（担当していない学年のボタンは表示しない）
+  const assignedGrades = getTeacherAssignedGrades();
+  if (!assignedGrades.includes(state.matrixGrade)) {
+    state.matrixGrade = assignedGrades[0];
+    localStorage.setItem('math_portal_matrix_grade', state.matrixGrade);
+  }
   const curGrade = state.matrixGrade || '2';
 
-  // ピルボタンのアクティブ更新
-  document.querySelectorAll('#matrixGradePillGroup .grade-pill-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.grade === curGrade);
-  });
+  // ピルボタンの動的生成（担当学年が1つだけなら非表示でスッキリ！）
+  if (pillGroup) {
+    if (assignedGrades.length <= 1) {
+      pillGroup.style.display = 'none';
+    } else {
+      pillGroup.style.display = 'flex';
+      pillGroup.innerHTML = assignedGrades.map(g => `
+        <button type="button" class="grade-pill-btn ${g === curGrade ? 'active' : ''}" data-grade="${g}" onclick="switchMatrixGrade('${g}')">中${g}</button>
+      `).join('');
+    }
+  }
 
   // 学年ごとの単元リスト抽出
   const gradeUnits = Object.entries(UNIT_SYLLABUS).filter(([k, u]) => u.grade === curGrade);
@@ -685,24 +735,26 @@ function renderMemosList(filterGrade = 'all') {
   const container = document.getElementById('memosHistoryGrid');
   const countBadge = document.getElementById('memosCountBadge');
   const countEl = document.getElementById('savedMemosCount');
+  const group = document.getElementById('memoGradeFilterGroup');
   if (!container) return;
 
-  let filtered = state.memos || [];
-  if (filterGrade !== 'all') {
-    filtered = filtered.filter(m => {
-      const u = m.unit || '';
-      return u.includes(`中${filterGrade}`) || u.startsWith(`${filterGrade}年`) || u.startsWith(`${filterGrade}-`);
-    });
-  }
+  // 担当学年の取得（担当していない学年のフィルタボタンは非表示）
+  const assignedGrades = typeof getTeacherAssignedGrades === 'function' ? getTeacherAssignedGrades() : ['2'];
 
-  if (countBadge) countBadge.textContent = `${filtered.length} 件`;
-  if (countEl) countEl.textContent = `${(state.memos || []).length} 件`;
-
-  const group = document.getElementById('memoGradeFilterGroup');
   if (group) {
-    group.querySelectorAll('.memo-filter-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.grade === filterGrade);
-    });
+    if (assignedGrades.length <= 1) {
+      // 担当学年が1つの場合はフィルタボタン自体不要なので非表示
+      group.style.display = 'none';
+      filterGrade = 'all';
+      currentMemoGradeFilter = 'all';
+    } else {
+      group.style.display = 'flex';
+      let btnsHtml = `<button type="button" class="memo-filter-btn ${filterGrade === 'all' ? 'active' : ''}" data-grade="all" onclick="filterMemosByGrade('all')">すべて</button>`;
+      assignedGrades.forEach(g => {
+        btnsHtml += `<button type="button" class="memo-filter-btn ${filterGrade === g ? 'active' : ''}" data-grade="${g}" onclick="filterMemosByGrade('${g}')">中${g}</button>`;
+      });
+      group.innerHTML = btnsHtml;
+    }
   }
 
   if (filtered.length === 0) {
